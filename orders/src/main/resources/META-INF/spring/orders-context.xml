@@ -27,7 +27,7 @@
     <aop:aspectj-autoproxy/>
 
     <axon:event-sourcing-repository id="portfolioRepository"
-                                    aggregate-type="org.axonframework.samples.trader.orders.command.Portfolio"
+                                    aggregate-type="com.icoin.trading.orders.command.Portfolio"
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
                                     event-store="eventStore">
@@ -35,7 +35,7 @@
     </axon:event-sourcing-repository>
 
     <axon:event-sourcing-repository id="transactionRepository"
-                                    aggregate-type="org.axonframework.samples.trader.orders.command.Transaction"
+                                    aggregate-type="com.icoin.trading.orders.command.Transaction"
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
                                     event-store="eventStore">
@@ -44,8 +44,8 @@
 
     <axon:saga-manager id="sagaManager" saga-repository="sagaRepository" event-bus="eventBus">
         <axon:types>
-            org.axonframework.samples.trader.orders.command.SellTradeManagerSaga,
-            org.axonframework.samples.trader.orders.command.BuyTradeManagerSaga
+            com.icoin.trading.orders.command.SellTradeManagerSaga,
+            com.icoin.trading.orders.command.BuyTradeManagerSaga
         </axon:types>
     </axon:saga-manager>
 

@@ -19,13 +19,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>axon-trader</artifactId>
-        <groupId>org.axonframework.samples</groupId>
+        <artifactId>icoin-trading</artifactId>
+        <groupId>com.icoin.trading</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.axonframework.samples</groupId>
-    <artifactId>axon-trader-webui</artifactId>
+    <groupId>com.icoin.trading</groupId>
+    <artifactId>icoin-trading-webui</artifactId>
     <version>0.1-SNAPSHOT</version>
     <name>Axon Trader Sample - Web ui</name>
     <packaging>war</packaging>
@@ -48,43 +48,43 @@
     <dependencies>
         <!-- Internal dependencies -->
         <dependency>
-            <groupId>org.axonframework.samples</groupId>
-            <artifactId>axon-trader-orders</artifactId>
+            <groupId>com.icoin.trading</groupId>
+            <artifactId>icoin-trading-orders</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-trader-trade-engine</artifactId>
+            <artifactId>icoin-trading-trade-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-trader-users</artifactId>
+            <artifactId>icoin-trading-users</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-trader-users-query</artifactId>
+            <artifactId>icoin-trading-users-query</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-trader-companies</artifactId>
+            <artifactId>icoin-trading-companies</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.axonframework.samples</groupId>
-            <artifactId>axon-trader-infrastructure</artifactId>
+            <groupId>com.icoin.trading</groupId>
+            <artifactId>icoin-trading-infrastructure</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.axonframework.samples</groupId>
-            <artifactId>axon-trader-query</artifactId>
+            <groupId>com.icoin.trading</groupId>
+            <artifactId>icoin-trading-query</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.axonframework.samples</groupId>
-            <artifactId>axon-trader-external-listeners</artifactId>
+            <groupId>com.icoin.trading</groupId>
+            <artifactId>icoin-trading-external-listeners</artifactId>
             <version>${project.version}</version>
         </dependency>
 

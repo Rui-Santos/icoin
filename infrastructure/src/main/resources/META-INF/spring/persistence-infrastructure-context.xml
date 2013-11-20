@@ -30,11 +30,11 @@
         <constructor-arg ref="mongoDbFactory"/>
     </bean>
 
-    <bean id="mongoTemplate" class="org.axonframework.samples.trader.infra.mongo.CFMongoTemplate">
+    <bean id="mongoTemplate" class="com.icoin.trading.infra.mongo.CFMongoTemplate">
         <constructor-arg ref="mongoDbFactory"/>
     </bean>
 
-    <bean id="mongoSagaTemplate" class="org.axonframework.samples.trader.infra.mongo.CFSagaMongoTemplate">
+    <bean id="mongoSagaTemplate" class="com.icoin.trading.infra.mongo.CFSagaMongoTemplate">
         <constructor-arg ref="mongoDbFactory"/>
     </bean>
 

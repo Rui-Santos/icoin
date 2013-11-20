@@ -21,12 +21,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.axonframework.samples</groupId>
-        <artifactId>axon-trader</artifactId>
+        <groupId>com.icoin.trading</groupId>
+        <artifactId>icoin-trading</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>axon-trader-external-listeners</artifactId>
+    <artifactId>icoin-trading-external-listeners</artifactId>
 
     <dependencies>
 
@@ -43,8 +43,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.axonframework.samples</groupId>
-            <artifactId>axon-trader-core-api</artifactId>
+            <groupId>com.icoin.trading</groupId>
+            <artifactId>icoin-trading-core-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

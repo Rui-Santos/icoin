@@ -21,7 +21,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd">
 
-    <bean class="org.axonframework.samples.trader.tradeengine.command.OrderBookCommandHandler">
+    <bean class="com.icoin.trading.query.tradeengine.command.OrderBookCommandHandler">
         <property name="repository" ref="orderBookRepository"/>
     </bean>
 

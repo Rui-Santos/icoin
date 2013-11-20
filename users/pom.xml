@@ -21,22 +21,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.axonframework.samples</groupId>
-        <artifactId>axon-trader</artifactId>
+        <groupId>com.icoin.trading</groupId>
+        <artifactId>icoin-trading</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>axon-trader-users</artifactId>
+    <artifactId>icoin-trading-users</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-trader-core-api</artifactId>
+            <artifactId>icoin-trading-core-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-trader-users-query</artifactId>
+            <artifactId>icoin-trading-users-query</artifactId>
             <version>${project.version}</version>
         </dependency>
 
