@@ -1,0 +1,60 @@
+footer {
+    background-color: #edeff1;
+    color: #bac1c8;
+    font-size: 15px;
+    padding: 0;
+}
+footer a {
+    color: #9aa4af;
+    font-weight: 700;
+}
+footer p {
+    font-size: 15px;
+    line-height: 20px;
+    margin-bottom: 10px;
+}
+.footer-title {
+    margin: 0 0 22px;
+    padding-top: 21px;
+    font-size: 24px;
+    line-height: 40px;
+}
+.footer-brand {
+    display: block;
+    margin-bottom: 26px;
+    width: 220px;
+}
+.footer-brand img {
+    width: 216px;
+}
+.footer-banner {
+    background-color: #1abc9c;
+    color: #d1f2eb;
+    margin-left: 42px;
+    min-height: 316px;
+    padding: 0 30px 30px;
+}
+.footer-banner .footer-title {
+    color: #ffffff;
+}
+.footer-banner a {
+    color: #b7f5e9;
+    text-decoration: underline;
+}
+.footer-banner a:hover {
+    text-decoration: none;
+}
+.footer-banner ul {
+    list-style-type: none;
+    margin: 0 0 26px;
+    padding: 0;
+}
+.footer-banner ul li {
+    border-top: 1px solid #1bc5a3;
+    line-height: 19px;
+    padding: 6px 0;
+}
+.footer-banner ul li:first-child {
+    border-top: none;
+    padding-top: 1px;
+}
