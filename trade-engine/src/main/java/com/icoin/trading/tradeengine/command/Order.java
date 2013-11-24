@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.query.tradeengine.command;
+package com.icoin.trading.tradeengine.command;
 
 import com.icoin.trading.api.orders.trades.OrderId;
 import com.icoin.trading.api.orders.trades.TradeExecutedEvent;
@@ -23,6 +23,9 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedEntity;
 import com.icoin.trading.api.orders.trades.PortfolioId;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 /**
  * @author Allard Buijze
  */
@@ -30,33 +33,38 @@ class Order extends AbstractAnnotatedEntity {
 
     private OrderId orderId;
     private TransactionId transactionId;
-    private final long itemPrice;
-    private final long tradeCount;
+    private final BigDecimal itemPrice;
+    private final BigDecimal tradeAmount;
     private final PortfolioId portfolioId;
-    private long itemsRemaining;
+    private BigDecimal itemsRemaining;
+    private Date date;
+    private CurrencyPair currencyPair;
 
-    public Order(OrderId orderId, TransactionId transactionId, long itemPrice, long tradeCount, PortfolioId portfolioId) {
+    public Order(OrderId orderId, TransactionId transactionId, BigDecimal itemPrice,
+                 BigDecimal tradeAmount, PortfolioId portfolioId,
+                 CurrencyPair currencyPair) {
         this.orderId = orderId;
         this.transactionId = transactionId;
         this.itemPrice = itemPrice;
-        this.tradeCount = tradeCount;
-        this.itemsRemaining = tradeCount;
+        this.tradeAmount = tradeAmount;
+        this.itemsRemaining = tradeAmount;
         this.portfolioId = portfolioId;
+        this.currencyPair = currencyPair;
     }
 
-    public long getItemPrice() {
+    public BigDecimal getItemPrice() {
         return itemPrice;
     }
 
-    public long getTradeCount() {
-        return tradeCount;
+    public BigDecimal getTradeAmount() {
+        return tradeAmount;
     }
 
     public PortfolioId getPortfolioId() {
         return portfolioId;
     }
 
-    public long getItemsRemaining() {
+    public BigDecimal getItemsRemaining() {
         return itemsRemaining;
     }
 
@@ -64,8 +72,8 @@ class Order extends AbstractAnnotatedEntity {
         return orderId;
     }
 
-    private void recordTraded(long tradeCount) {
-        this.itemsRemaining -= tradeCount;
+    private void recordTraded(BigDecimal tradeAmount) {
+        this.itemsRemaining.subtract(tradeAmount);
     }
 
     public TransactionId getTransactionId() {
@@ -76,7 +84,7 @@ class Order extends AbstractAnnotatedEntity {
     protected void onTradeExecuted(TradeExecutedEvent event) {
         if (orderId.equals(event.getBuyOrderId())
                 || orderId.equals(event.getSellOrderId())) {
-            recordTraded(event.getTradeCount());
+            recordTraded(event.getTradeAmount());
         }
     }
 }

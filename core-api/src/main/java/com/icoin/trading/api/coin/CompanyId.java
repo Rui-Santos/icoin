@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.api.company;
+package com.icoin.trading.api.coin;
 
 import org.axonframework.common.Assert;
 import org.axonframework.domain.IdentifierFactory;

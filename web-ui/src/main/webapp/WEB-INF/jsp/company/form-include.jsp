@@ -31,15 +31,15 @@
                     <td><form:errors path="itemPrice" cssClass="errorBox"/></td>
                 </tr>
                 <tr>
-                    <td><spring:message code="order.tradeCount"/>:</td>
-                    <td><form:input path="tradeCount"/></td>
-                    <td><form:errors path="tradeCount" cssClass="error"/></td>
+                    <td><spring:message code="order.tradeAmount"/>:</td>
+                    <td><form:input path="tradeAmount"/></td>
+                    <td><form:errors path="tradeAmount" cssClass="error"/></td>
                 </tr>
                 <tr>
                     <td colspan="3">
                         <input class="btn primary" type="submit" name="submit" value="Place Order"/>
                         <input class="btn" type="reset" name="reset" value="Reset"/>
-                        <a href="${ctx}/company/${order.companyId}" class="btn">Cancel</a>
+                        <a href="${ctx}/coin/${order.companyId}" class="btn">Cancel</a>
                     </td>
                 </tr>
             </table>

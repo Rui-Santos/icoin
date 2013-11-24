@@ -16,7 +16,7 @@
 
 package com.icoin.trading.query.company.repositories;
 
-import com.icoin.trading.api.company.CompanyId;
+import com.icoin.trading.api.coin.CompanyId;
 import com.icoin.trading.query.company.CompanyEntry;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -22,8 +22,8 @@
 <content tag="breadcrumb">
     <ul class="breadcrumb">
         <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
-        <li><a href="${ctx}/company">Companies</a> <span class="divider">/</span></li>
-        <li><a href="${ctx}/company/${order.companyId}"><c:out value='${order.companyName}'/></a> <span
+        <li><a href="${ctx}/coin">Companies</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/coin/${order.companyId}"><c:out value='${order.companyName}'/></a> <span
                 class="divider">/</span></li>
         <li class="active">Sell</li>
     </ul>

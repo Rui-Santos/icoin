@@ -16,8 +16,8 @@
 
 package com.icoin.trading.webui.init;
 
-import com.icoin.trading.api.company.CompanyId;
-import com.icoin.trading.api.company.CreateCompanyCommand;
+import com.icoin.trading.api.coin.CompanyId;
+import com.icoin.trading.coin.command.CreateCoinCommand;
 import com.icoin.trading.api.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.api.portfolio.stock.AddItemsToPortfolioCommand;
 import com.icoin.trading.api.users.UserId;
@@ -149,18 +149,18 @@ public class DBInit {
 
 
     private void createCompanies(UserId userIdentifier) {
-        CreateCompanyCommand command = new CreateCompanyCommand(new CompanyId(), userIdentifier, "Philips", 1000, 10000);
-        commandBus.dispatch(new GenericCommandMessage<CreateCompanyCommand>(command));
+        CreateCoinCommand command = new CreateCoinCommand(new CompanyId(), userIdentifier, "Philips", 1000, 10000);
+        commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCompanyCommand(new CompanyId(), userIdentifier, "Shell", 500, 5000);
-        commandBus.dispatch(new GenericCommandMessage<CreateCompanyCommand>(command));
+        command = new CreateCoinCommand(new CompanyId(), userIdentifier, "Shell", 500, 5000);
+        commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCompanyCommand(new CompanyId(), userIdentifier, "Bp", 15000, 100000);
-        commandBus.dispatch(new GenericCommandMessage<CreateCompanyCommand>(command));
+        command = new CreateCoinCommand(new CompanyId(), userIdentifier, "Bp", 15000, 100000);
+        commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
 //        To bo used for performance tests
 //        for (int i=0; i < 1000; i++) {
-//            command = new CreateCompanyCommand(userIdentifier, "Stock " + i, 15000, 100000);
+//            command = new CreateCoinCommand(userIdentifier, "Stock " + i, 15000, 100000);
 //            commandBus.dispatch(command);
 //        }
 

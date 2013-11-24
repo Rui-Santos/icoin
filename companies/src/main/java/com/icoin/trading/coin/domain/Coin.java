@@ -14,35 +14,35 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.company.command;
+package com.icoin.trading.coin.domain;
 
-import com.icoin.trading.api.company.CompanyCreatedEvent;
+import com.icoin.trading.coin.event.CoinCreatedEvent;
+import com.icoin.trading.coin.event.OrderBookAddedToCoinEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
-import com.icoin.trading.api.company.CompanyId;
-import com.icoin.trading.api.company.OrderBookAddedToCompanyEvent;
+import com.icoin.trading.api.coin.CompanyId;
 import com.icoin.trading.api.orders.trades.OrderBookId;
 
 /**
  * @author Jettro Coenradie
  */
-class Company extends AbstractAnnotatedAggregateRoot {
+public class Coin extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 8723320580782813954L;
 
     @AggregateIdentifier
     private CompanyId companyId;
 
     @SuppressWarnings("UnusedDeclaration")
-    protected Company() {
+    protected Coin() {
     }
 
-    public Company(CompanyId companyId, String name, long value, long amountOfShares) {
-        apply(new CompanyCreatedEvent(companyId, name, value, amountOfShares));
+    public Coin(CompanyId companyId, String name, long value, long amountOfShares) {
+        apply(new CoinCreatedEvent(companyId, name, value, amountOfShares));
     }
 
     public void addOrderBook(OrderBookId orderBookId) {
-        apply(new OrderBookAddedToCompanyEvent(companyId, orderBookId));
+        apply(new OrderBookAddedToCoinEvent(companyId, orderBookId));
     }
 
     @Override
@@ -51,7 +51,7 @@ class Company extends AbstractAnnotatedAggregateRoot {
     }
 
     @EventHandler
-    public void handle(CompanyCreatedEvent event) {
+    public void handle(CoinCreatedEvent event) {
         this.companyId = event.getCompanyIdentifier();
     }
 }

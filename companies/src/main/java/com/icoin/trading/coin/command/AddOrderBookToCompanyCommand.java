@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.api.company;
+package com.icoin.trading.coin.command;
 
+import com.icoin.trading.api.coin.CompanyId;
 import com.icoin.trading.api.orders.trades.OrderBookId;
 
 /**
- * <p>A new OrderBook is added to the Company</p>
+ * <p>Create the relation between a company and an OrderBook</p>
  *
  * @author Jettro Coenradie
  */
-public class OrderBookAddedToCompanyEvent {
+public class AddOrderBookToCompanyCommand {
     private CompanyId companyId;
     private OrderBookId orderBookId;
 
-    public OrderBookAddedToCompanyEvent(CompanyId companyId, OrderBookId orderBookId) {
+    public AddOrderBookToCompanyCommand(CompanyId companyId, OrderBookId orderBookId) {
         this.companyId = companyId;
         this.orderBookId = orderBookId;
     }

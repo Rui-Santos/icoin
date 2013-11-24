@@ -16,7 +16,7 @@
 
 package com.icoin.trading.query.orderbook;
 
-import com.icoin.trading.api.company.OrderBookAddedToCompanyEvent;
+import com.icoin.trading.api.coin.OrderBookAddedToCompanyEvent;
 import com.icoin.trading.api.orders.trades.AbstractOrderPlacedEvent;
 import com.icoin.trading.api.orders.trades.OrderId;
 import com.icoin.trading.api.orders.trades.TradeExecutedEvent;
@@ -87,7 +87,7 @@ public class OrderBookListener {
         TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();
         tradeExecutedEntry.setCompanyName(orderBookEntry.getCompanyName());
         tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getIdentifier());
-        tradeExecutedEntry.setTradeCount(event.getTradeCount());
+        tradeExecutedEntry.setTradeCount(event.getTradeAmount());
         tradeExecutedEntry.setTradePrice(event.getTradePrice());
 
         tradeExecutedRepository.save(tradeExecutedEntry);
@@ -97,7 +97,7 @@ public class OrderBookListener {
         for (OrderEntry order : orderBookEntry.buyOrders()) {
             if (order.getIdentifier().equals(buyOrderId.toString())) {
                 long itemsRemaining = order.getItemsRemaining();
-                order.setItemsRemaining(itemsRemaining - event.getTradeCount());
+                order.setItemsRemaining(itemsRemaining - event.getTradeAmount());
                 foundBuyOrder = order;
                 break;
             }
@@ -109,7 +109,7 @@ public class OrderBookListener {
         for (OrderEntry order : orderBookEntry.sellOrders()) {
             if (order.getIdentifier().equals(sellOrderId.toString())) {
                 long itemsRemaining = order.getItemsRemaining();
-                order.setItemsRemaining(itemsRemaining - event.getTradeCount());
+                order.setItemsRemaining(itemsRemaining - event.getTradeAmount());
                 foundSellOrder = order;
                 break;
             }

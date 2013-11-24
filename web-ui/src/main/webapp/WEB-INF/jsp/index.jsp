@@ -35,7 +35,7 @@
     </div>
 </content>
 
-<p>There are a few things implemented. You can choose the company to trade stock items for. Before you can
+<p>There are a few things implemented. You can choose the coin to trade stock items for. Before you can
     use them you need to login.</p>
 
 <div class="row">
@@ -69,7 +69,7 @@
 
         <p>If you have logged in, you can go to the companies</p>
 
-        <p><a class="btn primary" href="${ctx}/company">To the items &raquo;</a></p>
+        <p><a class="btn primary" href="${ctx}/coin">To the items &raquo;</a></p>
     </div>
     <div class="span5">
         <h2>Executed trades</h2>

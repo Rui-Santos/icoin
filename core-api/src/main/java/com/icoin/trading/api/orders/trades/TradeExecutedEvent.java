@@ -17,6 +17,7 @@
 package com.icoin.trading.api.orders.trades;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * <p>A new trade has been executed. The event contains the amount of items that are traded and the price for the items
@@ -27,8 +28,8 @@ import java.io.Serializable;
 public class TradeExecutedEvent implements Serializable {
     private static final long serialVersionUID = 6292249351659536792L;
 
-    private final long tradeCount;
-    private final long tradePrice;
+    private final BigDecimal tradeAmount;
+    private final BigDecimal tradePrice;
     private final OrderId buyOrderId;
     private final OrderId sellOrderId;
     private final TransactionId buyTransactionId;
@@ -36,13 +37,13 @@ public class TradeExecutedEvent implements Serializable {
     private final OrderBookId orderBookId;
 
     public TradeExecutedEvent(OrderBookId orderBookId,
-                              long tradeCount,
-                              long tradePrice,
+                              BigDecimal tradeAmount,
+                              BigDecimal tradePrice,
                               OrderId buyOrderId,
                               OrderId sellOrderId,
                               TransactionId buyTransactionId,
                               TransactionId sellTransactionId) {
-        this.tradeCount = tradeCount;
+        this.tradeAmount = tradeAmount;
         this.tradePrice = tradePrice;
         this.buyOrderId = buyOrderId;
         this.sellOrderId = sellOrderId;
@@ -55,11 +56,11 @@ public class TradeExecutedEvent implements Serializable {
         return this.orderBookId;
     }
 
-    public long getTradeCount() {
-        return tradeCount;
+    public BigDecimal getTradeAmount() {
+        return tradeAmount;
     }
 
-    public long getTradePrice() {
+    public BigDecimal getTradePrice() {
         return tradePrice;
     }
 

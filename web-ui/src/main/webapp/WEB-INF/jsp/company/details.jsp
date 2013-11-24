@@ -20,30 +20,30 @@
     <title>Company details</title>
 </head>
 <body>
-<content tag="title"><c:out value="${company.name}"/></content>
+<content tag="title"><c:out value="${coin.name}"/></content>
 <content tag="tagline">
     <span class="detailLabel">Value : </span>
-    <span><c:out value="${company.value}"/></span>
+    <span><c:out value="${coin.value}"/></span>
     <span class="detailLabel"># Shares : </span>
-    <span><c:out value="${company.amountOfShares}"/></span>
+    <span><c:out value="${coin.amountOfShares}"/></span>
 </content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
         <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
-        <li><a href="${ctx}/company">Companies</a> <span class="divider">/</span></li>
-        <li class="active"><c:out value='${company.name}'/></li>
+        <li><a href="${ctx}/coin">Companies</a> <span class="divider">/</span></li>
+        <li class="active"><c:out value='${coin.name}'/></li>
     </ul>
 </content>
 
 
-<c:if test="${company.tradeStarted}">
+<c:if test="${coin.tradeStarted}">
     <div class="row">
         <div class="span14">
             <p>
                 <a class="btn primary"
-                   href="${ctx}/company/buy/<c:out value='${company.identifier}'/>">Buy &raquo;</a>
+                   href="${ctx}/coin/buy/<c:out value='${coin.identifier}'/>">Buy &raquo;</a>
                 <a class="btn primary"
-                   href="${ctx}/company/sell/<c:out value='${company.identifier}'/>">Sell &raquo;</a>
+                   href="${ctx}/coin/sell/<c:out value='${coin.identifier}'/>">Sell &raquo;</a>
             </p>
         </div>
     </div>
@@ -62,7 +62,7 @@
             <tbody>
             <c:forEach items="${sellOrders}" var="order">
                 <tr>
-                    <td><c:out value='${order.tradeCount}'/></td>
+                    <td><c:out value='${order.tradeAmount}'/></td>
                     <td><c:out value='${order.itemPrice}'/></td>
                     <td><c:out value='${order.itemsRemaining}'/></td>
                 </tr>
@@ -83,7 +83,7 @@
             <tbody>
             <c:forEach items="${buyOrders}" var="order">
                 <tr>
-                    <td><c:out value='${order.tradeCount}'/></td>
+                    <td><c:out value='${order.tradeAmount}'/></td>
                     <td><c:out value='${order.itemPrice}'/></td>
                     <td><c:out value='${order.itemsRemaining}'/></td>
                 </tr>
@@ -103,7 +103,7 @@
             <tbody>
             <c:forEach items="${executedTrades}" var="trade">
                 <tr>
-                    <td><c:out value='${trade.tradeCount}'/></td>
+                    <td><c:out value='${trade.tradeAmount}'/></td>
                     <td><c:out value='${trade.tradePrice}'/></td>
                 </tr>
             </c:forEach>

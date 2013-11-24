@@ -32,7 +32,7 @@
     <c:forEach items="${orderBook.orders}" var="order">
         <tr>
             <td><c:out value='${order.type}'/></td>
-            <td><c:out value='${order.tradeCount}'/></td>
+            <td><c:out value='${order.tradeAmount}'/></td>
             <td><c:out value='${order.itemPrice}'/></td>
             <td><c:out value='${order.itemsRemaining}'/></td>
             <td><c:out value='${order.userId}'/></td>

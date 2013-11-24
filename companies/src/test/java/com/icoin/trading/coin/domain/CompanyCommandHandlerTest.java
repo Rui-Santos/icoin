@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.company.command;
+package com.icoin.trading.coin.domain;
 
-import com.icoin.trading.api.company.CompanyCreatedEvent;
-import com.icoin.trading.api.company.CompanyId;
-import com.icoin.trading.api.company.CreateCompanyCommand;
+import com.icoin.trading.coin.command.CoinCommandHandler;
+import com.icoin.trading.coin.command.CreateCoinCommand;
+import com.icoin.trading.coin.event.CoinCreatedEvent;
+import com.icoin.trading.api.coin.CompanyId;
 import com.icoin.trading.api.users.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
@@ -34,8 +35,8 @@ public class CompanyCommandHandlerTest {
 
     @Before
     public void setUp() {
-        fixture = Fixtures.newGivenWhenThenFixture(Company.class);
-        CompanyCommandHandler commandHandler = new CompanyCommandHandler();
+        fixture = Fixtures.newGivenWhenThenFixture(Coin.class);
+        CoinCommandHandler commandHandler = new CoinCommandHandler();
         commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);
     }
@@ -44,10 +45,10 @@ public class CompanyCommandHandlerTest {
     public void testCreateCompany() {
         CompanyId aggregateIdentifier = new CompanyId();
         UserId userId = new UserId();
-        CreateCompanyCommand command = new CreateCompanyCommand(aggregateIdentifier, userId, "TestItem", 1000, 10000);
+        CreateCoinCommand command = new CreateCoinCommand(aggregateIdentifier, userId, "TestItem", 1000, 10000);
 
         fixture.given()
                 .when(command)
-                .expectEvents(new CompanyCreatedEvent(aggregateIdentifier, "TestItem", 1000, 10000));
+                .expectEvents(new CoinCreatedEvent(aggregateIdentifier, "TestItem", 1000, 10000));
     }
 }

@@ -17,7 +17,7 @@
 package com.icoin.trading.query.company;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
-import com.icoin.trading.api.company.CompanyCreatedEvent;
+import com.icoin.trading.api.coin.CompanyCreatedEvent;
 import com.icoin.trading.query.company.repositories.CompanyQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

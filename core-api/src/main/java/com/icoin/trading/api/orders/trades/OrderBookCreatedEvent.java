@@ -24,9 +24,11 @@ package com.icoin.trading.api.orders.trades;
 public class OrderBookCreatedEvent {
 
     private OrderBookId orderBookId;
+    private CurrencyPair currencyPair;
 
-    public OrderBookCreatedEvent(OrderBookId orderBookId) {
+    public OrderBookCreatedEvent(OrderBookId orderBookId, CurrencyPair currencyPair) {
         this.orderBookId = orderBookId;
+        this.currencyPair = currencyPair;
     }
 
     public OrderBookId getOrderBookIdentifier() {

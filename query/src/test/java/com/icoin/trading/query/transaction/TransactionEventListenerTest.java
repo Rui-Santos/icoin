@@ -18,7 +18,7 @@ package com.icoin.trading.query.transaction;
 
 import com.icoin.trading.api.orders.trades.TransactionId;
 import com.icoin.trading.api.orders.transaction.BuyTransactionStartedEvent;
-import com.icoin.trading.api.company.CompanyId;
+import com.icoin.trading.api.coin.CompanyId;
 import com.icoin.trading.api.orders.transaction.SellTransactionCancelledEvent;
 import com.icoin.trading.api.orders.transaction.SellTransactionStartedEvent;
 import com.icoin.trading.query.orderbook.OrderBookEntry;

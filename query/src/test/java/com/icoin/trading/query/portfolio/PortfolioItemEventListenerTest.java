@@ -16,7 +16,7 @@
 
 package com.icoin.trading.query.portfolio;
 
-import com.icoin.trading.api.company.CompanyId;
+import com.icoin.trading.api.coin.CompanyId;
 import com.icoin.trading.api.orders.trades.TransactionId;
 import com.icoin.trading.api.portfolio.stock.ItemReservationCancelledForPortfolioEvent;
 import com.icoin.trading.api.portfolio.stock.ItemReservationConfirmedForPortfolioEvent;

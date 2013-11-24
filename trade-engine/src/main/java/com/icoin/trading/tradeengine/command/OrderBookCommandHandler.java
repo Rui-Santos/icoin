@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.query.tradeengine.command;
+package com.icoin.trading.tradeengine.command;
 
 import com.icoin.trading.api.orders.trades.CreateOrderBookCommand;
 import com.icoin.trading.api.orders.trades.CreateSellOrderCommand;

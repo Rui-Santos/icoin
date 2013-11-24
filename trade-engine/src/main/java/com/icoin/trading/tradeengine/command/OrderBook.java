@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.query.tradeengine.command;
+package com.icoin.trading.tradeengine.command;
 
 import com.icoin.trading.api.orders.trades.BuyOrderPlacedEvent;
 import com.icoin.trading.api.orders.trades.OrderBookCreatedEvent;
@@ -29,6 +29,7 @@ import org.axonframework.eventsourcing.annotation.EventSourcedMember;
 import com.icoin.trading.api.orders.trades.OrderBookId;
 import com.icoin.trading.api.orders.trades.PortfolioId;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -42,6 +43,8 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     @AggregateIdentifier
     private OrderBookId orderBookId;
 
+    private CurrencyPair currencyPair;
+
     @EventSourcedMember
     private SortedSet<Order> buyOrders = new TreeSet<Order>(new OrderComparator());
     @EventSourcedMember
@@ -51,8 +54,8 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     protected OrderBook() {
     }
 
-    public OrderBook(OrderBookId identifier) {
-        apply(new OrderBookCreatedEvent(identifier));
+    public OrderBook(OrderBookId identifier,CurrencyPair currencyPair) {
+        apply(new OrderBookCreatedEvent(identifier, currencyPair));
     }
 
     public void addBuyOrder(OrderId orderId, TransactionId transactionId, long tradeCount,
@@ -72,11 +75,15 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
         while (!tradingDone && !buyOrders.isEmpty() && !sellOrders.isEmpty()) {
             Order highestBuyer = buyOrders.last();
             Order lowestSeller = sellOrders.first();
-            if (highestBuyer.getItemPrice() >= lowestSeller.getItemPrice()) {
-                long matchedTradeCount = Math.min(highestBuyer.getItemsRemaining(), lowestSeller.getItemsRemaining());
+            if (highestBuyer.getItemPrice().compareTo(lowestSeller.getItemPrice())>=0) {
+                //highestBuyer.price >= lowestSeller.price
+                BigDecimal matchedTradeAmount = highestBuyer.getItemsRemaining().min(lowestSeller.getItemsRemaining());
+
+
+
                 long matchedTradePrice = ((highestBuyer.getItemPrice() + lowestSeller.getItemPrice()) / 2);
                 apply(new TradeExecutedEvent(orderBookId,
-                        matchedTradeCount,
+                        matchedTradeAmount,
                         matchedTradePrice,
                         highestBuyer.getOrderId(),
                         lowestSeller.getOrderId(),
@@ -115,10 +122,10 @@ class OrderBook extends AbstractAnnotatedAggregateRoot {
     protected void onTradeExecuted(TradeExecutedEvent event) {
         Order highestBuyer = buyOrders.last();
         Order lowestSeller = sellOrders.first();
-        if (highestBuyer.getItemsRemaining() <= event.getTradeCount()) {
+        if (highestBuyer.getItemsRemaining() <= event.getTradeAmount()) {
             buyOrders.remove(highestBuyer);
         }
-        if (lowestSeller.getItemsRemaining() <= event.getTradeCount()) {
+        if (lowestSeller.getItemsRemaining() <= event.getTradeAmount()) {
             sellOrders.remove(lowestSeller);
         }
     }

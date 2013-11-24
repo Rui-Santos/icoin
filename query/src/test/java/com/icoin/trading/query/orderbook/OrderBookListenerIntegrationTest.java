@@ -16,9 +16,9 @@
 
 package com.icoin.trading.query.orderbook;
 
-import com.icoin.trading.api.company.CompanyCreatedEvent;
-import com.icoin.trading.api.company.CompanyId;
-import com.icoin.trading.api.company.OrderBookAddedToCompanyEvent;
+import com.icoin.trading.api.coin.CompanyCreatedEvent;
+import com.icoin.trading.api.coin.CompanyId;
+import com.icoin.trading.api.coin.OrderBookAddedToCompanyEvent;
 import com.icoin.trading.api.orders.trades.OrderId;
 import com.icoin.trading.api.orders.trades.TradeExecutedEvent;
 import com.icoin.trading.api.orders.trades.TransactionId;

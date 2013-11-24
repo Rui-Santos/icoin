@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.api.company;
+package com.icoin.trading.coin.command;
+
+
+import com.icoin.trading.api.coin.CompanyId;
+import com.icoin.trading.api.users.UserId;
 
 /**
- * <p>A new company is created with a certain value and an amount of shares. Those two values can be used to calculate
- * the starting point for the value of a share.</p>
+ * <p>Create a new company by proving the name, the estimated value of the company and the amount of shares that are
+ * available for the company. You also must provide the id of the user that wants to create the company.</p>
  *
  * @author Jettro Coenradie
  */
-public class CompanyCreatedEvent {
+public class CreateCoinCommand {
     private CompanyId companyId;
+    private UserId userId;
     private String companyName;
     private long companyValue;
     private long amountOfShares;
 
-    public CompanyCreatedEvent(CompanyId companyId, String companyName, long amountOfShares, long companyValue) {
+    public CreateCoinCommand(CompanyId companyId, UserId userId, String companyName, long companyValue, long amountOfShares) {
+        this.companyId = companyId;
         this.amountOfShares = amountOfShares;
         this.companyName = companyName;
         this.companyValue = companyValue;
-        this.companyId = companyId;
-    }
-
-    public CompanyId getCompanyIdentifier() {
-        return this.companyId;
+        this.userId = userId;
     }
 
     public long getAmountOfShares() {
@@ -49,5 +51,13 @@ public class CompanyCreatedEvent {
 
     public long getCompanyValue() {
         return companyValue;
+    }
+
+    public UserId getUserId() {
+        return userId;
+    }
+
+    public CompanyId getCompanyId() {
+        return companyId;
     }
 }

@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.company.command;
+package com.icoin.trading.coin.event;
 
 import com.icoin.trading.api.orders.trades.CreateOrderBookCommand;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import com.icoin.trading.api.company.AddOrderBookToCompanyCommand;
-import com.icoin.trading.api.company.CompanyCreatedEvent;
+import com.icoin.trading.coin.command.AddOrderBookToCompanyCommand;
 import com.icoin.trading.api.orders.trades.OrderBookId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +33,12 @@ import org.springframework.stereotype.Component;
  * @author Jettro Coenradie
  */
 @Component
-public class CompanyOrderBookListener {
-    private final static Logger logger = LoggerFactory.getLogger(CompanyOrderBookListener.class);
+public class CoinOrderBookListener {
+    private final static Logger logger = LoggerFactory.getLogger(CoinOrderBookListener.class);
     private CommandBus commandBus;
 
     @EventHandler
-    public void handleCompanyCreated(CompanyCreatedEvent event) {
+    public void handleCompanyCreated(CoinCreatedEvent event) {
         logger.debug("About to dispatch a new command to create an OrderBook for the company {}",
                 event.getCompanyIdentifier());
 

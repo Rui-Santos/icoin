@@ -121,9 +121,9 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "sellTransactionId", keyName = "transactionIdentifier")
     public void handle(TradeExecutedEvent event) {
         logger.debug("Sell Transaction {} is executed, items for transaction are {} for a price of {}",
-                new Object[]{getTransactionIdentifier(), event.getTradeCount(), event.getTradePrice()});
+                new Object[]{getTransactionIdentifier(), event.getTradeAmount(), event.getTradePrice()});
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(getTransactionIdentifier(),
-                event.getTradeCount(),
+                event.getTradeAmount(),
                 event.getTradePrice());
         getCommandBus().dispatch(new GenericCommandMessage<ExecutedTransactionCommand>(command));
     }
