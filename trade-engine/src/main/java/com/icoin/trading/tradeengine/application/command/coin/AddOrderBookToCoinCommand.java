@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012. Axon Framework
+ * Copyright (c) 2012. Axon Framework
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.tradeengine.domain.events.order;
+package com.icoin.trading.tradeengine.application.command.coin;
 
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 
 /**
- * <p>A new OrderBook is created for the coin with the provided identifier.</p>
+ * <p>Create the relation between a coin and an OrderBook</p>
  *
  * @author Jettro Coenradie
  */
-public class OrderBookCreatedEvent {
-
+public class AddOrderBookToCoinCommand {
+    private CoinId coinId;
     private OrderBookId orderBookId;
-    private CurrencyPair currencyPair;
 
-    public OrderBookCreatedEvent(OrderBookId orderBookId, CurrencyPair currencyPair) {
+    public AddOrderBookToCoinCommand(CoinId coinId, OrderBookId orderBookId) {
+        this.coinId = coinId;
         this.orderBookId = orderBookId;
-        this.currencyPair = currencyPair;
     }
 
-    public OrderBookId getOrderBookIdentifier() {
-        return this.orderBookId;
+    public CoinId getCoinId() {
+        return coinId;
+    }
+
+    public OrderBookId getOrderBookId() {
+        return orderBookId;
     }
 }

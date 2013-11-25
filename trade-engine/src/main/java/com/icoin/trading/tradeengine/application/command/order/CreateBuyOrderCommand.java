@@ -16,10 +16,10 @@
 
 package com.icoin.trading.tradeengine.application.command.order;
 
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.OrderId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
-import com.icoin.trading.api.orders.trades.TransactionId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
 /**
  * <p>Create a new Buy Order.</p>

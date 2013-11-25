@@ -24,17 +24,17 @@
 		http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
-    <mongo:repositories base-package="**.query.*.repositories" mongo-template-ref="mongoSpringTemplate"/>
+    <mongo:repositories base-package="com.icoin.trading.tradeengine.query.*.repositories" mongo-template-ref="mongoSpringTemplate"/>
 
     <bean id="mongoSpringTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg ref="mongoDbFactory"/>
     </bean>
 
-    <bean id="mongoTemplate" class="com.icoin.trading.infra.mongo.CFMongoTemplate">
+    <bean id="mongoTemplate" class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.CFMongoTemplate">
         <constructor-arg ref="mongoDbFactory"/>
     </bean>
 
-    <bean id="mongoSagaTemplate" class="com.icoin.trading.infra.mongo.CFSagaMongoTemplate">
+    <bean id="mongoSagaTemplate" class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.CFSagaMongoTemplate">
         <constructor-arg ref="mongoDbFactory"/>
     </bean>
 

@@ -34,7 +34,7 @@
             classpath:META-INF/spring/persistence-infrastructure-context.xml,
             classpath:META-INF/spring/query-context.xml,
             classpath:META-INF/spring/users-query-context.xml,
-            classpath:META-INF/spring/orders-context.xml,
+            classpath:META-INF/spring/order-context.xml,
             classpath:META-INF/spring/trade-engine-context.xml,
             classpath:META-INF/spring/users-context.xml,
             classpath:META-INF/spring/companies-context.xml,

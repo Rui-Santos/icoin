@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.application.command.order;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 
 /**
@@ -25,15 +26,19 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
  * @author Jettro Coenradie
  */
 public class CreateOrderBookCommand {
-
+    private CurrencyPair currencyPair;
     private OrderBookId orderBookId;
 
-    public CreateOrderBookCommand(OrderBookId orderBookId) {
+    public CreateOrderBookCommand(OrderBookId orderBookId, CurrencyPair currencyPair) {
         this.orderBookId = orderBookId;
+        this.currencyPair = currencyPair;
     }
 
     public OrderBookId getOrderBookIdentifier() {
         return this.orderBookId;
     }
 
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
+    }
 }

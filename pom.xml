@@ -23,7 +23,7 @@
     <packaging>pom</packaging>
     <version>0.1-SNAPSHOT</version>
 
-    <name>Axon Trader Sample Project</name>
+    <name>iCoin Trader Project</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,17 +39,11 @@
     </properties>
 
     <modules>
-        <!--<module>core-api</module>-->
-        <module>infrastructure</module>
-        <module>query</module>
-        <module>orders</module>
+        <module>base</module>
         <module>trade-engine</module>
         <module>users</module>
-        <!--<module>users-query</module>-->
-        <module>coins</module>
+        <!--<module>fee</module>-->
         <module>web-ui</module>
-        <!--<module>external-listeners</module>-->
-        <!--<module>icoin-base</module>-->
     </modules>
 
     <build>

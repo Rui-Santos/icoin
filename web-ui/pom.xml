@@ -27,7 +27,7 @@
     <groupId>com.icoin.trading</groupId>
     <artifactId>icoin-trading-webui</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <name>Axon Trader Sample - Web ui</name>
+    <name>iCoin Trader - Web ui</name>
     <packaging>war</packaging>
 
     <build>
@@ -48,11 +48,6 @@
     <dependencies>
         <!-- Internal dependencies -->
         <dependency>
-            <groupId>com.icoin.trading</groupId>
-            <artifactId>icoin-trading-orders</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>icoin-trading-trade-engine</artifactId>
             <version>${project.version}</version>
@@ -63,28 +58,13 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>icoin-trading-users-query</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>icoin-trading-companies</artifactId>
+            <groupId>com.icoin.trading</groupId>
+            <artifactId>icoin-trading-base</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.icoin.trading</groupId>
-            <artifactId>icoin-trading-infrastructure</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.icoin.trading</groupId>
-            <artifactId>icoin-trading-query</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.icoin.trading</groupId>
-            <artifactId>icoin-trading-external-listeners</artifactId>
+            <artifactId>icoin-trading-trade-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
 
