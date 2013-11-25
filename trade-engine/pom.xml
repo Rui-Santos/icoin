@@ -56,19 +56,13 @@
         <dependency>
             <groupId>com.homhon</groupId>
             <artifactId>core</artifactId>
-            <version>${project.version}</version>
+            <version>${homhon.core.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.homhon</groupId>
             <artifactId>domain-base</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.homhon</groupId>
-            <artifactId>coin</artifactId>
-            <version>${project.version}</version>
+            <version>${homhon.domainbase.version}</version>
         </dependency>
 
         <dependency>

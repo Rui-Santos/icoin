@@ -28,6 +28,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <axon.version>2.0-rc3</axon.version>
+        <homhon.core.version>1.0-SNAPSHOT</homhon.core.version>
+        <homhon.domainbase.version>1.0-SNAPSHOT</homhon.domainbase.version>
         <slf4j.version>1.6.6</slf4j.version>
         <spring.version>3.1.1.RELEASE</spring.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
