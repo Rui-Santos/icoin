@@ -37,6 +37,7 @@ public class CloudApplicationContextInitializer
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
+        //cloud foundry
         CloudEnvironment env = new CloudEnvironment();
         if (env.getInstanceInfo() != null) {
             logger.info("Cloud API: {}", env.getCloudApiUri());

@@ -22,8 +22,8 @@
 
         <form:form commandName="order">
             <form:errors path="*" cssClass="alert-message block-message error" element="div"/>
-            <form:hidden path="companyId"/>
-            <form:hidden path="companyName"/>
+            <form:hidden path="coinId"/>
+            <form:hidden path="coinName"/>
             <table>
                 <tr>
                     <td><spring:message code="order.price"/>:</td>
@@ -39,7 +39,7 @@
                     <td colspan="3">
                         <input class="btn primary" type="submit" name="submit" value="Place Order"/>
                         <input class="btn" type="reset" name="reset" value="Reset"/>
-                        <a href="${ctx}/coin/${order.companyId}" class="btn">Cancel</a>
+                        <a href="${ctx}/coin/${order.coinId}" class="btn">Cancel</a>
                     </td>
                 </tr>
             </table>

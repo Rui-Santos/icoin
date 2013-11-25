@@ -47,7 +47,7 @@
             <td><c:out value='${portfolio.amountOfMoney}'/></td>
             <td>
                 <c:forEach items="${portfolio.itemsInPossession}" var="item">
-                    <c:out value="${item.value.companyName}"/>&nbsp;
+                    <c:out value="${item.value.coinName}"/>&nbsp;
                 </c:forEach>
             </td>
             <td><a href="${ctx}/admin/portfolio/<c:out value='${portfolio.identifier}'/>">details</a></td>

@@ -54,7 +54,7 @@
             eb.registerHandler("updates.trades", function (msg, replyTo) {
                 var results = msg.tradeExecuted;
                 $('#tradesTable tbody').prepend(
-                        "<tr><td>" + results.companyName +
+                        "<tr><td>" + results.coinName +
                                 "</td><td>" + results.count +
                                 "</td><td>" + results.price + "</td></tr>");
                 $('#lastUpdate').text(" " + new Date());

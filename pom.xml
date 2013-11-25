@@ -39,16 +39,17 @@
     </properties>
 
     <modules>
-        <module>core-api</module>
+        <!--<module>core-api</module>-->
         <module>infrastructure</module>
         <module>query</module>
         <module>orders</module>
         <module>trade-engine</module>
         <module>users</module>
-        <module>users-query</module>
-        <module>companies</module>
+        <!--<module>users-query</module>-->
+        <module>coins</module>
         <module>web-ui</module>
-        <module>external-listeners</module>
+        <!--<module>external-listeners</module>-->
+        <!--<module>icoin-base</module>-->
     </modules>
 
     <build>

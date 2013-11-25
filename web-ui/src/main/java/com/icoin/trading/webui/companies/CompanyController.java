@@ -17,22 +17,22 @@
 package com.icoin.trading.webui.companies;
 
 import com.icoin.trading.api.orders.trades.TransactionId;
-import com.icoin.trading.api.orders.transaction.StartSellTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
 import com.icoin.trading.query.company.CompanyEntry;
 import com.icoin.trading.query.orderbook.repositories.OrderBookQueryRepository;
 import com.icoin.trading.query.portfolio.PortfolioEntry;
 import com.icoin.trading.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
-import com.icoin.trading.query.users.repositories.UserQueryRepository;
+import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import com.icoin.trading.api.orders.transaction.StartBuyTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.query.company.repositories.CompanyQueryRepository;
 import com.icoin.trading.query.orderbook.OrderBookEntry;
-import com.icoin.trading.query.users.UserEntry;
+import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.api.orders.trades.OrderBookId;
 import com.icoin.trading.api.orders.trades.PortfolioId;
 import com.icoin.trading.webui.order.AbstractOrder;

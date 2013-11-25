@@ -52,7 +52,7 @@
         <tr>
             <td><c:out value='${item.name}'/></td>
             <td><c:out value='${item.value}'/></td>
-            <td><c:out value='${item.amountOfShares}'/></td>
+            <td><c:out value='${item.coinInitialAmount}'/></td>
             <td><a href="${ctx}/coin/<c:out value='${item.identifier}'/>">details</a></td>
         </tr>
     </c:forEach>

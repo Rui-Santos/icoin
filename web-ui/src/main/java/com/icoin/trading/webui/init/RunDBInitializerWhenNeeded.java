@@ -16,7 +16,7 @@
 
 package com.icoin.trading.webui.init;
 
-import com.icoin.trading.query.users.UserEntry;
+import com.icoin.trading.users.query.UserEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;

@@ -16,15 +16,15 @@
 
 package com.icoin.trading.app.command.user;
 
-import com.icoin.trading.api.users.UserId;
-import com.icoin.trading.query.users.repositories.UserQueryRepository;
-import com.icoin.trading.users.command.UserCommandHandler;
-import com.icoin.trading.api.users.AuthenticateUserCommand;
-import com.icoin.trading.api.users.CreateUserCommand;
-import com.icoin.trading.api.users.UserAuthenticatedEvent;
-import com.icoin.trading.api.users.UserCreatedEvent;
-import com.icoin.trading.query.users.UserEntry;
-import com.icoin.trading.users.command.User;
+import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.users.query.repositories.UserQueryRepository;
+import com.icoin.trading.users.application.command.UserCommandHandler;
+import com.icoin.trading.users.application.command.AuthenticateUserCommand;
+import com.icoin.trading.users.application.command.CreateUserCommand;
+import com.icoin.trading.users.domain.event.UserAuthenticatedEvent;
+import com.icoin.trading.users.domain.event.UserCreatedEvent;
+import com.icoin.trading.users.query.UserEntry;
+import com.icoin.trading.users.domain.User;
 import com.icoin.trading.users.util.DigestUtils;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;

@@ -25,7 +25,7 @@
     <span class="detailLabel">Value : </span>
     <span><c:out value="${coin.value}"/></span>
     <span class="detailLabel"># Shares : </span>
-    <span><c:out value="${coin.amountOfShares}"/></span>
+    <span><c:out value="${coin.coinInitialAmount}"/></span>
 </content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">

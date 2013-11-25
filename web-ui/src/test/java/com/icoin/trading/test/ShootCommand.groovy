@@ -38,7 +38,7 @@ def companyNames = [:]
 def orderBooks = []
 commandSender.obtainOrderBooks().each() {
     orderBooks.add it.identifier
-    companyNames.put(it.identifier, it.companyName)
+    companyNames.put(it.identifier, it.getCoinName)
 }
 def commandCreator = new CommandCreator(orderBooks)
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.orders.command;
+package com.icoin.trading.tradeengine.orders.command;
 
 import com.icoin.trading.api.orders.trades.TransactionId;
 import com.icoin.trading.api.orders.transaction.BuyTransactionConfirmedEvent;

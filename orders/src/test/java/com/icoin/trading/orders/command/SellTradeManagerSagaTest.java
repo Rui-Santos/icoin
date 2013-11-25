@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.orders.command;
+package com.icoin.trading.tradeengine.orders.command;
 
 import com.icoin.trading.api.orders.trades.OrderId;
 import com.icoin.trading.api.orders.trades.TradeExecutedEvent;
@@ -22,9 +22,9 @@ import com.icoin.trading.api.orders.trades.TransactionId;
 import com.icoin.trading.api.orders.transaction.SellTransactionConfirmedEvent;
 import com.icoin.trading.api.orders.transaction.SellTransactionExecutedEvent;
 import com.icoin.trading.api.portfolio.stock.NotEnoughItemsAvailableToReserveInPortfolio;
-import com.icoin.trading.orders.command.matchers.CancelItemReservationForPortfolioCommandMatcher;
-import com.icoin.trading.orders.command.matchers.CreateSellOrderCommandMatcher;
-import com.icoin.trading.orders.command.matchers.ExecutedTransactionCommandMatcher;
+import com.icoin.trading.tradeengine.orders.command.matchers.CancelItemReservationForPortfolioCommandMatcher;
+import com.icoin.trading.tradeengine.orders.command.matchers.CreateSellOrderCommandMatcher;
+import com.icoin.trading.tradeengine.orders.command.matchers.ExecutedTransactionCommandMatcher;
 import com.icoin.trading.api.orders.transaction.SellTransactionCancelledEvent;
 import com.icoin.trading.api.orders.transaction.SellTransactionPartiallyExecutedEvent;
 import com.icoin.trading.api.orders.transaction.SellTransactionStartedEvent;
@@ -32,10 +32,10 @@ import com.icoin.trading.api.portfolio.stock.ItemsReservedEvent;
 import com.icoin.trading.api.orders.trades.OrderBookId;
 import com.icoin.trading.api.orders.trades.PortfolioId;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
-import com.icoin.trading.orders.command.matchers.ConfirmItemReservationForPortfolioCommandMatcher;
-import com.icoin.trading.orders.command.matchers.ConfirmTransactionCommandMatcher;
-import com.icoin.trading.orders.command.matchers.DepositMoneyToPortfolioCommandMatcher;
-import com.icoin.trading.orders.command.matchers.ReservedItemsCommandMatcher;
+import com.icoin.trading.tradeengine.orders.command.matchers.ConfirmItemReservationForPortfolioCommandMatcher;
+import com.icoin.trading.tradeengine.orders.command.matchers.ConfirmTransactionCommandMatcher;
+import com.icoin.trading.tradeengine.orders.command.matchers.DepositMoneyToPortfolioCommandMatcher;
+import com.icoin.trading.tradeengine.orders.command.matchers.ReservedItemsCommandMatcher;
 import org.junit.Before;
 import org.junit.Test;
 

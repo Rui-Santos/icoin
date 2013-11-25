@@ -18,9 +18,9 @@ package com.icoin.trading.webui.init;
 
 import com.icoin.trading.api.coin.CompanyId;
 import com.icoin.trading.coin.command.CreateCoinCommand;
-import com.icoin.trading.api.portfolio.cash.DepositCashCommand;
-import com.icoin.trading.api.portfolio.stock.AddItemsToPortfolioCommand;
-import com.icoin.trading.api.users.UserId;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
+import com.icoin.trading.users.domain.UserId;
 import com.icoin.trading.query.company.CompanyEntry;
 import com.icoin.trading.query.orderbook.OrderEntry;
 import com.icoin.trading.query.orderbook.repositories.OrderBookQueryRepository;
@@ -34,10 +34,10 @@ import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.saga.repository.mongo.MongoTemplate;
 import com.icoin.trading.query.company.repositories.CompanyQueryRepository;
 import com.icoin.trading.query.orderbook.OrderBookEntry;
-import com.icoin.trading.query.users.UserEntry;
+import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.api.orders.trades.OrderBookId;
 import com.icoin.trading.api.orders.trades.PortfolioId;
-import com.icoin.trading.api.users.CreateUserCommand;
+import com.icoin.trading.users.application.command.CreateUserCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

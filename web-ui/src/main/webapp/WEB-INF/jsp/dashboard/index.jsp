@@ -53,7 +53,7 @@
                     <tbody>
                     <c:forEach var="item" items="${portfolio.itemsInPossession}">
                         <tr>
-                            <td><c:out value="${item.value.companyName}"/></td>
+                            <td><c:out value="${item.value.coinName}"/></td>
                             <td><c:out value="${item.value.amount}"/></td>
                         </tr>
                     </c:forEach>
@@ -74,7 +74,7 @@
                     <tbody>
                     <c:forEach var="item" items="${portfolio.itemsReserved}">
                         <tr>
-                            <td><c:out value="${item.value.companyName}"/></td>
+                            <td><c:out value="${item.value.coinName}"/></td>
                             <td><c:out value="${item.value.amount}"/></td>
                         </tr>
                     </c:forEach>
@@ -102,7 +102,7 @@
             <tbody>
             <c:forEach var="item" items="${transactions}">
                 <tr>
-                    <td><c:out value="${item.companyName}"/></td>
+                    <td><c:out value="${item.coinName}"/></td>
                     <td><c:out value="${item.type}"/></td>
                     <td><c:out value="${item.amountOfItems}"/></td>
                     <td><c:out value="${item.pricePerItem}"/></td>

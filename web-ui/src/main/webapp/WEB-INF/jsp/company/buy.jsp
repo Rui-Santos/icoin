@@ -17,13 +17,13 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   --%>
-<content tag="title">Buy order for : <c:out value='${order.companyName}'/></content>
+<content tag="title">Buy order for : <c:out value='${order.coinName}'/></content>
 <content tag="tagline">Enter items to buy and for how much</content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
         <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
         <li><a href="${ctx}/coin">Companies</a> <span class="divider">/</span></li>
-        <li><a href="${ctx}/coin/${order.companyId}"><c:out value='${order.companyName}'/></a> <span
+        <li><a href="${ctx}/coin/${order.coinId}"><c:out value='${order.coinName}'/></a> <span
                 class="divider">/</span></li>
         <li class="active">Buy</li>
     </ul>

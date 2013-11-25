@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.orders.command.matchers;
+package com.icoin.trading.tradeengine.orders.command.matchers;
 
 import com.icoin.trading.api.portfolio.cash.ReserveCashCommand;
 import com.icoin.trading.api.orders.trades.PortfolioId;

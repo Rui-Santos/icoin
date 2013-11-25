@@ -16,7 +16,7 @@
 
 package com.icoin.trading.webui.util;
 
-import com.icoin.trading.api.users.UserAccount;
+import com.icoin.trading.users.domain.UserAccount;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**

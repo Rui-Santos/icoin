@@ -50,13 +50,13 @@
         <h3>In possession</h3>
         <ul class="unstyled">
             <c:forEach var="item" items="${portfolio.itemsInPossession}">
-                <li><c:out value="${item.value.companyName}"/>:&nbsp<c:out value="${item.value.amount}"/></li>
+                <li><c:out value="${item.value.coinName}"/>:&nbsp<c:out value="${item.value.amount}"/></li>
             </c:forEach>
         </ul>
         <h3>Reserved</h3>
         <ul class="unstyled">
             <c:forEach var="item" items="${portfolio.itemsReserved}">
-                <li><c:out value="${item.value.companyName}"/>:&nbsp<c:out value="${item.value.amount}"/></li>
+                <li><c:out value="${item.value.coinName}"/>:&nbsp<c:out value="${item.value.amount}"/></li>
             </c:forEach>
         </ul>
     </div>
@@ -65,7 +65,7 @@
             <select name="orderbook" class="span3">
                 <c:forEach items="${orderbooks}" var="orderbook">
                     <option value="<c:out value="${orderbook.identifier}"/>"><c:out
-                            value="${orderbook.companyName}"/></option>
+                            value="${orderbook.coinName}"/></option>
                 </c:forEach>
             </select>
             <input name="amount" value="0" class="span2"/>

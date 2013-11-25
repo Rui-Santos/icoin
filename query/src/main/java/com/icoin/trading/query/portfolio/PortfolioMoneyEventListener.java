@@ -24,7 +24,7 @@ import com.icoin.trading.api.portfolio.cash.CashReservationConfirmedEvent;
 import com.icoin.trading.api.portfolio.cash.CashReservedEvent;
 import com.icoin.trading.api.portfolio.cash.CashWithdrawnEvent;
 import com.icoin.trading.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.query.users.repositories.UserQueryRepository;
+import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

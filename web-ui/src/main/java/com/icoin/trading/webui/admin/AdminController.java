@@ -18,8 +18,8 @@ package com.icoin.trading.webui.admin;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import com.icoin.trading.api.portfolio.stock.AddItemsToPortfolioCommand;
-import com.icoin.trading.api.portfolio.cash.DepositCashCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.query.orderbook.OrderBookEntry;
 import com.icoin.trading.query.orderbook.repositories.OrderBookQueryRepository;
 import com.icoin.trading.query.portfolio.PortfolioEntry;

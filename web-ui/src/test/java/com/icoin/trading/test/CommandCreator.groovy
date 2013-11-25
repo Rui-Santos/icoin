@@ -16,8 +16,8 @@
 
 package com.icoin.trading.query.test
 
-import com.icoin.trading.api.orders.transaction.StartBuyTransactionCommand
-import com.icoin.trading.api.orders.transaction.StartSellTransactionCommand
+import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand
+import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand
 import com.icoin.trading.query.portfolio.PortfolioEntry
 import com.icoin.trading.api.orders.trades.OrderBookId
 import com.icoin.trading.api.orders.trades.PortfolioId

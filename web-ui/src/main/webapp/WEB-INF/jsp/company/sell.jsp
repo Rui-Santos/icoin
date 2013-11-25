@@ -17,13 +17,13 @@
   ~ limitations under the License.
   --%>
 
-<content tag="title">Sell order for : <c:out value='${order.companyName}'/></content>
+<content tag="title">Sell order for : <c:out value='${order.coinName}'/></content>
 <content tag="tagline">Enter items to sell and for how much</content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
         <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
         <li><a href="${ctx}/coin">Companies</a> <span class="divider">/</span></li>
-        <li><a href="${ctx}/coin/${order.companyId}"><c:out value='${order.companyName}'/></a> <span
+        <li><a href="${ctx}/coin/${order.coinId}"><c:out value='${order.coinName}'/></a> <span
                 class="divider">/</span></li>
         <li class="active">Sell</li>
     </ul>
