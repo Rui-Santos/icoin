@@ -19,6 +19,8 @@ package com.icoin.trading.tradeengine.query.transaction;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
 import org.springframework.data.annotation.Id;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -30,33 +32,33 @@ public class TransactionEntry {
     private String portfolioIdentifier;
 
     private String companyName;
-    private long amountOfItems;
-    private long amountOfExecutedItems;
-    private long pricePerItem;
+    private BigDecimal amountOfItems;
+    private BigDecimal amountOfExecutedItems;
+    private BigDecimal pricePerItem;
     private TransactionState state;
     private TransactionType type;
 
-    public long getAmountOfExecutedItems() {
+    public BigDecimal getAmountOfExecutedItems() {
         return amountOfExecutedItems;
     }
 
-    public void setAmountOfExecutedItems(long amountOfExecutedItems) {
+    public void setAmountOfExecutedItems(BigDecimal amountOfExecutedItems) {
         this.amountOfExecutedItems = amountOfExecutedItems;
     }
 
-    public long getAmountOfItems() {
+    public BigDecimal getAmountOfItems() {
         return amountOfItems;
     }
 
-    public void setAmountOfItems(long amountOfItems) {
+    public void setAmountOfItems(BigDecimal amountOfItems) {
         this.amountOfItems = amountOfItems;
     }
 
-    public String getCompanyName() {
+    public String getCoinName() {
         return companyName;
     }
 
-    public void setCompanyName(String companyName) {
+    public void setCoinName(String companyName) {
         this.companyName = companyName;
     }
 
@@ -84,11 +86,11 @@ public class TransactionEntry {
         this.portfolioIdentifier = portfolioIdentifier;
     }
 
-    public long getPricePerItem() {
+    public BigDecimal getPricePerItem() {
         return pricePerItem;
     }
 
-    public void setPricePerItem(long pricePerItem) {
+    public void setPricePerItem(BigDecimal pricePerItem) {
         this.pricePerItem = pricePerItem;
     }
 

@@ -18,6 +18,8 @@ package com.icoin.trading.tradeengine.domain.events.coin;
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 
+import java.math.BigDecimal;
+
 /**
  * <p>A new coin is created with a certain value and an amount of shares. Those two values can be used to calculate
  * the starting point for the value of a share.</p>
@@ -27,10 +29,10 @@ import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 public class CoinCreatedEvent {
     private CoinId coinId;
     private String coinName;
-    private long coinInitialPrice;
-    private long coinInitialAmount;
+    private BigDecimal coinInitialPrice;
+    private BigDecimal coinInitialAmount;
 
-    public CoinCreatedEvent(CoinId coinId, String coinName, long coinInitialAmount, long coinInitialPrice) {
+    public CoinCreatedEvent(CoinId coinId, String coinName, BigDecimal coinInitialAmount, BigDecimal coinInitialPrice) {
         this.coinInitialAmount = coinInitialAmount;
         this.coinName = coinName;
         this.coinInitialPrice = coinInitialPrice;
@@ -41,7 +43,7 @@ public class CoinCreatedEvent {
         return this.coinId;
     }
 
-    public long getCoinInitialAmount() {
+    public BigDecimal getCoinInitialAmount() {
         return coinInitialAmount;
     }
 
@@ -49,7 +51,7 @@ public class CoinCreatedEvent {
         return coinName;
     }
 
-    public long getCoinInitialPrice() {
+    public BigDecimal getCoinInitialPrice() {
         return coinInitialPrice;
     }
 }

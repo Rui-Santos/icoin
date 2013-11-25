@@ -21,12 +21,15 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public class StartBuyTransactionCommand extends AbstractStartTransactionCommand {
 
-    public StartBuyTransactionCommand(TransactionId transactionId, OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, long tradeCount, long itemPrice) {
+    public StartBuyTransactionCommand(TransactionId transactionId, OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
+                                      BigDecimal tradeCount, BigDecimal itemPrice) {
         super(transactionId, orderbookIdentifier, portfolioIdentifier, tradeCount, itemPrice);
     }
 }

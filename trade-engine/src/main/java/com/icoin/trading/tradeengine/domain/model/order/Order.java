@@ -29,7 +29,7 @@ import java.util.Date;
 /**
  * @author Allard Buijze
  */
-class Order extends AbstractAnnotatedEntity {
+public class Order extends AbstractAnnotatedEntity {
 
     private OrderId orderId;
     private TransactionId transactionId;
@@ -37,7 +37,7 @@ class Order extends AbstractAnnotatedEntity {
     private final BigDecimal tradeAmount;
     private final PortfolioId portfolioId;
     private BigDecimal itemsRemaining;
-    private Date date;
+    private Date placeDate;
     private CurrencyPair currencyPair;
 
     public Order(OrderId orderId, TransactionId transactionId, BigDecimal itemPrice,
@@ -50,6 +50,7 @@ class Order extends AbstractAnnotatedEntity {
         this.itemsRemaining = tradeAmount;
         this.portfolioId = portfolioId;
         this.currencyPair = currencyPair;
+        this.placeDate = new Date();
     }
 
     public BigDecimal getItemPrice() {
@@ -78,6 +79,14 @@ class Order extends AbstractAnnotatedEntity {
 
     public TransactionId getTransactionId() {
         return transactionId;
+    }
+
+   public Date getPlaceDate() {
+        return placeDate;
+    }
+
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 
     @EventHandler

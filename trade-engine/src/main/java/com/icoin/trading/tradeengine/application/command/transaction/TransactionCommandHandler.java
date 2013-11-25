@@ -44,7 +44,7 @@ public class TransactionCommandHandler {
                 TransactionType.BUY,
                 command.getOrderbookIdentifier(),
                 command.getPortfolioIdentifier(),
-                command.getTradeCount(),
+                command.getTradeAmount(),
                 command.getItemPrice());
         repository.add(transaction);
     }
@@ -56,7 +56,7 @@ public class TransactionCommandHandler {
                 TransactionType.SELL,
                 command.getOrderbookIdentifier(),
                 command.getPortfolioIdentifier(),
-                command.getTradeCount(),
+                command.getTradeAmount(),
                 command.getItemPrice());
         repository.add(transaction);
     }

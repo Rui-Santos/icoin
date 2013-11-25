@@ -142,7 +142,7 @@ public class TransactionEventListener {
         entry.setPortfolioIdentifier(event.getPortfolioIdentifier().toString());
         entry.setState(TransactionState.STARTED);
         entry.setType(type);
-        entry.setCompanyName(orderBookEntry.getCompanyName());
+        entry.setCompanyName(orderBookEntry.getCoinName());
 
         transactionQueryRepository.save(entry);
     }

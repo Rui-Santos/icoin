@@ -19,7 +19,9 @@ package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -28,18 +30,18 @@ public class ReserveCashCommand {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    @Min(0)
-    private long amountOfMoneyToReserve;
+    @DecimalMin("0.0000001")
+    private BigDecimal amountOfMoneyToReserve;
 
     public ReserveCashCommand(PortfolioId portfolioIdentifier,
                               TransactionId transactionIdentifier,
-                              long amountOfMoneyToReserve) {
+                              BigDecimal amountOfMoneyToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoneyToReserve = amountOfMoneyToReserve;
     }
 
-    public long getAmountOfMoneyToReserve() {
+    public BigDecimal getAmountOfMoneyToReserve() {
         return amountOfMoneyToReserve;
     }
 

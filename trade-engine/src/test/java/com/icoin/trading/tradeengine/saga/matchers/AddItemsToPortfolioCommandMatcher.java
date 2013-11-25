@@ -16,10 +16,12 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.api.portfolio.stock.AddItemsToPortfolioCommand;
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -28,10 +30,10 @@ public class AddItemsToPortfolioCommandMatcher extends BaseCommandMatcher<AddIte
 
     private OrderBookId orderBookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private long amountOfItemsToAdd;
+    private BigDecimal amountOfItemsToAdd;
 
     public AddItemsToPortfolioCommandMatcher(PortfolioId portfolioIdentifier,
-                                             OrderBookId orderBookIdentifier, long amountOfItemsToAdd) {
+                                             OrderBookId orderBookIdentifier, BigDecimal amountOfItemsToAdd) {
         this.amountOfItemsToAdd = amountOfItemsToAdd;
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;

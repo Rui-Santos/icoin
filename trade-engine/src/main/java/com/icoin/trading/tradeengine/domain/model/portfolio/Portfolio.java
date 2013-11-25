@@ -18,7 +18,7 @@ package com.icoin.trading.tradeengine.domain.model.portfolio;
 
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.tradeengine.domain.model.user.UserId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
@@ -158,10 +158,10 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
         long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
-        reservedItems.put(event.getOrderBookIdentifier(), reserved + event.getAmountOfCancelledItems());
+        reservedItems.put(event.getOrderBookIdentifier(), reserved + event.getAmountOfCancelledAmount());
 
         long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available + event.getAmountOfCancelledItems());
+        availableItems.put(event.getOrderBookIdentifier(), available + event.getAmountOfCancelledAmount());
     }
 
     @EventHandler

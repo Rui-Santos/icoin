@@ -9,6 +9,8 @@ package com.icoin.trading.tradeengine.query.coin;
  */
 import org.springframework.data.annotation.Id;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -17,15 +19,15 @@ public class CoinEntry {
     @Id
     private String identifier;
     private String name;
-    private long coinInitialPrice;
-    private long coinInitialAmount;
+    private BigDecimal coinInitialPrice;
+    private BigDecimal coinInitialAmount;
     private boolean tradeStarted;
 
-    public long getCoinInitialAmount() {
+    public BigDecimal getCoinInitialAmount() {
         return coinInitialAmount;
     }
 
-    public void setCoinInitialAmount(long coinInitialAmount) {
+    public void setCoinInitialAmount(BigDecimal coinInitialAmount) {
         this.coinInitialAmount = coinInitialAmount;
     }
 
@@ -53,11 +55,11 @@ public class CoinEntry {
         this.tradeStarted = tradeStarted;
     }
 
-    public long getValue() {
+    public BigDecimal getCoinInitialPrice() {
         return coinInitialPrice;
     }
 
-    public void setValue(long coinInitialPrice) {
+    public void setCoinInitialPrice(BigDecimal coinInitialPrice) {
         this.coinInitialPrice = coinInitialPrice;
     }
 }

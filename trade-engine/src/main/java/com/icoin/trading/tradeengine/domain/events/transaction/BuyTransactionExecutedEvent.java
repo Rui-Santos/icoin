@@ -19,12 +19,14 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public class BuyTransactionExecutedEvent extends AbstractTransactionExecutedEvent {
 
-    public BuyTransactionExecutedEvent(TransactionId transactionIdentifier, long amountOfItems, long itemPrice) {
+    public BuyTransactionExecutedEvent(TransactionId transactionIdentifier, BigDecimal amountOfItems, BigDecimal itemPrice) {
         super(transactionIdentifier, amountOfItems, itemPrice);
     }
 }

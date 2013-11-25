@@ -18,6 +18,8 @@ package com.icoin.trading.tradeengine.query.portfolio;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -25,12 +27,12 @@ import static org.junit.Assert.assertEquals;
  */
 public class PortfolioEntryTest {
 
-    private static final long AMOUNT_ITEMS = 100;
-    private static final long AMOUNT_RESERVED = 40;
-    private static final int AMOUNT_SELL = 10;
+    private static final BigDecimal AMOUNT_ITEMS = BigDecimal.valueOf(100);
+    private static final BigDecimal AMOUNT_RESERVED = BigDecimal.valueOf(40);
+    private static final BigDecimal AMOUNT_SELL = BigDecimal.TEN;
     private static final String ORDERBOOK_IDENTIFIER = "item1";
-    private static final int AMOUNT_OF_MONEY = 1000;
-    private static final int RESERVED_AMOUNT_OF_MONEY = 200;
+    private static final BigDecimal AMOUNT_OF_MONEY = BigDecimal.valueOf(1000);
+    private static final BigDecimal RESERVED_AMOUNT_OF_MONEY = BigDecimal.valueOf(200);
 
     @Test
     public void testRemovingItems() {
@@ -39,22 +41,22 @@ public class PortfolioEntryTest {
         portfolio.removeReservedItem(ORDERBOOK_IDENTIFIER, AMOUNT_SELL);
         portfolio.removeItemsInPossession(ORDERBOOK_IDENTIFIER, AMOUNT_SELL);
 
-        assertEquals(AMOUNT_RESERVED - AMOUNT_SELL,
-                     portfolio.findReservedItemByIdentifier(ORDERBOOK_IDENTIFIER).getAmount());
-        assertEquals(AMOUNT_ITEMS - AMOUNT_SELL, portfolio.findItemInPossession(ORDERBOOK_IDENTIFIER).getAmount());
+        assertEquals(AMOUNT_RESERVED.subtract(AMOUNT_SELL),
+                portfolio.findReservedItemByIdentifier(ORDERBOOK_IDENTIFIER).getAmount());
+        assertEquals(AMOUNT_ITEMS.subtract(AMOUNT_SELL), portfolio.findItemInPossession(ORDERBOOK_IDENTIFIER).getAmount());
     }
 
     @Test
     public void testObtainAvailableItems() {
         PortfolioEntry portfolio = createDefaultPortfolio();
 
-        assertEquals(AMOUNT_ITEMS - AMOUNT_RESERVED, portfolio.obtainAmountOfAvailableItemsFor(ORDERBOOK_IDENTIFIER));
+        assertEquals(AMOUNT_ITEMS.subtract(AMOUNT_RESERVED), portfolio.obtainAmountOfAvailableItemsFor(ORDERBOOK_IDENTIFIER));
     }
 
     @Test
     public void testObtainBudget() {
         PortfolioEntry portfolio = createDefaultPortfolio();
-        assertEquals(AMOUNT_OF_MONEY - RESERVED_AMOUNT_OF_MONEY, portfolio.obtainMoneyToSpend());
+        assertEquals(AMOUNT_OF_MONEY.subtract(RESERVED_AMOUNT_OF_MONEY), portfolio.obtainMoneyToSpend());
     }
 
     private PortfolioEntry createDefaultPortfolio() {
@@ -67,7 +69,7 @@ public class PortfolioEntryTest {
         return portfolio;
     }
 
-    private ItemEntry createItem(long amount) {
+    private ItemEntry createItem(BigDecimal amount) {
         ItemEntry item1InPossession = new ItemEntry();
         item1InPossession.setIdentifier("item1");
         item1InPossession.setAmount(amount);

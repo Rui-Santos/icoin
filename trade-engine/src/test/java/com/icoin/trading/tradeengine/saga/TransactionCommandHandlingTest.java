@@ -16,24 +16,28 @@
 
 package com.icoin.trading.tradeengine.saga;
 
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
-import com.icoin.trading.api.orders.trades.TransactionId;
-import com.icoin.trading.api.orders.transaction.BuyTransactionCancelledEvent;
-import com.icoin.trading.api.orders.transaction.BuyTransactionConfirmedEvent;
-import com.icoin.trading.api.orders.transaction.BuyTransactionExecutedEvent;
-import com.icoin.trading.api.orders.transaction.BuyTransactionPartiallyExecutedEvent;
-import com.icoin.trading.api.orders.transaction.BuyTransactionStartedEvent;
-import com.icoin.trading.api.orders.transaction.CancelTransactionCommand;
-import com.icoin.trading.api.orders.transaction.ConfirmTransactionCommand;
-import com.icoin.trading.api.orders.transaction.ExecutedTransactionCommand;
-import com.icoin.trading.api.orders.transaction.SellTransactionStartedEvent;
-import com.icoin.trading.api.orders.transaction.StartBuyTransactionCommand;
-import com.icoin.trading.api.orders.transaction.StartSellTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.TransactionCommandHandler;
+import com.icoin.trading.tradeengine.application.command.transaction.command.CancelTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.ConfirmTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
+import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionCancelledEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionConfirmedEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionExecutedEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionPartiallyExecutedEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.domain.model.transaction.Transaction;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -55,24 +59,24 @@ public class TransactionCommandHandlingTest {
 
     @Test
     public void testStartBuyTransaction() {
-        StartBuyTransactionCommand command = new StartBuyTransactionCommand(transactionId, orderBook, portfolio, 200, 20);
+        StartBuyTransactionCommand command = new StartBuyTransactionCommand(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20));
         fixture.given()
                 .when(command)
-                .expectEvents(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20));
+                .expectEvents(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)));
     }
 
     @Test
     public void testStartSellTransaction() {
-        StartSellTransactionCommand command = new StartSellTransactionCommand(transactionId, orderBook, portfolio, 200, 20);
+        StartSellTransactionCommand command = new StartSellTransactionCommand(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20));
         fixture.given()
                 .when(command)
-                .expectEvents(new SellTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20));
+                .expectEvents(new SellTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)));
     }
 
     @Test
     public void testConfirmTransaction() {
         ConfirmTransactionCommand command = new ConfirmTransactionCommand(transactionId);
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20))
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)))
                 .when(command)
                 .expectEvents(new BuyTransactionConfirmedEvent(transactionId));
     }
@@ -80,47 +84,47 @@ public class TransactionCommandHandlingTest {
     @Test
     public void testCancelTransaction() {
         CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20))
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)))
                 .when(command)
-                .expectEvents(new BuyTransactionCancelledEvent(transactionId, 200, 0));
+                .expectEvents(new BuyTransactionCancelledEvent(transactionId, BigDecimal.valueOf(200), BigDecimal.valueOf(0)));
     }
 
     @Test
     public void testCancelTransaction_partiallyExecuted() {
         CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
-                new BuyTransactionPartiallyExecutedEvent(transactionId, 100, 100, 20))
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
+                new BuyTransactionPartiallyExecutedEvent(transactionId, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(20)))
                 .when(command)
-                .expectEvents(new BuyTransactionCancelledEvent(transactionId, 200, 100));
+                .expectEvents(new BuyTransactionCancelledEvent(transactionId, BigDecimal.valueOf(200), BigDecimal.valueOf(100)));
     }
 
     @Test
     public void testExecuteTransaction() {
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, 200, 20);
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
+        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, BigDecimal.valueOf(200), BigDecimal.valueOf(20));
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
                 new BuyTransactionConfirmedEvent(transactionId))
                 .when(command)
-                .expectEvents(new BuyTransactionExecutedEvent(transactionId, 200, 20));
+                .expectEvents(new BuyTransactionExecutedEvent(transactionId, BigDecimal.valueOf(200), BigDecimal.valueOf(20)));
     }
 
     @Test
     public void testExecuteTransaction_partiallyExecuted() {
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, 50, 20);
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
+        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, BigDecimal.valueOf(50), BigDecimal.valueOf(20));
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
                 new BuyTransactionConfirmedEvent(transactionId))
                 .when(command)
-                .expectEvents(new BuyTransactionPartiallyExecutedEvent(transactionId, 50, 50, 20));
+                .expectEvents(new BuyTransactionPartiallyExecutedEvent(transactionId, BigDecimal.valueOf(50), BigDecimal.valueOf(50), BigDecimal.valueOf(20)));
     }
 
     @Test
     public void testExecuteTransaction_completeAfterPartiallyExecuted() {
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, 150, 20);
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, 200, 20),
+        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, BigDecimal.valueOf(150), BigDecimal.valueOf(20));
+        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
                 new BuyTransactionConfirmedEvent(transactionId),
-                new BuyTransactionPartiallyExecutedEvent(transactionId, 50, 50, 20)
+                new BuyTransactionPartiallyExecutedEvent(transactionId, BigDecimal.valueOf(50), BigDecimal.valueOf(50), BigDecimal.valueOf(20))
         )
                 .when(command)
-                .expectEvents(new BuyTransactionExecutedEvent(transactionId, 150, 20));
+                .expectEvents(new BuyTransactionExecutedEvent(transactionId, BigDecimal.valueOf(150), BigDecimal.valueOf(20)));
         // TODO moeten we nu ook nog een partially executed event gooien?
     }
 }

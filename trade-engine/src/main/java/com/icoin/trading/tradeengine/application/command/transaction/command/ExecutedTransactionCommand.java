@@ -19,26 +19,28 @@ package com.icoin.trading.tradeengine.application.command.transaction.command;
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public class ExecutedTransactionCommand {
 
     private TransactionId transactionIdentifier;
-    private long amountOfItems;
-    private long itemPrice;
+    private BigDecimal amountOfItems;
+    private BigDecimal itemPrice;
 
-    public ExecutedTransactionCommand(TransactionId transactionIdentifier, long amountOfItems, long itemPrice) {
+    public ExecutedTransactionCommand(TransactionId transactionIdentifier, BigDecimal amountOfItems, BigDecimal itemPrice) {
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItems = amountOfItems;
         this.itemPrice = itemPrice;
     }
 
-    public long getAmountOfItems() {
+    public BigDecimal getAmountOfItems() {
         return amountOfItems;
     }
 
-    public long getItemPrice() {
+    public BigDecimal getItemPrice() {
         return itemPrice;
     }
 

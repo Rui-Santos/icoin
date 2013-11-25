@@ -16,61 +16,62 @@
 
 package com.icoin.trading.webui.order;
 
-import javax.validation.constraints.Min;
+import javax.validation.constraints.DecimalMin;
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
  */
 public class AbstractOrder {
 
-    private String companyId;
-    private String companyName;
+    private String coinId;
+    private String coinName;
 
-    @Min(1)
-    private long tradeCount;
+    @DecimalMin("0.00000001")
+    private BigDecimal tradeAmount;
 
-    @Min(0)
-    private int itemPrice;
+    @DecimalMin("0")
+    private BigDecimal itemPrice;
 
     public AbstractOrder() {
     }
 
-    public AbstractOrder(int itemPrice, long tradeCount, String companyId, String companyName) {
+    public AbstractOrder(BigDecimal itemPrice, BigDecimal tradeAmount, String coinId, String coinName) {
         this.itemPrice = itemPrice;
-        this.tradeCount = tradeCount;
-        this.companyId = companyId;
-        this.companyName = companyName;
+        this.tradeAmount = tradeAmount;
+        this.coinId = coinId;
+        this.coinName = coinName;
     }
 
-    public int getItemPrice() {
+    public BigDecimal getItemPrice() {
         return itemPrice;
     }
 
-    public void setItemPrice(int itemPrice) {
+    public void setItemPrice(BigDecimal itemPrice) {
         this.itemPrice = itemPrice;
     }
 
-    public long getTradeCount() {
-        return tradeCount;
+    public BigDecimal getTradeAmount() {
+        return tradeAmount;
     }
 
-    public void setTradeCount(long tradeCount) {
-        this.tradeCount = tradeCount;
+    public void setTradeAmount(BigDecimal tradeAmount) {
+        this.tradeAmount = tradeAmount;
     }
 
-    public String getCompanyId() {
-        return companyId;
+    public String getCoinId() {
+        return coinId;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setCoinId(String coinId) {
+        this.coinId = coinId;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getCoinName() {
+        return coinName;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setCoinName(String coinName) {
+        this.coinName = coinName;
     }
 }

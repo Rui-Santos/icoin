@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.query.tradeexecuted.repositories;
 
-import com.icoin.trading.query.tradeexecuted.TradeExecutedEntry;
+import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;

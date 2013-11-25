@@ -18,7 +18,7 @@ package com.icoin.trading.tradeengine.saga;
 
 import com.icoin.trading.tradeengine.application.command.portfolio.CreatePortfolioCommand;
 import com.icoin.trading.tradeengine.application.listener.PortfolioManagementUserListener;
-import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.tradeengine.domain.model.user.UserId;
 import com.icoin.trading.users.domain.event.UserCreatedEvent;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;

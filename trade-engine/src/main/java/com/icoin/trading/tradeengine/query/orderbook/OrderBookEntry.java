@@ -28,8 +28,8 @@ public class OrderBookEntry {
 
     @Id
     private String identifier;
-    private String companyIdentifier;
-    private String companyName;
+    private String coinIdentifier;
+    private String coinName;
     private List<OrderEntry> sellOrders = new ArrayList<OrderEntry>();
     private List<OrderEntry> buyOrders = new ArrayList<OrderEntry>();
 
@@ -49,20 +49,20 @@ public class OrderBookEntry {
         this.identifier = identifier;
     }
 
-    public String getCompanyIdentifier() {
-        return companyIdentifier;
+    public String getCoinIdentifier() {
+        return coinIdentifier;
     }
 
-    public void setCompanyIdentifier(String companyIdentifier) {
-        this.companyIdentifier = companyIdentifier;
+    public void setCoinIdentifier(String coinIdentifier) {
+        this.coinIdentifier = coinIdentifier;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getCoinName() {
+        return coinName;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setCoinName(String coinName) {
+        this.coinName = coinName;
     }
 
     public List<OrderEntry> getBuyOrders() {

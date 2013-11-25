@@ -16,28 +16,30 @@
 
 package com.icoin.trading.tradeengine.saga;
 
-import com.icoin.trading.api.orders.trades.OrderId;
-import com.icoin.trading.api.orders.trades.TradeExecutedEvent;
-import com.icoin.trading.api.orders.trades.TransactionId;
-import com.icoin.trading.api.orders.transaction.SellTransactionConfirmedEvent;
-import com.icoin.trading.api.orders.transaction.SellTransactionExecutedEvent;
-import com.icoin.trading.api.portfolio.stock.NotEnoughItemsAvailableToReserveInPortfolio;
-import com.icoin.trading.tradeengine.orders.command.matchers.CancelItemReservationForPortfolioCommandMatcher;
-import com.icoin.trading.tradeengine.orders.command.matchers.CreateSellOrderCommandMatcher;
-import com.icoin.trading.tradeengine.orders.command.matchers.ExecutedTransactionCommandMatcher;
-import com.icoin.trading.api.orders.transaction.SellTransactionCancelledEvent;
-import com.icoin.trading.api.orders.transaction.SellTransactionPartiallyExecutedEvent;
-import com.icoin.trading.api.orders.transaction.SellTransactionStartedEvent;
-import com.icoin.trading.api.portfolio.stock.ItemsReservedEvent;
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemsAvailableToReserveInPortfolio;
+import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCancelledEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionConfirmedEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionExecutedEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionPartiallyExecutedEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.tradeengine.saga.matchers.CancelItemReservationForPortfolioCommandMatcher;
+import com.icoin.trading.tradeengine.saga.matchers.ConfirmItemReservationForPortfolioCommandMatcher;
+import com.icoin.trading.tradeengine.saga.matchers.ConfirmTransactionCommandMatcher;
+import com.icoin.trading.tradeengine.saga.matchers.CreateSellOrderCommandMatcher;
+import com.icoin.trading.tradeengine.saga.matchers.DepositMoneyToPortfolioCommandMatcher;
+import com.icoin.trading.tradeengine.saga.matchers.ExecutedTransactionCommandMatcher;
+import com.icoin.trading.tradeengine.saga.matchers.ReservedItemsCommandMatcher;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
-import com.icoin.trading.tradeengine.orders.command.matchers.ConfirmItemReservationForPortfolioCommandMatcher;
-import com.icoin.trading.tradeengine.orders.command.matchers.ConfirmTransactionCommandMatcher;
-import com.icoin.trading.tradeengine.orders.command.matchers.DepositMoneyToPortfolioCommandMatcher;
-import com.icoin.trading.tradeengine.orders.command.matchers.ReservedItemsCommandMatcher;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.math.BigDecimal;
 
 import static org.axonframework.test.matchers.Matchers.andNoMore;
 import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
@@ -64,8 +66,8 @@ public class SellTradeManagerSagaTest {
                 .whenAggregate(transactionIdentifier).publishes(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
-                100,
-                10))
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(10)))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new ReservedItemsCommandMatcher(orderbookIdentifier,
                         portfolioIdentifier,
@@ -77,11 +79,11 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
-                100,
-                10))
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(10)))
                 .whenAggregate(portfolioIdentifier).publishes(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
                 transactionIdentifier,
-                100))
+                BigDecimal.valueOf(100)))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new ConfirmTransactionCommandMatcher(
                         transactionIdentifier)));
@@ -92,11 +94,11 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
-                100,
-                10))
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(10)))
                 .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
                 transactionIdentifier,
-                100))
+                BigDecimal.valueOf(100)))
                 .whenAggregate(transactionIdentifier).publishes(new SellTransactionConfirmedEvent(transactionIdentifier))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new CreateSellOrderCommandMatcher(portfolioIdentifier,
@@ -111,14 +113,14 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
-                100,
-                10))
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(10)))
                 .whenAggregate(portfolioIdentifier).publishes(new NotEnoughItemsAvailableToReserveInPortfolio(
                 portfolioIdentifier,
                 orderbookIdentifier,
                 transactionIdentifier,
-                50,
-                100))
+                BigDecimal.valueOf(50),
+                BigDecimal.valueOf(100)))
                 .expectActiveSagas(0);
     }
 
@@ -127,9 +129,10 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
-                100,
-                10))
-                .whenAggregate(transactionIdentifier).publishes(new SellTransactionCancelledEvent(transactionIdentifier, 50, 0))
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(10)))
+                .whenAggregate(transactionIdentifier).publishes(new SellTransactionCancelledEvent(
+                transactionIdentifier, BigDecimal.valueOf(50), BigDecimal.ZERO))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new CancelItemReservationForPortfolioCommandMatcher(
                         orderbookIdentifier,
@@ -145,15 +148,15 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
-                100,
-                99))
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(99)))
                 .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
                 transactionIdentifier,
-                100))
+                BigDecimal.valueOf(100)))
                 .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier))
                 .whenAggregate(orderbookIdentifier).publishes(new TradeExecutedEvent(orderbookIdentifier,
-                100,
-                102,
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(102),
                 buyOrderIdentifier,
                 sellOrderIdentifier,
                 buyTransactionIdentifier,
@@ -173,15 +176,15 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
-                100,
-                99))
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(99)))
                 .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
                 transactionIdentifier,
-                100))
+                BigDecimal.valueOf(100)))
                 .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier))
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
-                100,
-                102,
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(102),
                 buyOrderIdentifier,
                 sellOrderIdentifier,
                 buyTransactionIdentifier,
@@ -205,15 +208,15 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
-                100,
-                99))
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(99)))
                 .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
                 transactionIdentifier,
-                100))
+                BigDecimal.valueOf(100)))
                 .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier))
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
-                100,
-                102,
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(102),
                 buyOrderIdentifier,
                 sellOrderIdentifier,
                 buyTransactionIdentifier,

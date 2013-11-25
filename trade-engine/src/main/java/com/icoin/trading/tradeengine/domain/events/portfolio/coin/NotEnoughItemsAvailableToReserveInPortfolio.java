@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -28,14 +30,14 @@ public class NotEnoughItemsAvailableToReserveInPortfolio {
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
-    private long availableAmountOfItems;
-    private long amountOfItemsToReserve;
+    private BigDecimal availableAmountOfItems;
+    private BigDecimal amountOfItemsToReserve;
 
     public NotEnoughItemsAvailableToReserveInPortfolio(PortfolioId portfolioIdentifier,
                                                        OrderBookId orderBookIdentifier,
                                                        TransactionId transactionIdentifier,
-                                                       long availableAmountOfItems,
-                                                       long amountOfItemsToReserve) {
+                                                       BigDecimal availableAmountOfItems,
+                                                       BigDecimal amountOfItemsToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
@@ -43,11 +45,11 @@ public class NotEnoughItemsAvailableToReserveInPortfolio {
         this.amountOfItemsToReserve = amountOfItemsToReserve;
     }
 
-    public long getAmountOfItemsToReserve() {
+    public BigDecimal getAmountOfItemsToReserve() {
         return amountOfItemsToReserve;
     }
 
-    public long getAvailableAmountOfItems() {
+    public BigDecimal getAvailableAmountOfItems() {
         return availableAmountOfItems;
     }
 

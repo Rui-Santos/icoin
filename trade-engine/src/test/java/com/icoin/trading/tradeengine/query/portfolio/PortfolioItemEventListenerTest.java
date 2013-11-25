@@ -16,22 +16,24 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
-import com.icoin.trading.api.coin.CompanyId;
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
-import com.icoin.trading.api.orders.trades.TransactionId;
-import com.icoin.trading.api.portfolio.stock.ItemReservationCancelledForPortfolioEvent;
-import com.icoin.trading.api.portfolio.stock.ItemReservationConfirmedForPortfolioEvent;
-import com.icoin.trading.api.portfolio.stock.ItemsAddedToPortfolioEvent;
-import com.icoin.trading.api.portfolio.stock.ItemsReservedEvent;
-import com.icoin.trading.api.users.UserId;
-import com.icoin.trading.query.orderbook.OrderBookEntry;
-import com.icoin.trading.query.orderbook.repositories.OrderBookQueryRepository;
-import com.icoin.trading.query.portfolio.repositories.PortfolioQueryRepository;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationCancelledForPortfolioEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsAddedToPortfolioEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.tradeengine.domain.model.user.UserId;
+import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+
+import java.math.BigDecimal;
 
 /**
  * We setup this test with a default portfolio and a default orderBook. The portfolio contains the default amount of
@@ -41,14 +43,14 @@ import org.mockito.Mockito;
  */
 public class PortfolioItemEventListenerTest {
 
-    public static final int DEFAULT_AMOUNT_ITEMS = 100;
+    public static final BigDecimal DEFAULT_AMOUNT_ITEMS = BigDecimal.valueOf(100);
     private PortfolioQueryRepository portfolioQueryRepository;
     private PortfolioItemEventListener listener;
 
     final UserId userIdentifier = new UserId();
     final OrderBookId itemIdentifier = new OrderBookId();
     final PortfolioId portfolioIdentifier = new PortfolioId();
-    final CompanyId companyIdentifier = new CompanyId();
+    final CoinId coinIdentifier = new CoinId();
     final TransactionId transactionIdentifier = new TransactionId();
 
     @Before
@@ -70,13 +72,14 @@ public class PortfolioItemEventListenerTest {
 
     @Test
     public void testHandleEventAddItems() throws Exception {
-        ItemsAddedToPortfolioEvent event = new ItemsAddedToPortfolioEvent(portfolioIdentifier, itemIdentifier, 100);
+        ItemsAddedToPortfolioEvent event =
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, itemIdentifier, BigDecimal.valueOf(100));
         listener.handleEvent(event);
 
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
                 itemIdentifier.toString(),
                 1,
-                2 * DEFAULT_AMOUNT_ITEMS,
+                DEFAULT_AMOUNT_ITEMS.multiply(BigDecimal.valueOf(2)),
                 1,
                 DEFAULT_AMOUNT_ITEMS)));
     }
@@ -93,9 +96,9 @@ public class PortfolioItemEventListenerTest {
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
                 itemIdentifier.toString(),
                 1,
-                2 * DEFAULT_AMOUNT_ITEMS,
+                DEFAULT_AMOUNT_ITEMS.multiply(BigDecimal.valueOf(2)),
                 0,
-                0)));
+                BigDecimal.ZERO)));
     }
 
     /**
@@ -104,18 +107,20 @@ public class PortfolioItemEventListenerTest {
      */
     @Test
     public void testHandleEventConfirmItemReservation() {
-        ItemReservationConfirmedForPortfolioEvent event = new ItemReservationConfirmedForPortfolioEvent(portfolioIdentifier,
-                itemIdentifier,
-                transactionIdentifier,
-                50);
+        ItemReservationConfirmedForPortfolioEvent event =
+                new ItemReservationConfirmedForPortfolioEvent(
+                        portfolioIdentifier,
+                        itemIdentifier,
+                        transactionIdentifier,
+                        BigDecimal.valueOf(50));
         listener.handleEvent(event);
 
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
                 itemIdentifier.toString(),
                 1,
-                DEFAULT_AMOUNT_ITEMS - 50,
+                DEFAULT_AMOUNT_ITEMS.subtract(BigDecimal.valueOf(50)),
                 1,
-                DEFAULT_AMOUNT_ITEMS - 50)));
+                DEFAULT_AMOUNT_ITEMS.subtract(BigDecimal.valueOf(50)))));
     }
 
     @Test
@@ -128,7 +133,7 @@ public class PortfolioItemEventListenerTest {
                 1,
                 DEFAULT_AMOUNT_ITEMS,
                 1,
-                2 * DEFAULT_AMOUNT_ITEMS)));
+                DEFAULT_AMOUNT_ITEMS.multiply(BigDecimal.valueOf(2)))));
     }
 
     private PortfolioEntry createPortfolioEntry() {
@@ -136,26 +141,26 @@ public class PortfolioItemEventListenerTest {
         portfolioEntry.setIdentifier(portfolioIdentifier.toString());
         portfolioEntry.setUserIdentifier(userIdentifier.toString());
 
-        portfolioEntry.addItemInPossession(createItemEntry(itemIdentifier, companyIdentifier));
-        portfolioEntry.addReservedItem(createItemEntry(itemIdentifier, companyIdentifier));
-        portfolioEntry.setReservedAmountOfMoney(1000);
-        portfolioEntry.setAmountOfMoney(10000);
+        portfolioEntry.addItemInPossession(createItemEntry(itemIdentifier, coinIdentifier));
+        portfolioEntry.addReservedItem(createItemEntry(itemIdentifier, coinIdentifier));
+        portfolioEntry.setReservedAmountOfMoney(BigDecimal.valueOf(1000));
+        portfolioEntry.setAmountOfMoney(BigDecimal.valueOf(10000));
         return portfolioEntry;
     }
 
     private OrderBookEntry createOrderBookEntry() {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         orderBookEntry.setIdentifier(itemIdentifier.toString());
-        orderBookEntry.setCompanyIdentifier(companyIdentifier.toString());
-        orderBookEntry.setCompanyName("Test Company");
+        orderBookEntry.setCoinIdentifier(coinIdentifier.toString());
+        orderBookEntry.setCoinName("Test Company");
         return orderBookEntry;
     }
 
-    private ItemEntry createItemEntry(OrderBookId itemIdentifier, CompanyId companyIdentifier) {
+    private ItemEntry createItemEntry(OrderBookId itemIdentifier, CoinId coinIdentifier) {
         ItemEntry itemInPossession = new ItemEntry();
         itemInPossession.setIdentifier(itemIdentifier.toString());
-        itemInPossession.setCompanyIdentifier(companyIdentifier.toString());
-        itemInPossession.setCompanyName("Test company");
+        itemInPossession.setCompanyIdentifier(coinIdentifier.toString());
+        itemInPossession.setCompanyName("Test coin");
         itemInPossession.setAmount(DEFAULT_AMOUNT_ITEMS);
         return itemInPossession;
     }

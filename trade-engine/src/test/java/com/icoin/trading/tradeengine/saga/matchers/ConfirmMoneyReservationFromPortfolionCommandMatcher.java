@@ -20,6 +20,8 @@ import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmC
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -27,10 +29,10 @@ public class ConfirmMoneyReservationFromPortfolionCommandMatcher
         extends BaseCommandMatcher<ConfirmCashReservationCommand> {
 
     private PortfolioId portfolioIdentifier;
-    private long amountOfMoneyToconfirm;
+    private BigDecimal amountOfMoneyToconfirm;
 
     public ConfirmMoneyReservationFromPortfolionCommandMatcher(PortfolioId portfolioIdentifier,
-                                                               long amountOfMoneyToconfirm) {
+                                                               BigDecimal amountOfMoneyToconfirm) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfMoneyToconfirm = amountOfMoneyToconfirm;
     }

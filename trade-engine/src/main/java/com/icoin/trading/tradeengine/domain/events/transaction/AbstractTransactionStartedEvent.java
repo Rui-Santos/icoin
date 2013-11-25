@@ -20,6 +20,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -27,14 +29,14 @@ public abstract class AbstractTransactionStartedEvent {
     private TransactionId transactionIdentifier;
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private long totalItems;
-    private long pricePerItem;
+    private BigDecimal totalItems;
+    private BigDecimal pricePerItem;
 
     public AbstractTransactionStartedEvent(TransactionId transactionIdentifier,
                                            OrderBookId orderbookIdentifier,
                                            PortfolioId portfolioIdentifier,
-                                           long totalItems,
-                                           long pricePerItem) {
+                                           BigDecimal totalItems,
+                                           BigDecimal pricePerItem) {
         this.transactionIdentifier = transactionIdentifier;
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
@@ -54,11 +56,11 @@ public abstract class AbstractTransactionStartedEvent {
         return transactionIdentifier;
     }
 
-    public long getPricePerItem() {
+    public BigDecimal getPricePerItem() {
         return pricePerItem;
     }
 
-    public long getTotalItems() {
+    public BigDecimal getTotalItems() {
         return totalItems;
     }
 }

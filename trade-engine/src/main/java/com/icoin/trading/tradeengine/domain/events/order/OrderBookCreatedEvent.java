@@ -37,4 +37,8 @@ public class OrderBookCreatedEvent {
     public OrderBookId getOrderBookIdentifier() {
         return this.orderBookId;
     }
+
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
+    }
 }

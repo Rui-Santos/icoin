@@ -20,6 +20,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -28,19 +30,19 @@ public abstract class AbstractStartTransactionCommand {
     private TransactionId transactionId;
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private long tradeCount;
-    private long itemPrice;
+    private BigDecimal tradeAmount;
+    private BigDecimal itemPrice;
 
     public AbstractStartTransactionCommand(TransactionId transactionId, OrderBookId orderbookIdentifier,
-                                           PortfolioId portfolioIdentifier, long tradeCount, long itemPrice) {
+                                           PortfolioId portfolioIdentifier, BigDecimal tradeAmount, BigDecimal itemPrice) {
         this.transactionId = transactionId;
         this.itemPrice = itemPrice;
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
-        this.tradeCount = tradeCount;
+        this.tradeAmount = tradeAmount;
     }
 
-    public long getItemPrice() {
+    public BigDecimal getItemPrice() {
         return itemPrice;
     }
 
@@ -56,7 +58,7 @@ public abstract class AbstractStartTransactionCommand {
         return transactionId;
     }
 
-    public long getTradeCount() {
-        return tradeCount;
+    public BigDecimal getTradeAmount() {
+        return tradeAmount;
     }
 }

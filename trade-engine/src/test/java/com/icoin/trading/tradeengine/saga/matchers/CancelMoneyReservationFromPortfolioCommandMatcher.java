@@ -16,9 +16,11 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.api.portfolio.cash.CancelCashReservationCommand;
-import com.icoin.trading.api.orders.trades.PortfolioId;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.CancelCashReservationCommand;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -27,13 +29,13 @@ public class CancelMoneyReservationFromPortfolioCommandMatcher
         extends BaseCommandMatcher<CancelCashReservationCommand> {
 
     public CancelMoneyReservationFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier,
-                                                             long amountOfMoneyToCancel) {
+                                                             BigDecimal amountOfMoneyToCancel) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfMoneyToCancel = amountOfMoneyToCancel;
     }
 
     private PortfolioId portfolioIdentifier;
-    private long amountOfMoneyToCancel;
+    private BigDecimal amountOfMoneyToCancel;
 
     @Override
     protected boolean doMatches(CancelCashReservationCommand command) {

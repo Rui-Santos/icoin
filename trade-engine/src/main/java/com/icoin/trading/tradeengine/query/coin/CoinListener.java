@@ -7,7 +7,8 @@ package com.icoin.trading.tradeengine.query.coin;
  * Time: PM6:11
  * To change this template use File | Settings | File Templates.
  */
-import com.icoin.trading.coin.event.CoinCreatedEvent;
+
+import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class CoinListener {
     public void handleCoinCreatedEvent(CoinCreatedEvent event) {
         CoinEntry companyEntry = new CoinEntry();
         companyEntry.setIdentifier(event.getCoinIdentifier().toString());
-        companyEntry.setValue(event.getCoinInitialPrice());
+        companyEntry.setCoinInitialPrice(event.getCoinInitialPrice());
         companyEntry.setCoinInitialAmount(event.getCoinInitialAmount());
         companyEntry.setTradeStarted(true);
         companyEntry.setName(event.getCoinName());

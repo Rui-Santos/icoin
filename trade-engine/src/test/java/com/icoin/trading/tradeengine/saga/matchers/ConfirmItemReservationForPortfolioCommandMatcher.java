@@ -16,9 +16,9 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.portfolio.stock.ConfirmItemReservationForPortfolioCommand;
-import com.icoin.trading.api.orders.trades.PortfolioId;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmItemReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 
 /**

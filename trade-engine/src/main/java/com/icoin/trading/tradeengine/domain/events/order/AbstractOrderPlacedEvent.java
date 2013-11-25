@@ -22,6 +22,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * <p>Abstract parent class for all buy and sell order placed events.</p>
  *
@@ -32,18 +34,25 @@ public abstract class AbstractOrderPlacedEvent {
     private final OrderBookId orderBookId;
     private final OrderId orderId;
     private TransactionId transactionId;
-    private final long tradeCount;
-    private final long itemPrice;
+    private final BigDecimal tradeAmount;
+    private final BigDecimal itemPrice;
     private final PortfolioId portfolioId;
+    private final CurrencyPair currencyPair;
 
-    protected AbstractOrderPlacedEvent(OrderBookId orderBookId, OrderId orderId, TransactionId transactionId,
-                                       long tradeCount, long itemPrice, PortfolioId portfolioId) {
+    protected AbstractOrderPlacedEvent(OrderBookId orderBookId,
+                                       OrderId orderId,
+                                       TransactionId transactionId,
+                                       BigDecimal tradeAmount,
+                                       BigDecimal itemPrice,
+                                       PortfolioId portfolioId,
+                                       CurrencyPair currencyPair) {
         this.orderId = orderId;
         this.transactionId = transactionId;
-        this.tradeCount = tradeCount;
+        this.tradeAmount = tradeAmount;
         this.itemPrice = itemPrice;
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
+        this.currencyPair = currencyPair;
     }
 
     public OrderBookId orderBookIdentifier() {
@@ -58,11 +67,11 @@ public abstract class AbstractOrderPlacedEvent {
         return orderId;
     }
 
-    public long getTradeCount() {
-        return tradeCount;
+    public BigDecimal getTradeAmount() {
+        return tradeAmount;
     }
 
-    public long getItemPrice() {
+    public BigDecimal getItemPrice() {
         return itemPrice;
     }
 
@@ -70,23 +79,27 @@ public abstract class AbstractOrderPlacedEvent {
         return portfolioId;
     }
 
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
+    }
+
     /**
      * <p>A new OrderBook is created for the coin with the provided identifier.</p>
      *
      * @author Jettro Coenradie
      */
-    public static class OrderBookCreatedEvent {
-
-        private OrderBookId orderBookId;
-        private CurrencyPair currencyPair;
-
-        public OrderBookCreatedEvent(OrderBookId orderBookId, CurrencyPair currencyPair) {
-            this.orderBookId = orderBookId;
-            this.currencyPair = currencyPair;
-        }
-
-        public OrderBookId getOrderBookIdentifier() {
-            return this.orderBookId;
-        }
-    }
+//    public static class OrderBookCreatedEvent {
+//
+//        private OrderBookId orderBookId;
+//        private CurrencyPair currencyPair;
+//
+//        public OrderBookCreatedEvent(OrderBookId orderBookId, CurrencyPair currencyPair) {
+//            this.orderBookId = orderBookId;
+//            this.currencyPair = currencyPair;
+//        }
+//
+//        public OrderBookId getOrderBookIdentifier() {
+//            return this.orderBookId;
+//        }
+//    }
 }

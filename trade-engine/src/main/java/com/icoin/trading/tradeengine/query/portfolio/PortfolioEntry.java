@@ -16,8 +16,10 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,39 +32,44 @@ public class PortfolioEntry {
     private String identifier;
     private String userIdentifier;
     private String userName;
-    private long amountOfMoney;
-    private long reservedAmountOfMoney;
+    private BigDecimal amountOfMoney;
+    private BigDecimal reservedAmountOfMoney;
+    private BigDecimal lowestPrice = BigDecimal.valueOf(0.00000001);
 
     private Map<String, ItemEntry> itemsInPossession = new HashMap<String, ItemEntry>();
     private Map<String, ItemEntry> itemsReserved = new HashMap<String, ItemEntry>();
 
+    @Value("${trade.lowestPrice}")
+    public void setLowestPrice(BigDecimal lowestPrice) {
+        this.lowestPrice = lowestPrice;
+    }
     /*-------------------------------------------------------------------------------------------*/
     /* utility functions                                                                         */
     /*-------------------------------------------------------------------------------------------*/
-    public long obtainAmountOfAvailableItemsFor(String identifier) {
-        long possession = obtainAmountOfItemsInPossessionFor(identifier);
-        long reserved = obtainAmountOfReservedItemsFor(identifier);
-        return possession - reserved;
+    public BigDecimal obtainAmountOfAvailableItemsFor(String identifier) {
+        BigDecimal possession = obtainAmountOfItemsInPossessionFor(identifier);
+        BigDecimal reserved = obtainAmountOfReservedItemsFor(identifier);
+        return possession.subtract(reserved);
     }
 
-    public long obtainAmountOfReservedItemsFor(String identifier) {
+    public BigDecimal obtainAmountOfReservedItemsFor(String identifier) {
         ItemEntry item = findReservedItemByIdentifier(identifier);
         if (null == item) {
-            return 0;
+            return BigDecimal.ZERO;
         }
         return item.getAmount();
     }
 
-    public long obtainAmountOfItemsInPossessionFor(String identifier) {
+    public BigDecimal obtainAmountOfItemsInPossessionFor(String identifier) {
         ItemEntry item = findItemInPossession(identifier);
         if (null == item) {
-            return 0;
+            return BigDecimal.ZERO;
         }
         return item.getAmount();
     }
 
-    public long obtainMoneyToSpend() {
-        return amountOfMoney - reservedAmountOfMoney;
+    public BigDecimal obtainMoneyToSpend() {
+        return amountOfMoney.subtract(reservedAmountOfMoney);
     }
 
     public ItemEntry findReservedItemByIdentifier(String identifier) {
@@ -81,11 +88,11 @@ public class PortfolioEntry {
         handleAdd(itemsInPossession, itemEntry);
     }
 
-    public void removeReservedItem(String itemIdentifier, long amount) {
+    public void removeReservedItem(String itemIdentifier, BigDecimal amount) {
         handleRemoveItem(itemsReserved, itemIdentifier, amount);
     }
 
-    public void removeItemsInPossession(String itemIdentifier, long amount) {
+    public void removeItemsInPossession(String itemIdentifier, BigDecimal amount) {
         handleRemoveItem(itemsInPossession, itemIdentifier, amount);
     }
 
@@ -100,11 +107,11 @@ public class PortfolioEntry {
         this.userIdentifier = userIdentifier;
     }
 
-    public long getAmountOfMoney() {
+    public BigDecimal getAmountOfMoney() {
         return amountOfMoney;
     }
 
-    public void setAmountOfMoney(long amountOfMoney) {
+    public void setAmountOfMoney(BigDecimal amountOfMoney) {
         this.amountOfMoney = amountOfMoney;
     }
 
@@ -116,11 +123,11 @@ public class PortfolioEntry {
         this.identifier = identifier;
     }
 
-    public long getReservedAmountOfMoney() {
+    public BigDecimal getReservedAmountOfMoney() {
         return reservedAmountOfMoney;
     }
 
-    public void setReservedAmountOfMoney(long reservedAmountOfMoney) {
+    public void setReservedAmountOfMoney(BigDecimal reservedAmountOfMoney) {
         this.reservedAmountOfMoney = reservedAmountOfMoney;
     }
 
@@ -154,17 +161,17 @@ public class PortfolioEntry {
     private void handleAdd(Map<String, ItemEntry> items, ItemEntry itemEntry) {
         if (items.containsKey(itemEntry.getIdentifier())) {
             ItemEntry foundEntry = items.get(itemEntry.getIdentifier());
-            foundEntry.setAmount(foundEntry.getAmount() + itemEntry.getAmount());
+            foundEntry.setAmount(foundEntry.getAmount().add(itemEntry.getAmount()));
         } else {
             items.put(itemEntry.getIdentifier(), itemEntry);
         }
     }
 
-    private void handleRemoveItem(Map<String, ItemEntry> items, String itemIdentifier, long amount) {
+    private void handleRemoveItem(Map<String, ItemEntry> items, String itemIdentifier, BigDecimal amount) {
         if (items.containsKey(itemIdentifier)) {
             ItemEntry foundEntry = items.get(itemIdentifier);
-            foundEntry.setAmount(foundEntry.getAmount() - amount);
-            if (foundEntry.getAmount() <= 0) {
+            foundEntry.setAmount(foundEntry.getAmount().subtract(amount));
+            if (foundEntry.getAmount().compareTo(lowestPrice)<0) {
                 items.remove(foundEntry.getIdentifier());
             }
         }

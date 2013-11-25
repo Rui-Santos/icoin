@@ -122,21 +122,21 @@ public class CompanyController {
     @RequestMapping(value = "/sell/{companyId}", method = RequestMethod.POST)
     public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
-            OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCompanyId());
+            OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCoinId());
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
-            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()) < order.getTradeCount()) {
+            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()) < order.getTradeAmount()) {
                 bindingResult.rejectValue("tradeCount",
                         "error.order.sell.tomanyitems",
                         "Not enough items available to create sell order.");
-                addPortfolioItemInfoToModel(order.getCompanyId(), model);
+                addPortfolioItemInfoToModel(order.getCoinId(), model);
                 return "company/sell";
             }
 
             StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
                     new OrderBookId(bookEntry.getIdentifier()),
                     new PortfolioId(portfolioEntry.getIdentifier()),
-                    order.getTradeCount(),
+                    order.getTradeAmount(),
                     order.getItemPrice());
 
             commandBus.dispatch(new GenericCommandMessage<StartSellTransactionCommand>(command));
@@ -144,7 +144,7 @@ public class CompanyController {
             return "redirect:/company/{companyId}";
         }
 
-        addPortfolioItemInfoToModel(order.getCompanyId(), model);
+        addPortfolioItemInfoToModel(order.getCoinId(), model);
         return "company/sell";
     }
 
@@ -152,10 +152,10 @@ public class CompanyController {
     public String buy(@ModelAttribute("order") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
 
-            OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCompanyId());
+            OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCoinId());
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
-            if (portfolioEntry.obtainMoneyToSpend() < order.getTradeCount() * order.getItemPrice()) {
+            if (portfolioEntry.obtainMoneyToSpend() < order.getTradeAmount() * order.getItemPrice()) {
                 bindingResult.rejectValue("tradeCount",
                         "error.order.buy.notenoughmoney",
                         "Not enough cash to spend to buy the items for the price you want");
@@ -166,7 +166,7 @@ public class CompanyController {
             StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
                     new OrderBookId(bookEntry.getIdentifier()),
                     new PortfolioId(portfolioEntry.getIdentifier()),
-                    order.getTradeCount(),
+                    order.getTradeAmount(),
                     order.getItemPrice());
             commandBus.dispatch(new GenericCommandMessage<StartBuyTransactionCommand>(command));
             return "redirect:/company/{companyId}";
@@ -219,7 +219,7 @@ public class CompanyController {
 
     private void prepareInitialOrder(String identifier, AbstractOrder order) {
         CompanyEntry company = companyRepository.findOne(identifier);
-        order.setCompanyId(identifier);
-        order.setCompanyName(company.getName());
+        order.setCoinId(identifier);
+        order.setCoinName(company.getName());
     }
 }

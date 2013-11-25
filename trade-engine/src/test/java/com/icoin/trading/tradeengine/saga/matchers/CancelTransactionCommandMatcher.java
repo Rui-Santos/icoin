@@ -16,8 +16,8 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.api.orders.trades.TransactionId;
-import com.icoin.trading.api.orders.transaction.CancelTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.CancelTransactionCommand;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.hamcrest.Description;
 
 /**

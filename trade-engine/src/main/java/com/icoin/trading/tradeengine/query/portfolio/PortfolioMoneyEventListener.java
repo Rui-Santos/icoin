@@ -16,14 +16,10 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
-import com.icoin.trading.api.portfolio.PortfolioCreatedEvent;
-import com.icoin.trading.api.portfolio.cash.CashDepositedEvent;
-import com.icoin.trading.api.portfolio.cash.CashReservationCancelledEvent;
-import com.icoin.trading.api.portfolio.cash.CashReservationConfirmedEvent;
-import com.icoin.trading.api.portfolio.cash.CashReservedEvent;
-import com.icoin.trading.api.portfolio.cash.CashWithdrawnEvent;
-import com.icoin.trading.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.users.query.repositories.UserQueryRepository;
+import com.icoin.trading.tradeengine.domain.events.portfolio.PortfolioCreatedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashDepositedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashWithdrawnEvent;
+import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

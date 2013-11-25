@@ -16,10 +16,13 @@
 
 package com.icoin.trading.tradeengine.domain.events.order;
 
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+
+import java.math.BigDecimal;
 
 /**
  * <p>A new Sell Order is placed for the current OrderBook. </p>
@@ -28,8 +31,13 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
  */
 public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent {
 
-    public SellOrderPlacedEvent(OrderBookId orderBookId, OrderId orderId, TransactionId transactionId, long tradeCount,
-                                long itemPrice, PortfolioId portfolioId) {
-        super(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId);
+    public SellOrderPlacedEvent(OrderBookId orderBookId,
+                                OrderId orderId,
+                                TransactionId transactionId,
+                                BigDecimal tradeCount,
+                                BigDecimal itemPrice,
+                                PortfolioId portfolioId,
+                                CurrencyPair currencyPair) {
+        super(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId, currencyPair);
     }
 }

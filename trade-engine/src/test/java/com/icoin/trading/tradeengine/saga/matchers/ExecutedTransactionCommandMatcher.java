@@ -16,9 +16,11 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.api.orders.trades.TransactionId;
-import com.icoin.trading.api.orders.transaction.ExecutedTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.hamcrest.Description;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -26,10 +28,10 @@ import org.hamcrest.Description;
 public class ExecutedTransactionCommandMatcher extends BaseCommandMatcher<ExecutedTransactionCommand> {
 
     private TransactionId transactionIdentifier;
-    private long amountOfItems;
-    private long itemPrice;
+    private BigDecimal amountOfItems;
+    private BigDecimal itemPrice;
 
-    public ExecutedTransactionCommandMatcher(long amountOfItems, long itemPrice, TransactionId transactionIdentifier) {
+    public ExecutedTransactionCommandMatcher(BigDecimal amountOfItems, BigDecimal itemPrice, TransactionId transactionIdentifier) {
         this.amountOfItems = amountOfItems;
         this.itemPrice = itemPrice;
         this.transactionIdentifier = transactionIdentifier;
@@ -38,8 +40,8 @@ public class ExecutedTransactionCommandMatcher extends BaseCommandMatcher<Execut
     @Override
     protected boolean doMatches(ExecutedTransactionCommand command) {
         return command.getTransactionIdentifier().equals(transactionIdentifier)
-                && command.getAmountOfItems() == amountOfItems
-                && command.getItemPrice() == itemPrice;
+                && command.getAmountOfItems().subtract(amountOfItems).abs().doubleValue()< 0.000000000001
+                && command.getItemPrice().subtract(itemPrice).abs().doubleValue()< 0.000000000001;
     }
 
     @Override

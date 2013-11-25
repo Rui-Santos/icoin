@@ -16,8 +16,8 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.api.portfolio.cash.DepositCashCommand;
-import com.icoin.trading.api.orders.trades.PortfolioId;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 
 /**

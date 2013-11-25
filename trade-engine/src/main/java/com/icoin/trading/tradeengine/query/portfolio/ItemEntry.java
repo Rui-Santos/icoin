@@ -16,6 +16,8 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -24,13 +26,13 @@ public class ItemEntry {
     private String identifier;
     private String companyIdentifier;
     private String companyName;
-    private long amount;
+    private BigDecimal amount;
 
-    public long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

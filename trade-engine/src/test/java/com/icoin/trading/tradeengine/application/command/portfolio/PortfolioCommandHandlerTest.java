@@ -1,7 +1,5 @@
 package com.icoin.trading.tradeengine.application.command.portfolio;
 
-
-
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.CancelCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
@@ -28,11 +26,13 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.tradeengine.domain.model.user.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -74,7 +74,7 @@ public class PortfolioCommandHandlerTest {
                 100);
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier))
                 .when(command)
-                .expectEvents(new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 100));
+                .expectEvents(new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, BigDecimal.valueOf(100)));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class PortfolioCommandHandlerTest {
                 transactionIdentifier,
                 200);
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
-                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 100))
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, BigDecimal.valueOf(100)))
                 .when(command)
                 .expectEvents(new NotEnoughItemsAvailableToReserveInPortfolio(portfolioIdentifier,
                         orderBookIdentifier,
@@ -111,9 +111,9 @@ public class PortfolioCommandHandlerTest {
                 transactionIdentifier,
                 200);
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
-                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 400))
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, BigDecimal.valueOf(400)))
                 .when(command)
-                .expectEvents(new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 200));
+                .expectEvents(new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, BigDecimal.valueOf(200)));
     }
 
     @Test
@@ -124,13 +124,13 @@ public class PortfolioCommandHandlerTest {
                         transactionIdentifier,
                         100);
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
-                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 400),
-                new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 100))
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, BigDecimal.valueOf(400)),
+                new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, BigDecimal.valueOf(100)))
                 .when(command)
                 .expectEvents(new ItemReservationConfirmedForPortfolioEvent(portfolioIdentifier,
                         orderBookIdentifier,
                         transactionIdentifier,
-                        100));
+                        BigDecimal.valueOf(100)));
     }
 
     @Test
@@ -141,13 +141,13 @@ public class PortfolioCommandHandlerTest {
                         transactionIdentifier,
                         100);
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
-                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, 400),
-                new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, 100))
+                new ItemsAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier, BigDecimal.valueOf(400)),
+                new ItemsReservedEvent(portfolioIdentifier, orderBookIdentifier, transactionIdentifier, BigDecimal.valueOf(100)))
                 .when(command)
                 .expectEvents(new ItemReservationCancelledForPortfolioEvent(portfolioIdentifier,
                         orderBookIdentifier,
                         transactionIdentifier,
-                        100));
+                        BigDecimal.valueOf(100)));
     }
 
     /* Money related test methods */

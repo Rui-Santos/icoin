@@ -16,26 +16,23 @@
 
 package com.icoin.trading.tradeengine.query.transaction;
 
-import com.icoin.trading.api.coin.CompanyId;
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
-import com.icoin.trading.api.orders.trades.TransactionId;
-import com.icoin.trading.api.orders.transaction.BuyTransactionStartedEvent;
-import com.icoin.trading.api.orders.transaction.SellTransactionCancelledEvent;
-import com.icoin.trading.api.orders.transaction.SellTransactionStartedEvent;
-import com.icoin.trading.query.orderbook.OrderBookEntry;
-import com.icoin.trading.query.orderbook.repositories.OrderBookQueryRepository;
-import com.icoin.trading.query.transaction.repositories.TransactionQueryRepository;
+import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCancelledEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
+import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.transaction.repositories.TransactionQueryRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
-import static com.icoin.trading.api.orders.transaction.TransactionType.BUY;
-import static com.icoin.trading.api.orders.transaction.TransactionType.SELL;
-import static com.icoin.trading.query.transaction.TransactionState.CANCELLED;
-import static com.icoin.trading.query.transaction.TransactionState.STARTED;
-
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -45,11 +42,11 @@ public class TransactionEventListenerTest {
     public static final TransactionId transactionIdentifier = new TransactionId();
     public static final OrderBookId orderBookIdentifier = new OrderBookId();
     public static final PortfolioId portfolioIdentifier = new PortfolioId();
-    public static final CompanyId companyIdentifier = new CompanyId();
+    public static final CoinId coinIdentifier = new CoinId();
 
-    public static final int DEFAULT_TOTAL_ITEMS = 100;
-    public static final int DEFAULT_ITEM_PRICE = 10;
-    private static final String DEFAULT_COMPANY_NAME = "Test Company";
+    public static final BigDecimal DEFAULT_TOTAL_ITEMS = BigDecimal.valueOf(100);
+    public static final BigDecimal DEFAULT_ITEM_PRICE = BigDecimal.TEN;
+    private static final String DEFAULT_COMPANY_NAME = "Test Coin";
 
     private TransactionEventListener listener;
     private TransactionQueryRepository transactionQueryRepository;
@@ -78,11 +75,11 @@ public class TransactionEventListenerTest {
 
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
-                0,
+                BigDecimal.ZERO,
                 DEFAULT_COMPANY_NAME,
                 DEFAULT_ITEM_PRICE,
-                STARTED,
-                BUY
+                TransactionState.STARTED,
+                TransactionType.BUY
 
         )));
     }
@@ -98,11 +95,11 @@ public class TransactionEventListenerTest {
 
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
-                0,
+                BigDecimal.ZERO,
                 DEFAULT_COMPANY_NAME,
                 DEFAULT_ITEM_PRICE,
-                STARTED,
-                SELL
+                TransactionState.STARTED,
+                TransactionType.SELL
 
         )));
     }
@@ -111,14 +108,14 @@ public class TransactionEventListenerTest {
     public void handleSellTransactionCancelledEvent() {
         TransactionEntry transactionEntry = new TransactionEntry();
         transactionEntry.setIdentifier(transactionIdentifier.toString());
-        transactionEntry.setAmountOfExecutedItems(0);
+        transactionEntry.setAmountOfExecutedItems(BigDecimal.ZERO);
         transactionEntry.setPricePerItem(DEFAULT_ITEM_PRICE);
-        transactionEntry.setState(STARTED);
+        transactionEntry.setState(TransactionState.STARTED);
         transactionEntry.setAmountOfItems(DEFAULT_TOTAL_ITEMS);
-        transactionEntry.setCompanyName(DEFAULT_COMPANY_NAME);
+        transactionEntry.setCoinName(DEFAULT_COMPANY_NAME);
         transactionEntry.setOrderbookIdentifier(orderBookIdentifier.toString());
         transactionEntry.setPortfolioIdentifier(portfolioIdentifier.toString());
-        transactionEntry.setType(SELL);
+        transactionEntry.setType(TransactionType.SELL);
 
         Mockito.when(transactionQueryRepository.findOne(transactionIdentifier.toString())).thenReturn(transactionEntry);
         SellTransactionCancelledEvent event = new SellTransactionCancelledEvent(
@@ -126,11 +123,11 @@ public class TransactionEventListenerTest {
         listener.handleEvent(event);
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
-                0,
+                BigDecimal.ZERO,
                 DEFAULT_COMPANY_NAME,
                 DEFAULT_ITEM_PRICE,
-                CANCELLED,
-                SELL
+                TransactionState.CANCELLED,
+                TransactionType.SELL
 
         )));
     }
@@ -138,8 +135,8 @@ public class TransactionEventListenerTest {
     private OrderBookEntry createOrderBookEntry() {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         orderBookEntry.setIdentifier(orderBookIdentifier.toString());
-        orderBookEntry.setCompanyIdentifier(companyIdentifier.toString());
-        orderBookEntry.setCompanyName(DEFAULT_COMPANY_NAME);
+        orderBookEntry.setCoinIdentifier(coinIdentifier.toString());
+        orderBookEntry.setCoinName(DEFAULT_COMPANY_NAME);
         return orderBookEntry;
     }
 }

@@ -20,6 +20,8 @@ package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 
+import java.math.BigDecimal;
+
 /**
  * New items have been added to the portfolio for the OrderBook of the provided identifier.
  *
@@ -28,15 +30,15 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 public class ItemsAddedToPortfolioEvent {
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
-    private long amountOfItemsAdded;
+    private BigDecimal amountOfItemsAdded;
 
-    public ItemsAddedToPortfolioEvent(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier, long amountOfItemsAdded) {
+    public ItemsAddedToPortfolioEvent(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier, BigDecimal amountOfItemsAdded) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsAdded = amountOfItemsAdded;
     }
 
-    public long getAmountOfItemsAdded() {
+    public BigDecimal getAmountOfItemsAdded() {
         return amountOfItemsAdded;
     }
 

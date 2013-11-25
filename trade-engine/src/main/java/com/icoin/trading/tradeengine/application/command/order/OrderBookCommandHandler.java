@@ -33,7 +33,7 @@ public class OrderBookCommandHandler {
 
         orderBook.addBuyOrder(command.getOrderId(),
                 command.getTransactionId(),
-                command.getTradeCount(),
+                command.getTradeAmount(),
                 command.getItemPrice(),
                 command.getPortfolioId());
     }
@@ -43,14 +43,14 @@ public class OrderBookCommandHandler {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
         orderBook.addSellOrder(command.getOrderId(),
                 command.getTransactionId(),
-                command.getTradeCount(),
+                command.getTradeAmount(),
                 command.getItemPrice(),
                 command.getPortfolioId());
     }
 
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) {
-        OrderBook orderBook = new OrderBook(command.getOrderBookIdentifier());
+        OrderBook orderBook = new OrderBook(command.getOrderBookIdentifier(), command.getCurrencyPair());
         repository.add(orderBook);
     }
 

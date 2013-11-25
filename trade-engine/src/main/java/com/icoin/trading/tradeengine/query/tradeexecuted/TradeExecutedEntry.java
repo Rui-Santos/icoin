@@ -16,37 +16,39 @@
 
 package com.icoin.trading.tradeengine.query.tradeexecuted;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public class TradeExecutedEntry {
 
-    private long tradeCount;
-    private long tradePrice;
-    private String companyName;
+    private BigDecimal tradeAmount;
+    private BigDecimal tradePrice;
+    private String coinName;
     private String orderBookIdentifier;
 
-    public long getTradeCount() {
-        return tradeCount;
+    public BigDecimal getTradeAmount() {
+        return tradeAmount;
     }
 
-    public void setTradeCount(long tradeCount) {
-        this.tradeCount = tradeCount;
+    public void setTradeAmount(BigDecimal tradeAmount) {
+        this.tradeAmount = tradeAmount;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getCoinName() {
+        return coinName;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setCoinName(String companyName) {
+        this.coinName = companyName;
     }
 
-    public long getTradePrice() {
+    public BigDecimal getTradePrice() {
         return tradePrice;
     }
 
-    public void setTradePrice(long tradePrice) {
+    public void setTradePrice(BigDecimal tradePrice) {
         this.tradePrice = tradePrice;
     }
 

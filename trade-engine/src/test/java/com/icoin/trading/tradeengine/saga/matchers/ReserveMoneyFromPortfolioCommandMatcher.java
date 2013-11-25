@@ -20,15 +20,17 @@ import com.icoin.trading.tradeengine.application.command.portfolio.cash.ReserveC
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public class ReserveMoneyFromPortfolioCommandMatcher extends BaseCommandMatcher<ReserveCashCommand> {
 
     private PortfolioId portfolioIdentifier;
-    private long amountOfMoneyToReserve;
+    private BigDecimal amountOfMoneyToReserve;
 
-    public ReserveMoneyFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier, long amountOfMoneyToReserve) {
+    public ReserveMoneyFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier, BigDecimal amountOfMoneyToReserve) {
         this.amountOfMoneyToReserve = amountOfMoneyToReserve;
         this.portfolioIdentifier = portfolioIdentifier;
     }
@@ -36,7 +38,7 @@ public class ReserveMoneyFromPortfolioCommandMatcher extends BaseCommandMatcher<
     @Override
     protected boolean doMatches(ReserveCashCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && command.getAmountOfMoneyToReserve() == amountOfMoneyToReserve;
+                && Math.abs(command.getAmountOfMoneyToReserve()amountOfMoneyToReserve);
     }
 
     @Override

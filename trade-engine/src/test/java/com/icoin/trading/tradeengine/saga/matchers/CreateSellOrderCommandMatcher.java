@@ -16,9 +16,9 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.api.orders.trades.CreateSellOrderCommand;
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
+import com.icoin.trading.tradeengine.application.command.order.CreateSellOrderCommand;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 
 /**
@@ -42,7 +42,7 @@ public class CreateSellOrderCommandMatcher extends BaseCommandMatcher<CreateSell
     protected boolean doMatches(CreateSellOrderCommand command) {
         return command.getOrderBookId().equals(orderbookIdentifier)
                 && command.getPortfolioId().equals(portfolioIdentifier)
-                && tradeCount == command.getTradeCount()
+                && tradeCount == command.getTradeAmount()
                 && itemPrice == command.getItemPrice();
     }
 

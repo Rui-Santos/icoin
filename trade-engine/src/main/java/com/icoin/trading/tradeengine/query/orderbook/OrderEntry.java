@@ -16,6 +16,8 @@
 
 package com.icoin.trading.tradeengine.query.orderbook;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -23,10 +25,10 @@ public class OrderEntry {
 
     private String identifier;
     private OrderBookEntry orderBookEntry;
-    private long tradeCount;
-    private long itemPrice;
+    private BigDecimal tradeAmount;
+    private BigDecimal itemPrice;
     private String userId;
-    private long itemsRemaining;
+    private BigDecimal itemsRemaining;
     private String type;
 
     public String getIdentifier() {
@@ -37,19 +39,19 @@ public class OrderEntry {
         this.identifier = identifier;
     }
 
-    public long getItemPrice() {
+    public BigDecimal getItemPrice() {
         return itemPrice;
     }
 
-    void setItemPrice(long itemPrice) {
+    void setItemPrice(BigDecimal itemPrice) {
         this.itemPrice = itemPrice;
     }
 
-    public long getItemsRemaining() {
+    public BigDecimal getItemsRemaining() {
         return itemsRemaining;
     }
 
-    void setItemsRemaining(long itemsRemaining) {
+    void setItemsRemaining(BigDecimal itemsRemaining) {
         this.itemsRemaining = itemsRemaining;
     }
 
@@ -61,12 +63,12 @@ public class OrderEntry {
         this.orderBookEntry = orderBookEntry;
     }
 
-    public long getTradeCount() {
-        return tradeCount;
+    public BigDecimal getTradeAmount() {
+        return tradeAmount;
     }
 
-    void setTradeCount(long tradeCount) {
-        this.tradeCount = tradeCount;
+    void setTradeAmount(BigDecimal tradeAmount) {
+        this.tradeAmount = tradeAmount;
     }
 
     public String getUserId() {

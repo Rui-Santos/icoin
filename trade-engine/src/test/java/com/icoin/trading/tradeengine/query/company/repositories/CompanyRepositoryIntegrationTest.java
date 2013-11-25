@@ -16,13 +16,16 @@
 
 package com.icoin.trading.tradeengine.query.company.repositories;
 
-import com.icoin.trading.api.coin.CompanyId;
-import com.icoin.trading.query.company.CompanyEntry;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.query.coin.CoinEntry;
+import com.icoin.trading.tradeengine.query.coin.CoinQueryRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -32,16 +35,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class CompanyRepositoryIntegrationTest {
 
     @Autowired
-    private CompanyQueryRepository companyRepository;
+    private CoinQueryRepository coinQueryRepository;
 
     @Test
     public void storeCompanyInRepository() {
-        CompanyEntry companyEntry = new CompanyEntry();
-        companyEntry.setIdentifier(new CompanyId().toString());
-        companyEntry.setValue(100000);
-        companyEntry.setAmountOfShares(1000);
+        CoinEntry companyEntry = new CoinEntry();
+        companyEntry.setIdentifier(new CoinId().toString());
+        companyEntry.setCoinInitialAmount(BigDecimal.valueOf(100000));
+        companyEntry.setCoinInitialPrice(BigDecimal.valueOf(1000));
         companyEntry.setTradeStarted(true);
 
-        companyRepository.save(companyEntry);
+        coinQueryRepository.save(companyEntry);
     }
 }

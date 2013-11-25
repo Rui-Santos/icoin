@@ -19,6 +19,7 @@ package com.icoin.trading.tradeengine.query.orderbook;
 import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
 import com.icoin.trading.tradeengine.domain.events.order.AbstractOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
+import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
@@ -29,7 +30,10 @@ import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -39,18 +43,23 @@ public class OrderBookListener {
 
     private static final String BUY = "Buy";
     private static final String SELL = "Sell";
+    private BigDecimal lowestPrice = BigDecimal.valueOf(0.00000001);
 
     private OrderBookQueryRepository orderBookRepository;
     private CoinQueryRepository coinRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
 
+    @Value("${trade.lowestPrice}")
+    public void setLowestPrice(BigDecimal lowestPrice) {
+        this.lowestPrice = lowestPrice;
+    }
 
     @EventHandler
-    public void handleOrderBookAddedToCompanyEvent(OrderBookAddedToCoinEvent event) {
-        CoinEntry companyEntry = coinRepository.findOne(event.getCoinId().toString());
+    public void handleOrderBookAddedToCoinEvent(OrderBookAddedToCoinEvent event) {
+        CoinEntry coinEntry = coinRepository.findOne(event.getCoinId().toString());
         OrderBookEntry orderBookEntry = new OrderBookEntry();
-        orderBookEntry.setCompanyIdentifier(event.getCoinId().toString());
-        orderBookEntry.setCompanyName(companyEntry.getName());
+        orderBookEntry.setCoinIdentifier(event.getCoinId().toString());
+        orderBookEntry.setCoinName(coinEntry.getName());
         orderBookEntry.setIdentifier(event.getOrderBookId().toString());
         orderBookRepository.save(orderBookEntry);
     }
@@ -84,9 +93,9 @@ public class OrderBookListener {
         OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.toString());
 
         TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();
-        tradeExecutedEntry.setCompanyName(orderBookEntry.getCompanyName());
+        tradeExecutedEntry.setCoinName(orderBookEntry.getCoinName());
         tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getIdentifier());
-        tradeExecutedEntry.setTradeCount(event.getTradeAmount());
+        tradeExecutedEntry.setTradeAmount(event.getTradeAmount());
         tradeExecutedEntry.setTradePrice(event.getTradePrice());
 
         tradeExecutedRepository.save(tradeExecutedEntry);
@@ -95,25 +104,25 @@ public class OrderBookListener {
         OrderEntry foundBuyOrder = null;
         for (OrderEntry order : orderBookEntry.buyOrders()) {
             if (order.getIdentifier().equals(buyOrderId.toString())) {
-                long itemsRemaining = order.getItemsRemaining();
-                order.setItemsRemaining(itemsRemaining - event.getTradeAmount());
+                BigDecimal itemsRemaining = order.getItemsRemaining();
+                order.setItemsRemaining(itemsRemaining.subtract(event.getTradeAmount()));
                 foundBuyOrder = order;
                 break;
             }
         }
-        if (null != foundBuyOrder && foundBuyOrder.getItemsRemaining() == 0) {
+        if (null != foundBuyOrder && foundBuyOrder.getItemsRemaining().compareTo(lowestPrice)<0) {
             orderBookEntry.buyOrders().remove(foundBuyOrder);
         }
         OrderEntry foundSellOrder = null;
         for (OrderEntry order : orderBookEntry.sellOrders()) {
             if (order.getIdentifier().equals(sellOrderId.toString())) {
-                long itemsRemaining = order.getItemsRemaining();
-                order.setItemsRemaining(itemsRemaining - event.getTradeAmount());
+                BigDecimal itemsRemaining = order.getItemsRemaining();
+                order.setItemsRemaining(itemsRemaining.subtract(event.getTradeAmount()));
                 foundSellOrder = order;
                 break;
             }
         }
-        if (null != foundSellOrder && foundSellOrder.getItemsRemaining() == 0) {
+        if (null != foundSellOrder && foundSellOrder.getItemsRemaining().compareTo(lowestPrice)<0) {
             orderBookEntry.sellOrders().remove(foundSellOrder);
         }
         orderBookRepository.save(orderBookEntry);
@@ -122,8 +131,8 @@ public class OrderBookListener {
     private OrderEntry createPlacedOrder(AbstractOrderPlacedEvent event, String type) {
         OrderEntry entry = new OrderEntry();
         entry.setIdentifier(event.getOrderId().toString());
-        entry.setItemsRemaining(event.getTradeCount());
-        entry.setTradeCount(event.getTradeCount());
+        entry.setItemsRemaining(event.getTradeAmount());
+        entry.setTradeAmount(event.getTradeAmount());
         entry.setUserId(event.getPortfolioId().toString());
         entry.setType(type);
         entry.setItemPrice(event.getItemPrice());

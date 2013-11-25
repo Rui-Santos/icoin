@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -28,19 +30,19 @@ public class ItemsReservedEvent {
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
-    private long amountOfItemsReserved;
+    private BigDecimal amountOfItemsReserved;
 
     public ItemsReservedEvent(PortfolioId portfolioIdentifier,
                               OrderBookId orderBookIdentifier,
                               TransactionId transactionIdentifier,
-                              long amountOfItemsReserved) {
+                              BigDecimal amountOfItemsReserved) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItemsReserved = amountOfItemsReserved;
     }
 
-    public long getAmountOfItemsReserved() {
+    public BigDecimal getAmountOfItemsReserved() {
         return amountOfItemsReserved;
     }
 

@@ -19,17 +19,19 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public abstract class AbstractTransactionPartiallyExecutedEvent {
     private TransactionId transactionIdentifier;
-    private long amountOfExecutedItems;
-    private long totalOfExecutedItems;
-    private long itemPrice;
+    private BigDecimal amountOfExecutedItems;
+    private BigDecimal totalOfExecutedItems;
+    private BigDecimal itemPrice;
 
-    public AbstractTransactionPartiallyExecutedEvent(TransactionId transactionIdentifier, long amountOfExecutedItems, long totalOfExecutedItems,
-                                                     long itemPrice) {
+    public AbstractTransactionPartiallyExecutedEvent(TransactionId transactionIdentifier, BigDecimal amountOfExecutedItems, BigDecimal totalOfExecutedItems,
+                                                     BigDecimal itemPrice) {
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfExecutedItems = amountOfExecutedItems;
         this.totalOfExecutedItems = totalOfExecutedItems;
@@ -40,15 +42,15 @@ public abstract class AbstractTransactionPartiallyExecutedEvent {
         return transactionIdentifier;
     }
 
-    public long getAmountOfExecutedItems() {
+    public BigDecimal getAmountOfExecutedItems() {
         return amountOfExecutedItems;
     }
 
-    public long getItemPrice() {
+    public BigDecimal getItemPrice() {
         return itemPrice;
     }
 
-    public long getTotalOfExecutedItems() {
+    public BigDecimal getTotalOfExecutedItems() {
         return totalOfExecutedItems;
     }
 }

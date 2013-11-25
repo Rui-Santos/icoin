@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -56,10 +58,10 @@ public class PortfolioItemEventListener {
         logger.debug("Handle ItemReservationCancelledForPortfolioEvent for orderbook with identifier {}",
                 event.getOrderBookIdentifier());
         ItemEntry itemEntry = createItemEntry(event.getOrderBookIdentifier().toString(),
-                event.getAmountOfCancelledItems());
+                event.getAmountOfCancelledAmount());
 
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.removeReservedItem(event.getOrderBookIdentifier().toString(), event.getAmountOfCancelledItems());
+        portfolioEntry.removeReservedItem(event.getOrderBookIdentifier().toString(), event.getAmountOfCancelledAmount());
         portfolioEntry.addItemInPossession(itemEntry);
 
         portfolioRepository.save(portfolioEntry);
@@ -89,12 +91,12 @@ public class PortfolioItemEventListener {
         portfolioRepository.save(portfolioEntry);
     }
 
-    private ItemEntry createItemEntry(String identifier, long amount) {
+    private ItemEntry createItemEntry(String identifier, BigDecimal amount) {
         OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(identifier);
         ItemEntry itemEntry = new ItemEntry();
         itemEntry.setIdentifier(identifier);
-        itemEntry.setCompanyIdentifier(orderBookEntry.getCompanyIdentifier());
-        itemEntry.setCompanyName(orderBookEntry.getCompanyName());
+        itemEntry.setCompanyIdentifier(orderBookEntry.getCoinIdentifier());
+        itemEntry.setCompanyName(orderBookEntry.getCoinName());
         itemEntry.setAmount(amount);
         return itemEntry;
     }
