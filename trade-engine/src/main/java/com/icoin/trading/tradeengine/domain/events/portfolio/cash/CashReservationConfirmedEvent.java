@@ -20,17 +20,19 @@ package com.icoin.trading.tradeengine.domain.events.portfolio.cash;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public class CashReservationConfirmedEvent {
     private TransactionId transactionIdentifier;
     private PortfolioId portfolioIdentifier;
-    private long amountOfMoneyConfirmedInCents;
+    private BigDecimal amountOfMoneyConfirmedInCents;
 
     public CashReservationConfirmedEvent(PortfolioId portfolioIdentifier,
                                          TransactionId transactionId,
-                                         long amountOfMoneyConfirmedInCents) {
+                                         BigDecimal amountOfMoneyConfirmedInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionId;
         this.amountOfMoneyConfirmedInCents = amountOfMoneyConfirmedInCents;
@@ -44,7 +46,7 @@ public class CashReservationConfirmedEvent {
         return transactionIdentifier;
     }
 
-    public long getAmountOfMoneyConfirmedInCents() {
+    public BigDecimal getAmountOfMoneyConfirmedInCents() {
         return amountOfMoneyConfirmedInCents;
     }
 }

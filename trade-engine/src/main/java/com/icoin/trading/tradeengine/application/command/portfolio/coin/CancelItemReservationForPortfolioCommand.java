@@ -20,6 +20,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * Cancel a reservation for an amount of items for the OrderBook belonging to the provided identifier in the Portfolio
  * of the provided identifier.
@@ -31,12 +33,12 @@ public class CancelItemReservationForPortfolioCommand {
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
-    private long amountOfCancelledItems;
+    private BigDecimal amountOfCancelledItems;
 
     public CancelItemReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
                                                     OrderBookId orderBookIdentifier,
                                                     TransactionId transactionIdentifier,
-                                                    long amountOfCancelledItems) {
+                                                    BigDecimal amountOfCancelledItems) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
@@ -44,7 +46,7 @@ public class CancelItemReservationForPortfolioCommand {
         this.amountOfCancelledItems = amountOfCancelledItems;
     }
 
-    public long getAmountOfItemsToCancel() {
+    public BigDecimal getAmountOfItemsToCancel() {
         return amountOfCancelledItems;
     }
 

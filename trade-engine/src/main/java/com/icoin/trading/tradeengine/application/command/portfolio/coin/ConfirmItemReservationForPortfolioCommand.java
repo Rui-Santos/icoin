@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * Confirm the reserved items belonging to OrderBook of the provided identifier for the Portfolio of the provided
  * identifier.
@@ -32,19 +34,19 @@ public class ConfirmItemReservationForPortfolioCommand {
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
-    private long amountOfItemsToConfirm;
+    private BigDecimal amountOfItemsToConfirm;
 
     public ConfirmItemReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
                                                      OrderBookId orderBookIdentifier,
                                                      TransactionId transactionIdentifier,
-                                                     long amountOfItemsToConfirm) {
+                                                     BigDecimal amountOfItemsToConfirm) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItemsToConfirm = amountOfItemsToConfirm;
     }
 
-    public long getAmountOfItemsToConfirm() {
+    public BigDecimal getAmountOfItemsToConfirm() {
         return amountOfItemsToConfirm;
     }
 

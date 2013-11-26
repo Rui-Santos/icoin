@@ -32,7 +32,9 @@ public class ItemsAddedToPortfolioEvent {
     private OrderBookId orderBookIdentifier;
     private BigDecimal amountOfItemsAdded;
 
-    public ItemsAddedToPortfolioEvent(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier, BigDecimal amountOfItemsAdded) {
+    public ItemsAddedToPortfolioEvent(PortfolioId portfolioIdentifier,
+                                      OrderBookId orderBookIdentifier,
+                                      BigDecimal amountOfItemsAdded) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsAdded = amountOfItemsAdded;

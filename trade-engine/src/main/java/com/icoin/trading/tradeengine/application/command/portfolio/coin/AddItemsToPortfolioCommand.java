@@ -20,7 +20,9 @@ package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
+import java.math.BigDecimal;
 
 /**
  * Try to add new items for a specific OrderBook to the portfolio.
@@ -31,8 +33,8 @@ public class AddItemsToPortfolioCommand {
 
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
-    @Min(0)
-    private long amountOfItemsToAdd;
+    @DecimalMin("0.00000001")
+    private BigDecimal amountOfItemsToAdd;
 
     /**
      * Create a new command.
@@ -42,13 +44,13 @@ public class AddItemsToPortfolioCommand {
      * @param amountOfItemsToAdd  AMount of items to add
      */
     public AddItemsToPortfolioCommand(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier,
-                                      long amountOfItemsToAdd) {
+                                      BigDecimal amountOfItemsToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.amountOfItemsToAdd = amountOfItemsToAdd;
     }
 
-    public long getAmountOfItemsToAdd() {
+    public BigDecimal getAmountOfItemsToAdd() {
         return amountOfItemsToAdd;
     }
 

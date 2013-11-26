@@ -16,12 +16,6 @@
 
 package com.icoin.trading.tradeengine.domain.model.portfolio;
 
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import com.icoin.trading.tradeengine.domain.model.user.UserId;
-import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import com.icoin.trading.tradeengine.domain.events.portfolio.PortfolioCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashDepositedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationCancelledEvent;
@@ -35,7 +29,14 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemToReserveN
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsAddedToPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemsAvailableToReserveInPortfolio;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.tradeengine.domain.model.user.UserId;
+import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,11 +54,11 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
     @AggregateIdentifier
     private PortfolioId portfolioId;
-    private Map<OrderBookId, Long> availableItems = new HashMap<OrderBookId, Long>();
-    private Map<OrderBookId, Long> reservedItems = new HashMap<OrderBookId, Long>();
+    private Map<OrderBookId, BigDecimal> availableItems = new HashMap<OrderBookId, BigDecimal>();
+    private Map<OrderBookId, BigDecimal> reservedItems = new HashMap<OrderBookId, BigDecimal>();
 
-    private long amountOfMoney;
-    private long reservedAmountOfMoney;
+    private BigDecimal amountOfMoney;
+    private BigDecimal reservedAmountOfMoney;
 
     protected Portfolio() {
     }
@@ -66,16 +67,16 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new PortfolioCreatedEvent(portfolioId, userIdentifier));
     }
 
-    public void addItems(OrderBookId orderBookIdentifier, long amountOfItemsToAdd) {
+    public void addItems(OrderBookId orderBookIdentifier, BigDecimal amountOfItemsToAdd) {
         apply(new ItemsAddedToPortfolioEvent(portfolioId, orderBookIdentifier, amountOfItemsToAdd));
     }
 
-    public void reserveItems(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, long amountOfItemsToReserve) {
+    public void reserveItems(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, BigDecimal amountOfItemsToReserve) {
         if (!availableItems.containsKey(orderBookIdentifier)) {
             apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, orderBookIdentifier, transactionIdentifier));
         } else {
-            Long availableAmountOfItems = availableItems.get(orderBookIdentifier);
-            if (availableAmountOfItems < amountOfItemsToReserve) {
+            BigDecimal availableAmountOfItems = availableItems.get(orderBookIdentifier);
+            if (availableAmountOfItems.compareTo(amountOfItemsToReserve) < 0) {
                 apply(new NotEnoughItemsAvailableToReserveInPortfolio(
                         portfolioId, orderBookIdentifier, transactionIdentifier, availableAmountOfItems, amountOfItemsToReserve));
             } else {
@@ -85,7 +86,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     public void confirmReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier,
-                                   long amountOfItemsToConfirm) {
+                                   BigDecimal amountOfItemsToConfirm) {
         apply(new ItemReservationConfirmedForPortfolioEvent(
                 portfolioId,
                 orderBookIdentifier,
@@ -93,7 +94,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
                 amountOfItemsToConfirm));
     }
 
-    public void cancelReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, long amountOfItemsToCancel) {
+    public void cancelReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, BigDecimal amountOfItemsToCancel) {
         apply(new ItemReservationCancelledForPortfolioEvent(
                 portfolioId,
                 orderBookIdentifier,
@@ -101,27 +102,27 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
                 amountOfItemsToCancel));
     }
 
-    public void addMoney(long moneyToAddInCents) {
-        apply(new CashDepositedEvent(portfolioId, moneyToAddInCents));
+    public void addMoney(BigDecimal money) {
+        apply(new CashDepositedEvent(portfolioId, money));
     }
 
-    public void makePayment(long amountToPayInCents) {
+    public void makePayment(BigDecimal amountToPayInCents) {
         apply(new CashWithdrawnEvent(portfolioId, amountToPayInCents));
     }
 
-    public void reserveMoney(TransactionId transactionIdentifier, long amountToReserve) {
-        if (amountOfMoney >= amountToReserve) {
+    public void reserveMoney(TransactionId transactionIdentifier, BigDecimal amountToReserve) {
+        if (amountOfMoney.compareTo(amountToReserve) >= 0) {
             apply(new CashReservedEvent(portfolioId, transactionIdentifier, amountToReserve));
         } else {
             apply(new CashReservationRejectedEvent(portfolioId, transactionIdentifier, amountToReserve));
         }
     }
 
-    public void cancelMoneyReservation(TransactionId transactionIdentifier, long amountOfMoneyToCancel) {
+    public void cancelMoneyReservation(TransactionId transactionIdentifier, BigDecimal amountOfMoneyToCancel) {
         apply(new CashReservationCancelledEvent(portfolioId, transactionIdentifier, amountOfMoneyToCancel));
     }
 
-    public void confirmMoneyReservation(TransactionId transactionIdentifier, long amountOfMoneyToConfirm) {
+    public void confirmMoneyReservation(TransactionId transactionIdentifier, BigDecimal amountOfMoneyToConfirm) {
         apply(new CashReservationConfirmedEvent(portfolioId, transactionIdentifier, amountOfMoneyToConfirm));
     }
 
@@ -133,75 +134,75 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onItemsAddedToPortfolio(ItemsAddedToPortfolioEvent event) {
-        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available + event.getAmountOfItemsAdded());
+        BigDecimal available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
+        availableItems.put(event.getOrderBookIdentifier(), available.add(event.getAmountOfItemsAdded()));
     }
 
     @EventHandler
     public void onItemsReserved(ItemsReservedEvent event) {
-        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available - event.getAmountOfItemsReserved());
+        BigDecimal available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
+        availableItems.put(event.getOrderBookIdentifier(), available.subtract(event.getAmountOfItemsReserved()));
 
-        long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
-        reservedItems.put(event.getOrderBookIdentifier(), reserved + event.getAmountOfItemsReserved());
+        BigDecimal reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
+        reservedItems.put(event.getOrderBookIdentifier(), reserved.add(event.getAmountOfItemsReserved()));
     }
 
     @EventHandler
     public void onReservationConfirmed(ItemReservationConfirmedForPortfolioEvent event) {
-        long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
-        reservedItems.put(event.getOrderBookIdentifier(), reserved - event.getAmountOfConfirmedItems());
+        BigDecimal reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
+        reservedItems.put(event.getOrderBookIdentifier(), reserved.subtract(event.getAmountOfConfirmedItems()));
 
-        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available - event.getAmountOfConfirmedItems());
+        BigDecimal available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
+        availableItems.put(event.getOrderBookIdentifier(), available.subtract(event.getAmountOfConfirmedItems()));
     }
 
     @EventHandler
     public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
-        long reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
-        reservedItems.put(event.getOrderBookIdentifier(), reserved + event.getAmountOfCancelledAmount());
+        BigDecimal reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
+        reservedItems.put(event.getOrderBookIdentifier(), reserved.subtract(event.getAmountOfCancelledAmount()));
 
-        long available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available + event.getAmountOfCancelledAmount());
+        BigDecimal available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
+        availableItems.put(event.getOrderBookIdentifier(), available.subtract(event.getAmountOfCancelledAmount()));
     }
 
     @EventHandler
     public void onMoneyAddedToPortfolio(CashDepositedEvent event) {
-        amountOfMoney += event.getMoneyAddedInCents();
+        amountOfMoney = amountOfMoney.add(event.getMoneyAddedInCents());
     }
 
     @EventHandler
     public void onPaymentMadeFromPortfolio(CashWithdrawnEvent event) {
-        amountOfMoney -= event.getAmountPaidInCents();
+        amountOfMoney = amountOfMoney.subtract(event.getAmountPaidInCents());
     }
 
     @EventHandler
     public void onMoneyReservedFromPortfolio(CashReservedEvent event) {
-        amountOfMoney -= event.getAmountToReserve();
-        reservedAmountOfMoney += event.getAmountToReserve();
+        amountOfMoney = amountOfMoney.subtract(event.getAmountToReserve());
+        reservedAmountOfMoney = amountOfMoney.add(event.getAmountToReserve());
     }
 
     @EventHandler
     public void onMoneyReservationCancelled(CashReservationCancelledEvent event) {
-        amountOfMoney += event.getAmountOfMoneyToCancel();
-        reservedAmountOfMoney -= event.getAmountOfMoneyToCancel();
+        amountOfMoney = amountOfMoney.add(event.getAmountOfMoneyToCancel());
+        reservedAmountOfMoney = reservedAmountOfMoney.subtract(event.getAmountOfMoneyToCancel());
     }
 
     @EventHandler
     public void onMoneyReservationConfirmed(CashReservationConfirmedEvent event) {
-        reservedAmountOfMoney -= event.getAmountOfMoneyConfirmedInCents();
+        reservedAmountOfMoney = reservedAmountOfMoney.subtract(event.getAmountOfMoneyConfirmedInCents());
     }
 
     /* UTILITY METHODS */
-    private long obtainCurrentAvailableItems(OrderBookId orderBookIdentifier) {
-        long available = 0;
+    private BigDecimal obtainCurrentAvailableItems(OrderBookId orderBookIdentifier) {
+        BigDecimal available = BigDecimal.ZERO;
         if (availableItems.containsKey(orderBookIdentifier)) {
             available = availableItems.get(orderBookIdentifier);
         }
         return available;
     }
 
-    private long obtainCurrentReservedItems(OrderBookId orderBookIdentifier) {
-        long reserved = 0;
+    private BigDecimal obtainCurrentReservedItems(OrderBookId orderBookIdentifier) {
+        BigDecimal reserved = BigDecimal.ZERO;
         if (reservedItems.containsKey(orderBookIdentifier)) {
             reserved = reservedItems.get(orderBookIdentifier);
         }

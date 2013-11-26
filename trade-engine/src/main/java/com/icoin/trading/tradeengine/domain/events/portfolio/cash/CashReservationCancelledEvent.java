@@ -20,17 +20,19 @@ package com.icoin.trading.tradeengine.domain.events.portfolio.cash;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public class CashReservationCancelledEvent {
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    private long amountOfMoneyToCancel;
+    private BigDecimal amountOfMoneyToCancel;
 
     public CashReservationCancelledEvent(PortfolioId portfolioIdentifier,
                                          TransactionId transactionIdentifier,
-                                         long amountOfMoneyToCancel) {
+                                         BigDecimal amountOfMoneyToCancel) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoneyToCancel = amountOfMoneyToCancel;
@@ -44,7 +46,7 @@ public class CashReservationCancelledEvent {
         return transactionIdentifier;
     }
 
-    public long getAmountOfMoneyToCancel() {
+    public BigDecimal getAmountOfMoneyToCancel() {
         return amountOfMoneyToCancel;
     }
 }

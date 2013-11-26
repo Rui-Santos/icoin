@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -29,19 +31,19 @@ public class ReserveItemsCommand {
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
     private OrderBookId orderBookIdentifier;
-    private long amountOfItemsToReserve;
+    private BigDecimal amountOfItemsToReserve;
 
     public ReserveItemsCommand(PortfolioId portfolioIdentifier,
                                OrderBookId orderBookIdentifier,
                                TransactionId transactionIdentifier,
-                               long amountOfItemsToReserve) {
+                               BigDecimal amountOfItemsToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItemsToReserve = amountOfItemsToReserve;
         this.orderBookIdentifier = orderBookIdentifier;
     }
 
-    public long getAmountOfItemsToReserve() {
+    public BigDecimal getAmountOfItemsToReserve() {
         return amountOfItemsToReserve;
     }
 

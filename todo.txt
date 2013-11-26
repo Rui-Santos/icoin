@@ -1,2 +1,12 @@
+refactor module
+price refactor
+run project
+upgrade axon
+treeset/cache on exchange
 bigdecimal:                <bean class="com.homhon.mongo.converter.BigDecimalToDoubleConverter"/>
+money adding
 events command refactoring
+
+
+WS:
+https://github.com/spring-projects/spring-ws-samples/blob/master/stockquote/server/src/main/java/org/springframework/ws/samples/stockquote/ws/StockService.java

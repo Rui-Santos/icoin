@@ -20,6 +20,8 @@ package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -27,18 +29,18 @@ public class ConfirmCashReservationCommand {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    private long amountOfMoneyToConfirmInCents;
+    private BigDecimal amountOfMoneyToConfirmInCents;
 
 
     public ConfirmCashReservationCommand(PortfolioId portfolioIdentifier,
                                          TransactionId transactionIdentifier,
-                                         long amountOfMoneyToConfirmInCents) {
+                                         BigDecimal amountOfMoneyToConfirmInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoneyToConfirmInCents = amountOfMoneyToConfirmInCents;
     }
 
-    public long getAmountOfMoneyToConfirmInCents() {
+    public BigDecimal getAmountOfMoneyToConfirmInCents() {
         return amountOfMoneyToConfirmInCents;
     }
 

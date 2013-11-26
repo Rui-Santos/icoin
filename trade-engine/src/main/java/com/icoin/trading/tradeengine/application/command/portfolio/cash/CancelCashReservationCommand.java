@@ -20,6 +20,8 @@ package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -27,17 +29,17 @@ public class CancelCashReservationCommand {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    private long amountOfMoneyToCancel;
+    private BigDecimal amountOfMoneyToCancel;
 
     public CancelCashReservationCommand(PortfolioId portfolioIdentifier,
                                         TransactionId transactionIdentifier,
-                                        long amountOfMoneyToCancel) {
+                                        BigDecimal amountOfMoneyToCancel) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoneyToCancel = amountOfMoneyToCancel;
     }
 
-    public long getAmountOfMoneyToCancel() {
+    public BigDecimal getAmountOfMoneyToCancel() {
         return amountOfMoneyToCancel;
     }
 

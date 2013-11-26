@@ -20,6 +20,7 @@ package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 
 import javax.validation.constraints.Min;
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -28,15 +29,15 @@ public class WithdrawCashCommand {
 
     private PortfolioId portfolioIdentifier;
     @Min(0)
-    private long amountToPayInCents;
+    private BigDecimal amountToPayInCents;
 
-    public WithdrawCashCommand(PortfolioId portfolioIdentifier, long amountToPayInCents) {
+    public WithdrawCashCommand(PortfolioId portfolioIdentifier, BigDecimal amountToPayInCents) {
 
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountToPayInCents = amountToPayInCents;
     }
 
-    public long getAmountToPayInCents() {
+    public BigDecimal getAmountToPayInCents() {
         return amountToPayInCents;
     }
 

@@ -19,14 +19,16 @@ package com.icoin.trading.tradeengine.domain.events.portfolio.cash;
 
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public class CashWithdrawnEvent {
     private PortfolioId portfolioIdentifier;
-    private long amountPaidInCents;
+    private BigDecimal amountPaidInCents;
 
-    public CashWithdrawnEvent(PortfolioId portfolioIdentifier, long amountPaidInCents) {
+    public CashWithdrawnEvent(PortfolioId portfolioIdentifier, BigDecimal amountPaidInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountPaidInCents = amountPaidInCents;
     }
@@ -35,7 +37,7 @@ public class CashWithdrawnEvent {
         return portfolioIdentifier;
     }
 
-    public long getAmountPaidInCents() {
+    public BigDecimal getAmountPaidInCents() {
         return amountPaidInCents;
     }
 }
