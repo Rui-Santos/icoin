@@ -18,10 +18,10 @@ package com.icoin.trading.query.test
 
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand
-import com.icoin.trading.query.portfolio.PortfolioEntry
-import com.icoin.trading.api.orders.trades.OrderBookId
-import com.icoin.trading.api.orders.trades.PortfolioId
-import com.icoin.trading.api.orders.trades.TransactionId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId
+import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry
 
 /**
  * Class used to create an order based on the provided Profile. If the profile has cash we place buy orders, if

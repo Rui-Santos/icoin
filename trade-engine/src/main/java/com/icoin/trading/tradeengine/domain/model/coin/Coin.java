@@ -23,6 +23,8 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -36,7 +38,7 @@ public class Coin extends AbstractAnnotatedAggregateRoot {
     protected Coin() {
     }
 
-    public Coin(CoinId coinId, String name, long value, long amountOfShares) {
+    public Coin(CoinId coinId, String name, BigDecimal value, BigDecimal amountOfShares) {
         apply(new CoinCreatedEvent(coinId, name, value, amountOfShares));
     }
 

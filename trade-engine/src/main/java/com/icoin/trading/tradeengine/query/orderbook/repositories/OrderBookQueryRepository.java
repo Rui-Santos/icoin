@@ -26,5 +26,5 @@ import java.util.List;
  */
 public interface OrderBookQueryRepository extends PagingAndSortingRepository<OrderBookEntry, String> {
 
-    List<OrderBookEntry> findByCompanyIdentifier(String companyIdentifier);
+    List<OrderBookEntry> findByCoinIdentifier(String coinIdentifier);
 }

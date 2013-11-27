@@ -40,7 +40,7 @@ public class CancelMoneyReservationFromPortfolioCommandMatcher
     @Override
     protected boolean doMatches(CancelCashReservationCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && command.getAmountOfMoneyToCancel() == amountOfMoneyToCancel;
+                && command.getAmountOfMoneyToCancel().compareTo(amountOfMoneyToCancel) == 0;
     }
 
     @Override

@@ -16,22 +16,26 @@
 
 package com.icoin.trading.tradeengine.application.command;
 
-import com.icoin.trading.api.orders.trades.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.application.command.order.CreateOrderBookCommand;
 import com.icoin.trading.tradeengine.application.command.order.CreateSellOrderCommand;
-import com.icoin.trading.api.orders.trades.OrderBookCreatedEvent;
-import com.icoin.trading.api.orders.trades.OrderId;
-import com.icoin.trading.api.orders.trades.SellOrderPlacedEvent;
-import com.icoin.trading.api.orders.trades.TradeExecutedEvent;
-import com.icoin.trading.api.orders.trades.TransactionId;
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
-import com.icoin.trading.tradeengine.application.command.orderbook.OrderBookCommandHandler;
-import com.icoin.trading.tradeengine.orders.OrderBook;
+import com.icoin.trading.tradeengine.application.command.order.OrderBookCommandHandler;
+import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
+import com.icoin.trading.tradeengine.domain.events.order.OrderBookCreatedEvent;
+import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
+import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author Allard Buijze
@@ -54,23 +58,41 @@ public class OrderBookCommandHandlerTest {
         PortfolioId sellingUser = new PortfolioId();
         TransactionId sellingTransaction = new TransactionId();
         OrderBookId orderBookId = new OrderBookId();
+        final Date sellPlaceDate = new Date();
+        final Date buyPlaceDate = new Date();
+
         CreateSellOrderCommand orderCommand = new CreateSellOrderCommand(sellOrder,
                 sellingUser,
                 orderBookId,
                 sellingTransaction,
-                100,
-                100);
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(100),
+                sellPlaceDate);
 
         OrderId buyOrder = new OrderId();
         TransactionId buyTransactionId = new TransactionId();
         PortfolioId buyPortfolioId = new PortfolioId();
-        fixture.given(new OrderBookCreatedEvent(orderBookId),
-                new BuyOrderPlacedEvent(orderBookId, buyOrder, buyTransactionId, 200, 100, buyPortfolioId))
+        fixture.given(new OrderBookCreatedEvent(orderBookId, CurrencyPair.createCurrencyPair("BTC", "CNY")),
+                new BuyOrderPlacedEvent(
+                        orderBookId, buyOrder, buyTransactionId,
+                        BigDecimal.valueOf(200),
+                        BigDecimal.valueOf(100),
+                        buyPortfolioId,
+                        CurrencyPair.createCurrencyPair("BTC", "CNY"),
+                        buyPlaceDate))
                 .when(orderCommand)
-                .expectEvents(new SellOrderPlacedEvent(orderBookId, sellOrder, sellingTransaction, 100, 100, sellingUser),
+                .expectEvents(new SellOrderPlacedEvent(
+                        orderBookId,
+                        sellOrder,
+                        sellingTransaction,
+                        BigDecimal.valueOf(100),
+                        BigDecimal.valueOf(100),
+                        sellingUser,
+                        CurrencyPair.createCurrencyPair("BTC", "CNY"),
+                        sellPlaceDate),
                         new TradeExecutedEvent(orderBookId,
-                                100,
-                                100,
+                                BigDecimal.valueOf(100),
+                                BigDecimal.valueOf(100),
                                 buyOrder,
                                 sellOrder,
                                 buyTransactionId,
@@ -92,35 +114,61 @@ public class OrderBookCommandHandlerTest {
 
         OrderBookId orderBookId = new OrderBookId();
 
+        final Date sellPlaceDate = new Date();
+        final Date buyPlaceDate1 = new Date();
+        final Date buyPlaceDate2 = new Date();
+        final Date buyPlaceDate3 = new Date();
         CreateSellOrderCommand sellOrder = new CreateSellOrderCommand(sellOrderId,
                 sellingUser,
                 orderBookId,
                 sellingTransaction,
-                200,
-                100);
-        fixture.given(new OrderBookCreatedEvent(orderBookId),
-                new BuyOrderPlacedEvent(orderBookId, buyOrder1, buyTransaction1, 100, 100, new PortfolioId()),
-                new BuyOrderPlacedEvent(orderBookId, buyOrder2, buyTransaction2, 66, 120, new PortfolioId()),
-                new BuyOrderPlacedEvent(orderBookId, buyOrder3, buyTransaction3, 44, 140, new PortfolioId()))
+                BigDecimal.valueOf(200),
+                BigDecimal.valueOf(100),
+                sellPlaceDate);
+        fixture.given(new OrderBookCreatedEvent(orderBookId, CurrencyPair.createCurrencyPair("XPM", "CNY")),
+                new BuyOrderPlacedEvent(orderBookId,
+                        buyOrder1,
+                        buyTransaction1,
+                        BigDecimal.valueOf(100),
+                        BigDecimal.valueOf(100),
+                        new PortfolioId(),
+                        CurrencyPair.createCurrencyPair("XPM", "CNY"),
+                        buyPlaceDate1),
+                new BuyOrderPlacedEvent(orderBookId,
+                        buyOrder2,
+                        buyTransaction2,
+                        BigDecimal.valueOf(66),
+                        BigDecimal.valueOf(120),
+                        new PortfolioId(),
+                        CurrencyPair.createCurrencyPair("XPM", "CNY"),
+                        buyPlaceDate2),
+                new BuyOrderPlacedEvent(orderBookId, buyOrder3, buyTransaction3, BigDecimal.valueOf(44), BigDecimal.valueOf(140),
+                        new PortfolioId(), CurrencyPair.createCurrencyPair("XPM", "CNY"), buyPlaceDate3))
                 .when(sellOrder)
-                .expectEvents(new SellOrderPlacedEvent(orderBookId, sellOrderId, sellingTransaction, 200, 100, sellingUser),
+                .expectEvents(new SellOrderPlacedEvent(orderBookId,
+                        sellOrderId,
+                        sellingTransaction,
+                        BigDecimal.valueOf(200),
+                        BigDecimal.valueOf(100),
+                        sellingUser, CurrencyPair.createCurrencyPair("XPM", "CNY"),
+                        sellPlaceDate),
                         new TradeExecutedEvent(orderBookId,
-                                44,
-                                120,
+                                BigDecimal.valueOf(44),
+                                BigDecimal.valueOf(120),
                                 buyOrder3,
                                 sellOrderId,
                                 buyTransaction3,
                                 sellingTransaction),
                         new TradeExecutedEvent(orderBookId,
-                                66,
-                                110,
+                                BigDecimal.valueOf(66),
+                                BigDecimal.valueOf(110),
                                 buyOrder2,
                                 sellOrderId,
                                 buyTransaction2,
                                 sellingTransaction),
                         new TradeExecutedEvent(orderBookId,
-                                90,
-                                100,
+                                BigDecimal.valueOf(90),
+                                BigDecimal.valueOf(100),
                                 buyOrder1,
                                 sellOrderId,
                                 buyTransaction1,
@@ -130,9 +178,9 @@ public class OrderBookCommandHandlerTest {
     @Test
     public void testCreateOrderBook() {
         OrderBookId orderBookId = new OrderBookId();
-        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(orderBookId);
+        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(orderBookId, CurrencyPair.createCurrencyPair("XPM", "CNY"));
         fixture.given()
                 .when(createOrderBookCommand)
-                .expectEvents(new OrderBookCreatedEvent(orderBookId));
+                .expectEvents(new OrderBookCreatedEvent(orderBookId, CurrencyPair.createCurrencyPair("XPM", "CNY")));
     }
 }

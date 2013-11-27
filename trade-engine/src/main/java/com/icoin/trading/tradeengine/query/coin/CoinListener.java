@@ -9,6 +9,7 @@ package com.icoin.trading.tradeengine.query.coin;
  */
 
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
+import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

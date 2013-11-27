@@ -19,13 +19,14 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
 public class SellTransactionConfirmedEvent extends AbstractTransactionConfirmedEvent {
 
-    public SellTransactionConfirmedEvent(TransactionId transactionIdentifier) {
-        super(transactionIdentifier);
+    public SellTransactionConfirmedEvent(TransactionId transactionIdentifier,Date confirmedDate) {
+        super(transactionIdentifier,confirmedDate);
     }
-
 }

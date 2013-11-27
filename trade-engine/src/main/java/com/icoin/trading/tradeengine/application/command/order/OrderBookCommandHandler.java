@@ -35,7 +35,8 @@ public class OrderBookCommandHandler {
                 command.getTransactionId(),
                 command.getTradeAmount(),
                 command.getItemPrice(),
-                command.getPortfolioId());
+                command.getPortfolioId(),
+                command.getPlaceDate());
     }
 
     @CommandHandler
@@ -45,7 +46,8 @@ public class OrderBookCommandHandler {
                 command.getTransactionId(),
                 command.getTradeAmount(),
                 command.getItemPrice(),
-                command.getPortfolioId());
+                command.getPortfolioId(),
+                command.getPlaceDate());
     }
 
     @CommandHandler

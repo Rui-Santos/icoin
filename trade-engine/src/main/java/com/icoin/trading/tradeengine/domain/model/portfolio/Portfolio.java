@@ -31,7 +31,7 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedE
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemsAvailableToReserveInPortfolio;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import com.icoin.trading.tradeengine.domain.model.user.UserId;
+import com.icoin.trading.users.domain.UserId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
@@ -57,8 +57,8 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     private Map<OrderBookId, BigDecimal> availableItems = new HashMap<OrderBookId, BigDecimal>();
     private Map<OrderBookId, BigDecimal> reservedItems = new HashMap<OrderBookId, BigDecimal>();
 
-    private BigDecimal amountOfMoney;
-    private BigDecimal reservedAmountOfMoney;
+    private BigDecimal amountOfMoney = BigDecimal.ZERO;
+    private BigDecimal reservedAmountOfMoney = BigDecimal.ZERO;
 
     protected Portfolio() {
     }

@@ -40,6 +40,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import static org.axonframework.test.matchers.Matchers.andNoMore;
 import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
@@ -71,7 +72,7 @@ public class SellTradeManagerSagaTest {
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new ReservedItemsCommandMatcher(orderbookIdentifier,
                         portfolioIdentifier,
-                        100)));
+                        BigDecimal.valueOf(100))));
     }
 
     @Test
@@ -99,12 +100,12 @@ public class SellTradeManagerSagaTest {
                 .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
                 transactionIdentifier,
                 BigDecimal.valueOf(100)))
-                .whenAggregate(transactionIdentifier).publishes(new SellTransactionConfirmedEvent(transactionIdentifier))
+                .whenAggregate(transactionIdentifier).publishes(new SellTransactionConfirmedEvent(transactionIdentifier,new Date()))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new CreateSellOrderCommandMatcher(portfolioIdentifier,
                         orderbookIdentifier,
-                        100,
-                        10)));
+                        BigDecimal.valueOf(100),
+                        BigDecimal.valueOf(10))));
     }
 
 
@@ -137,7 +138,7 @@ public class SellTradeManagerSagaTest {
                 .expectDispatchedCommandsMatching(exactSequenceOf(new CancelItemReservationForPortfolioCommandMatcher(
                         orderbookIdentifier,
                         portfolioIdentifier,
-                        50)));
+                        BigDecimal.valueOf(50))));
     }
 
     @Test
@@ -153,7 +154,7 @@ public class SellTradeManagerSagaTest {
                 .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
                 transactionIdentifier,
                 BigDecimal.valueOf(100)))
-                .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier))
+                .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier,new Date()))
                 .whenAggregate(orderbookIdentifier).publishes(new TradeExecutedEvent(orderbookIdentifier,
                 BigDecimal.valueOf(100),
                 BigDecimal.valueOf(102),
@@ -162,8 +163,8 @@ public class SellTradeManagerSagaTest {
                 buyTransactionIdentifier,
                 transactionIdentifier))
                 .expectActiveSagas(1)
-                .expectDispatchedCommandsMatching(exactSequenceOf(new ExecutedTransactionCommandMatcher(100,
-                        102,
+                .expectDispatchedCommandsMatching(exactSequenceOf(new ExecutedTransactionCommandMatcher(BigDecimal.valueOf(100),
+                        BigDecimal.valueOf(102),
                         transactionIdentifier),
                         andNoMore()));
     }
@@ -181,7 +182,7 @@ public class SellTradeManagerSagaTest {
                 .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
                 transactionIdentifier,
                 BigDecimal.valueOf(100)))
-                .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier))
+                .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier,new Date()))
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
                 BigDecimal.valueOf(100),
                 BigDecimal.valueOf(102),
@@ -189,14 +190,19 @@ public class SellTradeManagerSagaTest {
                 sellOrderIdentifier,
                 buyTransactionIdentifier,
                 transactionIdentifier))
-                .whenAggregate(transactionIdentifier).publishes(new SellTransactionExecutedEvent(transactionIdentifier, 100, 102))
+                .whenAggregate(transactionIdentifier)
+                .publishes(
+                        new SellTransactionExecutedEvent(
+                                transactionIdentifier,
+                                BigDecimal.valueOf(100),
+                                BigDecimal.valueOf(102)))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
                                 new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier,
                                         portfolioIdentifier,
-                                        100),
-                                new DepositMoneyToPortfolioCommandMatcher(portfolioIdentifier, 100 * 102)));
+                                        BigDecimal.valueOf(100)),
+                                new DepositMoneyToPortfolioCommandMatcher(portfolioIdentifier, BigDecimal.valueOf(100 * 102))));
     }
 
     @Test
@@ -213,7 +219,7 @@ public class SellTradeManagerSagaTest {
                 .andThenAggregate(portfolioIdentifier).published(new ItemsReservedEvent(portfolioIdentifier, orderbookIdentifier,
                 transactionIdentifier,
                 BigDecimal.valueOf(100)))
-                .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier))
+                .andThenAggregate(transactionIdentifier).published(new SellTransactionConfirmedEvent(transactionIdentifier,new Date()))
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
                 BigDecimal.valueOf(100),
                 BigDecimal.valueOf(102),
@@ -221,13 +227,14 @@ public class SellTradeManagerSagaTest {
                 sellOrderIdentifier,
                 buyTransactionIdentifier,
                 transactionIdentifier))
-                .whenAggregate(transactionIdentifier).publishes(new SellTransactionPartiallyExecutedEvent(transactionIdentifier, 50, 75, 102))
+                .whenAggregate(transactionIdentifier).publishes(
+                new SellTransactionPartiallyExecutedEvent(transactionIdentifier, BigDecimal.valueOf(50), BigDecimal.valueOf(75), BigDecimal.valueOf(102)))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
                                 new ConfirmItemReservationForPortfolioCommandMatcher(orderbookIdentifier,
                                         portfolioIdentifier,
-                                        50),
-                                new DepositMoneyToPortfolioCommandMatcher(portfolioIdentifier, 50 * 102)));
+                                        BigDecimal.valueOf(50)),
+                                new DepositMoneyToPortfolioCommandMatcher(portfolioIdentifier, BigDecimal.valueOf(50 * 102))));
     }
 }

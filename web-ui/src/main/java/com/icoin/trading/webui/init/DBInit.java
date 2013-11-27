@@ -16,31 +16,32 @@
 
 package com.icoin.trading.webui.init;
 
-import com.icoin.trading.api.coin.CompanyId;
-import com.icoin.trading.coin.command.CreateCoinCommand;
+import com.icoin.trading.tradeengine.application.command.coin.CreateCoinCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.query.coin.CoinEntry;
+import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
+import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.orderbook.OrderEntry;
+import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
+import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
+import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
+import com.icoin.trading.tradeengine.query.transaction.TransactionEntry;
 import com.icoin.trading.users.domain.UserId;
-import com.icoin.trading.query.company.CompanyEntry;
-import com.icoin.trading.query.orderbook.OrderEntry;
-import com.icoin.trading.query.orderbook.repositories.OrderBookQueryRepository;
-import com.icoin.trading.query.portfolio.PortfolioEntry;
-import com.icoin.trading.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.query.tradeexecuted.TradeExecutedEntry;
-import com.icoin.trading.query.transaction.TransactionEntry;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.saga.repository.mongo.MongoTemplate;
-import com.icoin.trading.query.company.repositories.CompanyQueryRepository;
-import com.icoin.trading.query.orderbook.OrderBookEntry;
 import com.icoin.trading.users.query.UserEntry;
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
 import com.icoin.trading.users.application.command.CreateUserCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -53,7 +54,7 @@ import java.util.List;
 public class DBInit {
 
     private CommandBus commandBus;
-    private CompanyQueryRepository companyRepository;
+    private CoinQueryRepository coinRepository;
     private PortfolioQueryRepository portfolioRepository;
     private OrderBookQueryRepository orderBookRepository;
     private org.axonframework.eventstore.mongo.MongoTemplate systemAxonMongo;
@@ -63,7 +64,7 @@ public class DBInit {
 
     @Autowired
     public DBInit(CommandBus commandBus,
-                  CompanyQueryRepository companyRepository,
+                  CoinQueryRepository coinRepository,
                   org.axonframework.eventstore.mongo.MongoTemplate systemMongo,
                   MongoEventStore eventStore,
                   org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
@@ -71,7 +72,7 @@ public class DBInit {
                   PortfolioQueryRepository portfolioRepository,
                   OrderBookQueryRepository orderBookRepository) {
         this.commandBus = commandBus;
-        this.companyRepository = companyRepository;
+        this.coinRepository = coinRepository;
         this.systemAxonMongo = systemMongo;
         this.eventStore = eventStore;
         this.mongoTemplate = mongoTemplate;
@@ -89,7 +90,7 @@ public class DBInit {
         mongoTemplate.dropCollection(UserEntry.class);
         mongoTemplate.dropCollection(OrderBookEntry.class);
         mongoTemplate.dropCollection(OrderEntry.class);
-        mongoTemplate.dropCollection(CompanyEntry.class);
+        mongoTemplate.dropCollection(CoinEntry.class);
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
         mongoTemplate.dropCollection(PortfolioEntry.class);
         mongoTemplate.dropCollection(TransactionEntry.class);
@@ -103,19 +104,19 @@ public class DBInit {
 
         createCompanies(buyer1);
 
-        addMoney(buyer1, 100000);
-        addItems(buyer2, "Philips", 10000l);
-        addMoney(buyer3, 100000);
-        addItems(buyer4, "Shell", 10000l);
-        addMoney(buyer5, 100000);
-        addItems(buyer6, "Bp", 10000l);
+        addMoney(buyer1, BigDecimal.valueOf(100000));
+        addItems(buyer2, "Philips", BigDecimal.valueOf(10000l));
+        addMoney(buyer3, BigDecimal.valueOf(100000));
+        addItems(buyer4, "Shell", BigDecimal.valueOf(10000l));
+        addMoney(buyer5, BigDecimal.valueOf(100000));
+        addItems(buyer6, "Bp", BigDecimal.valueOf(100000));
 
         eventStore.ensureIndexes();
     }
 
-    private void addItems(UserId user, String companyName, long amount) {
+    private void addItems(UserId user, String coinName, BigDecimal amount) {
         PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(user.toString());
-        OrderBookEntry orderBookEntry = obtainOrderBookByCompanyName(companyName);
+        OrderBookEntry orderBookEntry = obtainOrderBookByCoinName(coinName);
         AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
                 new OrderBookId(orderBookEntry.getIdentifier()),
@@ -123,25 +124,25 @@ public class DBInit {
         commandBus.dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(command));
     }
 
-    private OrderBookEntry obtainOrderBookByCompanyName(String companyName) {
-        Iterable<CompanyEntry> companyEntries = companyRepository.findAll();
-        for (CompanyEntry entry : companyEntries) {
-            if (entry.getName().equals(companyName)) {
+    private OrderBookEntry obtainOrderBookByCoinName(String coinName) {
+        Iterable<CoinEntry> coinEntries = coinRepository.findAll();
+        for (CoinEntry entry : coinEntries) {
+            if (entry.getName().equals(coinName)) {
                 List<OrderBookEntry> orderBookEntries = orderBookRepository
-                        .findByCompanyIdentifier(entry.getIdentifier());
+                        .findByCoinIdentifier(entry.getIdentifier());
 
                 return orderBookEntries.get(0);
             }
         }
-        throw new RuntimeException("Problem initializing, could not find company with required name.");
+        throw new RuntimeException("Problem initializing, could not find coin with required name.");
     }
 
-    private void addMoney(UserId buyer1, long amount) {
+    private void addMoney(UserId buyer1, BigDecimal amount) {
         PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(buyer1.toString());
         depositMoneyToPortfolio(portfolioEntry.getIdentifier(), amount);
     }
 
-    public void depositMoneyToPortfolio(String portfolioIdentifier, long amountOfMoney) {
+    public void depositMoneyToPortfolio(String portfolioIdentifier, BigDecimal amountOfMoney) {
         DepositCashCommand command =
                 new DepositCashCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
         commandBus.dispatch(new GenericCommandMessage<DepositCashCommand>(command));
@@ -149,13 +150,13 @@ public class DBInit {
 
 
     private void createCompanies(UserId userIdentifier) {
-        CreateCoinCommand command = new CreateCoinCommand(new CompanyId(), userIdentifier, "Philips", 1000, 10000);
+        CreateCoinCommand command = new CreateCoinCommand(new CoinId(), userIdentifier, "Philips", BigDecimal.valueOf(1000), BigDecimal.valueOf(10000));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCoinCommand(new CompanyId(), userIdentifier, "Shell", 500, 5000);
+        command = new CreateCoinCommand(new CoinId(), userIdentifier, "Shell", BigDecimal.valueOf(500), BigDecimal.valueOf(5000));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCoinCommand(new CompanyId(), userIdentifier, "Bp", 15000, 100000);
+        command = new CreateCoinCommand(new CoinId(), userIdentifier, "Bp", BigDecimal.valueOf(15000), BigDecimal.valueOf(100000));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
 //        To bo used for performance tests

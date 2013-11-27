@@ -30,7 +30,7 @@ import java.math.BigDecimal;
 public class DepositCashCommand {
 
     private PortfolioId portfolioIdentifier;
-    @DecimalMin("0.01")
+    @DecimalMin("0.00000001")
     private BigDecimal moneyToAddInCents;
 
     public DepositCashCommand(PortfolioId portfolioIdentifier, BigDecimal moneyToAddInCents) {

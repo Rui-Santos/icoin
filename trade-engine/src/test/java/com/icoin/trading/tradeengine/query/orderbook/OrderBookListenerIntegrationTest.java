@@ -29,7 +29,7 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.CoinListener;
-import com.icoin.trading.tradeengine.query.coin.CoinQueryRepository;
+import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
@@ -42,7 +42,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
+import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -108,6 +110,8 @@ public class OrderBookListenerIntegrationTest {
         CoinEntry company = createCoin();
         OrderBookEntry orderBook = createOrderBook(company);
 
+        final Date placeDate = new Date();
+
         BuyOrderPlacedEvent event =
                 new BuyOrderPlacedEvent(
                         orderBookId,
@@ -116,7 +120,8 @@ public class OrderBookListenerIntegrationTest {
                         BigDecimal.valueOf(300),
                         BigDecimal.valueOf(100),
                         portfolioId,
-                        CurrencyPair.createCurrencyPair("BTC", "USD"));
+                        CurrencyPair.createCurrencyPair("BTC", "USD"),
+                        placeDate);
 
         orderBookListener.handleBuyOrderPlaced(event);
         Iterable<OrderBookEntry> all = orderBookRepository.findAll();
@@ -124,13 +129,16 @@ public class OrderBookListenerIntegrationTest {
         assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
         assertEquals("Test Coin", orderBookEntry.getCoinName());
         assertEquals(1, orderBookEntry.buyOrders().size());
-        assertEquals(300, orderBookEntry.buyOrders().get(0).getTradeAmount());
+//        assertEquals(300, orderBookEntry.buyOrders().get(0).getTradeAmount());
+        closeTo(300.00, orderBookEntry.buyOrders().get(0).getTradeAmount().doubleValue());
     }
 
     @Test
     public void testHandleSellOrderPlaced() throws Exception {
         CoinEntry company = createCoin();
         OrderBookEntry orderBook = createOrderBook(company);
+
+        final Date placeDate = new Date();
 
         OrderBookId orderBookId = new OrderBookId(orderBook.getIdentifier());
         SellOrderPlacedEvent event =
@@ -141,7 +149,8 @@ public class OrderBookListenerIntegrationTest {
                         BigDecimal.valueOf(300),
                         BigDecimal.valueOf(100),
                         portfolioId,
-                        CurrencyPair.createCurrencyPair("BTC", "USD"));
+                        CurrencyPair.createCurrencyPair("BTC", "USD"),
+                        placeDate);
 
         orderBookListener.handleSellOrderPlaced(event);
         Iterable<OrderBookEntry> all = orderBookRepository.findAll();
@@ -157,6 +166,7 @@ public class OrderBookListenerIntegrationTest {
         CoinEntry company = createCoin();
         OrderBookEntry orderBook = createOrderBook(company);
 
+        final Date sellPlaceDate = new Date();
         OrderId sellOrderId = new OrderId();
         TransactionId sellTransactionId = new TransactionId();
         SellOrderPlacedEvent sellOrderPlacedEvent =
@@ -167,10 +177,12 @@ public class OrderBookListenerIntegrationTest {
                         BigDecimal.valueOf(400),
                         BigDecimal.valueOf(100),
                         portfolioId,
-                        CurrencyPair.createCurrencyPair("BTC", "USD"));
+                        CurrencyPair.createCurrencyPair("BTC", "USD"),
+                        sellPlaceDate);
 
         orderBookListener.handleSellOrderPlaced(sellOrderPlacedEvent);
 
+        final Date buyPlaceDate = new Date();
         OrderId buyOrderId = new OrderId();
         TransactionId buyTransactionId = new TransactionId();
         BuyOrderPlacedEvent buyOrderPlacedEvent = new BuyOrderPlacedEvent(orderBookId
@@ -179,7 +191,8 @@ public class OrderBookListenerIntegrationTest {
                 BigDecimal.valueOf(300),
                 BigDecimal.valueOf(150),
                 portfolioId,
-                CurrencyPair.createCurrencyPair("BTC", "USD"));
+                CurrencyPair.createCurrencyPair("BTC", "USD"),
+                buyPlaceDate);
 
         orderBookListener.handleBuyOrderPlaced(buyOrderPlacedEvent);
 

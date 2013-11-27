@@ -16,22 +16,24 @@
 
 package com.icoin.trading.webui.admin;
 
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
+import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
-import com.icoin.trading.query.orderbook.OrderBookEntry;
-import com.icoin.trading.query.orderbook.repositories.OrderBookQueryRepository;
-import com.icoin.trading.query.portfolio.PortfolioEntry;
-import com.icoin.trading.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -66,7 +68,7 @@ public class AdminController {
 
     @RequestMapping(value = "/portfolio/{identifier}/money")
     public String addMoney(@PathVariable("identifier") String portfolioIdentifier,
-                           @RequestParam("amount") long amountOfMoney
+                           @RequestParam("amount") BigDecimal amountOfMoney
     ) {
         DepositCashCommand command =
                 new DepositCashCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
@@ -77,7 +79,7 @@ public class AdminController {
     @RequestMapping(value = "/portfolio/{identifier}/item")
     public String addItem(@PathVariable("identifier") String portfolioIdentifier,
                           @RequestParam("orderbook") String orderBookIdentifier,
-                          @RequestParam("amount") long amount
+                          @RequestParam("amount") BigDecimal amount
     ) {
         AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(new PortfolioId(
                 portfolioIdentifier),

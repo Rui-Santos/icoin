@@ -19,6 +19,7 @@ package com.icoin.trading.tradeengine.application.listener;
 import com.icoin.trading.tradeengine.application.command.coin.AddOrderBookToCoinCommand;
 import com.icoin.trading.tradeengine.application.command.order.CreateOrderBookCommand;
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
@@ -44,7 +45,7 @@ public class CoinOrderBookListener {
                 event.getCoinIdentifier());
 
         OrderBookId orderBookId = new OrderBookId();
-        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(orderBookId);
+        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(orderBookId, CurrencyPair.createCurrencyPair(event.getCoinName(), "CNY"));
         commandBus.dispatch(new GenericCommandMessage<CreateOrderBookCommand>(createOrderBookCommand));
 
         AddOrderBookToCoinCommand addOrderBookToCoinCommand =

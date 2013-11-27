@@ -40,8 +40,8 @@ public class ExecutedTransactionCommandMatcher extends BaseCommandMatcher<Execut
     @Override
     protected boolean doMatches(ExecutedTransactionCommand command) {
         return command.getTransactionIdentifier().equals(transactionIdentifier)
-                && command.getAmountOfItems().subtract(amountOfItems).abs().doubleValue()< 0.000000000001
-                && command.getItemPrice().subtract(itemPrice).abs().doubleValue()< 0.000000000001;
+                && command.getAmountOfItems().subtract(amountOfItems).abs().doubleValue() < 0.000000000001
+                && command.getItemPrice().subtract(itemPrice).abs().doubleValue() < 0.000000000001;
     }
 
     @Override

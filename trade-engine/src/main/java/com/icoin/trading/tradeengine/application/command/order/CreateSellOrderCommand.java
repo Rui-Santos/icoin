@@ -22,6 +22,9 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 /**
  * <p>Create a new Sell Order using the amount of items to sell for the provided price.</p>
  *
@@ -30,7 +33,8 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 public class CreateSellOrderCommand extends AbstractOrderCommand {
 
     public CreateSellOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
-                                  TransactionId transactionId, long tradeCount, long itemPrice) {
-        super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice);
+                                  TransactionId transactionId, BigDecimal tradeCount, BigDecimal itemPrice,
+                                  Date placeDate) {
+        super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice,placeDate);
     }
 }

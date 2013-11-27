@@ -23,6 +23,7 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>Abstract parent class for all buy and sell order placed events.</p>
@@ -38,6 +39,7 @@ public abstract class AbstractOrderPlacedEvent {
     private final BigDecimal itemPrice;
     private final PortfolioId portfolioId;
     private final CurrencyPair currencyPair;
+    private final Date placeDate;
 
     protected AbstractOrderPlacedEvent(OrderBookId orderBookId,
                                        OrderId orderId,
@@ -45,7 +47,8 @@ public abstract class AbstractOrderPlacedEvent {
                                        BigDecimal tradeAmount,
                                        BigDecimal itemPrice,
                                        PortfolioId portfolioId,
-                                       CurrencyPair currencyPair) {
+                                       CurrencyPair currencyPair,
+                                       Date placeDate) {
         this.orderId = orderId;
         this.transactionId = transactionId;
         this.tradeAmount = tradeAmount;
@@ -53,6 +56,7 @@ public abstract class AbstractOrderPlacedEvent {
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
         this.currencyPair = currencyPair;
+        this.placeDate = placeDate;
     }
 
     public OrderBookId orderBookIdentifier() {
@@ -81,6 +85,10 @@ public abstract class AbstractOrderPlacedEvent {
 
     public CurrencyPair getCurrencyPair() {
         return currencyPair;
+    }
+
+    public Date getPlaceDate() {
+        return placeDate;
     }
 
     /**

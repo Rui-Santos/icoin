@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -28,10 +30,10 @@ public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItems
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private int amountOfReservedItems;
+    private BigDecimal amountOfReservedItems;
 
     public ReservedItemsCommandMatcher(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
-                                       int amountOfReservedItems) {
+                                       BigDecimal amountOfReservedItems) {
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfReservedItems = amountOfReservedItems;
@@ -41,7 +43,7 @@ public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItems
     protected boolean doMatches(ReserveItemsCommand command) {
         return command.getOrderBookIdentifier().equals(orderbookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && amountOfReservedItems == command.getAmountOfItemsToReserve();
+                && amountOfReservedItems.compareTo(command.getAmountOfItemsToReserve()) == 0;
     }
 
     @Override

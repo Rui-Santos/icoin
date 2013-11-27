@@ -56,14 +56,14 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
         }
         TransactionEntry transactionEntry = (TransactionEntry) argument;
         if (Math.abs(amountOfItems.floatValue() - transactionEntry.getAmountOfItems().floatValue()) > min) {
-            problem = String.format("Amount of items is not %d but %d",
+            problem = String.format("Amount of items is not %f but %f",
                                     amountOfItems,
                                     transactionEntry.getAmountOfItems());
             return false;
         }
 
         if (Math.abs(amountOfItemsExecuted.floatValue() - transactionEntry.getAmountOfExecutedItems().floatValue()) > min) {
-            problem = String.format("Amount of executed items is not %d but %d",
+            problem = String.format("Amount of executed items is not %f but %f",
                                     amountOfItemsExecuted.doubleValue(),
                                     transactionEntry.getAmountOfExecutedItems().doubleValue());
             return false;
@@ -74,7 +74,7 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
         }
 
         if (Math.abs(pricePerItem.floatValue() - transactionEntry.getPricePerItem().floatValue())< min) {
-            problem = String.format("Price per item is not %d but %d",
+            problem = String.format("Price per item is not %f but %f",
                                     pricePerItem.doubleValue(),
                                     transactionEntry.getPricePerItem().doubleValue());
             return false;

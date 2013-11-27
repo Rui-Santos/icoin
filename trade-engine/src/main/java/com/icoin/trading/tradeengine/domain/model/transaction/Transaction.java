@@ -32,6 +32,9 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -40,8 +43,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
 
     @AggregateIdentifier
     private TransactionId transactionId;
-    private long amountOfItems;
-    private long amountOfExecutedItems;
+    private BigDecimal amountOfItems = BigDecimal.ZERO;
+    private BigDecimal amountOfExecutedItems= BigDecimal.ZERO;
     private TransactionType type;
 
 
@@ -53,8 +56,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                        TransactionType type,
                        OrderBookId orderbookIdentifier,
                        PortfolioId portfolioIdentifier,
-                       long amountOfItems,
-                       long pricePerItem) {
+                       BigDecimal amountOfItems,
+                       BigDecimal pricePerItem) {
         switch (type) {
             case BUY:
                 apply(new BuyTransactionStartedEvent(transactionId,
@@ -76,10 +79,10 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     public void confirm() {
         switch (this.type) {
             case BUY:
-                apply(new BuyTransactionConfirmedEvent(transactionId));
+                apply(new BuyTransactionConfirmedEvent(transactionId, new Date()));
                 break;
             case SELL:
-                apply(new SellTransactionConfirmedEvent(transactionId));
+                apply(new SellTransactionConfirmedEvent(transactionId, new Date()));
                 break;
         }
     }
@@ -95,13 +98,13 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    public void execute(long amountOfItems, long itemPrice) {
+    public void execute(BigDecimal amountOfItems, BigDecimal itemPrice) {
         switch (this.type) {
             case BUY:
                 if (isPartiallyExecuted(amountOfItems)) {
                     apply(new BuyTransactionPartiallyExecutedEvent(transactionId,
                             amountOfItems,
-                            amountOfItems + amountOfExecutedItems,
+                            amountOfItems.add(amountOfExecutedItems) ,
                             itemPrice));
                 } else {
                     apply(new BuyTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
@@ -111,7 +114,7 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                 if (isPartiallyExecuted(amountOfItems)) {
                     apply(new SellTransactionPartiallyExecutedEvent(transactionId,
                             amountOfItems,
-                            amountOfItems + amountOfExecutedItems,
+                            amountOfItems.add(amountOfExecutedItems),
                             itemPrice));
                 } else {
                     apply(new SellTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
@@ -120,8 +123,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    private boolean isPartiallyExecuted(long amountOfItems) {
-        return this.amountOfExecutedItems + amountOfItems < this.amountOfItems;
+    private boolean isPartiallyExecuted(BigDecimal amountOfItems) {
+        return this.amountOfExecutedItems.add(amountOfItems).compareTo(this.amountOfItems) < 0;
     }
 
     @EventHandler
@@ -150,12 +153,12 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onTransactionPartiallyExecuted(SellTransactionPartiallyExecutedEvent event) {
-        this.amountOfExecutedItems += event.getAmountOfExecutedItems();
+        this.amountOfExecutedItems =  amountOfExecutedItems.add(event.getAmountOfExecutedItems());
     }
 
     @EventHandler
     public void onTransactionPartiallyExecuted(BuyTransactionPartiallyExecutedEvent event) {
-        this.amountOfExecutedItems += event.getAmountOfExecutedItems();
+        this.amountOfExecutedItems = amountOfExecutedItems.add(event.getAmountOfExecutedItems());
     }
 
     @Override

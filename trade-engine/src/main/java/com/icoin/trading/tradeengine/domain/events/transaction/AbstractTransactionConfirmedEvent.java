@@ -19,17 +19,25 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
 public abstract class AbstractTransactionConfirmedEvent {
     private TransactionId transactionIdentifier;
+    private Date confirmedDate;
 
-    protected AbstractTransactionConfirmedEvent(TransactionId transactionIdentifier) {
+    protected AbstractTransactionConfirmedEvent(TransactionId transactionIdentifier,Date confirmedDate) {
         this.transactionIdentifier = transactionIdentifier;
+        this.confirmedDate = confirmedDate;
     }
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getConfirmedDate() {
+        return confirmedDate;
     }
 }

@@ -16,27 +16,27 @@
 
 package com.icoin.trading.webui.companies;
 
-import com.icoin.trading.api.orders.trades.TransactionId;
+import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
-import com.icoin.trading.query.company.CompanyEntry;
-import com.icoin.trading.query.orderbook.repositories.OrderBookQueryRepository;
-import com.icoin.trading.query.portfolio.PortfolioEntry;
-import com.icoin.trading.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.query.tradeexecuted.TradeExecutedEntry;
-import com.icoin.trading.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.tradeengine.query.coin.CoinEntry;
+import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
+import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
+import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
+import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
+import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
+import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
+import com.icoin.trading.webui.order.AbstractOrder;
 import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
+import com.icoin.trading.webui.util.SecurityUtil;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
-import com.icoin.trading.query.company.repositories.CompanyQueryRepository;
-import com.icoin.trading.query.orderbook.OrderBookEntry;
-import com.icoin.trading.users.query.UserEntry;
-import com.icoin.trading.api.orders.trades.OrderBookId;
-import com.icoin.trading.api.orders.trades.PortfolioId;
-import com.icoin.trading.webui.order.AbstractOrder;
-import com.icoin.trading.webui.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,10 +53,10 @@ import java.util.List;
  * @author Jettro Coenradie
  */
 @Controller
-@RequestMapping("/company")
-public class CompanyController {
+@RequestMapping("/coin")
+public class CoinController {
 
-    private CompanyQueryRepository companyRepository;
+    private CoinQueryRepository coinRepository;
     private OrderBookQueryRepository orderBookRepository;
     private UserQueryRepository userRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
@@ -65,13 +65,13 @@ public class CompanyController {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public CompanyController(CompanyQueryRepository companyRepository,
-                             CommandBus commandBus,
-                             UserQueryRepository userRepository,
-                             OrderBookQueryRepository orderBookRepository,
-                             TradeExecutedQueryRepository tradeExecutedRepository,
-                             PortfolioQueryRepository portfolioQueryRepository) {
-        this.companyRepository = companyRepository;
+    public CoinController(CoinQueryRepository coinRepository,
+                          CommandBus commandBus,
+                          UserQueryRepository userRepository,
+                          OrderBookQueryRepository orderBookRepository,
+                          TradeExecutedQueryRepository tradeExecutedRepository,
+                          PortfolioQueryRepository portfolioQueryRepository) {
+        this.coinRepository = coinRepository;
         this.commandBus = commandBus;
         this.userRepository = userRepository;
         this.orderBookRepository = orderBookRepository;
@@ -81,56 +81,56 @@ public class CompanyController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String get(Model model) {
-        model.addAttribute("items", companyRepository.findAll());
-        return "company/list";
+        model.addAttribute("items", coinRepository.findAll());
+        return "coin/list";
     }
 
-    @RequestMapping(value = "/{companyId}", method = RequestMethod.GET)
-    public String details(@PathVariable String companyId, Model model) {
-        CompanyEntry company = companyRepository.findOne(companyId);
-        OrderBookEntry bookEntry = orderBookRepository.findByCompanyIdentifier(company.getIdentifier()).get(0);
+    @RequestMapping(value = "/{coinId}", method = RequestMethod.GET)
+    public String details(@PathVariable String coinId, Model model) {
+        CoinEntry coin = coinRepository.findOne(coinId);
+        OrderBookEntry bookEntry = orderBookRepository.findByCoinIdentifier(coin.getIdentifier()).get(0);
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
                 .getIdentifier());
-        model.addAttribute("company", company);
+        model.addAttribute("coin", coin);
         model.addAttribute("sellOrders", bookEntry.sellOrders());
         model.addAttribute("buyOrders", bookEntry.buyOrders());
         model.addAttribute("executedTrades", executedTrades);
-        return "company/details";
+        return "coin/details";
     }
 
 
-    @RequestMapping(value = "/buy/{companyId}", method = RequestMethod.GET)
-    public String buyForm(@PathVariable String companyId, Model model) {
+    @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.GET)
+    public String buyForm(@PathVariable String coinId, Model model) {
         addPortfolioMoneyInfoToModel(model);
 
         BuyOrder order = new BuyOrder();
-        prepareInitialOrder(companyId, order);
+        prepareInitialOrder(coinId, order);
         model.addAttribute("order", order);
-        return "company/buy";
+        return "coin/buy";
     }
 
-    @RequestMapping(value = "/sell/{companyId}", method = RequestMethod.GET)
-    public String sellForm(@PathVariable String companyId, Model model) {
-        addPortfolioItemInfoToModel(companyId, model);
+    @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.GET)
+    public String sellForm(@PathVariable String coinId, Model model) {
+        addPortfolioItemInfoToModel(coinId, model);
 
         SellOrder order = new SellOrder();
-        prepareInitialOrder(companyId, order);
+        prepareInitialOrder(coinId, order);
         model.addAttribute("order", order);
-        return "company/sell";
+        return "coin/sell";
     }
 
-    @RequestMapping(value = "/sell/{companyId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.POST)
     public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
-            OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCoinId());
+            OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
-            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()) < order.getTradeAmount()) {
+            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getIdentifier()).compareTo(order.getTradeAmount()) < 0) {
                 bindingResult.rejectValue("tradeCount",
                         "error.order.sell.tomanyitems",
                         "Not enough items available to create sell order.");
                 addPortfolioItemInfoToModel(order.getCoinId(), model);
-                return "company/sell";
+                return "coin/sell";
             }
 
             StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
@@ -141,26 +141,26 @@ public class CompanyController {
 
             commandBus.dispatch(new GenericCommandMessage<StartSellTransactionCommand>(command));
 
-            return "redirect:/company/{companyId}";
+            return "redirect:/coin/{coinId}";
         }
 
         addPortfolioItemInfoToModel(order.getCoinId(), model);
-        return "company/sell";
+        return "coin/sell";
     }
 
-    @RequestMapping(value = "/buy/{companyId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.POST)
     public String buy(@ModelAttribute("order") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
 
-            OrderBookEntry bookEntry = obtainOrderBookForCompany(order.getCoinId());
+            OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
-            if (portfolioEntry.obtainMoneyToSpend() < order.getTradeAmount() * order.getItemPrice()) {
+            if (portfolioEntry.obtainMoneyToSpend().compareTo(order.getTradeAmount().multiply(order.getItemPrice())) < 0) {
                 bindingResult.rejectValue("tradeCount",
                         "error.order.buy.notenoughmoney",
                         "Not enough cash to spend to buy the items for the price you want");
                 addPortfolioMoneyInfoToModel(portfolioEntry, model);
-                return "company/buy";
+                return "coin/buy";
             }
 
             StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
@@ -169,16 +169,16 @@ public class CompanyController {
                     order.getTradeAmount(),
                     order.getItemPrice());
             commandBus.dispatch(new GenericCommandMessage<StartBuyTransactionCommand>(command));
-            return "redirect:/company/{companyId}";
+            return "redirect:/coin/{coinId}";
         }
 
         addPortfolioMoneyInfoToModel(model);
-        return "company/buy";
+        return "coin/buy";
     }
 
     private void addPortfolioItemInfoToModel(String identifier, Model model) {
         PortfolioEntry portfolioEntry = obtainPortfolioForUser();
-        OrderBookEntry orderBookEntry = obtainOrderBookForCompany(identifier);
+        OrderBookEntry orderBookEntry = obtainOrderBookForCoin(identifier);
         addPortfolioItemInfoToModel(portfolioEntry, orderBookEntry.getIdentifier(), model);
     }
 
@@ -198,13 +198,13 @@ public class CompanyController {
     }
 
     /**
-     * At the moment we handle the first orderBook found for a company.
+     * At the moment we handle the first orderBook found for a coin.
      *
-     * @param companyId Identifier for the company to obtain the orderBook for
-     * @return Found OrderBook for the company belonging to the provided identifier
+     * @param coinId Identifier for the coin to obtain the orderBook for
+     * @return Found OrderBook for the coin belonging to the provided identifier
      */
-    private OrderBookEntry obtainOrderBookForCompany(String companyId) {
-        return orderBookRepository.findByCompanyIdentifier(companyId).get(0);
+    private OrderBookEntry obtainOrderBookForCoin(String coinId) {
+        return orderBookRepository.findByCoinIdentifier(coinId).get(0);
     }
 
     /**
@@ -218,8 +218,8 @@ public class CompanyController {
     }
 
     private void prepareInitialOrder(String identifier, AbstractOrder order) {
-        CompanyEntry company = companyRepository.findOne(identifier);
+        CoinEntry coin = coinRepository.findOne(identifier);
         order.setCoinId(identifier);
-        order.setCoinName(company.getName());
+        order.setCoinName(coin.getName());
     }
 }

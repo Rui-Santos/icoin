@@ -39,6 +39,8 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedE
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -99,14 +101,15 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                 getOrderbookIdentifier(),
                 getTransactionIdentifier(),
                 getTotalItems(),
-                getPricePerItem());
+                getPricePerItem(),
+                event.getConfirmedDate());
         getCommandBus().dispatch(new GenericCommandMessage<CreateSellOrderCommand>(command));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
     public void handle(SellTransactionCancelledEvent event) {
-        long amountOfCancelledItems = event.getTotalAmountOfItems() - event.getAmountOfExecutedItems();
+        BigDecimal amountOfCancelledItems = event.getTotalAmountOfItems().subtract(event.getAmountOfExecutedItems());
         logger.debug("Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}",
                 event.getTransactionIdentifier(),
                 amountOfCancelledItems);
@@ -143,7 +146,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmItemReservationForPortfolioCommand>(confirmCommand));
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
-                        event.getItemPrice() * event.getAmountOfItems());
+                        event.getItemPrice().multiply(event.getAmountOfItems()));
         getCommandBus().dispatch(new GenericCommandMessage<DepositCashCommand>(depositCommand));
     }
 
@@ -162,7 +165,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmItemReservationForPortfolioCommand>(confirmCommand));
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
-                        event.getItemPrice() * event.getAmountOfExecutedItems());
+                        event.getItemPrice().multiply(event.getAmountOfExecutedItems()));
         getCommandBus().dispatch(new GenericCommandMessage<DepositCashCommand>(depositCommand));
     }
 }

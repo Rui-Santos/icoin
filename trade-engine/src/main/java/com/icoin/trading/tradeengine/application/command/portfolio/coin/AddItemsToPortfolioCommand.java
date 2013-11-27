@@ -21,7 +21,6 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
 /**

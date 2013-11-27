@@ -16,29 +16,31 @@
 
 package com.icoin.trading.tradeengine.saga;
 
+import com.icoin.trading.tradeengine.application.command.order.CreateBuyOrderCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.CancelCashReservationCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmCashReservationCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.ReserveCashCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.ConfirmTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
+import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationRejectedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionCancelledEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionConfirmedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionPartiallyExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
-import com.icoin.trading.tradeengine.application.command.transaction.command.ConfirmTransactionCommand;
-import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.cash.CancelCashReservationCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmCashReservationCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.cash.ReserveCashCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.saga.annotation.EndSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionCancelledEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationRejectedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedEvent;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
-import com.icoin.trading.tradeengine.application.command.order.CreateBuyOrderCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -71,7 +73,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         ReserveCashCommand command = new ReserveCashCommand(getPortfolioIdentifier(),
                 getTransactionIdentifier(),
                 getTotalItems()
-                        * getPricePerItem());
+                        .multiply(getPricePerItem()));
         getCommandBus().dispatch(new GenericCommandMessage<ReserveCashCommand>(command));
     }
 
@@ -111,13 +113,14 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 getOrderbookIdentifier(),
                 getTransactionIdentifier(),
                 getTotalItems(),
-                getPricePerItem());
+                getPricePerItem(),
+                event.getConfirmedDate());
         getCommandBus().dispatch(new GenericCommandMessage<CreateBuyOrderCommand>(command));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(BuyTransactionCancelledEvent event) {
-        long amountToCancel = (event.getTotalAmountOfItems() - event.getAmountOfExecutedItems()) * getPricePerItem();
+        BigDecimal amountToCancel = (event.getTotalAmountOfItems().subtract(event.getAmountOfExecutedItems())).multiply(getPricePerItem());
         logger.debug("Buy Transaction {} is cancelled, amount of cash reserved to cancel is {}",
                 event.getTransactionIdentifier(),
                 amountToCancel);
@@ -146,7 +149,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         ConfirmCashReservationCommand confirmCommand =
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
-                        event.getAmountOfItems() * event.getItemPrice());
+                        event.getAmountOfItems().multiply(event.getItemPrice()));
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
         AddItemsToPortfolioCommand addItemsCommand =
                 new AddItemsToPortfolioCommand(getPortfolioIdentifier(),
@@ -164,8 +167,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         ConfirmCashReservationCommand confirmCommand =
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
-                        event.getAmountOfExecutedItems() * event
-                                .getItemPrice());
+                        event.getAmountOfExecutedItems().multiply(event.getItemPrice()));
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
         AddItemsToPortfolioCommand addItemsCommand =
                 new AddItemsToPortfolioCommand(getPortfolioIdentifier(),

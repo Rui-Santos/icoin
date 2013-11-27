@@ -29,7 +29,9 @@ import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcedMember;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -61,7 +63,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                             TransactionId transactionId,
                             BigDecimal tradeCount,
                             BigDecimal itemPrice,
-                            PortfolioId portfolioId) {
+                            PortfolioId portfolioId,
+                            Date placeDate) {
         apply(new BuyOrderPlacedEvent(
                 orderBookId,
                 orderId,
@@ -69,12 +72,13 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 tradeCount,
                 itemPrice,
                 portfolioId,
-                currencyPair));
+                currencyPair,
+                placeDate));
         executeTrades();
     }
 
     public void addSellOrder(OrderId orderId, TransactionId transactionId, BigDecimal tradeCount,
-                             BigDecimal itemPrice, PortfolioId portfolioId) {
+                             BigDecimal itemPrice, PortfolioId portfolioId, Date placeDate) {
         apply(new SellOrderPlacedEvent(
                 orderBookId,
                 orderId,
@@ -82,7 +86,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 tradeCount,
                 itemPrice,
                 portfolioId,
-                currencyPair));
+                currencyPair,
+                placeDate));
         executeTrades();
     }
 
@@ -97,7 +102,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
 
 
                 //todo price method
-                BigDecimal matchedTradePrice = ((highestBuyer.getItemPrice() + lowestSeller.getItemPrice()) / 2);
+                BigDecimal matchedTradePrice = (highestBuyer.getItemPrice().add(lowestSeller.getItemPrice()).divide(
+                       BigDecimal.valueOf(2) , 2, RoundingMode.HALF_EVEN));
                 apply(new TradeExecutedEvent(orderBookId,
                         matchedTradeAmount,
                         matchedTradePrice,
@@ -124,7 +130,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 event.getItemPrice(),
                 event.getTradeAmount(),
                 event.getPortfolioId(),
-                event.getCurrencyPair()
+                event.getCurrencyPair(),
+                event.getPlaceDate()
         ));
     }
 
@@ -135,7 +142,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 event.getItemPrice(),
                 event.getTradeAmount(),
                 event.getPortfolioId(),
-                event.getCurrencyPair()));
+                event.getCurrencyPair(),
+                event.getPlaceDate()));
     }
 
     @EventHandler

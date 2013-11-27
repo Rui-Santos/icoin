@@ -24,7 +24,7 @@ import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import com.icoin.trading.tradeengine.domain.model.user.UserId;
+import com.icoin.trading.users.domain.UserId;
 import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;

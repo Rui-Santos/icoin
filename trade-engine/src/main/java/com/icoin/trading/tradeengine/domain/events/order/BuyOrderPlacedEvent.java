@@ -23,6 +23,7 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>A new Buy Order is placed.</p>
@@ -33,7 +34,8 @@ public class BuyOrderPlacedEvent extends AbstractOrderPlacedEvent {
 
     public BuyOrderPlacedEvent(OrderBookId orderBookId, OrderId orderId, TransactionId transactionId, BigDecimal tradeAmount,
                                BigDecimal itemPrice, PortfolioId portfolioId,
-                               CurrencyPair currencyPair) {
-        super(orderBookId, orderId, transactionId, tradeAmount, itemPrice, portfolioId, currencyPair);
+                               CurrencyPair currencyPair,
+                               Date placeDate) {
+        super(orderBookId, orderId, transactionId, tradeAmount, itemPrice, portfolioId, currencyPair,placeDate);
     }
 }

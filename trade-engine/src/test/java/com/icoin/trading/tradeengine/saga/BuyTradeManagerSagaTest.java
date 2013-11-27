@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import static org.axonframework.test.matchers.Matchers.andNoMore;
 import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
@@ -116,7 +117,7 @@ public class BuyTradeManagerSagaTest {
                         portfolioIdentifier,
                         transactionIdentifier,
                         TOTAL_ITEMS.multiply(PRICE_PER_ITEM)))
-                .whenAggregate(transactionIdentifier).publishes(new BuyTransactionConfirmedEvent(transactionIdentifier))
+                .whenAggregate(transactionIdentifier).publishes(new BuyTransactionConfirmedEvent(transactionIdentifier,new Date()))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(
                         new CreateBuyOrderCommandMatcher(portfolioIdentifier,
@@ -154,7 +155,7 @@ public class BuyTradeManagerSagaTest {
                 .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS.multiply(PRICE_PER_ITEM)))
-                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
+                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier,new Date()))
                 .whenAggregate(orderbookIdentifier).publishes(new TradeExecutedEvent(orderbookIdentifier,
                 TOTAL_ITEMS,
                 BigDecimal.valueOf(99),
@@ -183,7 +184,7 @@ public class BuyTradeManagerSagaTest {
                 .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS.multiply(PRICE_PER_ITEM)))
-                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
+                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier,new Date()))
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier, TOTAL_ITEMS,
                 BigDecimal.valueOf(99),
                 buyOrderIdentifier,
@@ -215,7 +216,7 @@ public class BuyTradeManagerSagaTest {
                 .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS.multiply(PRICE_PER_ITEM)))
-                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
+                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier,new Date()))
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
                 BigDecimal.valueOf(50),
                 BigDecimal.valueOf(99),
@@ -246,7 +247,7 @@ public class BuyTradeManagerSagaTest {
                 .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_ITEMS.multiply(PRICE_PER_ITEM)))
-                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier))
+                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier,new Date()))
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
                 BigDecimal.valueOf(50),
                 BigDecimal.valueOf(9),

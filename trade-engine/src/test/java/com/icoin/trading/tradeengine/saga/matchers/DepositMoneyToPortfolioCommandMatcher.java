@@ -20,22 +20,24 @@ import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositC
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public class DepositMoneyToPortfolioCommandMatcher extends BaseCommandMatcher<DepositCashCommand> {
 
-    private long moneyToAddInCents;
+    private BigDecimal moneyToAddInCents;
     private PortfolioId portfolioIdentifier;
 
-    public DepositMoneyToPortfolioCommandMatcher(PortfolioId portfolioIdentifier, long moneyToAddInCents) {
+    public DepositMoneyToPortfolioCommandMatcher(PortfolioId portfolioIdentifier, BigDecimal moneyToAddInCents) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.moneyToAddInCents = moneyToAddInCents;
     }
 
     @Override
     protected boolean doMatches(DepositCashCommand command) {
-        return moneyToAddInCents == command.getMoneyToAddInCents()
+        return moneyToAddInCents.compareTo(command.getMoneyToAddInCents()) == 0
                 && portfolioIdentifier.equals(command.getPortfolioIdentifier());
     }
 

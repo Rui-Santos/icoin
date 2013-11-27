@@ -2,11 +2,17 @@ refactor module
 price refactor
 run project
 upgrade axon
+events command refactoring
 treeset/cache on exchange
 bigdecimal:                <bean class="com.homhon.mongo.converter.BigDecimalToDoubleConverter"/>
 money adding
-events command refactoring
 
+http://api.highcharts.com/highstock
+highstock
+http://www.chartjs.org/docs/
+
+
+gravityonmars / Balloons.IO
 
 WS:
 https://github.com/spring-projects/spring-ws-samples/blob/master/stockquote/server/src/main/java/org/springframework/ws/samples/stockquote/ws/StockService.java

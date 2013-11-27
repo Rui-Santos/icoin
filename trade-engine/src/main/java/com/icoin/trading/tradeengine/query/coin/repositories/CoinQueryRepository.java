@@ -1,5 +1,6 @@
-package com.icoin.trading.tradeengine.query.coin;
+package com.icoin.trading.tradeengine.query.coin.repositories;
 
+import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**

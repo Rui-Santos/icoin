@@ -11,11 +11,13 @@ package com.icoin.trading.tradeengine.application.command.coin;
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.Coin;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.user.UserId;
+import com.icoin.trading.users.domain.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -36,10 +38,11 @@ public class CoinCommandHandlerTest {
     public void testCreateCompany() {
         CoinId aggregateIdentifier = new CoinId();
         UserId userId = new UserId();
-        CreateCoinCommand command = new CreateCoinCommand(aggregateIdentifier, userId, "TestItem", 1000, 10000);
+        CreateCoinCommand command = new CreateCoinCommand(aggregateIdentifier, userId, "TestItem",
+                BigDecimal.valueOf(1000), BigDecimal.valueOf(10000));
 
         fixture.given()
                 .when(command)
-                .expectEvents(new CoinCreatedEvent(aggregateIdentifier, "TestItem", 1000, 10000));
+                .expectEvents(new CoinCreatedEvent(aggregateIdentifier, "TestItem", BigDecimal.valueOf(1000), BigDecimal.valueOf(10000)));
     }
 }

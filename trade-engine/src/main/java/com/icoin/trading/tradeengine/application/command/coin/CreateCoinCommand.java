@@ -18,7 +18,9 @@ package com.icoin.trading.tradeengine.application.command.coin;
 
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.user.UserId;
+import com.icoin.trading.users.domain.UserId;
+
+import java.math.BigDecimal;
 
 /**
  * <p>Create a new company by proving the name, the estimated value of the company and the amount of shares that are
@@ -30,10 +32,10 @@ public class CreateCoinCommand {
     private CoinId coinId;
     private UserId userId;
     private String coinName;
-    private long coinInitialPrice;
-    private long coinInitialAmount;
+    private BigDecimal coinInitialPrice;
+    private BigDecimal coinInitialAmount;
 
-    public CreateCoinCommand(CoinId coinId, UserId userId, String coinName, long coinInitialPrice, long coinInitialAmount) {
+    public CreateCoinCommand(CoinId coinId, UserId userId, String coinName, BigDecimal coinInitialPrice, BigDecimal coinInitialAmount) {
         this.coinId = coinId;
         this.coinInitialAmount = coinInitialAmount;
         this.coinName = coinName;
@@ -41,7 +43,7 @@ public class CreateCoinCommand {
         this.userId = userId;
     }
 
-    public long getCoinInitialAmount() {
+    public BigDecimal getCoinInitialAmount() {
         return coinInitialAmount;
     }
 
@@ -49,7 +51,7 @@ public class CreateCoinCommand {
         return coinName;
     }
 
-    public long getCoinInitialPrice() {
+    public BigDecimal getCoinInitialPrice() {
         return coinInitialPrice;
     }
 

@@ -21,6 +21,9 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 /**
  * <p>Create a new Buy Order.</p>
  *
@@ -29,7 +32,8 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 public class CreateBuyOrderCommand extends AbstractOrderCommand {
 
     public CreateBuyOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
-                                 TransactionId transactionId, long tradeCount, long itemPrice) {
-        super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice);
+                                 TransactionId transactionId, BigDecimal tradeCount, BigDecimal itemPrice,
+                                 Date placeDate) {
+        super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice,placeDate);
     }
 }

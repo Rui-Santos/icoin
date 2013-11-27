@@ -22,8 +22,10 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>Abstract parent class for all commands that are order related.</p>
@@ -36,20 +38,23 @@ public abstract class AbstractOrderCommand {
     @TargetAggregateIdentifier
     private OrderBookId orderBookId;
     private TransactionId transactionId;
-    @Min(0)
+    @DecimalMin("0.00000001")
     private BigDecimal tradeAmount;
-    @Min(0)
+    @DecimalMin("0.00000001")
     private BigDecimal itemPrice;
     private OrderId orderId;
+    private Date placeDate;
 
     protected AbstractOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
-                                   TransactionId transactionId, BigDecimal tradeAmount, BigDecimal itemPrice) {
+                                   TransactionId transactionId, BigDecimal tradeAmount, BigDecimal itemPrice,
+                                   Date placeDate) {
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
         this.tradeAmount = tradeAmount;
         this.itemPrice = itemPrice;
         this.transactionId = transactionId;
         this.orderId = orderId;
+        this.placeDate = placeDate;
     }
 
     public PortfolioId getPortfolioId() {
@@ -74,5 +79,9 @@ public abstract class AbstractOrderCommand {
 
     public OrderId getOrderId() {
         return orderId;
+    }
+
+    public Date getPlaceDate() {
+        return placeDate;
     }
 }

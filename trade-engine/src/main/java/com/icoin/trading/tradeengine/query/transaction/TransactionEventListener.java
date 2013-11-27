@@ -37,6 +37,9 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * @author Jettro Coenradie
  */
@@ -100,9 +103,9 @@ public class TransactionEventListener {
         TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier()
                 .toString());
 
-        long value = transactionEntry.getAmountOfExecutedItems() * transactionEntry.getPricePerItem();
-        long additionalValue = event.getAmountOfExecutedItems() * event.getItemPrice();
-        long newPrice = (value + additionalValue) / event.getTotalOfExecutedItems();
+        BigDecimal value = transactionEntry.getAmountOfExecutedItems().multiply(transactionEntry.getPricePerItem()) ;
+        BigDecimal additionalValue = event.getAmountOfExecutedItems().multiply(event.getItemPrice());
+        BigDecimal newPrice = (value.add(additionalValue)).divide(event.getTotalOfExecutedItems(),2, RoundingMode.HALF_EVEN);
 
         transactionEntry.setState(TransactionState.PARTIALLYEXECUTED);
         transactionEntry.setAmountOfExecutedItems(event.getTotalOfExecutedItems());
@@ -114,9 +117,10 @@ public class TransactionEventListener {
         TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier()
                 .toString());
 
-        long value = transactionEntry.getAmountOfExecutedItems() * transactionEntry.getPricePerItem();
-        long additionalValue = event.getAmountOfItems() * event.getItemPrice();
-        long newPrice = (value + additionalValue) / transactionEntry.getAmountOfItems();
+        BigDecimal value = transactionEntry.getAmountOfExecutedItems().multiply(transactionEntry.getPricePerItem());
+        BigDecimal additionalValue = event.getAmountOfItems().multiply(event.getItemPrice());
+        BigDecimal newPrice = (value.add(additionalValue) ).divide(transactionEntry.getAmountOfItems(),
+                2, RoundingMode.HALF_EVEN);
 
         transactionEntry.setState(TransactionState.EXECUTED);
         transactionEntry.setAmountOfExecutedItems(transactionEntry.getAmountOfItems());
@@ -134,15 +138,15 @@ public class TransactionEventListener {
         OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(event.getOrderbookIdentifier().toString());
 
         TransactionEntry entry = new TransactionEntry();
-        entry.setAmountOfExecutedItems(0);
-        entry.setAmountOfItems((int) event.getTotalItems());
+        entry.setAmountOfExecutedItems(BigDecimal.ZERO);
+        entry.setAmountOfItems(event.getTotalItems());
         entry.setPricePerItem(event.getPricePerItem());
         entry.setIdentifier(event.getTransactionIdentifier().toString());
         entry.setOrderbookIdentifier(event.getOrderbookIdentifier().toString());
         entry.setPortfolioIdentifier(event.getPortfolioIdentifier().toString());
         entry.setState(TransactionState.STARTED);
         entry.setType(type);
-        entry.setCompanyName(orderBookEntry.getCoinName());
+        entry.setCoinName(orderBookEntry.getCoinName());
 
         transactionQueryRepository.save(entry);
     }

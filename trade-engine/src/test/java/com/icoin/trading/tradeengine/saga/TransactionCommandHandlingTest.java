@@ -38,6 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author Jettro Coenradie
@@ -78,7 +79,7 @@ public class TransactionCommandHandlingTest {
         ConfirmTransactionCommand command = new ConfirmTransactionCommand(transactionId);
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)))
                 .when(command)
-                .expectEvents(new BuyTransactionConfirmedEvent(transactionId));
+                .expectEvents(new BuyTransactionConfirmedEvent(transactionId,new Date()));
     }
 
     @Test
@@ -102,7 +103,7 @@ public class TransactionCommandHandlingTest {
     public void testExecuteTransaction() {
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, BigDecimal.valueOf(200), BigDecimal.valueOf(20));
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
-                new BuyTransactionConfirmedEvent(transactionId))
+                new BuyTransactionConfirmedEvent(transactionId, new Date()))
                 .when(command)
                 .expectEvents(new BuyTransactionExecutedEvent(transactionId, BigDecimal.valueOf(200), BigDecimal.valueOf(20)));
     }
@@ -111,7 +112,7 @@ public class TransactionCommandHandlingTest {
     public void testExecuteTransaction_partiallyExecuted() {
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, BigDecimal.valueOf(50), BigDecimal.valueOf(20));
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
-                new BuyTransactionConfirmedEvent(transactionId))
+                new BuyTransactionConfirmedEvent(transactionId,new Date()))
                 .when(command)
                 .expectEvents(new BuyTransactionPartiallyExecutedEvent(transactionId, BigDecimal.valueOf(50), BigDecimal.valueOf(50), BigDecimal.valueOf(20)));
     }
@@ -120,7 +121,7 @@ public class TransactionCommandHandlingTest {
     public void testExecuteTransaction_completeAfterPartiallyExecuted() {
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, BigDecimal.valueOf(150), BigDecimal.valueOf(20));
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
-                new BuyTransactionConfirmedEvent(transactionId),
+                new BuyTransactionConfirmedEvent(transactionId,new Date()),
                 new BuyTransactionPartiallyExecutedEvent(transactionId, BigDecimal.valueOf(50), BigDecimal.valueOf(50), BigDecimal.valueOf(20))
         )
                 .when(command)

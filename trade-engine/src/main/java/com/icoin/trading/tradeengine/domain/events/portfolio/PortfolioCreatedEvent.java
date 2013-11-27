@@ -17,7 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.portfolio;
 
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.user.UserId;
+import com.icoin.trading.users.domain.UserId;
 
 /**
  * @author Jettro Coenradie

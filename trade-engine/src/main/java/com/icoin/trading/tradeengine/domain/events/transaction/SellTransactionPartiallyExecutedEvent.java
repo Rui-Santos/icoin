@@ -18,15 +18,17 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public class SellTransactionPartiallyExecutedEvent extends AbstractTransactionPartiallyExecutedEvent {
 
     public SellTransactionPartiallyExecutedEvent(TransactionId transactionIdentifier,
-                                                 long amountOfExecutedItems,
-                                                 long totalOfExecutedItems,
-                                                 long itemPrice) {
+                                                 BigDecimal amountOfExecutedItems,
+                                                 BigDecimal totalOfExecutedItems,
+                                                 BigDecimal itemPrice) {
         super(transactionIdentifier, amountOfExecutedItems, totalOfExecutedItems, itemPrice);
     }
 }

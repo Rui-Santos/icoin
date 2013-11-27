@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -29,10 +31,10 @@ public class ConfirmItemReservationForPortfolioCommandMatcher
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private int amountOfConfirmedItems;
+    private BigDecimal amountOfConfirmedItems;
 
     public ConfirmItemReservationForPortfolioCommandMatcher(
-            OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, int amountOfConfirmedItems) {
+            OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, BigDecimal amountOfConfirmedItems) {
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfConfirmedItems = amountOfConfirmedItems;
@@ -42,7 +44,7 @@ public class ConfirmItemReservationForPortfolioCommandMatcher
     protected boolean doMatches(ConfirmItemReservationForPortfolioCommand command) {
         return command.getOrderBookIdentifier().equals(orderbookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && amountOfConfirmedItems == command.getAmountOfItemsToConfirm();
+                && amountOfConfirmedItems.compareTo(command.getAmountOfItemsToConfirm()) == 0;
     }
 
     @Override

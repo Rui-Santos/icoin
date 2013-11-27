@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -29,11 +31,11 @@ public class CancelItemReservationForPortfolioCommandMatcher
 
     private OrderBookId orderBookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private long amountOfItemsToCancel;
+    private BigDecimal amountOfItemsToCancel;
 
     public CancelItemReservationForPortfolioCommandMatcher(OrderBookId orderBookIdentifier,
                                                            PortfolioId portfolioIdentifier,
-                                                           long amountOfItemsToCancel) {
+                                                           BigDecimal amountOfItemsToCancel) {
         this.amountOfItemsToCancel = amountOfItemsToCancel;
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
@@ -43,7 +45,7 @@ public class CancelItemReservationForPortfolioCommandMatcher
     protected boolean doMatches(CancelItemReservationForPortfolioCommand command) {
         return command.getOrderBookIdentifier().equals(orderBookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && command.getAmountOfItemsToCancel() == amountOfItemsToCancel;
+                && command.getAmountOfItemsToCancel().compareTo(amountOfItemsToCancel) == 0;
     }
 
     @Override

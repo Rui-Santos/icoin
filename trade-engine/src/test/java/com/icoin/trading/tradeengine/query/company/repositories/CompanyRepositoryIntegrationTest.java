@@ -18,7 +18,7 @@ package com.icoin.trading.tradeengine.query.company.repositories;
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
-import com.icoin.trading.tradeengine.query.coin.CoinQueryRepository;
+import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,7 @@ import java.math.BigDecimal;
 @ContextConfiguration({"classpath:META-INF/spring/persistence-infrastructure-context.xml"})
 public class CompanyRepositoryIntegrationTest {
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private CoinQueryRepository coinQueryRepository;
 

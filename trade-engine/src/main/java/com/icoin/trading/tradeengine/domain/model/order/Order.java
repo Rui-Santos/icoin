@@ -42,7 +42,8 @@ public class Order extends AbstractAnnotatedEntity {
 
     public Order(OrderId orderId, TransactionId transactionId, BigDecimal itemPrice,
                  BigDecimal tradeAmount, PortfolioId portfolioId,
-                 CurrencyPair currencyPair) {
+                 CurrencyPair currencyPair,
+                 Date placeDate) {
         this.orderId = orderId;
         this.transactionId = transactionId;
         this.itemPrice = itemPrice;
@@ -50,7 +51,7 @@ public class Order extends AbstractAnnotatedEntity {
         this.itemsRemaining = tradeAmount;
         this.portfolioId = portfolioId;
         this.currencyPair = currencyPair;
-        this.placeDate = new Date();
+        this.placeDate = placeDate;
     }
 
     public BigDecimal getItemPrice() {
@@ -74,7 +75,7 @@ public class Order extends AbstractAnnotatedEntity {
     }
 
     private void recordTraded(BigDecimal tradeAmount) {
-        this.itemsRemaining.subtract(tradeAmount);
+        itemsRemaining = itemsRemaining.subtract(tradeAmount);
     }
 
     public TransactionId getTransactionId() {
@@ -87,6 +88,20 @@ public class Order extends AbstractAnnotatedEntity {
 
     public CurrencyPair getCurrencyPair() {
         return currencyPair;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", transactionId=" + transactionId +
+                ", itemPrice=" + itemPrice +
+                ", tradeAmount=" + tradeAmount +
+                ", portfolioId=" + portfolioId +
+                ", itemsRemaining=" + itemsRemaining +
+                ", placeDate=" + placeDate.getTime() +
+                ", currencyPair=" + currencyPair +
+                '}';
     }
 
     @EventHandler

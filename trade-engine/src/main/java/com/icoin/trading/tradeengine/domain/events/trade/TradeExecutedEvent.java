@@ -20,6 +20,8 @@ package com.icoin.trading.tradeengine.domain.events.trade;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -48,8 +50,8 @@ public class TradeExecutedEvent implements Serializable {
                               OrderId sellOrderId,
                               TransactionId buyTransactionId,
                               TransactionId sellTransactionId) {
-        this.tradeAmount = tradeAmount;
-        this.tradePrice = tradePrice;
+        this.tradeAmount = tradeAmount.setScale(8);
+        this.tradePrice = tradePrice.setScale(8);
         this.buyOrderId = buyOrderId;
         this.sellOrderId = sellOrderId;
         this.sellTransactionId = sellTransactionId;
@@ -83,5 +85,43 @@ public class TradeExecutedEvent implements Serializable {
 
     public TransactionId getSellTransactionId() {
         return sellTransactionId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null) {
+            return false;
+        }
+
+        if (!TradeExecutedEvent.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+
+        TradeExecutedEvent other = (TradeExecutedEvent) obj;
+
+        return new EqualsBuilder()
+                .append(tradeAmount.setScale(8), other.tradeAmount.setScale(8))
+                .append(tradePrice.setScale(8), other.tradePrice.setScale(8))
+                .append(buyOrderId, other.buyOrderId)
+                .append(sellOrderId, other.sellOrderId)
+                .append(sellTransactionId, other.sellTransactionId)
+                .append(buyTransactionId, other.buyTransactionId)
+                .append(orderBookId, other.orderBookId)
+                .build();
+
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(tradeAmount.setScale(8))
+                .append(tradePrice.setScale(8))
+                .append(buyOrderId)
+                .append(sellOrderId)
+                .append(sellTransactionId)
+                .append(buyTransactionId)
+                .append(orderBookId)
+                .build();
     }
 }

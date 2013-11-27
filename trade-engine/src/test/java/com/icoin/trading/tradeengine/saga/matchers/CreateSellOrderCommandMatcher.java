@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
@@ -28,10 +30,10 @@ public class CreateSellOrderCommandMatcher extends BaseCommandMatcher<CreateSell
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private long tradeCount;
-    private int itemPrice;
+    private BigDecimal tradeCount;
+    private BigDecimal itemPrice;
 
-    public CreateSellOrderCommandMatcher(PortfolioId portfolioId, OrderBookId orderbookId, long tradeCount, int itemPrice) {
+    public CreateSellOrderCommandMatcher(PortfolioId portfolioId, OrderBookId orderbookId, BigDecimal tradeCount, BigDecimal itemPrice) {
         this.portfolioIdentifier = portfolioId;
         this.orderbookIdentifier = orderbookId;
         this.tradeCount = tradeCount;
@@ -42,8 +44,8 @@ public class CreateSellOrderCommandMatcher extends BaseCommandMatcher<CreateSell
     protected boolean doMatches(CreateSellOrderCommand command) {
         return command.getOrderBookId().equals(orderbookIdentifier)
                 && command.getPortfolioId().equals(portfolioIdentifier)
-                && tradeCount == command.getTradeAmount()
-                && itemPrice == command.getItemPrice();
+                && tradeCount.compareTo(command.getTradeAmount()) == 0
+                && itemPrice.compareTo(command.getItemPrice()) == 0;
     }
 
     @Override

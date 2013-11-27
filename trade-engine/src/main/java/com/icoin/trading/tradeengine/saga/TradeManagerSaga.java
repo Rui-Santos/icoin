@@ -23,14 +23,16 @@ import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.saga.annotation.AbstractAnnotatedSaga;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jettro Coenradie
  */
 public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
 
     private transient CommandBus commandBus;
-    private long totalItems;
-    private long pricePerItem;
+    private BigDecimal totalItems;
+    private BigDecimal pricePerItem;
     private TransactionId transactionIdentifier;
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
@@ -63,19 +65,19 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
         this.portfolioIdentifier = portfolioIdentifier;
     }
 
-    protected long getPricePerItem() {
+    protected BigDecimal getPricePerItem() {
         return pricePerItem;
     }
 
-    protected void setPricePerItem(long pricePerItem) {
+    protected void setPricePerItem(BigDecimal pricePerItem) {
         this.pricePerItem = pricePerItem;
     }
 
-    protected long getTotalItems() {
+    protected BigDecimal getTotalItems() {
         return totalItems;
     }
 
-    protected void setTotalItems(long totalItems) {
+    protected void setTotalItems(BigDecimal totalItems) {
         this.totalItems = totalItems;
     }
 

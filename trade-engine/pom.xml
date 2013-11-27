@@ -66,6 +66,12 @@
         </dependency>
 
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>icoin-trading-users</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-core</artifactId>
             <version>${axon.version}</version>
