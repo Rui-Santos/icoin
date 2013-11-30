@@ -16,14 +16,14 @@
 
 package com.icoin.trading.webui.rest;
 
+import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
+import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.thoughtworks.xstream.XStream;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
-import com.icoin.trading.query.orderbook.OrderBookEntry;
-import com.icoin.trading.query.orderbook.repositories.OrderBookQueryRepository;
-import com.icoin.trading.query.portfolio.PortfolioEntry;
-import com.icoin.trading.query.portfolio.repositories.PortfolioQueryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

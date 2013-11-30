@@ -46,7 +46,7 @@ public class UserController {
 
     @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
     public String detail(@PathVariable("identifier") String userIdentifier, Model model) {
-        model.addAttribute("item", userRepository.findByIdentifier(userIdentifier));
+        model.addAttribute("item", userRepository.findOne(userIdentifier));
         return "user/detail";
     }
 }

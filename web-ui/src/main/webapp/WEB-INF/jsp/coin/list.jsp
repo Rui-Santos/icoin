@@ -17,7 +17,7 @@
 
 <html>
 <head>
-    <title>Companies</title>
+    <title>Coins</title>
     <script type="text/javascript" src="${ctx}/js/jquery.tablesorter.min.js"></script>
     <script>
         $(function () {
@@ -33,7 +33,7 @@
 <content tag="breadcrumb">
     <ul class="breadcrumb">
         <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
-        <li class="active">Companies</li>
+        <li class="active">Coins</li>
     </ul>
 </content>
 
@@ -51,9 +51,9 @@
     <c:forEach items="${items}" var="item">
         <tr>
             <td><c:out value='${item.name}'/></td>
-            <td><c:out value='${item.value}'/></td>
-            <td><c:out value='${item.coinInitialAmount}'/></td>
-            <td><a href="${ctx}/coin/<c:out value='${item.identifier}'/>">details</a></td>
+            <td><c:out value='${item.coinPrice}'/></td>
+            <td><c:out value='${item.coinAmount}'/></td>
+            <td><a href="${ctx}/coin/<c:out value='${item.primaryKey}'/>">details</a></td>
         </tr>
     </c:forEach>
     </tbody>

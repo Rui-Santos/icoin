@@ -150,17 +150,17 @@ public class PortfolioItemEventListenerTest {
 
     private OrderBookEntry createOrderBookEntry() {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
-        orderBookEntry.setIdentifier(itemIdentifier.toString());
+        orderBookEntry.setPrimaryKey(itemIdentifier.toString());
         orderBookEntry.setCoinIdentifier(coinIdentifier.toString());
-        orderBookEntry.setCoinName("Test Company");
+        orderBookEntry.setCoinName("Test Coin");
         return orderBookEntry;
     }
 
     private ItemEntry createItemEntry(OrderBookId itemIdentifier, CoinId coinIdentifier) {
         ItemEntry itemInPossession = new ItemEntry();
-        itemInPossession.setIdentifier(itemIdentifier.toString());
-        itemInPossession.setCompanyIdentifier(coinIdentifier.toString());
-        itemInPossession.setCompanyName("Test coin");
+        itemInPossession.setPrimaryKey(itemIdentifier.toString());
+        itemInPossession.setCoinIdentifier(coinIdentifier.toString());
+        itemInPossession.setCoinName("Test coin");
         itemInPossession.setAmount(DEFAULT_AMOUNT_ITEMS);
         return itemInPossession;
     }

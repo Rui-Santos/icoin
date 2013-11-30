@@ -16,28 +16,20 @@
 
 package com.icoin.trading.tradeengine.query.orderbook;
 
+import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
+
 import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
  */
-public class OrderEntry {
-
-    private String identifier;
+public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long> {
     private OrderBookEntry orderBookEntry;
     private BigDecimal tradeAmount;
     private BigDecimal itemPrice;
     private String userId;
     private BigDecimal itemsRemaining;
     private String type;
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
 
     public BigDecimal getItemPrice() {
         return itemPrice;

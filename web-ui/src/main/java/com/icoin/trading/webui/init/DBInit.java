@@ -45,7 +45,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * <p>Initializes the repository with a number of users, companiess and order books</p>
+ * <p>Initializes the repository with a number of users, coins and order books</p>
  *
  * @author Jettro Coenradie
  */
@@ -102,7 +102,7 @@ public class DBInit {
         UserId buyer5 = createuser("Buyer five", "buyer5");
         UserId buyer6 = createuser("Buyer six", "buyer6");
 
-        createCompanies(buyer1);
+        createCoins();
 
         addMoney(buyer1, BigDecimal.valueOf(100000));
         addItems(buyer2, "Philips", BigDecimal.valueOf(10000l));
@@ -119,7 +119,7 @@ public class DBInit {
         OrderBookEntry orderBookEntry = obtainOrderBookByCoinName(coinName);
         AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
-                new OrderBookId(orderBookEntry.getIdentifier()),
+                new OrderBookId(orderBookEntry.getPrimaryKey()),
                 amount);
         commandBus.dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(command));
     }
@@ -129,7 +129,7 @@ public class DBInit {
         for (CoinEntry entry : coinEntries) {
             if (entry.getName().equals(coinName)) {
                 List<OrderBookEntry> orderBookEntries = orderBookRepository
-                        .findByCoinIdentifier(entry.getIdentifier());
+                        .findByCoinIdentifier(entry.getPrimaryKey());
 
                 return orderBookEntries.get(0);
             }
@@ -149,14 +149,17 @@ public class DBInit {
     }
 
 
-    private void createCompanies(UserId userIdentifier) {
-        CreateCoinCommand command = new CreateCoinCommand(new CoinId(), userIdentifier, "Philips", BigDecimal.valueOf(1000), BigDecimal.valueOf(10000));
+    private void createCoins() {
+        CreateCoinCommand command = new CreateCoinCommand(new CoinId("BTC"), "Philips", BigDecimal.valueOf(1000), BigDecimal.valueOf(10000));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCoinCommand(new CoinId(), userIdentifier, "Shell", BigDecimal.valueOf(500), BigDecimal.valueOf(5000));
+        command = new CreateCoinCommand(new CoinId("LTC"), "Shell", BigDecimal.valueOf(500), BigDecimal.valueOf(5000));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCoinCommand(new CoinId(), userIdentifier, "Bp", BigDecimal.valueOf(15000), BigDecimal.valueOf(100000));
+        command = new CreateCoinCommand(new CoinId("PPC"), "Bp", BigDecimal.valueOf(15000), BigDecimal.valueOf(100000));
+        commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
+
+        command = new CreateCoinCommand(new CoinId("XPM"), "Bp", BigDecimal.valueOf(15000), BigDecimal.valueOf(100000));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
 //        To bo used for performance tests

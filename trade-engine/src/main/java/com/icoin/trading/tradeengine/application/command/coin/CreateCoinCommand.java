@@ -23,24 +23,22 @@ import com.icoin.trading.users.domain.UserId;
 import java.math.BigDecimal;
 
 /**
- * <p>Create a new company by proving the name, the estimated value of the company and the amount of shares that are
- * available for the company. You also must provide the id of the user that wants to create the company.</p>
+ * <p>Create a new coin by proving the name, the estimated value of the coin and the amount of shares that are
+ * available for the coin. You also must provide the id of the user that wants to create the coin.</p>
  *
  * @author Jettro Coenradie
  */
 public class CreateCoinCommand {
     private CoinId coinId;
-    private UserId userId;
     private String coinName;
     private BigDecimal coinInitialPrice;
     private BigDecimal coinInitialAmount;
 
-    public CreateCoinCommand(CoinId coinId, UserId userId, String coinName, BigDecimal coinInitialPrice, BigDecimal coinInitialAmount) {
+    public CreateCoinCommand(CoinId coinId, String coinName, BigDecimal coinInitialPrice, BigDecimal coinInitialAmount) {
         this.coinId = coinId;
         this.coinInitialAmount = coinInitialAmount;
         this.coinName = coinName;
         this.coinInitialPrice = coinInitialPrice;
-        this.userId = userId;
     }
 
     public BigDecimal getCoinInitialAmount() {
@@ -53,10 +51,6 @@ public class CreateCoinCommand {
 
     public BigDecimal getCoinInitialPrice() {
         return coinInitialPrice;
-    }
-
-    public UserId getUserId() {
-        return userId;
     }
 
     public CoinId getCoinId() {

@@ -54,16 +54,40 @@
         </dependency>
 
         <dependency>
-            <groupId>com.homhon</groupId>
+            <groupId>homhon-base</groupId>
             <artifactId>core</artifactId>
-            <version>${homhon.core.version}</version>
+            <version>${homhon.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.homhon</groupId>
-            <artifactId>domain-base</artifactId>
-            <version>${homhon.domainbase.version}</version>
+            <groupId>homhon-base</groupId>
+            <artifactId>mongobase</artifactId>
+            <version>${homhon.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>homhon-base</groupId>
+            <artifactId>basedomain</artifactId>
+            <version>${homhon.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>${project.groupId}</groupId>

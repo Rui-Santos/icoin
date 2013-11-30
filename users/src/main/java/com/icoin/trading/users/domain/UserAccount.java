@@ -23,7 +23,7 @@ package com.icoin.trading.users.domain;
  */
 public interface UserAccount {
 
-    String getUserId();
+    String getPrimaryKey();
 
     String getUserName();
 

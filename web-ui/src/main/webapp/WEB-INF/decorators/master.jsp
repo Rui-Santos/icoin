@@ -43,7 +43,7 @@
             <ul class="nav">
                 <li><a href="${ctx}/">Home</a></li>
                 <li><a href="${ctx}/dashboard">Dashboard</a></li>
-                <li><a href="${ctx}/coin">Companies</a></li>
+                <li><a href="${ctx}/coin">Coins</a></li>
                 <li><a href="${ctx}/data/collections">Data</a></li>
                 <li><a href="${ctx}/admin/portfolio">Portfolio</a></li>
             </ul>

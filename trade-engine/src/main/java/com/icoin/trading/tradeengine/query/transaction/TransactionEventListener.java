@@ -128,8 +128,8 @@ public class TransactionEventListener {
         transactionQueryRepository.save(transactionEntry);
     }
 
-    private void changeStateOfTransaction(String identifier, TransactionState newState) {
-        TransactionEntry transactionEntry = transactionQueryRepository.findOne(identifier);
+    private void changeStateOfTransaction(String primaryKey, TransactionState newState) {
+        TransactionEntry transactionEntry = transactionQueryRepository.findOne(primaryKey);
         transactionEntry.setState(newState);
         transactionQueryRepository.save(transactionEntry);
     }
@@ -141,7 +141,7 @@ public class TransactionEventListener {
         entry.setAmountOfExecutedItems(BigDecimal.ZERO);
         entry.setAmountOfItems(event.getTotalItems());
         entry.setPricePerItem(event.getPricePerItem());
-        entry.setIdentifier(event.getTransactionIdentifier().toString());
+        entry.setPrimaryKey(event.getTransactionIdentifier().toString());
         entry.setOrderbookIdentifier(event.getOrderbookIdentifier().toString());
         entry.setPortfolioIdentifier(event.getPortfolioIdentifier().toString());
         entry.setState(TransactionState.STARTED);

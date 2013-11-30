@@ -24,7 +24,7 @@
              http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="org.axonframework.samples.trader.webui.security"/>
+    <context:component-scan base-package="com.icoin.trading.webui"/>
 
     <http pattern="/js/**" security="none"/>
     <http pattern="/favicon.ico" security="none"/>

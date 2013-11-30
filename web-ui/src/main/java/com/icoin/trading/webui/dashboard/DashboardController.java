@@ -16,10 +16,10 @@
 
 package com.icoin.trading.webui.dashboard;
 
-import com.icoin.trading.query.transaction.TransactionEntry;
-import com.icoin.trading.query.portfolio.PortfolioEntry;
-import com.icoin.trading.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.query.transaction.repositories.TransactionQueryRepository;
+import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
+import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
+import com.icoin.trading.tradeengine.query.transaction.TransactionEntry;
+import com.icoin.trading.tradeengine.query.transaction.repositories.TransactionQueryRepository;
 import com.icoin.trading.webui.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

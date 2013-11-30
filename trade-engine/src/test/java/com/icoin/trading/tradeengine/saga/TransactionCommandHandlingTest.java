@@ -76,10 +76,11 @@ public class TransactionCommandHandlingTest {
 
     @Test
     public void testConfirmTransaction() {
-        ConfirmTransactionCommand command = new ConfirmTransactionCommand(transactionId);
+        final Date confirmDate = new Date();
+        ConfirmTransactionCommand command = new ConfirmTransactionCommand(transactionId, confirmDate);
         fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)))
                 .when(command)
-                .expectEvents(new BuyTransactionConfirmedEvent(transactionId,new Date()));
+                .expectEvents(new BuyTransactionConfirmedEvent(transactionId, confirmDate));
     }
 
     @Test

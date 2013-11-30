@@ -22,7 +22,7 @@
 
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
-    <mongo:repositories base-package="com.icoin.trading.tradeengine.query.*.repositories"
-                        mongo-template-ref="mongoSpringTemplate"/>
+    <!--<mongo:repositories base-package="com.icoin.trading.tradeengine.query.*.repositories"-->
+                        <!--mongo-template-ref="mongoSpringTemplate"/>-->
 
 </beans>

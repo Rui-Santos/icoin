@@ -28,16 +28,17 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <axon.version>2.0.6</axon.version>
-        <homhon.core.version>1.0-SNAPSHOT</homhon.core.version>
-        <homhon.domainbase.version>1.0-SNAPSHOT</homhon.domainbase.version>
+        <homhon.version>1.0-SNAPSHOT</homhon.version>
+        <logback.version>1.0.13</logback.version>
         <slf4j.version>1.6.6</slf4j.version>
-        <spring.version>3.1.1.RELEASE</spring.version>
+        <spring.version>3.2.2.RELEASE</spring.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <junit.version>4.8.1</junit.version>
         <mockito.version>1.8.5</mockito.version>
         <hamcrest.version>1.1</hamcrest.version>
         <mongodb.java.version>2.8.0</mongodb.java.version>
-        <springdata.mongodb.version>1.3.2.RELEASE</springdata.mongodb.version>
+        <!--<springdata.mongodb.version>1.3.2.RELEASE</springdata.mongodb.version>-->
+        <springdata.mongodb.version>1.2.3.RELEASE</springdata.mongodb.version>
     </properties>
 
     <modules>

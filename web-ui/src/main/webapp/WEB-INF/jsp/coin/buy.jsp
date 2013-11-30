@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@include file="../include.jsp" %>
 <%--
   ~ Copyright (c) 2010-2012. Axon Framework
@@ -16,24 +17,24 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   --%>
-
-<content tag="title">Sell order for : <c:out value='${order.coinName}'/></content>
-<content tag="tagline">Enter items to sell and for how much</content>
+<content tag="title">Buy order for : <c:out value='${order.coinName}'/></content>
+<content tag="tagline">Enter items to buy and for how much</content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
         <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
-        <li><a href="${ctx}/coin">Companies</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/coin">Coins</a> <span class="divider">/</span></li>
         <li><a href="${ctx}/coin/${order.coinId}"><c:out value='${order.coinName}'/></a> <span
                 class="divider">/</span></li>
-        <li class="active">Sell</li>
+        <li class="active">Buy</li>
     </ul>
 </content>
 <div class="row">
     <div class="span14">
         <div class="alert-message block-message info">
-            <p><c:out value="${itemsInPossession}"/> Items available of which <c:out value="${itemsReserved}"/>
+            <p><c:out value="${moneyInPossession}"/> Cents available of which <c:out value="${moneyReserved}"/> cents
                 reserved.</p>
         </div>
     </div>
 </div>
+
 <jsp:include page="form-include.jsp"/>

@@ -76,13 +76,13 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    public void confirm() {
+    public void confirm(Date confirmDate) {
         switch (this.type) {
             case BUY:
-                apply(new BuyTransactionConfirmedEvent(transactionId, new Date()));
+                apply(new BuyTransactionConfirmedEvent(transactionId, confirmDate));
                 break;
             case SELL:
-                apply(new SellTransactionConfirmedEvent(transactionId, new Date()));
+                apply(new SellTransactionConfirmedEvent(transactionId, confirmDate));
                 break;
         }
     }

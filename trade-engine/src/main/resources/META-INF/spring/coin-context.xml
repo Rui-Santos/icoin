@@ -25,7 +25,7 @@
     </bean>
 
     <axon:event-sourcing-repository id="coinRepository"
-                                    aggregate-type="org.axonframework.samples.trader.coin.command.Company"
+                                    aggregate-type="com.icoin.trading.tradeengine.domain.model.coin.Coin"
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
                                     event-store="eventStore">

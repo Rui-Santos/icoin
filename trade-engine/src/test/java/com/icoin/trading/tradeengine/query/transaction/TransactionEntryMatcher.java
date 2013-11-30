@@ -50,22 +50,22 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
     public boolean matches(Object argument) {
         if (!(argument instanceof TransactionEntry)) {
             problem = String.format("Wrong argument type, required %s but received %s",
-                                    TransactionEntry.class.getName(),
-                                    argument.getClass().getName());
+                    TransactionEntry.class.getName(),
+                    argument.getClass().getName());
             return false;
         }
         TransactionEntry transactionEntry = (TransactionEntry) argument;
         if (Math.abs(amountOfItems.floatValue() - transactionEntry.getAmountOfItems().floatValue()) > min) {
             problem = String.format("Amount of items is not %f but %f",
-                                    amountOfItems,
-                                    transactionEntry.getAmountOfItems());
+                    amountOfItems,
+                    transactionEntry.getAmountOfItems());
             return false;
         }
 
         if (Math.abs(amountOfItemsExecuted.floatValue() - transactionEntry.getAmountOfExecutedItems().floatValue()) > min) {
             problem = String.format("Amount of executed items is not %f but %f",
-                                    amountOfItemsExecuted.doubleValue(),
-                                    transactionEntry.getAmountOfExecutedItems().doubleValue());
+                    amountOfItemsExecuted.doubleValue(),
+                    transactionEntry.getAmountOfExecutedItems().doubleValue());
             return false;
         }
         if (!coinName.equals(transactionEntry.getCoinName())) {
@@ -73,10 +73,10 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
             return false;
         }
 
-        if (Math.abs(pricePerItem.floatValue() - transactionEntry.getPricePerItem().floatValue())< min) {
+        if (Math.abs(pricePerItem.floatValue() - transactionEntry.getPricePerItem().floatValue()) > min) {
             problem = String.format("Price per item is not %f but %f",
-                                    pricePerItem.doubleValue(),
-                                    transactionEntry.getPricePerItem().doubleValue());
+                    pricePerItem.doubleValue(),
+                    transactionEntry.getPricePerItem().doubleValue());
             return false;
         }
         if (state != transactionEntry.getState()) {

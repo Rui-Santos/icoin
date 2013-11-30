@@ -16,11 +16,11 @@
 
 package com.icoin.trading.query.test
 
+import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry
+import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry
 import com.thoughtworks.xstream.XStream
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
-import com.icoin.trading.query.orderbook.OrderBookEntry
-import com.icoin.trading.query.portfolio.PortfolioEntry
 
 /**
  * This class serializes the command using xstream and sends it to the server.

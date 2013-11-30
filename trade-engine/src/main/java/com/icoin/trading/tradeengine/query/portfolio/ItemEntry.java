@@ -16,16 +16,16 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
+import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
+
 import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
  */
-public class ItemEntry {
-
-    private String identifier;
-    private String companyIdentifier;
-    private String companyName;
+public class ItemEntry extends AuditAwareEntitySupport<ItemEntry, String, Long> {
+    private String coinIdentifier;
+    private String coinName;
     private BigDecimal amount;
 
     public BigDecimal getAmount() {
@@ -36,37 +36,29 @@ public class ItemEntry {
         this.amount = amount;
     }
 
-    public String getCompanyIdentifier() {
-        return companyIdentifier;
+    public String getCoinIdentifier() {
+        return coinIdentifier;
     }
 
-    public void setCompanyIdentifier(String companyIdentifier) {
-        this.companyIdentifier = companyIdentifier;
+    public void setCoinIdentifier(String coinIdentifier) {
+        this.coinIdentifier = coinIdentifier;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getCoinName() {
+        return coinName;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setCoinName(String coinName) {
+        this.coinName = coinName;
     }
 
     @Override
     public String toString() {
         return "ItemEntry{" +
                 "amount=" + amount +
-                ", identifier='" + identifier + '\'' +
-                ", companyIdentifier='" + companyIdentifier + '\'' +
-                ", companyName='" + companyName + '\'' +
+                ", primaryKey='" + primaryKey + '\'' +
+                ", coinIdentifier='" + coinIdentifier + '\'' +
+                ", coinName='" + coinName + '\'' +
                 '}';
     }
 }

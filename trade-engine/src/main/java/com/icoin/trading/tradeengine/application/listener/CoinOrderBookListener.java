@@ -40,7 +40,7 @@ public class CoinOrderBookListener {
     private CommandBus commandBus;
 
     @EventHandler
-    public void handleCompanyCreated(CoinCreatedEvent event) {
+    public void handleCoinCreated(CoinCreatedEvent event) {
         logger.debug("About to dispatch a new command to create an OrderBook for the coin {}",
                 event.getCoinIdentifier());
 

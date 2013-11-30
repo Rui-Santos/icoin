@@ -49,9 +49,9 @@ public class OrderBookListener {
     private CoinQueryRepository coinRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
 
-    @Value("${trade.lowestPrice}")
-    public void setLowestPrice(BigDecimal lowestPrice) {
-        this.lowestPrice = lowestPrice;
+    //@Value("#{trading.lowestTradePrice}")
+    public void setLowestPrice(double lowestPrice) {
+        this.lowestPrice = BigDecimal.valueOf(lowestPrice);
     }
 
     @EventHandler
@@ -60,7 +60,7 @@ public class OrderBookListener {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         orderBookEntry.setCoinIdentifier(event.getCoinId().toString());
         orderBookEntry.setCoinName(coinEntry.getName());
-        orderBookEntry.setIdentifier(event.getOrderBookId().toString());
+        orderBookEntry.setPrimaryKey(event.getOrderBookId().toString());
         orderBookRepository.save(orderBookEntry);
     }
 
@@ -94,7 +94,7 @@ public class OrderBookListener {
 
         TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();
         tradeExecutedEntry.setCoinName(orderBookEntry.getCoinName());
-        tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getIdentifier());
+        tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getPrimaryKey());
         tradeExecutedEntry.setTradeAmount(event.getTradeAmount());
         tradeExecutedEntry.setTradePrice(event.getTradePrice());
 
@@ -103,7 +103,7 @@ public class OrderBookListener {
         // TODO find a better solution or maybe pull them apart
         OrderEntry foundBuyOrder = null;
         for (OrderEntry order : orderBookEntry.buyOrders()) {
-            if (order.getIdentifier().equals(buyOrderId.toString())) {
+            if (order.getPrimaryKey().equals(buyOrderId.toString())) {
                 BigDecimal itemsRemaining = order.getItemsRemaining();
                 order.setItemsRemaining(itemsRemaining.subtract(event.getTradeAmount()));
                 foundBuyOrder = order;
@@ -115,7 +115,7 @@ public class OrderBookListener {
         }
         OrderEntry foundSellOrder = null;
         for (OrderEntry order : orderBookEntry.sellOrders()) {
-            if (order.getIdentifier().equals(sellOrderId.toString())) {
+            if (order.getPrimaryKey().equals(sellOrderId.toString())) {
                 BigDecimal itemsRemaining = order.getItemsRemaining();
                 order.setItemsRemaining(itemsRemaining.subtract(event.getTradeAmount()));
                 foundSellOrder = order;
@@ -130,7 +130,7 @@ public class OrderBookListener {
 
     private OrderEntry createPlacedOrder(AbstractOrderPlacedEvent event, String type) {
         OrderEntry entry = new OrderEntry();
-        entry.setIdentifier(event.getOrderId().toString());
+        entry.setPrimaryKey(event.getOrderId().toString());
         entry.setItemsRemaining(event.getTradeAmount());
         entry.setTradeAmount(event.getTradeAmount());
         entry.setUserId(event.getPortfolioId().toString());

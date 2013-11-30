@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,7 @@ public class MongoController {
 
     @RequestMapping(value = "/portfolio/money/{identifier}/{amount}")
     public String addMoneyToPortfolio(@PathVariable("identifier") String portfolioIdentifier,
-                                      @PathVariable("amount") long amount,
+                                      @PathVariable("amount") BigDecimal amount,
                                       Model model) {
         dbInit.depositMoneyToPortfolio(portfolioIdentifier, amount);
         model.addAttribute("info", "Added cash to the portfolio.");

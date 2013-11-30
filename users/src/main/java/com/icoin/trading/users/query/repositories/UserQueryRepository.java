@@ -16,15 +16,16 @@
 
 package com.icoin.trading.users.query.repositories;
 
+import com.homhon.base.domain.repository.GenericCrudRepository;
 import com.icoin.trading.users.query.UserEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  * @author Jettro Coenradie
  */
-public interface UserQueryRepository extends PagingAndSortingRepository<UserEntry, String> {
+public interface UserQueryRepository extends PagingAndSortingRepository<UserEntry, String>, GenericCrudRepository<UserEntry, String> {
 
     UserEntry findByUsername(String username);
 
-    UserEntry findByIdentifier(String identifier);
+//    UserEntry findByUserId(String identifier);
 }

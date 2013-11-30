@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.tradeengine.query.company.repositories;
+package com.icoin.trading.tradeengine.query.user;
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
-import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
+import com.icoin.trading.users.query.UserEntry;
+import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -31,21 +33,22 @@ import java.math.BigDecimal;
  * @author Jettro Coenradie
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:META-INF/spring/persistence-infrastructure-context.xml"})
-public class CompanyRepositoryIntegrationTest {
+@ActiveProfiles("dev")
+@ContextConfiguration({"classpath:com/icoin/trading/tradeengine/infrastructure/persistence/mongo/tradeengine-persistence-mongo.xml"})
+public class UserRepositoryIntegrationTest {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    private CoinQueryRepository coinQueryRepository;
+    private UserQueryRepository userQueryRepository;
 
     @Test
-    public void storeCompanyInRepository() {
-        CoinEntry companyEntry = new CoinEntry();
-        companyEntry.setIdentifier(new CoinId().toString());
-        companyEntry.setCoinInitialAmount(BigDecimal.valueOf(100000));
-        companyEntry.setCoinInitialPrice(BigDecimal.valueOf(1000));
-        companyEntry.setTradeStarted(true);
+    public void storeUserInRepository() {
+        UserEntry userEntry = new UserEntry();
+        userEntry.setPrimaryKey(new CoinId().toString());
+        userEntry.setUsername("User Name");
+        userEntry.setName("logon name");
+        userEntry.setPassword("abc");
 
-        coinQueryRepository.save(companyEntry);
+        userQueryRepository.save(userEntry);
     }
 }

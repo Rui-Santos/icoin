@@ -1,5 +1,6 @@
 package com.icoin.trading.tradeengine.query.coin.repositories;
 
+import com.homhon.base.domain.repository.GenericCrudRepository;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -10,5 +11,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * Time: PM6:13
  * To change this template use File | Settings | File Templates.
  */
-public interface CoinQueryRepository extends PagingAndSortingRepository<CoinEntry, String> {
+public interface CoinQueryRepository extends PagingAndSortingRepository<CoinEntry, String>, GenericCrudRepository<CoinEntry, String> {
 }

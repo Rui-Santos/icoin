@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.query.transaction;
 
+import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
 import org.springframework.data.annotation.Id;
 
@@ -24,14 +25,11 @@ import java.math.BigDecimal;
 /**
  * @author Jettro Coenradie
  */
-public class TransactionEntry {
-
-    @Id
-    private String identifier;
+public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, String, Long> {
     private String orderbookIdentifier;
     private String portfolioIdentifier;
 
-    private String companyName;
+    private String coinName;
     private BigDecimal amountOfItems;
     private BigDecimal amountOfExecutedItems;
     private BigDecimal pricePerItem;
@@ -55,19 +53,11 @@ public class TransactionEntry {
     }
 
     public String getCoinName() {
-        return companyName;
+        return coinName;
     }
 
-    public void setCoinName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setCoinName(String coinName) {
+        this.coinName = coinName;
     }
 
     public String getOrderbookIdentifier() {

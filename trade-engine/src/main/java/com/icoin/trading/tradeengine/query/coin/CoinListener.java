@@ -20,22 +20,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class CoinListener {
 
-    private CoinQueryRepository companyRepository;
+    private CoinQueryRepository coinRepository;
 
     @EventHandler
     public void handleCoinCreatedEvent(CoinCreatedEvent event) {
-        CoinEntry companyEntry = new CoinEntry();
-        companyEntry.setIdentifier(event.getCoinIdentifier().toString());
-        companyEntry.setCoinInitialPrice(event.getCoinInitialPrice());
-        companyEntry.setCoinInitialAmount(event.getCoinInitialAmount());
-        companyEntry.setTradeStarted(true);
-        companyEntry.setName(event.getCoinName());
+        CoinEntry coinEntry = new CoinEntry();
+        coinEntry.setPrimaryKey(event.getCoinIdentifier().toString());
+        coinEntry.setCoinPrice(event.getCoinInitialPrice());
+        coinEntry.setCoinAmount(event.getCoinInitialAmount());
+        coinEntry.setTradeStarted(true);
+        coinEntry.setName(event.getCoinName());
 
-        companyRepository.save(companyEntry);
+        coinRepository.save(coinEntry);
     }
 
     @Autowired
-    public void setCoinRepository(CoinQueryRepository companyRepository) {
-        this.companyRepository = companyRepository;
+    public void setCoinRepository(CoinQueryRepository coinRepository) {
+        this.coinRepository = coinRepository;
     }
 }

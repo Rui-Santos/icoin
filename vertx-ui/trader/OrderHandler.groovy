@@ -15,13 +15,13 @@
  */
 def logger = container.logger
 def eventBus = vertx.eventBus
-def companies = [:] // Map containing the names of the companies with the id of the orderbook as a key
+def coins = [:] // Map containing the names of the companies with the id of the orderbook as a key
 
 eventBus.registerHandler("trader.trade.executed") { message ->
     def result = message.body
     logger.info "Received an executed trade : ${result}"
     // Add the name of the coin to the obtained result
-    result.tradeExecuted.coinName = companies.get(result.tradeExecuted.orderbookId)
+    result.tradeExecuted.coinName = coins.get(result.tradeExecuted.orderbookId)
 
     // Put a new message with the result on the event bus to send it to subscribers
     eventBus.send("updates.trades", result)
@@ -29,7 +29,7 @@ eventBus.registerHandler("trader.trade.executed") { message ->
 
 
 
-def mongoConfig = ["db_name": "axontrader"]
+def mongoConfig = ["db_name": "dev"]
 container.with {
     deployVerticle('mongo-persistor', mongoConfig, 1) {
         logger.info "Mongo busmod is deployed"
@@ -39,7 +39,7 @@ container.with {
         eventBus.send("vertx.mongopersistor", query) {message ->
             message.body.results.each {orderbook ->
                 logger.info "Add Coin for orderbook: ${orderbook._id} - ${orderbook.coinName}"
-                companies.put(orderbook._id, orderbook.coinName)
+                coins.put(orderbook._id, orderbook.coinName)
             }
         }
     }

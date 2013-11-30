@@ -36,7 +36,7 @@
     <table class="table table-striped" id="tradesTable">
         <thead>
         <tr>
-            <th>Company</th>
+            <th>Coin</th>
             <th>#items</th>
             <th>Price</th>
         </tr>

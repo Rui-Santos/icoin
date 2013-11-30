@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.query.transaction.repositories;
 
+import com.homhon.base.domain.repository.GenericCrudRepository;
 import com.icoin.trading.tradeengine.query.transaction.TransactionEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * @author Jettro Coenradie
  */
-public interface TransactionQueryRepository extends PagingAndSortingRepository<TransactionEntry, String> {
+public interface TransactionQueryRepository extends PagingAndSortingRepository<TransactionEntry, String>, GenericCrudRepository<TransactionEntry, String> {
 
     List<TransactionEntry> findByPortfolioIdentifier(String portfolioIdentifier);
 }

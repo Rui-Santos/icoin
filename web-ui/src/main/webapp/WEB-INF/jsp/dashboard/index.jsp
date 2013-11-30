@@ -91,7 +91,7 @@
         <table class="zebra-striped condensed-table">
             <thead>
             <tr>
-                <th>Company</th>
+                <th>Coin</th>
                 <th>Type</th>
                 <th># Items</th>
                 <th>Price</th>

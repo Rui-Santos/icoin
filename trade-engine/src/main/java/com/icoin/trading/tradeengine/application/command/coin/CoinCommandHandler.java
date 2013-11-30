@@ -45,8 +45,8 @@ public class CoinCommandHandler {
     }
 
     @Autowired
-    @Qualifier("companyRepository")
-    public void setRepository(Repository<Coin> companyRepository) {
-        this.repository = companyRepository;
+    @Qualifier("coinRepository")
+    public void setRepository(Repository<Coin> coinRepository) {
+        this.repository = coinRepository;
     }
 }

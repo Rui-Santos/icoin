@@ -35,10 +35,9 @@ public class CoinCommandHandlerTest {
     }
 
     @Test
-    public void testCreateCompany() {
+    public void testCreateCoin() {
         CoinId aggregateIdentifier = new CoinId();
-        UserId userId = new UserId();
-        CreateCoinCommand command = new CreateCoinCommand(aggregateIdentifier, userId, "TestItem",
+        CreateCoinCommand command = new CreateCoinCommand(aggregateIdentifier, "TestItem",
                 BigDecimal.valueOf(1000), BigDecimal.valueOf(10000));
 
         fixture.given()

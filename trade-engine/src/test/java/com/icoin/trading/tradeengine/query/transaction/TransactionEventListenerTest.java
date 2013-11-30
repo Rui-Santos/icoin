@@ -46,7 +46,7 @@ public class TransactionEventListenerTest {
 
     public static final BigDecimal DEFAULT_TOTAL_ITEMS = BigDecimal.valueOf(100);
     public static final BigDecimal DEFAULT_ITEM_PRICE = BigDecimal.TEN;
-    private static final String DEFAULT_COMPANY_NAME = "Test Coin";
+    private static final String DEFAULT_COIN_NAME = "Test Coin";
 
     private TransactionEventListener listener;
     private TransactionQueryRepository transactionQueryRepository;
@@ -76,7 +76,7 @@ public class TransactionEventListenerTest {
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
                 BigDecimal.ZERO,
-                DEFAULT_COMPANY_NAME,
+                DEFAULT_COIN_NAME,
                 DEFAULT_ITEM_PRICE,
                 TransactionState.STARTED,
                 TransactionType.BUY
@@ -96,7 +96,7 @@ public class TransactionEventListenerTest {
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
                 BigDecimal.ZERO,
-                DEFAULT_COMPANY_NAME,
+                DEFAULT_COIN_NAME,
                 DEFAULT_ITEM_PRICE,
                 TransactionState.STARTED,
                 TransactionType.SELL
@@ -107,12 +107,12 @@ public class TransactionEventListenerTest {
     @Test
     public void handleSellTransactionCancelledEvent() {
         TransactionEntry transactionEntry = new TransactionEntry();
-        transactionEntry.setIdentifier(transactionIdentifier.toString());
+        transactionEntry.setPrimaryKey(transactionIdentifier.toString());
         transactionEntry.setAmountOfExecutedItems(BigDecimal.ZERO);
         transactionEntry.setPricePerItem(DEFAULT_ITEM_PRICE);
         transactionEntry.setState(TransactionState.STARTED);
         transactionEntry.setAmountOfItems(DEFAULT_TOTAL_ITEMS);
-        transactionEntry.setCoinName(DEFAULT_COMPANY_NAME);
+        transactionEntry.setCoinName(DEFAULT_COIN_NAME);
         transactionEntry.setOrderbookIdentifier(orderBookIdentifier.toString());
         transactionEntry.setPortfolioIdentifier(portfolioIdentifier.toString());
         transactionEntry.setType(TransactionType.SELL);
@@ -124,7 +124,7 @@ public class TransactionEventListenerTest {
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
                 BigDecimal.ZERO,
-                DEFAULT_COMPANY_NAME,
+                DEFAULT_COIN_NAME,
                 DEFAULT_ITEM_PRICE,
                 TransactionState.CANCELLED,
                 TransactionType.SELL
@@ -134,9 +134,9 @@ public class TransactionEventListenerTest {
 
     private OrderBookEntry createOrderBookEntry() {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
-        orderBookEntry.setIdentifier(orderBookIdentifier.toString());
+        orderBookEntry.setPrimaryKey(orderBookIdentifier.toString());
         orderBookEntry.setCoinIdentifier(coinIdentifier.toString());
-        orderBookEntry.setCoinName(DEFAULT_COMPANY_NAME);
+        orderBookEntry.setCoinName(DEFAULT_COIN_NAME);
         return orderBookEntry;
     }
 }

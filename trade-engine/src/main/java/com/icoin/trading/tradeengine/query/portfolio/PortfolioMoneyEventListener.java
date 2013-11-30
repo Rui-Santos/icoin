@@ -45,13 +45,13 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(PortfolioCreatedEvent event) {
-        logger.debug("About to handle the PortfolioCreatedEvent for user with identifier {}",
+        logger.debug("About to handle the PortfolioCreatedEvent for user with primaryKey {}",
                 event.getUserId().toString());
 
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         portfolioEntry.setIdentifier(event.getPortfolioId().toString());
         portfolioEntry.setUserIdentifier(event.getUserId().toString());
-        portfolioEntry.setUserName(userQueryRepository.findByIdentifier(event.getUserId().toString())
+        portfolioEntry.setUserName(userQueryRepository.findOne(event.getUserId().toString())
                 .getFullName());
         portfolioEntry.setAmountOfMoney(BigDecimal.ZERO);
         portfolioEntry.setReservedAmountOfMoney(BigDecimal.ZERO);

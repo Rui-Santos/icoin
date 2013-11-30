@@ -26,7 +26,7 @@
     </bean>
 
     <axon:event-sourcing-repository id="orderBookRepository"
-                                    aggregate-type="org.axonframework.samples.trader.tradeengine.command.OrderBook"
+                                    aggregate-type="com.icoin.trading.tradeengine.domain.model.order.OrderBook"
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
                                     event-store="eventStore">

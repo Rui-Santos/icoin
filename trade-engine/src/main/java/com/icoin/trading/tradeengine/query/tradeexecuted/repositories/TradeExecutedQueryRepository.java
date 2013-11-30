@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.query.tradeexecuted.repositories;
 
+import com.homhon.base.domain.repository.GenericCrudRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * @author Jettro Coenradie
  */
-public interface TradeExecutedQueryRepository extends PagingAndSortingRepository<TradeExecutedEntry, String> {
+public interface TradeExecutedQueryRepository extends PagingAndSortingRepository<TradeExecutedEntry, String>, GenericCrudRepository<TradeExecutedEntry, String> {
 
     List<TradeExecutedEntry> findByOrderBookIdentifier(String orderBookIdentifier);
 }

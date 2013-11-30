@@ -16,13 +16,14 @@
 
 package com.icoin.trading.tradeengine.query.portfolio.repositories;
 
+import com.homhon.base.domain.repository.GenericCrudRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  * @author Jettro Coenradie
  */
-public interface PortfolioQueryRepository extends PagingAndSortingRepository<PortfolioEntry, String> {
+public interface PortfolioQueryRepository extends PagingAndSortingRepository<PortfolioEntry, String>, GenericCrudRepository<PortfolioEntry, String> {
 
     PortfolioEntry findByUserIdentifier(String userIdentifier);
 }

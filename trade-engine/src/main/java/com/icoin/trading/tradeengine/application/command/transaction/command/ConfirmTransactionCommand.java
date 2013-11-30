@@ -18,18 +18,26 @@ package com.icoin.trading.tradeengine.application.command.transaction.command;
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
 public class ConfirmTransactionCommand {
 
     private TransactionId transactionIdentifier;
+    private Date confirmDate;
 
-    public ConfirmTransactionCommand(TransactionId transactionIdentifier) {
+    public ConfirmTransactionCommand(TransactionId transactionIdentifier, Date confirmDate) {
         this.transactionIdentifier = transactionIdentifier;
+        this.confirmDate = confirmDate;
     }
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getConfirmDate() {
+        return confirmDate;
     }
 }

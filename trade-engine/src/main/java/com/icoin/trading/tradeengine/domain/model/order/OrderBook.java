@@ -55,8 +55,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
     protected OrderBook() {
     }
 
-    public OrderBook(OrderBookId identifier, CurrencyPair currencyPair) {
-        apply(new OrderBookCreatedEvent(identifier, currencyPair));
+    public OrderBook(OrderBookId primaryKey, CurrencyPair currencyPair) {
+        apply(new OrderBookCreatedEvent(primaryKey, currencyPair));
     }
 
     public void addBuyOrder(OrderId orderId,

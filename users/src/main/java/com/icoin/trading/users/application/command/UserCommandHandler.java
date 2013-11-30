@@ -18,6 +18,7 @@ package com.icoin.trading.users.application.command;
 
 import com.icoin.trading.users.domain.UserId;
 import com.icoin.trading.users.domain.User;
+import com.icoin.trading.users.query.UserEntry;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
@@ -47,10 +48,22 @@ public class UserCommandHandler {
     @CommandHandler
     public UserAccount handleAuthenticateUser(AuthenticateUserCommand command) {
         UserAccount account = userQueryRepository.findByUsername(command.getUserName());
+
+        //todo remove
+        final Iterable<UserEntry> users = userQueryRepository.findAll();
+        if(users!=null){
+            for (UserEntry user : users) {
+                System.err.println("user:" + user);
+            }
+        }else {
+            System.err.println("Cannot find any users now");
+        }
+
+
         if (account == null) {
             return null;
         }
-        boolean success = onUser(account.getUserId()).authenticate(command.getPassword());
+        boolean success = onUser(account.getPrimaryKey()).authenticate(command.getPassword());
         return success ? account : null;
     }
 

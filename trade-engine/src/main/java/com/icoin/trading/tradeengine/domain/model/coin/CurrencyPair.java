@@ -1,5 +1,6 @@
 package com.icoin.trading.tradeengine.domain.model.coin;
 
+
 import com.homhon.base.domain.model.ValueObjectSupport;
 
 import static com.homhon.util.Asserts.notNull;

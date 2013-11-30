@@ -17,20 +17,20 @@
 
 <html>
 <head>
-    <title>Company details</title>
+    <title>Coin details</title>
 </head>
 <body>
 <content tag="title"><c:out value="${coin.name}"/></content>
 <content tag="tagline">
     <span class="detailLabel">Value : </span>
-    <span><c:out value="${coin.value}"/></span>
+    <span><c:out value="${coin.coinPrice}"/></span>
     <span class="detailLabel"># Shares : </span>
-    <span><c:out value="${coin.coinInitialAmount}"/></span>
+    <span><c:out value="${coin.coinAmount}"/></span>
 </content>
 <content tag="breadcrumb">
     <ul class="breadcrumb">
         <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
-        <li><a href="${ctx}/coin">Companies</a> <span class="divider">/</span></li>
+        <li><a href="${ctx}/coin">Coins</a> <span class="divider">/</span></li>
         <li class="active"><c:out value='${coin.name}'/></li>
     </ul>
 </content>
@@ -41,9 +41,9 @@
         <div class="span14">
             <p>
                 <a class="btn primary"
-                   href="${ctx}/coin/buy/<c:out value='${coin.identifier}'/>">Buy &raquo;</a>
+                   href="${ctx}/coin/buy/<c:out value='${coin.primaryKey}'/>">Buy &raquo;</a>
                 <a class="btn primary"
-                   href="${ctx}/coin/sell/<c:out value='${coin.identifier}'/>">Sell &raquo;</a>
+                   href="${ctx}/coin/sell/<c:out value='${coin.primaryKey}'/>">Sell &raquo;</a>
             </p>
         </div>
     </div>

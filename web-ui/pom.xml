@@ -57,11 +57,7 @@
             <artifactId>icoin-trading-users</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.icoin.trading</groupId>
-            <artifactId>icoin-trading-base</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>com.icoin.trading</groupId>
             <artifactId>icoin-trading-trade-engine</artifactId>

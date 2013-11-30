@@ -54,7 +54,7 @@ public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
                 && portfolioEntry.getItemsReserved().size() == itemsInReservation
                 && !(itemsInReservation != 0 &&
                 Math.abs(amountOfItemInReservation.floatValue() -
-                        portfolioEntry.findItemInPossession(itemIdentifier).getAmount().floatValue()) > min);
+                        portfolioEntry.findReservedItemByIdentifier(itemIdentifier).getAmount().floatValue()) > min);
     }
 
     @Override

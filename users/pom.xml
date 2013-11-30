@@ -29,17 +29,6 @@
     <artifactId>icoin-trading-users</artifactId>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>${project.groupId}</groupId>-->
-            <!--<artifactId>icoin-trading-core-api</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>icoin-trading-users-query</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
@@ -55,6 +44,76 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
             <version>${springdata.mongodb.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>homhon-base</groupId>
+            <artifactId>core</artifactId>
+            <version>${homhon.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>homhon-base</groupId>
+            <artifactId>mongobase</artifactId>
+            <version>${homhon.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>homhon-base</groupId>
+            <artifactId>basedomain</artifactId>
+            <version>${homhon.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-core</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-mongo</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>${mongodb.java.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.cloudfoundry</groupId>
+            <artifactId>cloudfoundry-runtime</artifactId>
+            <version>0.8.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>${springdata.mongodb.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.2</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -83,6 +142,24 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.1.0.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

@@ -64,7 +64,7 @@ public class TransactionCommandHandler {
     @CommandHandler
     public void handleConfirmTransactionCommand(ConfirmTransactionCommand command) {
         Transaction transaction = repository.load(command.getTransactionIdentifier());
-        transaction.confirm();
+        transaction.confirm(command.getConfirmDate());
     }
 
     @CommandHandler

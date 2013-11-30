@@ -43,7 +43,7 @@ public class PortfolioItemEventListener {
 
     @EventHandler
     public void handleEvent(ItemsAddedToPortfolioEvent event) {
-        logger.debug("Handle ItemsAddedToPortfolioEvent for orderbook with identifier {}",
+        logger.debug("Handle ItemsAddedToPortfolioEvent for orderbook with primaryKey {}",
                 event.getOrderBookIdentifier());
         ItemEntry itemEntry = createItemEntry(event.getOrderBookIdentifier().toString(), event.getAmountOfItemsAdded());
 
@@ -55,7 +55,7 @@ public class PortfolioItemEventListener {
 
     @EventHandler
     public void handleEvent(ItemReservationCancelledForPortfolioEvent event) {
-        logger.debug("Handle ItemReservationCancelledForPortfolioEvent for orderbook with identifier {}",
+        logger.debug("Handle ItemReservationCancelledForPortfolioEvent for orderbook with primaryKey {}",
                 event.getOrderBookIdentifier());
         ItemEntry itemEntry = createItemEntry(event.getOrderBookIdentifier().toString(),
                 event.getAmountOfCancelledAmount());
@@ -69,7 +69,7 @@ public class PortfolioItemEventListener {
 
     @EventHandler
     public void handleEvent(ItemReservationConfirmedForPortfolioEvent event) {
-        logger.debug("Handle ItemReservationConfirmedForPortfolioEvent for orderbook with identifier {}",
+        logger.debug("Handle ItemReservationConfirmedForPortfolioEvent for orderbook with primaryKey {}",
                 event.getOrderBookIdentifier());
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         portfolioEntry.removeReservedItem(event.getOrderBookIdentifier().toString(), event.getAmountOfConfirmedItems());
@@ -81,7 +81,7 @@ public class PortfolioItemEventListener {
 
     @EventHandler
     public void handleEvent(ItemsReservedEvent event) {
-        logger.debug("Handle ItemsReservedEvent for orderbook with identifier {}", event.getOrderBookIdentifier());
+        logger.debug("Handle ItemsReservedEvent for orderbook with primaryKey {}", event.getOrderBookIdentifier());
         ItemEntry itemEntry = createItemEntry(event.getOrderBookIdentifier().toString(),
                 event.getAmountOfItemsReserved());
 
@@ -91,12 +91,12 @@ public class PortfolioItemEventListener {
         portfolioRepository.save(portfolioEntry);
     }
 
-    private ItemEntry createItemEntry(String identifier, BigDecimal amount) {
-        OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(identifier);
+    private ItemEntry createItemEntry(String primaryKey, BigDecimal amount) {
+        OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(primaryKey);
         ItemEntry itemEntry = new ItemEntry();
-        itemEntry.setIdentifier(identifier);
-        itemEntry.setCompanyIdentifier(orderBookEntry.getCoinIdentifier());
-        itemEntry.setCompanyName(orderBookEntry.getCoinName());
+        itemEntry.setPrimaryKey(primaryKey);
+        itemEntry.setCoinIdentifier(orderBookEntry.getCoinIdentifier());
+        itemEntry.setCoinName(orderBookEntry.getCoinName());
         itemEntry.setAmount(amount);
         return itemEntry;
     }

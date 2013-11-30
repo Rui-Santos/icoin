@@ -71,10 +71,10 @@ public class PortfolioEntryTest {
 
     private ItemEntry createItem(BigDecimal amount) {
         ItemEntry item1InPossession = new ItemEntry();
-        item1InPossession.setIdentifier("item1");
+        item1InPossession.setPrimaryKey("item1");
         item1InPossession.setAmount(amount);
-        item1InPossession.setCompanyIdentifier("company1");
-        item1InPossession.setCompanyName("Company One");
+        item1InPossession.setCoinIdentifier("coin1");
+        item1InPossession.setCoinName("Coin One");
         return item1InPossession;
     }
 }

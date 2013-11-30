@@ -23,21 +23,24 @@
     <display-name>Axon framework Trader sample</display-name>
 
     <context-param>
-        <param-name>contextInitializerClasses</param-name>
-        <param-value>com.icoin.trading.webui.init.CloudApplicationContextInitializer</param-value>
+        <param-name>spring.profiles.default</param-name>
+        <param-value>dev</param-value>
     </context-param>
+
+    <!--<context-param>-->
+        <!--<param-name>contextInitializerClasses</param-name>-->
+        <!--<param-value>com.icoin.trading.webui.init.CloudApplicationContextInitializer</param-value>-->
+    <!--</context-param>-->
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
+            classpath:com/icoin/trading/tradeengine/infrastructure/persistence/mongo/tradeengine-persistence-mongo.xml,
             classpath:META-INF/spring/cqrs-infrastructure-context.xml,
-            classpath:META-INF/spring/persistence-infrastructure-context.xml,
-            classpath:META-INF/spring/query-context.xml,
-            classpath:META-INF/spring/users-query-context.xml,
             classpath:META-INF/spring/order-context.xml,
             classpath:META-INF/spring/trade-engine-context.xml,
             classpath:META-INF/spring/users-context.xml,
-            classpath:META-INF/spring/companies-context.xml,
+            classpath:META-INF/spring/coin-context.xml,
             classpath:META-INF/spring/configuration-context.xml,
             classpath:META-INF/spring/security-context.xml,
             classpath:META-INF/spring/external-context.xml

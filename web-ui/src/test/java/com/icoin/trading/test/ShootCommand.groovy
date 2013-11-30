@@ -16,6 +16,8 @@
 
 package com.icoin.trading.query.test
 
+import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry
+
 /**
  * For some reason groovy finds the log4j.xml from the httpbuilder jar. Therefore we configure the logging to come
  * from a log4j.properties file on the classpath.
@@ -25,22 +27,21 @@ package com.icoin.trading.query.test
  * @author Jettro Coenradie
  */
 
-import com.icoin.trading.query.portfolio.PortfolioEntry
 
-def commandSender = new CommandSender()
+def commandSender = new com.icoin.trading.query.test.CommandSender()
 
 def portfolios = []
 commandSender.obtainPortfolios().each() {
     portfolios.add it.identifier
 }
 
-def companyNames = [:]
+def coinNames = [:]
 def orderBooks = []
 commandSender.obtainOrderBooks().each() {
     orderBooks.add it.identifier
-    companyNames.put(it.identifier, it.getCoinName)
+    coinNames.put(it.identifier, it.getCoinName)
 }
-def commandCreator = new CommandCreator(orderBooks)
+def commandCreator = new com.icoin.trading.query.test.CommandCreator(orderBooks)
 
 def numUsers = portfolios.size()
 def numUser = 1;
@@ -50,7 +51,7 @@ for (int i = 0; i < 1000; i++) {
     PortfolioEntry portfolio = commandSender.obtainPortfolio(portfolioIdentifier)
     def command = commandCreator.createCommand(portfolio)
 
-    println "${portfolio.userName} # ${command.getTradeAmount} \$ ${command.itemPrice} ${companyNames[command.orderbookIdentifier.toString()]}"
+    println "${portfolio.userName} # ${command.getTradeAmount} \$ ${command.itemPrice} ${coinNames[command.orderbookIdentifier.toString()]}"
 
     commandSender.sendCommand(command)
 

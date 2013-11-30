@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
+import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 
@@ -26,10 +27,8 @@ import java.util.Map;
 /**
  * @author Jettro Coenradie
  */
-public class PortfolioEntry {
+public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, String, Long> {
 
-    @Id
-    private String identifier;
     private String userIdentifier;
     private String userName;
     private BigDecimal amountOfMoney;
@@ -46,22 +45,22 @@ public class PortfolioEntry {
     /*-------------------------------------------------------------------------------------------*/
     /* utility functions                                                                         */
     /*-------------------------------------------------------------------------------------------*/
-    public BigDecimal obtainAmountOfAvailableItemsFor(String identifier) {
-        BigDecimal possession = obtainAmountOfItemsInPossessionFor(identifier);
-        BigDecimal reserved = obtainAmountOfReservedItemsFor(identifier);
+    public BigDecimal obtainAmountOfAvailableItemsFor(String primaryKey) {
+        BigDecimal possession = obtainAmountOfItemsInPossessionFor(primaryKey);
+        BigDecimal reserved = obtainAmountOfReservedItemsFor(primaryKey);
         return possession.subtract(reserved);
     }
 
-    public BigDecimal obtainAmountOfReservedItemsFor(String identifier) {
-        ItemEntry item = findReservedItemByIdentifier(identifier);
+    public BigDecimal obtainAmountOfReservedItemsFor(String primaryKey) {
+        ItemEntry item = findReservedItemByIdentifier(primaryKey);
         if (null == item) {
             return BigDecimal.ZERO;
         }
         return item.getAmount();
     }
 
-    public BigDecimal obtainAmountOfItemsInPossessionFor(String identifier) {
-        ItemEntry item = findItemInPossession(identifier);
+    public BigDecimal obtainAmountOfItemsInPossessionFor(String primaryKey) {
+        ItemEntry item = findItemInPossession(primaryKey);
         if (null == item) {
             return BigDecimal.ZERO;
         }
@@ -72,12 +71,12 @@ public class PortfolioEntry {
         return amountOfMoney.subtract(reservedAmountOfMoney);
     }
 
-    public ItemEntry findReservedItemByIdentifier(String identifier) {
-        return itemsReserved.get(identifier);
+    public ItemEntry findReservedItemByIdentifier(String primaryKey) {
+        return itemsReserved.get(primaryKey);
     }
 
-    public ItemEntry findItemInPossession(String identifier) {
-        return itemsInPossession.get(identifier);
+    public ItemEntry findItemInPossession(String primaryKey) {
+        return itemsInPossession.get(primaryKey);
     }
 
     public void addReservedItem(ItemEntry itemEntry) {
@@ -116,11 +115,11 @@ public class PortfolioEntry {
     }
 
     public String getIdentifier() {
-        return identifier;
+        return primaryKey;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setIdentifier(String primaryKey) {
+        this.primaryKey = primaryKey;
     }
 
     public BigDecimal getReservedAmountOfMoney() {
@@ -159,11 +158,11 @@ public class PortfolioEntry {
     /* Private helper methods                                                                    */
     /*-------------------------------------------------------------------------------------------*/
     private void handleAdd(Map<String, ItemEntry> items, ItemEntry itemEntry) {
-        if (items.containsKey(itemEntry.getIdentifier())) {
-            ItemEntry foundEntry = items.get(itemEntry.getIdentifier());
+        if (items.containsKey(itemEntry.getPrimaryKey())) {
+            ItemEntry foundEntry = items.get(itemEntry.getPrimaryKey());
             foundEntry.setAmount(foundEntry.getAmount().add(itemEntry.getAmount()));
         } else {
-            items.put(itemEntry.getIdentifier(), itemEntry);
+            items.put(itemEntry.getPrimaryKey(), itemEntry);
         }
     }
 
@@ -172,7 +171,7 @@ public class PortfolioEntry {
             ItemEntry foundEntry = items.get(itemIdentifier);
             foundEntry.setAmount(foundEntry.getAmount().subtract(amount));
             if (foundEntry.getAmount().compareTo(lowestPrice)<0) {
-                items.remove(foundEntry.getIdentifier());
+                items.remove(foundEntry.getPrimaryKey());
             }
         }
     }
@@ -181,7 +180,7 @@ public class PortfolioEntry {
     public String toString() {
         return "PortfolioEntry{" +
                 "amountOfMoney=" + amountOfMoney +
-                ", identifier='" + identifier + '\'' +
+                ", primaryKey='" + primaryKey + '\'' +
                 ", userIdentifier='" + userIdentifier + '\'' +
                 ", userName='" + userName + '\'' +
                 ", reservedAmountOfMoney=" + reservedAmountOfMoney +

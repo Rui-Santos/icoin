@@ -7,36 +7,27 @@ package com.icoin.trading.tradeengine.query.coin;
  * Time: PM4:48
  * To change this template use File | Settings | File Templates.
  */
-import org.springframework.data.annotation.Id;
+
+import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 
 import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
  */
-public class CoinEntry {
+public class CoinEntry extends AuditAwareEntitySupport<CoinEntry, String, Long> {
 
-    @Id
-    private String identifier;
     private String name;
-    private BigDecimal coinInitialPrice;
-    private BigDecimal coinInitialAmount;
+    private BigDecimal coinPrice;
+    private BigDecimal coinAmount;
     private boolean tradeStarted;
 
-    public BigDecimal getCoinInitialAmount() {
-        return coinInitialAmount;
+    public BigDecimal getCoinAmount() {
+        return coinAmount;
     }
 
-    public void setCoinInitialAmount(BigDecimal coinInitialAmount) {
-        this.coinInitialAmount = coinInitialAmount;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setCoinAmount(BigDecimal coinAmount) {
+        this.coinAmount = coinAmount;
     }
 
     public String getName() {
@@ -55,11 +46,11 @@ public class CoinEntry {
         this.tradeStarted = tradeStarted;
     }
 
-    public BigDecimal getCoinInitialPrice() {
-        return coinInitialPrice;
+    public BigDecimal getCoinPrice() {
+        return coinPrice;
     }
 
-    public void setCoinInitialPrice(BigDecimal coinInitialPrice) {
-        this.coinInitialPrice = coinInitialPrice;
+    public void setCoinPrice(BigDecimal coinPrice) {
+        this.coinPrice = coinPrice;
     }
 }

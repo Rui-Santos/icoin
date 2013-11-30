@@ -67,7 +67,7 @@
     <div class="span4">
         <h2>Check the stocks</h2>
 
-        <p>If you have logged in, you can go to the companies</p>
+        <p>If you have logged in, you can go to the coins</p>
 
         <p><a class="btn primary" href="${ctx}/coin">To the items &raquo;</a></p>
     </div>

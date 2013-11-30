@@ -67,7 +67,7 @@ public class UserCommandHandlerTest {
 
         UserEntry userEntry = new UserEntry();
         userEntry.setUsername("buyer1");
-        userEntry.setIdentifier(aggregateIdentifier.toString());
+        userEntry.setPrimaryKey(aggregateIdentifier.toString());
         userEntry.setName("Buyer One");
         Mockito.when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
 

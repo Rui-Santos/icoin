@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author Jettro Coenradie
@@ -80,8 +81,9 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(ItemsReservedEvent event) {
-        logger.debug("Items for transaction {} are reserved", getTransactionIdentifier());
-        ConfirmTransactionCommand confirmTransactionCommand = new ConfirmTransactionCommand(getTransactionIdentifier());
+        final Date confirmDate = new Date();
+        logger.debug("Items for transaction {} are reserved, set confirm date {}", getTransactionIdentifier(), confirmDate);
+        ConfirmTransactionCommand confirmTransactionCommand = new ConfirmTransactionCommand(getTransactionIdentifier(), confirmDate);
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmTransactionCommand>(confirmTransactionCommand));
     }
 

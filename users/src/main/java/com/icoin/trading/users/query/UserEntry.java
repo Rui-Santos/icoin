@@ -16,27 +16,18 @@
 
 package com.icoin.trading.users.query;
 
+import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 import com.icoin.trading.users.domain.UserAccount;
 
-import java.io.Serializable;
 
 /**
  * @author Jettro Coenradie
  */
-public class UserEntry implements UserAccount, Serializable {
+public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> implements UserAccount {
 
-    private String identifier;
     private String name;
     private String username;
     private String password;
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
 
     public String getName() {
         return name;
@@ -55,8 +46,8 @@ public class UserEntry implements UserAccount, Serializable {
     }
 
     @Override
-    public String getUserId() {
-        return this.identifier;
+    public String getPrimaryKey() {
+        return this.primaryKey;
     }
 
     @Override
@@ -71,5 +62,14 @@ public class UserEntry implements UserAccount, Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntry{" +
+                "name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

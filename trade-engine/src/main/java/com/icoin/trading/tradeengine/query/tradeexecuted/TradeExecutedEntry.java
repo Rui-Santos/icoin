@@ -16,12 +16,14 @@
 
 package com.icoin.trading.tradeengine.query.tradeexecuted;
 
+import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
+
 import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
  */
-public class TradeExecutedEntry {
+public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEntry, String, Long> {
 
     private BigDecimal tradeAmount;
     private BigDecimal tradePrice;
@@ -40,8 +42,8 @@ public class TradeExecutedEntry {
         return coinName;
     }
 
-    public void setCoinName(String companyName) {
-        this.coinName = companyName;
+    public void setCoinName(String coinName) {
+        this.coinName = coinName;
     }
 
     public BigDecimal getTradePrice() {

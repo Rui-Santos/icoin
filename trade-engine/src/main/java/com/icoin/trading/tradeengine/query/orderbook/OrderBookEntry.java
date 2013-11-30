@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.query.orderbook;
 
+import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
@@ -24,10 +25,8 @@ import java.util.List;
 /**
  * @author Jettro Coenradie
  */
-public class OrderBookEntry {
+public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, String, Long> {
 
-    @Id
-    private String identifier;
     private String coinIdentifier;
     private String coinName;
     private List<OrderEntry> sellOrders = new ArrayList<OrderEntry>();
@@ -39,14 +38,6 @@ public class OrderBookEntry {
 
     public List<OrderEntry> buyOrders() {
         return buyOrders;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
     }
 
     public String getCoinIdentifier() {
