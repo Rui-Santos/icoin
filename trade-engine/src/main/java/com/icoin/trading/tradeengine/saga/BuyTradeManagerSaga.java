@@ -20,7 +20,7 @@ import com.icoin.trading.tradeengine.application.command.order.CreateBuyOrderCom
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.CancelCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ReserveCashCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ConfirmTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationRejectedEvent;
@@ -153,11 +153,11 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                         getTransactionIdentifier(),
                         event.getAmountOfItems().multiply(event.getItemPrice()));
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
-        AddItemsToPortfolioCommand addItemsCommand =
-                new AddItemsToPortfolioCommand(getPortfolioIdentifier(),
+        AddAmountToPortfolioCommand addItemsCommand =
+                new AddAmountToPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         event.getAmountOfItems());
-        getCommandBus().dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(addItemsCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(addItemsCommand));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -171,10 +171,10 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                         getTransactionIdentifier(),
                         event.getAmountOfExecutedItems().multiply(event.getItemPrice()));
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
-        AddItemsToPortfolioCommand addItemsCommand =
-                new AddItemsToPortfolioCommand(getPortfolioIdentifier(),
+        AddAmountToPortfolioCommand addItemsCommand =
+                new AddAmountToPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         event.getAmountOfExecutedItems());
-        getCommandBus().dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(addItemsCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(addItemsCommand));
     }
 }

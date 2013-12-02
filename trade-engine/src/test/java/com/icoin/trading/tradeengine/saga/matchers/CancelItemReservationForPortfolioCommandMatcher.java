@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelItemReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
@@ -27,7 +27,7 @@ import java.math.BigDecimal;
  * @author Jettro Coenradie
  */
 public class CancelItemReservationForPortfolioCommandMatcher
-        extends BaseCommandMatcher<CancelItemReservationForPortfolioCommand> {
+        extends BaseCommandMatcher<CancelAmountReservationForPortfolioCommand> {
 
     private OrderBookId orderBookIdentifier;
     private PortfolioId portfolioIdentifier;
@@ -42,7 +42,7 @@ public class CancelItemReservationForPortfolioCommandMatcher
     }
 
     @Override
-    protected boolean doMatches(CancelItemReservationForPortfolioCommand command) {
+    protected boolean doMatches(CancelAmountReservationForPortfolioCommand command) {
         return command.getOrderBookIdentifier().equals(orderBookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfItemsToCancel().compareTo(amountOfItemsToCancel) == 0;
@@ -50,7 +50,7 @@ public class CancelItemReservationForPortfolioCommandMatcher
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("CancelItemReservationForPortfolioCommand with amountOfItemsToCancel [")
+        description.appendText("CancelAmountReservationForPortfolioCommand with amountOfItemsToCancel [")
                 .appendValue(amountOfItemsToCancel)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)

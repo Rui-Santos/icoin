@@ -49,17 +49,6 @@ public class UserCommandHandler {
     public UserAccount handleAuthenticateUser(AuthenticateUserCommand command) {
         UserAccount account = userQueryRepository.findByUsername(command.getUserName());
 
-        //todo remove
-        final Iterable<UserEntry> users = userQueryRepository.findAll();
-        if(users!=null){
-            for (UserEntry user : users) {
-                System.err.println("user:" + user);
-            }
-        }else {
-            System.err.println("Cannot find any users now");
-        }
-
-
         if (account == null) {
             return null;
         }

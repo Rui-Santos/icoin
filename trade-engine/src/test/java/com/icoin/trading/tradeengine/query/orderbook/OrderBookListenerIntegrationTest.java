@@ -21,8 +21,8 @@ import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEven
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -122,7 +122,7 @@ public class OrderBookListenerIntegrationTest {
                         BigDecimal.valueOf(300),
                         BigDecimal.valueOf(100),
                         portfolioId,
-                        CurrencyPair.createCurrencyPair("BTC", "USD"),
+                        CoinExchangePair.createCoinExchangePair("BTC", "USD"),
                         placeDate);
 
         orderBookListener.handleBuyOrderPlaced(event);
@@ -151,7 +151,7 @@ public class OrderBookListenerIntegrationTest {
                         BigDecimal.valueOf(300),
                         BigDecimal.valueOf(100),
                         portfolioId,
-                        CurrencyPair.createCurrencyPair("BTC", "USD"),
+                        CoinExchangePair.createCoinExchangePair("BTC", "USD"),
                         placeDate);
 
         orderBookListener.handleSellOrderPlaced(event);
@@ -179,7 +179,7 @@ public class OrderBookListenerIntegrationTest {
                         BigDecimal.valueOf(400),
                         BigDecimal.valueOf(100),
                         portfolioId,
-                        CurrencyPair.createCurrencyPair("BTC", "USD"),
+                        CoinExchangePair.createCoinExchangePair("BTC", "USD"),
                         sellPlaceDate);
 
         orderBookListener.handleSellOrderPlaced(sellOrderPlacedEvent);
@@ -193,7 +193,7 @@ public class OrderBookListenerIntegrationTest {
                 BigDecimal.valueOf(300),
                 BigDecimal.valueOf(150),
                 portfolioId,
-                CurrencyPair.createCurrencyPair("BTC", "USD"),
+                CoinExchangePair.createCoinExchangePair("BTC", "USD"),
                 buyPlaceDate);
 
         orderBookListener.handleBuyOrderPlaced(buyOrderPlacedEvent);

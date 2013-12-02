@@ -29,7 +29,7 @@ eventBus.registerHandler("trader.trade.executed") { message ->
 
 
 
-def mongoConfig = ["db_name": "dev"]
+def mongoConfig = ["db_name": "test"]
 container.with {
     deployVerticle('mongo-persistor', mongoConfig, 1) {
         logger.info "Mongo busmod is deployed"

@@ -37,6 +37,8 @@ import com.icoin.trading.webui.order.SellOrder;
 import com.icoin.trading.webui.util.SecurityUtil;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,7 +57,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/coin")
 public class CoinController {
-
+    private static Logger logger = LoggerFactory.getLogger(CoinController.class);
     private CoinQueryRepository coinRepository;
     private OrderBookQueryRepository orderBookRepository;
     private UserQueryRepository userRepository;
@@ -88,7 +90,8 @@ public class CoinController {
     @RequestMapping(value = "/{coinId}", method = RequestMethod.GET)
     public String details(@PathVariable String coinId, Model model) {
         CoinEntry coin = coinRepository.findOne(coinId);
-        OrderBookEntry bookEntry = orderBookRepository.findByCoinIdentifier(coin.getPrimaryKey()).get(0);
+        final List<OrderBookEntry> bookEntryList = orderBookRepository.findByCoinIdentifier(coin.getPrimaryKey());
+        OrderBookEntry bookEntry = bookEntryList.get(0);
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
                 .getPrimaryKey());
         model.addAttribute("coin", coin);
@@ -125,13 +128,15 @@ public class CoinController {
             OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
-            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getPrimaryKey()).compareTo(order.getTradeAmount()) < 0) {
-                bindingResult.rejectValue("tradeAmount",
-                        "error.order.sell.tomanyitems",
-                        "Not enough items available to create sell order.");
-                addPortfolioItemInfoToModel(order.getCoinId(), model);
-                return "coin/sell";
-            }
+//            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getPrimaryKey()).compareTo(order.getTradeAmount()) < 0) {
+//                bindingResult.rejectValue("tradeAmount",
+//                        "error.order.sell.tomanyitems",
+//                        "Not enough items available to create sell order.");
+//                addPortfolioItemInfoToModel(order.getCoinId(), model);
+//                return "coin/sell";
+//            }
+
+            logger.info("placing a buy order: {}.", order);
 
             StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
                     new OrderBookId(bookEntry.getPrimaryKey()),
@@ -140,6 +145,7 @@ public class CoinController {
                     order.getItemPrice());
 
             commandBus.dispatch(new GenericCommandMessage<StartSellTransactionCommand>(command));
+            logger.info("Sell order {} dispatched... ", order);
 
             return "redirect:/coin/{coinId}";
         }
@@ -163,12 +169,15 @@ public class CoinController {
                 return "coin/buy";
             }
 
+            logger.info("placing a buy order: {}.",  order);
+
             StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
                     new OrderBookId(bookEntry.getPrimaryKey()),
                     new PortfolioId(portfolioEntry.getIdentifier()),
                     order.getTradeAmount(),
                     order.getItemPrice());
             commandBus.dispatch(new GenericCommandMessage<StartBuyTransactionCommand>(command));
+            logger.info("Buy order {} dispatched... ", order);
             return "redirect:/coin/{coinId}";
         }
 

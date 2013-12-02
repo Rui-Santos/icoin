@@ -20,14 +20,18 @@ import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.OrderBookCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcedMember;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
@@ -40,11 +44,14 @@ import java.util.TreeSet;
  */
 public class OrderBook extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 6778782949492587631L;
+    private static Logger logger = LoggerFactory.getLogger(OrderBook.class);
 
     @AggregateIdentifier
     private OrderBookId orderBookId;
 
-    private CurrencyPair currencyPair;
+    private CoinExchangePair coinExchangePair;
+
+    private CoinId coinId;
 
     @EventSourcedMember
     private SortedSet<Order> buyOrders = new TreeSet<Order>(new OrderComparator());
@@ -55,8 +62,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
     protected OrderBook() {
     }
 
-    public OrderBook(OrderBookId primaryKey, CurrencyPair currencyPair) {
-        apply(new OrderBookCreatedEvent(primaryKey, currencyPair));
+    public OrderBook(OrderBookId primaryKey, CoinId coinId, CoinExchangePair coinExchangePair) {
+        apply(new OrderBookCreatedEvent(primaryKey, coinId, coinExchangePair));
     }
 
     public void addBuyOrder(OrderId orderId,
@@ -72,7 +79,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 tradeCount,
                 itemPrice,
                 portfolioId,
-                currencyPair,
+                coinExchangePair,
                 placeDate));
         executeTrades();
     }
@@ -86,7 +93,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 tradeCount,
                 itemPrice,
                 portfolioId,
-                currencyPair,
+                coinExchangePair,
                 placeDate));
         executeTrades();
     }
@@ -100,10 +107,15 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 //highestBuyer.price >= lowestSeller.price
                 BigDecimal matchedTradeAmount = highestBuyer.getItemsRemaining().min(lowestSeller.getItemsRemaining());
 
-
                 //todo price method
                 BigDecimal matchedTradePrice = (highestBuyer.getItemPrice().add(lowestSeller.getItemPrice()).divide(
-                       BigDecimal.valueOf(2) , 2, RoundingMode.HALF_EVEN));
+                        BigDecimal.valueOf(2), 2, RoundingMode.HALF_EVEN));
+
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Executing orders with amount {}, price {}: highest buying order {}, lowest selling order {}",
+                            matchedTradeAmount, matchedTradePrice, highestBuyer, lowestSeller);
+                }
+
                 apply(new TradeExecutedEvent(orderBookId,
                         matchedTradeAmount,
                         matchedTradePrice,
@@ -120,7 +132,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     protected void onOrderBookCreated(OrderBookCreatedEvent event) {
         this.orderBookId = event.getOrderBookIdentifier();
-        this.currencyPair = event.getCurrencyPair();
+        this.coinExchangePair = event.getCoinExchangePair();
+        this.coinId = event.getCoinId();
     }
 
     @EventHandler
@@ -130,7 +143,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 event.getItemPrice(),
                 event.getTradeAmount(),
                 event.getPortfolioId(),
-                event.getCurrencyPair(),
+                event.getCoinExchangePair(),
                 event.getPlaceDate()
         ));
     }
@@ -142,7 +155,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 event.getItemPrice(),
                 event.getTradeAmount(),
                 event.getPortfolioId(),
-                event.getCurrencyPair(),
+                event.getCoinExchangePair(),
                 event.getPlaceDate()));
     }
 
@@ -158,7 +171,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    private static class OrderComparator implements Comparator<Order> {
+    private static class OrderComparator implements Comparator<Order>, Serializable {
 
         public int compare(Order o1, Order o2) {
             // copied from Java 7 Long.compareTo to support java 6

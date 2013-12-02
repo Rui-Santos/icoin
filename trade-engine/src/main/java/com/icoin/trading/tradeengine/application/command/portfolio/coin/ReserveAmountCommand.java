@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 
+
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -23,39 +24,35 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import java.math.BigDecimal;
 
 /**
- * Cancel a reservation for an amount of items for the OrderBook belonging to the provided identifier in the Portfolio
- * of the provided identifier.
- *
  * @author Jettro Coenradie
  */
-public class CancelItemReservationForPortfolioCommand {
+public class ReserveAmountCommand {
 
     private PortfolioId portfolioIdentifier;
-    private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
-    private BigDecimal amountOfCancelledItems;
+    private OrderBookId orderBookIdentifier;
+    private BigDecimal amountOfItemsToReserve;
 
-    public CancelItemReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
-                                                    OrderBookId orderBookIdentifier,
-                                                    TransactionId transactionIdentifier,
-                                                    BigDecimal amountOfCancelledItems) {
+    public ReserveAmountCommand(PortfolioId portfolioIdentifier,
+                                OrderBookId orderBookIdentifier,
+                                TransactionId transactionIdentifier,
+                                BigDecimal amountOfItemsToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-
-        this.amountOfCancelledItems = amountOfCancelledItems;
+        this.amountOfItemsToReserve = amountOfItemsToReserve;
+        this.orderBookIdentifier = orderBookIdentifier;
     }
 
-    public BigDecimal getAmountOfItemsToCancel() {
-        return amountOfCancelledItems;
-    }
-
-    public OrderBookId getOrderBookIdentifier() {
-        return orderBookIdentifier;
+    public BigDecimal getAmountOfItemsToReserve() {
+        return amountOfItemsToReserve;
     }
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public OrderBookId getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
     public TransactionId getTransactionIdentifier() {

@@ -16,41 +16,38 @@
 
 package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 
-
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
-import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
 /**
- * Try to add new items for a specific OrderBook to the portfolio.
+ * Cancel a reservation for an amount of items for the OrderBook belonging to the provided identifier in the Portfolio
+ * of the provided identifier.
  *
  * @author Jettro Coenradie
  */
-public class AddItemsToPortfolioCommand {
+public class CancelAmountReservationForPortfolioCommand {
 
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
-    @DecimalMin("0.00000001")
-    private BigDecimal amountOfItemsToAdd;
+    private TransactionId transactionIdentifier;
+    private BigDecimal amountOfCancelledItems;
 
-    /**
-     * Create a new command.
-     *
-     * @param portfolioIdentifier Identifier of the Portfolio to add items to
-     * @param orderBookIdentifier Identifier of the OrderBook to add items for
-     * @param amountOfItemsToAdd  AMount of items to add
-     */
-    public AddItemsToPortfolioCommand(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier,
-                                      BigDecimal amountOfItemsToAdd) {
+    public CancelAmountReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
+                                                      OrderBookId orderBookIdentifier,
+                                                      TransactionId transactionIdentifier,
+                                                      BigDecimal amountOfCancelledItems) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
-        this.amountOfItemsToAdd = amountOfItemsToAdd;
+        this.transactionIdentifier = transactionIdentifier;
+
+        this.amountOfCancelledItems = amountOfCancelledItems;
     }
 
-    public BigDecimal getAmountOfItemsToAdd() {
-        return amountOfItemsToAdd;
+    public BigDecimal getAmountOfItemsToCancel() {
+        return amountOfCancelledItems;
     }
 
     public OrderBookId getOrderBookIdentifier() {
@@ -61,12 +58,7 @@ public class AddItemsToPortfolioCommand {
         return portfolioIdentifier;
     }
 
-    @Override
-    public String toString() {
-        return "AddItemsToPortfolioCommand{" +
-                "amountOfItemsToAdd=" + amountOfItemsToAdd +
-                ", portfolioIdentifier=" + portfolioIdentifier +
-                ", orderBookIdentifier=" + orderBookIdentifier +
-                '}';
+    public TransactionId getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

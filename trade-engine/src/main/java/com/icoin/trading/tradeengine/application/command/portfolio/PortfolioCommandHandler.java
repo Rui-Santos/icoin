@@ -16,7 +16,9 @@
 
 package com.icoin.trading.tradeengine.application.command.portfolio;
 
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveItemsCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveAmountCommand;
 import com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
@@ -25,9 +27,7 @@ import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmC
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ReserveCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.WithdrawCashCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelItemReservationForPortfolioCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmItemReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -47,7 +47,7 @@ public class PortfolioCommandHandler {
     }
 
     @CommandHandler
-    public void handleReserveItemsCommand(ReserveItemsCommand command) {
+    public void handleReserveItemsCommand(ReserveAmountCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.reserveItems(command.getOrderBookIdentifier(),
                 command.getTransactionIdentifier(),
@@ -55,13 +55,13 @@ public class PortfolioCommandHandler {
     }
 
     @CommandHandler
-    public void handleAddItemsToPortfolioCommand(AddItemsToPortfolioCommand command) {
+    public void handleAddItemsToPortfolioCommand(AddAmountToPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.addItems(command.getOrderBookIdentifier(), command.getAmountOfItemsToAdd());
     }
 
     @CommandHandler
-    public void handleConfirmReservationCommand(ConfirmItemReservationForPortfolioCommand command) {
+    public void handleConfirmReservationCommand(ConfirmAmountReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.confirmReservation(command.getOrderBookIdentifier(),
                 command.getTransactionIdentifier(),
@@ -69,7 +69,7 @@ public class PortfolioCommandHandler {
     }
 
     @CommandHandler
-    public void handleCancelReservationCommand(CancelItemReservationForPortfolioCommand command) {
+    public void handleCancelReservationCommand(CancelAmountReservationForPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.cancelReservation(command.getOrderBookIdentifier(),
                 command.getTransactionIdentifier(),

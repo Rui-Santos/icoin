@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmItemReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
@@ -27,7 +27,7 @@ import java.math.BigDecimal;
  * @author Jettro Coenradie
  */
 public class ConfirmItemReservationForPortfolioCommandMatcher
-        extends BaseCommandMatcher<ConfirmItemReservationForPortfolioCommand> {
+        extends BaseCommandMatcher<ConfirmAmountReservationForPortfolioCommand> {
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
@@ -41,7 +41,7 @@ public class ConfirmItemReservationForPortfolioCommandMatcher
     }
 
     @Override
-    protected boolean doMatches(ConfirmItemReservationForPortfolioCommand command) {
+    protected boolean doMatches(ConfirmAmountReservationForPortfolioCommand command) {
         return command.getOrderBookIdentifier().equals(orderbookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && amountOfConfirmedItems.compareTo(command.getAmountOfItemsToConfirm()) == 0;
@@ -49,7 +49,7 @@ public class ConfirmItemReservationForPortfolioCommandMatcher
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("ConfirmItemReservationForPortfolioCommand with amountOfConfirmedItems [")
+        description.appendText("ConfirmAmountReservationForPortfolioCommand with amountOfConfirmedItems [")
                 .appendValue(amountOfConfirmedItems)
                 .appendText("] for OrderBook with identifier [")
                 .appendValue(orderbookIdentifier)

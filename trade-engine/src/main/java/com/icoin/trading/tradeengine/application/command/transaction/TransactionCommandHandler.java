@@ -19,12 +19,12 @@ package com.icoin.trading.tradeengine.application.command.transaction;
 import com.icoin.trading.tradeengine.application.command.transaction.command.CancelTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ConfirmTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
+import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
 import com.icoin.trading.tradeengine.domain.model.transaction.Transaction;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
-import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -39,25 +39,27 @@ public class TransactionCommandHandler {
 
     @CommandHandler
     public void handleStartBuyTransactionCommand(StartBuyTransactionCommand command) {
-        Transaction transaction = new Transaction(
-                command.getTransactionIdentifier(),
-                TransactionType.BUY,
-                command.getOrderbookIdentifier(),
-                command.getPortfolioIdentifier(),
-                command.getTradeAmount(),
-                command.getItemPrice());
+        Transaction transaction =
+                new Transaction(
+                        command.getTransactionIdentifier(),
+                        TransactionType.BUY,
+                        command.getOrderbookIdentifier(),
+                        command.getPortfolioIdentifier(),
+                        command.getTradeAmount(),
+                        command.getItemPrice());
         repository.add(transaction);
     }
 
     @CommandHandler
     public void handleStartSellTransactionCommand(StartSellTransactionCommand command) {
-        Transaction transaction = new Transaction(
-                command.getTransactionIdentifier(),
-                TransactionType.SELL,
-                command.getOrderbookIdentifier(),
-                command.getPortfolioIdentifier(),
-                command.getTradeAmount(),
-                command.getItemPrice());
+        Transaction transaction =
+                new Transaction(
+                        command.getTransactionIdentifier(),
+                        TransactionType.SELL,
+                        command.getOrderbookIdentifier(),
+                        command.getPortfolioIdentifier(),
+                        command.getTradeAmount(),
+                        command.getItemPrice());
         repository.add(transaction);
     }
 

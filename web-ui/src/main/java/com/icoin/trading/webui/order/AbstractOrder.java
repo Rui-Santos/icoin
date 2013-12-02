@@ -17,6 +17,7 @@
 package com.icoin.trading.webui.order;
 
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -26,11 +27,13 @@ public class AbstractOrder {
 
     private String coinId;
     private String coinName;
+    private OrderType orderType;
 
-    @DecimalMin("0.00000001")
+    @DecimalMin(value = "0.01", message = "trading.minimal.amount")
+    @NotNull(message = "trading.amount.required")
     private BigDecimal tradeAmount;
 
-    @DecimalMin("0")
+    @NotNull(message = "trading.price.required")
     private BigDecimal itemPrice;
 
     public AbstractOrder() {
@@ -73,5 +76,16 @@ public class AbstractOrder {
 
     public void setCoinName(String coinName) {
         this.coinName = coinName;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "coinId='" + coinId + '\'' +
+                ", coinName='" + coinName + '\'' +
+                ", orderType=" + orderType +
+                ", tradeAmount=" + tradeAmount +
+                ", itemPrice=" + itemPrice +
+                '}';
     }
 }

@@ -18,7 +18,7 @@ package com.icoin.trading.webui.init;
 
 import com.icoin.trading.tradeengine.application.command.coin.CreateCoinCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -105,36 +105,37 @@ public class DBInit {
         createCoins();
 
         addMoney(buyer1, BigDecimal.valueOf(100000));
-        addItems(buyer2, "Philips", BigDecimal.valueOf(10000l));
+        addItems(buyer1, "XPM", BigDecimal.valueOf(10000l));
+        addItems(buyer2, "XPM", BigDecimal.valueOf(10000l));
         addMoney(buyer3, BigDecimal.valueOf(100000));
-        addItems(buyer4, "Shell", BigDecimal.valueOf(10000l));
+        addItems(buyer4, "BTC", BigDecimal.valueOf(10000l));
         addMoney(buyer5, BigDecimal.valueOf(100000));
-        addItems(buyer6, "Bp", BigDecimal.valueOf(100000));
+        addItems(buyer6, "LTC", BigDecimal.valueOf(100000));
 
         eventStore.ensureIndexes();
     }
 
-    private void addItems(UserId user, String coinName, BigDecimal amount) {
+    private void addItems(UserId user, String coinId, BigDecimal amount) {
         PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(user.toString());
-        OrderBookEntry orderBookEntry = obtainOrderBookByCoinName(coinName);
-        AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(
+        OrderBookEntry orderBookEntry = obtainOrderBookByCoinName(coinId);
+        AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
                 new OrderBookId(orderBookEntry.getPrimaryKey()),
                 amount);
-        commandBus.dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(command));
+        commandBus.dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(command));
     }
 
-    private OrderBookEntry obtainOrderBookByCoinName(String coinName) {
+    private OrderBookEntry obtainOrderBookByCoinName(String coinId) {
         Iterable<CoinEntry> coinEntries = coinRepository.findAll();
         for (CoinEntry entry : coinEntries) {
-            if (entry.getName().equals(coinName)) {
+            if (entry.getPrimaryKey().equals(coinId)) {
                 List<OrderBookEntry> orderBookEntries = orderBookRepository
                         .findByCoinIdentifier(entry.getPrimaryKey());
 
                 return orderBookEntries.get(0);
             }
         }
-        throw new RuntimeException("Problem initializing, could not find coin with required name.");
+        throw new RuntimeException(String.format("Problem initializing, could not find coin with required name %s.", coinId));
     }
 
     private void addMoney(UserId buyer1, BigDecimal amount) {
@@ -150,23 +151,17 @@ public class DBInit {
 
 
     private void createCoins() {
-        CreateCoinCommand command = new CreateCoinCommand(new CoinId("BTC"), "Philips", BigDecimal.valueOf(1000), BigDecimal.valueOf(10000));
+        CreateCoinCommand command = new CreateCoinCommand(new CoinId("BTC"), "Bitcoin", BigDecimal.valueOf(1000), BigDecimal.valueOf(10000));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCoinCommand(new CoinId("LTC"), "Shell", BigDecimal.valueOf(500), BigDecimal.valueOf(5000));
+        command = new CreateCoinCommand(new CoinId("LTC"), "Litecoin", BigDecimal.valueOf(500), BigDecimal.valueOf(5000));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCoinCommand(new CoinId("PPC"), "Bp", BigDecimal.valueOf(15000), BigDecimal.valueOf(100000));
+        command = new CreateCoinCommand(new CoinId("PPC"), "Peercoin", BigDecimal.valueOf(15000), BigDecimal.valueOf(100000));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCoinCommand(new CoinId("XPM"), "Bp", BigDecimal.valueOf(15000), BigDecimal.valueOf(100000));
+        command = new CreateCoinCommand(new CoinId("XPM"), "Primecoin", BigDecimal.valueOf(15000), BigDecimal.valueOf(100000));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
-
-//        To bo used for performance tests
-//        for (int i=0; i < 1000; i++) {
-//            command = new CreateCoinCommand(userIdentifier, "Stock " + i, 15000, 100000);
-//            commandBus.dispatch(command);
-//        }
 
     }
 

@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveItemsCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveAmountCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 /**
  * @author Jettro Coenradie
  */
-public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItemsCommand> {
+public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveAmountCommand> {
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
@@ -40,7 +40,7 @@ public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItems
     }
 
     @Override
-    protected boolean doMatches(ReserveItemsCommand command) {
+    protected boolean doMatches(ReserveAmountCommand command) {
         return command.getOrderBookIdentifier().equals(orderbookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && amountOfReservedItems.compareTo(command.getAmountOfItemsToReserve()) == 0;
@@ -48,7 +48,7 @@ public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveItems
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("ReserveItemsCommand with amountOfReservedItems [")
+        description.appendText("ReserveAmountCommand with amountOfReservedItems [")
                 .appendValue(amountOfReservedItems)
                 .appendText("] for OrderBook with identifier [")
                 .appendValue(orderbookIdentifier)

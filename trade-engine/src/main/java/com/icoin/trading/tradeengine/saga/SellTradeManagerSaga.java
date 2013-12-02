@@ -17,25 +17,25 @@
 package com.icoin.trading.tradeengine.saga;
 
 import com.icoin.trading.tradeengine.application.command.order.CreateSellOrderCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveAmountCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ConfirmTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemsAvailableToReserveInPortfolio;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCancelledEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionConfirmedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionPartiallyExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
-import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelItemReservationForPortfolioCommand;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemsAvailableToReserveInPortfolio;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveItemsCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.saga.annotation.EndSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmItemReservationForPortfolioCommand;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,13 +56,13 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         if (logger.isDebugEnabled()) {
             logger.debug(
                     "A new sell transaction is started with identifier {}, for portfolio with identifier {} and orderbook with identifier {}",
-                    new Object[]{event.getTransactionIdentifier(),
-                            event.getPortfolioIdentifier(),
-                            event.getOrderbookIdentifier()});
+                    event.getTransactionIdentifier(),
+                    event.getPortfolioIdentifier(),
+                    event.getOrderbookIdentifier());
             logger.debug("The sell transaction with identifier {} is for selling {} items for the price of {}",
-                    new Object[]{event.getTransactionIdentifier(),
-                            event.getTotalItems(),
-                            event.getPricePerItem()});
+                    event.getTransactionIdentifier(),
+                    event.getTotalItems(),
+                    event.getPricePerItem());
         }
 
         setTransactionIdentifier(event.getTransactionIdentifier());
@@ -71,12 +71,12 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         setPricePerItem(event.getPricePerItem());
         setTotalItems(event.getTotalItems());
 
-        ReserveItemsCommand reserveItemsCommand =
-                new ReserveItemsCommand(getPortfolioIdentifier(),
+        ReserveAmountCommand reserveAmountCommand =
+                new ReserveAmountCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         getTransactionIdentifier(),
                         event.getTotalItems());
-        getCommandBus().dispatch(new GenericCommandMessage<ReserveItemsCommand>(reserveItemsCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<ReserveAmountCommand>(reserveAmountCommand));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -115,12 +115,12 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         logger.debug("Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}",
                 event.getTransactionIdentifier(),
                 amountOfCancelledItems);
-        CancelItemReservationForPortfolioCommand command =
-                new CancelItemReservationForPortfolioCommand(getPortfolioIdentifier(),
+        CancelAmountReservationForPortfolioCommand command =
+                new CancelAmountReservationForPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         getTransactionIdentifier(),
                         amountOfCancelledItems);
-        getCommandBus().dispatch(new GenericCommandMessage<CancelItemReservationForPortfolioCommand>(command));
+        getCommandBus().dispatch(new GenericCommandMessage<CancelAmountReservationForPortfolioCommand>(command));
     }
 
     @SagaEventHandler(associationProperty = "sellTransactionId", keyName = "transactionIdentifier")
@@ -140,12 +140,12 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         logger.debug("Sell Transaction {} is executed, last amount of executed items is {} for a price of {}",
                 new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
 
-        ConfirmItemReservationForPortfolioCommand confirmCommand =
-                new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(),
+        ConfirmAmountReservationForPortfolioCommand confirmCommand =
+                new ConfirmAmountReservationForPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         getTransactionIdentifier(),
                         event.getAmountOfItems());
-        getCommandBus().dispatch(new GenericCommandMessage<ConfirmItemReservationForPortfolioCommand>(confirmCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<ConfirmAmountReservationForPortfolioCommand>(confirmCommand));
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
                         event.getItemPrice().multiply(event.getAmountOfItems()));
@@ -159,12 +159,12 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                         event.getAmountOfExecutedItems(),
                         event.getItemPrice()});
 
-        ConfirmItemReservationForPortfolioCommand confirmCommand =
-                new ConfirmItemReservationForPortfolioCommand(getPortfolioIdentifier(),
+        ConfirmAmountReservationForPortfolioCommand confirmCommand =
+                new ConfirmAmountReservationForPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         getTransactionIdentifier(),
                         event.getAmountOfExecutedItems());
-        getCommandBus().dispatch(new GenericCommandMessage<ConfirmItemReservationForPortfolioCommand>(confirmCommand));
+        getCommandBus().dispatch(new GenericCommandMessage<ConfirmAmountReservationForPortfolioCommand>(confirmCommand));
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
                         event.getItemPrice().multiply(event.getAmountOfExecutedItems()));

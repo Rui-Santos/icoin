@@ -52,7 +52,8 @@ public class OrderBookCommandHandler {
 
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) {
-        OrderBook orderBook = new OrderBook(command.getOrderBookIdentifier(), command.getCurrencyPair());
+        OrderBook orderBook =
+                new OrderBook(command.getOrderBookIdentifier(), command.getCoinId(), command.getCoinExchangePair());
         repository.add(orderBook);
     }
 

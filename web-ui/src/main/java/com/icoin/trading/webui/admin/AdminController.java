@@ -16,6 +16,7 @@
 
 package com.icoin.trading.webui.admin;
 
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
@@ -24,7 +25,6 @@ import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,12 +81,12 @@ public class AdminController {
                           @RequestParam("orderbook") String orderBookIdentifier,
                           @RequestParam("amount") BigDecimal amount
     ) {
-        AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(new PortfolioId(
+        AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(new PortfolioId(
                 portfolioIdentifier),
                 new OrderBookId(
                         orderBookIdentifier),
                 amount);
-        commandBus.dispatch(new GenericCommandMessage<AddItemsToPortfolioCommand>(command));
+        commandBus.dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(command));
         return "redirect:/admin/portfolio/{identifier}";
     }
 

@@ -49,7 +49,8 @@ routeMatcher.post("/executed") { request ->
 server.requestHandler(routeMatcher.asClosure())
 
 // Setup the Sockjs connection
-vertx.createSockJSServer(server).bridge(prefix: '/eventbus', [[:]])
+//vertx.createSockJSServer(server).bridge(prefix: '/eventbus', [[:]])
+vertx.createSockJSServer(server).bridge(prefix: '/eventbus', [], [])
 
 server.listen(9090)
 

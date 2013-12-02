@@ -37,7 +37,7 @@
         </div>
     </div>
     <div class="span8">
-        <form method="GET" action="${ctx}/admin/portfolio/<c:out value="${portfolio.identifier}"/>/money/">
+        <form method="GET" action="${ctx}/admin/portfolio/<c:out value="${portfolio.primaryKey}"/>/money/">
             <input name="amount" value="0" class="span2">
             <input type="submit" class="btn" value="Add Money">
         </form>
@@ -61,10 +61,10 @@
         </ul>
     </div>
     <div class="span8">
-        <form method="GET" action="${ctx}/admin/portfolio/<c:out value="${portfolio.identifier}"/>/item/">
+        <form method="GET" action="${ctx}/admin/portfolio/<c:out value="${portfolio.primaryKey}"/>/item/">
             <select name="orderbook" class="span3">
                 <c:forEach items="${orderbooks}" var="orderbook">
-                    <option value="<c:out value="${orderbook.identifier}"/>"><c:out
+                    <option value="<c:out value="${orderbook.primaryKey}"/>"><c:out
                             value="${orderbook.coinName}"/></option>
                 </c:forEach>
             </select>

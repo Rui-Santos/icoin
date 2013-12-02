@@ -29,7 +29,7 @@
     <c:forEach items="${items}" var="item">
         <tr>
             <td><c:out value='${item.coinName}'/></td>
-            <td><a href="${ctx}/orderbook/<c:out value='${item.identifier}'/>">orders</a></td>
+            <td><a href="${ctx}/orderbook/<c:out value='${item.primaryKey}'/>">orders</a></td>
         </tr>
     </c:forEach>
     </tbody>

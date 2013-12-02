@@ -5,10 +5,10 @@ import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmC
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ReserveCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.WithdrawCashCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelItemReservationForPortfolioCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmItemReservationForPortfolioCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveItemsCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveAmountCommand;
 import com.icoin.trading.tradeengine.domain.events.portfolio.PortfolioCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashDepositedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationCancelledEvent;
@@ -69,7 +69,7 @@ public class PortfolioCommandHandlerTest {
     /* Items related test methods */
     @Test
     public void testAddItemsToPortfolio() {
-        AddItemsToPortfolioCommand command = new AddItemsToPortfolioCommand(portfolioIdentifier,
+        AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(portfolioIdentifier,
                 orderBookIdentifier,
                 BigDecimal.valueOf(100));
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier))
@@ -79,7 +79,7 @@ public class PortfolioCommandHandlerTest {
 
     @Test
     public void testReserveItems_noItemsAvailable() {
-        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier,
+        ReserveAmountCommand command = new ReserveAmountCommand(portfolioIdentifier,
                 orderBookIdentifier,
                 transactionIdentifier,
                 BigDecimal.valueOf(200));
@@ -90,7 +90,7 @@ public class PortfolioCommandHandlerTest {
 
     @Test
     public void testReserveItems_notEnoughItemsAvailable() {
-        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier,
+        ReserveAmountCommand command = new ReserveAmountCommand(portfolioIdentifier,
                 orderBookIdentifier,
                 transactionIdentifier,
                 BigDecimal.valueOf(200));
@@ -106,7 +106,7 @@ public class PortfolioCommandHandlerTest {
 
     @Test
     public void testReserveItems() {
-        ReserveItemsCommand command = new ReserveItemsCommand(portfolioIdentifier,
+        ReserveAmountCommand command = new ReserveAmountCommand(portfolioIdentifier,
                 orderBookIdentifier,
                 transactionIdentifier,
                 BigDecimal.valueOf(200));
@@ -118,8 +118,8 @@ public class PortfolioCommandHandlerTest {
 
     @Test
     public void testConfirmationOfReservation() {
-        ConfirmItemReservationForPortfolioCommand command =
-                new ConfirmItemReservationForPortfolioCommand(portfolioIdentifier,
+        ConfirmAmountReservationForPortfolioCommand command =
+                new ConfirmAmountReservationForPortfolioCommand(portfolioIdentifier,
                         orderBookIdentifier,
                         transactionIdentifier,
                         BigDecimal.valueOf(100));
@@ -135,8 +135,8 @@ public class PortfolioCommandHandlerTest {
 
     @Test
     public void testCancellationOfReservation() {
-        CancelItemReservationForPortfolioCommand command =
-                new CancelItemReservationForPortfolioCommand(portfolioIdentifier,
+        CancelAmountReservationForPortfolioCommand command =
+                new CancelAmountReservationForPortfolioCommand(portfolioIdentifier,
                         orderBookIdentifier,
                         transactionIdentifier,
                         BigDecimal.valueOf(100));

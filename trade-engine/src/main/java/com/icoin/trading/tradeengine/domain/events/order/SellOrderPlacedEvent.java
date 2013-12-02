@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.domain.events.order;
 
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -38,8 +38,8 @@ public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent {
                                 BigDecimal tradeCount,
                                 BigDecimal itemPrice,
                                 PortfolioId portfolioId,
-                                CurrencyPair currencyPair,
+                                CoinExchangePair coinExchangePair,
                                 Date placeDate) {
-        super(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId, currencyPair, placeDate);
+        super(orderBookId, orderId, transactionId, tradeCount, itemPrice, portfolioId, coinExchangePair, placeDate);
     }
 }

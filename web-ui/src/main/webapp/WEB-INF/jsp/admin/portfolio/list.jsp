@@ -50,7 +50,7 @@
                     <c:out value="${item.value.coinName}"/>&nbsp;
                 </c:forEach>
             </td>
-            <td><a href="${ctx}/admin/portfolio/<c:out value='${portfolio.identifier}'/>">details</a></td>
+            <td><a href="${ctx}/admin/portfolio/<c:out value='${portfolio.primaryKey}'/>">details</a></td>
         </tr>
     </c:forEach>
     </tbody>

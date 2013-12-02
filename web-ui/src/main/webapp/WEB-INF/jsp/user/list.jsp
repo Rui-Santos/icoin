@@ -44,7 +44,7 @@
         <tr>
             <td><c:out value='${item.name}'/></td>
             <td><c:out value='${item.username}'/></td>
-            <td><a href="${ctx}/user/<c:out value='${item.identifier}'/>">details</a></td>
+            <td><a href="${ctx}/user/<c:out value='${item.primaryKey}'/>">details</a></td>
         </tr>
     </c:forEach>
     </tbody>

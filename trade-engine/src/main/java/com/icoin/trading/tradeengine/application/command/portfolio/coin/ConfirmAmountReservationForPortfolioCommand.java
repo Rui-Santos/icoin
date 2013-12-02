@@ -24,35 +24,38 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import java.math.BigDecimal;
 
 /**
+ * Confirm the reserved items belonging to OrderBook of the provided identifier for the Portfolio of the provided
+ * identifier.
+ *
  * @author Jettro Coenradie
  */
-public class ReserveItemsCommand {
+public class ConfirmAmountReservationForPortfolioCommand {
 
     private PortfolioId portfolioIdentifier;
-    private TransactionId transactionIdentifier;
     private OrderBookId orderBookIdentifier;
-    private BigDecimal amountOfItemsToReserve;
+    private TransactionId transactionIdentifier;
+    private BigDecimal amountOfItemsToConfirm;
 
-    public ReserveItemsCommand(PortfolioId portfolioIdentifier,
-                               OrderBookId orderBookIdentifier,
-                               TransactionId transactionIdentifier,
-                               BigDecimal amountOfItemsToReserve) {
+    public ConfirmAmountReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
+                                                       OrderBookId orderBookIdentifier,
+                                                       TransactionId transactionIdentifier,
+                                                       BigDecimal amountOfItemsToConfirm) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.transactionIdentifier = transactionIdentifier;
-        this.amountOfItemsToReserve = amountOfItemsToReserve;
         this.orderBookIdentifier = orderBookIdentifier;
+        this.transactionIdentifier = transactionIdentifier;
+        this.amountOfItemsToConfirm = amountOfItemsToConfirm;
     }
 
-    public BigDecimal getAmountOfItemsToReserve() {
-        return amountOfItemsToReserve;
-    }
-
-    public PortfolioId getPortfolioIdentifier() {
-        return portfolioIdentifier;
+    public BigDecimal getAmountOfItemsToConfirm() {
+        return amountOfItemsToConfirm;
     }
 
     public OrderBookId getOrderBookIdentifier() {
         return orderBookIdentifier;
+    }
+
+    public PortfolioId getPortfolioIdentifier() {
+        return portfolioIdentifier;
     }
 
     public TransactionId getTransactionIdentifier() {

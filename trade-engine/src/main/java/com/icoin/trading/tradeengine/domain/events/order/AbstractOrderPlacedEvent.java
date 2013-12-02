@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.domain.events.order;
 
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -38,7 +38,7 @@ public abstract class AbstractOrderPlacedEvent {
     private final BigDecimal tradeAmount;
     private final BigDecimal itemPrice;
     private final PortfolioId portfolioId;
-    private final CurrencyPair currencyPair;
+    private final CoinExchangePair coinExchangePair;
     private final Date placeDate;
 
     protected AbstractOrderPlacedEvent(OrderBookId orderBookId,
@@ -47,7 +47,7 @@ public abstract class AbstractOrderPlacedEvent {
                                        BigDecimal tradeAmount,
                                        BigDecimal itemPrice,
                                        PortfolioId portfolioId,
-                                       CurrencyPair currencyPair,
+                                       CoinExchangePair coinExchangePair,
                                        Date placeDate) {
         this.orderId = orderId;
         this.transactionId = transactionId;
@@ -55,7 +55,7 @@ public abstract class AbstractOrderPlacedEvent {
         this.itemPrice = itemPrice;
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
-        this.currencyPair = currencyPair;
+        this.coinExchangePair = coinExchangePair;
         this.placeDate = placeDate;
     }
 
@@ -83,8 +83,8 @@ public abstract class AbstractOrderPlacedEvent {
         return portfolioId;
     }
 
-    public CurrencyPair getCurrencyPair() {
-        return currencyPair;
+    public CoinExchangePair getCoinExchangePair() {
+        return coinExchangePair;
     }
 
     public Date getPlaceDate() {
@@ -99,11 +99,11 @@ public abstract class AbstractOrderPlacedEvent {
 //    public static class OrderBookCreatedEvent {
 //
 //        private OrderBookId orderBookId;
-//        private CurrencyPair currencyPair;
+//        private CoinExchangePair coinExchangePair;
 //
-//        public OrderBookCreatedEvent(OrderBookId orderBookId, CurrencyPair currencyPair) {
+//        public OrderBookCreatedEvent(OrderBookId orderBookId, CoinExchangePair coinExchangePair) {
 //            this.orderBookId = orderBookId;
-//            this.currencyPair = currencyPair;
+//            this.coinExchangePair = coinExchangePair;
 //        }
 //
 //        public OrderBookId getOrderBookIdentifier() {

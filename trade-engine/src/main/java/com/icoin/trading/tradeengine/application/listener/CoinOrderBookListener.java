@@ -19,7 +19,8 @@ package com.icoin.trading.tradeengine.application.listener;
 import com.icoin.trading.tradeengine.application.command.coin.AddOrderBookToCoinCommand;
 import com.icoin.trading.tradeengine.application.command.order.CreateOrderBookCommand;
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
@@ -41,15 +42,25 @@ public class CoinOrderBookListener {
 
     @EventHandler
     public void handleCoinCreated(CoinCreatedEvent event) {
-        logger.debug("About to dispatch a new command to create an OrderBook for the coin {}",
+        logger.info("About to dispatch a new command to create an OrderBook for the coin {}",
                 event.getCoinIdentifier());
 
         OrderBookId orderBookId = new OrderBookId();
-        CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(orderBookId, CurrencyPair.createCurrencyPair(event.getCoinName(), "CNY"));
+        final CoinId coinId = event.getCoinIdentifier();
+        CreateOrderBookCommand createOrderBookCommand =
+                new CreateOrderBookCommand(orderBookId,
+                        coinId,
+                        CoinExchangePair.createExchangeToDefault(coinId.toString()));
         commandBus.dispatch(new GenericCommandMessage<CreateOrderBookCommand>(createOrderBookCommand));
 
+        //add coin to default Currency always for exchange
+        //coin to coin change, will added later
         AddOrderBookToCoinCommand addOrderBookToCoinCommand =
-                new AddOrderBookToCoinCommand(event.getCoinIdentifier(), orderBookId);
+                new AddOrderBookToCoinCommand(
+                        event.getCoinIdentifier(),
+                        orderBookId,
+                        CoinExchangePair.createExchangeToDefault(coinId.toString()));
+
         commandBus.dispatch(new GenericCommandMessage<AddOrderBookToCoinCommand>(addOrderBookToCoinCommand));
     }
 

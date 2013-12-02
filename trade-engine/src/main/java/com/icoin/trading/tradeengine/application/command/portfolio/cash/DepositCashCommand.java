@@ -20,6 +20,7 @@ package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -30,6 +31,8 @@ import java.math.BigDecimal;
 public class DepositCashCommand {
 
     private PortfolioId portfolioIdentifier;
+
+    @NotNull
     @DecimalMin("0.00000001")
     private BigDecimal moneyToAddInCents;
 

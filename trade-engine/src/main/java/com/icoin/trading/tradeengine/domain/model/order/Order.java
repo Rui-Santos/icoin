@@ -17,7 +17,7 @@
 package com.icoin.trading.tradeengine.domain.model.order;
 
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -38,11 +38,12 @@ public class Order extends AbstractAnnotatedEntity {
     private final PortfolioId portfolioId;
     private BigDecimal itemsRemaining;
     private Date placeDate;
-    private CurrencyPair currencyPair;
+    private CoinExchangePair coinExchangePair;
+    private OrderType orderType;
 
     public Order(OrderId orderId, TransactionId transactionId, BigDecimal itemPrice,
                  BigDecimal tradeAmount, PortfolioId portfolioId,
-                 CurrencyPair currencyPair,
+                 CoinExchangePair coinExchangePair,
                  Date placeDate) {
         this.orderId = orderId;
         this.transactionId = transactionId;
@@ -50,7 +51,7 @@ public class Order extends AbstractAnnotatedEntity {
         this.tradeAmount = tradeAmount;
         this.itemsRemaining = tradeAmount;
         this.portfolioId = portfolioId;
-        this.currencyPair = currencyPair;
+        this.coinExchangePair = coinExchangePair;
         this.placeDate = placeDate;
     }
 
@@ -86,8 +87,8 @@ public class Order extends AbstractAnnotatedEntity {
         return placeDate;
     }
 
-    public CurrencyPair getCurrencyPair() {
-        return currencyPair;
+    public CoinExchangePair getCoinExchangePair() {
+        return coinExchangePair;
     }
 
     @Override
@@ -100,7 +101,7 @@ public class Order extends AbstractAnnotatedEntity {
                 ", portfolioId=" + portfolioId +
                 ", itemsRemaining=" + itemsRemaining +
                 ", placeDate=" + placeDate.getTime() +
-                ", currencyPair=" + currencyPair +
+                ", coinExchangePair=" + coinExchangePair +
                 '}';
     }
 

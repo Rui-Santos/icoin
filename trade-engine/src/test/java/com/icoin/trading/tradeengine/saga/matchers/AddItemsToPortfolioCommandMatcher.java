@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddItemsToPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 /**
  * @author Jettro Coenradie
  */
-public class AddItemsToPortfolioCommandMatcher extends BaseCommandMatcher<AddItemsToPortfolioCommand> {
+public class AddItemsToPortfolioCommandMatcher extends BaseCommandMatcher<AddAmountToPortfolioCommand> {
 
     private OrderBookId orderBookIdentifier;
     private PortfolioId portfolioIdentifier;
@@ -40,7 +40,7 @@ public class AddItemsToPortfolioCommandMatcher extends BaseCommandMatcher<AddIte
     }
 
     @Override
-    protected boolean doMatches(AddItemsToPortfolioCommand command) {
+    protected boolean doMatches(AddAmountToPortfolioCommand command) {
         return command.getOrderBookIdentifier().equals(orderBookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && command.getAmountOfItemsToAdd().compareTo(amountOfItemsToAdd) == 0;
@@ -48,7 +48,7 @@ public class AddItemsToPortfolioCommandMatcher extends BaseCommandMatcher<AddIte
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("AddItemsToPortfolioCommand with amountOfItemsToAdd [")
+        description.appendText("AddAmountToPortfolioCommand with amountOfItemsToAdd [")
                 .appendValue(amountOfItemsToAdd)
                 .appendText("] for OrderBook with identifier [")
                 .appendValue(orderBookIdentifier)

@@ -19,35 +19,38 @@ package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
 /**
- * Confirm the reserved items belonging to OrderBook of the provided identifier for the Portfolio of the provided
- * identifier.
+ * Try to add new items for a specific OrderBook to the portfolio.
  *
  * @author Jettro Coenradie
  */
-public class ConfirmItemReservationForPortfolioCommand {
+public class AddAmountToPortfolioCommand {
 
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
-    private TransactionId transactionIdentifier;
-    private BigDecimal amountOfItemsToConfirm;
+    @DecimalMin("0.00000001")
+    private BigDecimal amountOfItemsToAdd;
 
-    public ConfirmItemReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
-                                                     OrderBookId orderBookIdentifier,
-                                                     TransactionId transactionIdentifier,
-                                                     BigDecimal amountOfItemsToConfirm) {
+    /**
+     * Create a new command.
+     *
+     * @param portfolioIdentifier Identifier of the Portfolio to add items to
+     * @param orderBookIdentifier Identifier of the OrderBook to add items for
+     * @param amountOfItemsToAdd  AMount of items to add
+     */
+    public AddAmountToPortfolioCommand(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier,
+                                       BigDecimal amountOfItemsToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
-        this.transactionIdentifier = transactionIdentifier;
-        this.amountOfItemsToConfirm = amountOfItemsToConfirm;
+        this.amountOfItemsToAdd = amountOfItemsToAdd;
     }
 
-    public BigDecimal getAmountOfItemsToConfirm() {
-        return amountOfItemsToConfirm;
+    public BigDecimal getAmountOfItemsToAdd() {
+        return amountOfItemsToAdd;
     }
 
     public OrderBookId getOrderBookIdentifier() {
@@ -58,7 +61,12 @@ public class ConfirmItemReservationForPortfolioCommand {
         return portfolioIdentifier;
     }
 
-    public TransactionId getTransactionIdentifier() {
-        return transactionIdentifier;
+    @Override
+    public String toString() {
+        return "AddAmountToPortfolioCommand{" +
+                "amountOfItemsToAdd=" + amountOfItemsToAdd +
+                ", portfolioIdentifier=" + portfolioIdentifier +
+                ", orderBookIdentifier=" + orderBookIdentifier +
+                '}';
     }
 }
