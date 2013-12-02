@@ -26,18 +26,18 @@ import java.math.BigDecimal;
  */
 public class CashWithdrawnEvent {
     private PortfolioId portfolioIdentifier;
-    private BigDecimal amountPaidInCents;
+    private BigDecimal amountPaid;
 
-    public CashWithdrawnEvent(PortfolioId portfolioIdentifier, BigDecimal amountPaidInCents) {
+    public CashWithdrawnEvent(PortfolioId portfolioIdentifier, BigDecimal amountPaid) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.amountPaidInCents = amountPaidInCents;
+        this.amountPaid = amountPaid;
     }
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
 
-    public BigDecimal getAmountPaidInCents() {
-        return amountPaidInCents;
+    public BigDecimal getAmountPaid() {
+        return amountPaid;
     }
 }

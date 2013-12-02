@@ -79,7 +79,7 @@ public class PortfolioCommandHandler {
     @CommandHandler
     public void handleAddMoneyToPortfolioCommand(DepositCashCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.addMoney(command.getMoneyToAddInCents());
+        portfolio.addMoney(command.getMoneyToAdd());
     }
 
     @CommandHandler

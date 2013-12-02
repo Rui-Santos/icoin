@@ -54,7 +54,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
     @AggregateIdentifier
     private PortfolioId portfolioId;
-    private Map<OrderBookId, BigDecimal> availableItems = new HashMap<OrderBookId, BigDecimal>();
+    private Map<OrderBookId, BigDecimal> availableCoins = new HashMap<OrderBookId, BigDecimal>();
     private Map<OrderBookId, BigDecimal> reservedItems = new HashMap<OrderBookId, BigDecimal>();
 
     private BigDecimal amountOfMoney = BigDecimal.ZERO;
@@ -72,10 +72,10 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     public void reserveItems(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, BigDecimal amountOfItemsToReserve) {
-        if (!availableItems.containsKey(orderBookIdentifier)) {
+        if (!availableCoins.containsKey(orderBookIdentifier)) {
             apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, orderBookIdentifier, transactionIdentifier));
         } else {
-            BigDecimal availableAmountOfItems = availableItems.get(orderBookIdentifier);
+            BigDecimal availableAmountOfItems = availableCoins.get(orderBookIdentifier);
             if (availableAmountOfItems.compareTo(amountOfItemsToReserve) < 0) {
                 apply(new NotEnoughItemsAvailableToReserveInPortfolio(
                         portfolioId, orderBookIdentifier, transactionIdentifier, availableAmountOfItems, amountOfItemsToReserve));
@@ -135,13 +135,13 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void onItemsAddedToPortfolio(ItemsAddedToPortfolioEvent event) {
         BigDecimal available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available.add(event.getAmountOfItemsAdded()));
+        availableCoins.put(event.getOrderBookIdentifier(), available.add(event.getAmountOfItemsAdded()));
     }
 
     @EventHandler
     public void onItemsReserved(ItemsReservedEvent event) {
         BigDecimal available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available.subtract(event.getAmountOfItemsReserved()));
+        availableCoins.put(event.getOrderBookIdentifier(), available.subtract(event.getAmountOfItemsReserved()));
 
         BigDecimal reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
         reservedItems.put(event.getOrderBookIdentifier(), reserved.add(event.getAmountOfItemsReserved()));
@@ -153,26 +153,26 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         reservedItems.put(event.getOrderBookIdentifier(), reserved.subtract(event.getAmountOfConfirmedItems()));
 
         BigDecimal available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available.subtract(event.getAmountOfConfirmedItems()));
+        availableCoins.put(event.getOrderBookIdentifier(), available.subtract(event.getAmountOfConfirmedItems()));
     }
 
     @EventHandler
     public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
         BigDecimal reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier());
-        reservedItems.put(event.getOrderBookIdentifier(), reserved.subtract(event.getAmountOfCancelledAmount()));
+        reservedItems.put(event.getOrderBookIdentifier(), reserved.add(event.getAmountOfCancelledAmount()));
 
         BigDecimal available = obtainCurrentAvailableItems(event.getOrderBookIdentifier());
-        availableItems.put(event.getOrderBookIdentifier(), available.subtract(event.getAmountOfCancelledAmount()));
+        availableCoins.put(event.getOrderBookIdentifier(), available.add(event.getAmountOfCancelledAmount()));
     }
 
     @EventHandler
     public void onMoneyAddedToPortfolio(CashDepositedEvent event) {
-        amountOfMoney = amountOfMoney.add(event.getMoneyAddedInCents());
+        amountOfMoney = amountOfMoney.add(event.getMoneyAdded());
     }
 
     @EventHandler
     public void onPaymentMadeFromPortfolio(CashWithdrawnEvent event) {
-        amountOfMoney = amountOfMoney.subtract(event.getAmountPaidInCents());
+        amountOfMoney = amountOfMoney.subtract(event.getAmountPaid());
     }
 
     @EventHandler
@@ -195,8 +195,8 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     /* UTILITY METHODS */
     private BigDecimal obtainCurrentAvailableItems(OrderBookId orderBookIdentifier) {
         BigDecimal available = BigDecimal.ZERO;
-        if (availableItems.containsKey(orderBookIdentifier)) {
-            available = availableItems.get(orderBookIdentifier);
+        if (availableCoins.containsKey(orderBookIdentifier)) {
+            available = availableCoins.get(orderBookIdentifier);
         }
         return available;
     }

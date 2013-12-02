@@ -37,7 +37,7 @@ public class DepositMoneyToPortfolioCommandMatcher extends BaseCommandMatcher<De
 
     @Override
     protected boolean doMatches(DepositCashCommand command) {
-        return moneyToAddInCents.compareTo(command.getMoneyToAddInCents()) == 0
+        return moneyToAddInCents.compareTo(command.getMoneyToAdd()) == 0
                 && portfolioIdentifier.equals(command.getPortfolioIdentifier());
     }
 

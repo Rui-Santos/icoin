@@ -62,14 +62,14 @@ public class PortfolioMoneyEventListener {
     @EventHandler
     public void handleEvent(CashDepositedEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().add(event.getMoneyAddedInCents()));
+        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().add(event.getMoneyAdded()));
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(CashWithdrawnEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().subtract(event.getAmountPaidInCents()));
+        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().subtract(event.getAmountPaid()));
         portfolioRepository.save(portfolioEntry);
     }
 

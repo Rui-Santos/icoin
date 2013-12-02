@@ -67,6 +67,7 @@ public class OrderbookExternalListener {
         }
     }
 
+    //sending to external system that the trades executed
     private void doHandle(TradeExecutedEvent event) throws IOException {
         String jsonObjectAsString = createJsonInString(event);
 
@@ -90,7 +91,7 @@ public class OrderbookExternalListener {
         g.writeStartObject();
         g.writeObjectFieldStart("tradeExecuted");
         g.writeStringField("orderbookId", event.getOrderBookIdentifier().toString());
-        g.writeStringField("count", String.valueOf(event.getTradeAmount()));
+        g.writeStringField("amount", String.valueOf(event.getTradeAmount()));
         g.writeStringField("price", String.valueOf(event.getTradePrice()));
         g.writeEndObject(); // for trade-executed
         g.close();

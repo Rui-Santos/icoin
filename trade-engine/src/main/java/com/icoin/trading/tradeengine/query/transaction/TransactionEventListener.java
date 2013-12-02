@@ -120,7 +120,7 @@ public class TransactionEventListener {
         BigDecimal value = transactionEntry.getAmountOfExecutedItems().multiply(transactionEntry.getPricePerItem());
         BigDecimal additionalValue = event.getAmountOfItems().multiply(event.getItemPrice());
         BigDecimal newPrice = (value.add(additionalValue) ).divide(transactionEntry.getAmountOfItems(),
-                2, RoundingMode.HALF_EVEN);
+                8, RoundingMode.HALF_EVEN);
 
         transactionEntry.setState(TransactionState.EXECUTED);
         transactionEntry.setAmountOfExecutedItems(transactionEntry.getAmountOfItems());

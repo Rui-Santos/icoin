@@ -26,18 +26,18 @@ import java.math.BigDecimal;
  */
 public class CashDepositedEvent {
     private PortfolioId portfolioId;
-    private BigDecimal moneyAddedInCents;
+    private BigDecimal moneyAdded;
 
-    public CashDepositedEvent(PortfolioId portfolioId, BigDecimal moneyAddedInCents) {
+    public CashDepositedEvent(PortfolioId portfolioId, BigDecimal moneyAdded) {
         this.portfolioId = portfolioId;
-        this.moneyAddedInCents = moneyAddedInCents;
+        this.moneyAdded = moneyAdded;
     }
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioId;
     }
 
-    public BigDecimal getMoneyAddedInCents() {
-        return moneyAddedInCents;
+    public BigDecimal getMoneyAdded() {
+        return moneyAdded;
     }
 }

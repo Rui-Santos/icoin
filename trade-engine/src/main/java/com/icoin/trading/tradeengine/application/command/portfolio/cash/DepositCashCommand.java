@@ -34,15 +34,15 @@ public class DepositCashCommand {
 
     @NotNull
     @DecimalMin("0.00000001")
-    private BigDecimal moneyToAddInCents;
+    private BigDecimal moneyToAdd;
 
-    public DepositCashCommand(PortfolioId portfolioIdentifier, BigDecimal moneyToAddInCents) {
+    public DepositCashCommand(PortfolioId portfolioIdentifier, BigDecimal moneyToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.moneyToAddInCents = moneyToAddInCents;
+        this.moneyToAdd = moneyToAdd;
     }
 
-    public BigDecimal getMoneyToAddInCents() {
-        return moneyToAddInCents;
+    public BigDecimal getMoneyToAdd() {
+        return moneyToAdd;
     }
 
     public PortfolioId getPortfolioIdentifier() {
