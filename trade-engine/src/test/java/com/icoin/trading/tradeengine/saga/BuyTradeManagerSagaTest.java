@@ -159,8 +159,8 @@ public class BuyTradeManagerSagaTest {
                 .whenAggregate(orderbookIdentifier).publishes(new TradeExecutedEvent(orderbookIdentifier,
                 TOTAL_ITEMS,
                 BigDecimal.valueOf(99),
-                buyOrderIdentifier,
-                sellOrderIdentifier,
+                buyOrderIdentifier.toString(), //todo change
+                sellOrderIdentifier.toString(), //todo change
                 transactionIdentifier,
                 sellTransactionIdentifier))
                 .expectActiveSagas(1)
@@ -187,8 +187,8 @@ public class BuyTradeManagerSagaTest {
                 .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier,new Date()))
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier, TOTAL_ITEMS,
                 BigDecimal.valueOf(99),
-                buyOrderIdentifier,
-                sellOrderIdentifier,
+                buyOrderIdentifier.toString(),//todo change
+                sellOrderIdentifier.toString(),//todo change
                 transactionIdentifier,
                 sellTransactionIdentifier))
                 .whenAggregate(transactionIdentifier).publishes(new BuyTransactionExecutedEvent(transactionIdentifier, TOTAL_ITEMS, BigDecimal.valueOf(99)))
@@ -220,8 +220,8 @@ public class BuyTradeManagerSagaTest {
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
                 BigDecimal.valueOf(50),
                 BigDecimal.valueOf(99),
-                buyOrderIdentifier,
-                sellOrderIdentifier,
+                buyOrderIdentifier.toString(),//todo change
+                sellOrderIdentifier.toString(),//todo change
                 transactionIdentifier,
                 sellTransactionIdentifier))
                 .whenAggregate(transactionIdentifier).publishes(new BuyTransactionPartiallyExecutedEvent(transactionIdentifier,
@@ -251,8 +251,8 @@ public class BuyTradeManagerSagaTest {
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
                 BigDecimal.valueOf(50),
                 BigDecimal.valueOf(9),
-                buyOrderIdentifier,
-                sellOrderIdentifier,
+                buyOrderIdentifier.toString(),//todo change
+                sellOrderIdentifier.toString(),//todo change
                 transactionIdentifier,
                 sellTransactionIdentifier))
                 .whenAggregate(transactionIdentifier).publishes(

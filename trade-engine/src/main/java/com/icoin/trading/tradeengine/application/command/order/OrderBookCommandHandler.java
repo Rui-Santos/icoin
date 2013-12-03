@@ -16,6 +16,10 @@
 
 package com.icoin.trading.tradeengine.application.command.order;
 
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
+import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
@@ -26,32 +30,62 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 public class OrderBookCommandHandler {
 
     private Repository<OrderBook> repository;
+    private SellOrderRepository sellOrderRepository;
+    private BuyOrderRepository buyOrderRepository;
+    private TradeExecutor tradeExecutor;
+
 
     @CommandHandler
     public void handleBuyOrder(CreateBuyOrderCommand command) {
-        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
+        final BuyOrder buyOrder = createBuyOrder(command);
+        buyOrderRepository.save(buyOrder);
 
-        orderBook.addBuyOrder(command.getOrderId(),
-                command.getTransactionId(),
-                command.getTradeAmount(),
-                command.getItemPrice(),
-                command.getPortfolioId(),
-                command.getPlaceDate());
+
+//        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
+
+        tradeExecutor.put(buyOrder);
+
+//        orderBook.addBuyOrder(command.getOrderId(),
+//                command.getTransactionId(),
+//                command.getTradeAmount(),
+//                command.getItemPrice(),
+//                command.getPortfolioId(),
+//                command.getPlaceDate());
+    }
+
+    private BuyOrder createBuyOrder(CreateBuyOrderCommand command) {
+        return null;  //To change body of created methods use File | Settings | File Templates.
     }
 
     @CommandHandler
     public void handleSellOrder(CreateSellOrderCommand command) {
-        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
-        orderBook.addSellOrder(command.getOrderId(),
-                command.getTransactionId(),
-                command.getTradeAmount(),
-                command.getItemPrice(),
-                command.getPortfolioId(),
-                command.getPlaceDate());
+        final SellOrder sellOrder = createSellOrder(command);
+
+        sellOrderRepository.save(sellOrder);
+        tradeExecutor.put(sellOrder);
+
+//        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
+//        orderBook.addSellOrder(command.getOrderId(),
+//                command.getTransactionId(),
+//                command.getTradeAmount(),
+//                command.getItemPrice(),
+//                command.getPortfolioId(),
+//                command.getPlaceDate());
+    }
+
+    private SellOrder createSellOrder(CreateSellOrderCommand command) {
+        return null;
     }
 
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) {
+        OrderBook orderBook =
+                new OrderBook(command.getOrderBookIdentifier(), command.getCoinId(), command.getCoinExchangePair());
+        repository.add(orderBook);
+    }
+
+    @CommandHandler
+    public void handleRefreshOrderBook(CreateOrderBookCommand command) {
         OrderBook orderBook =
                 new OrderBook(command.getOrderBookIdentifier(), command.getCoinId(), command.getCoinExchangePair());
         repository.add(orderBook);

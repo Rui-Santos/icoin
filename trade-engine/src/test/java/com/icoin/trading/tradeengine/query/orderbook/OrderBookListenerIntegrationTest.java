@@ -209,8 +209,8 @@ public class OrderBookListenerIntegrationTest {
         TradeExecutedEvent event = new TradeExecutedEvent(orderBookId,
                 BigDecimal.valueOf(300),
                 BigDecimal.valueOf(125),
-                buyOrderId,
-                sellOrderId,
+                buyOrderId.toString(),//todo change,
+                sellOrderId.toString(),//todo change,
                 buyTransactionId,
                 sellTransactionId);
         orderBookListener.handleTradeExecuted(event);

@@ -1,5 +1,7 @@
 package com.icoin.trading.tradeengine.domain.model.order;
 
+import com.homhon.base.domain.ValueObject;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -7,7 +9,15 @@ package com.icoin.trading.tradeengine.domain.model.order;
  * Time: PM2:32
  * To change this template use File | Settings | File Templates.
  */
-public enum OrderType {
+public enum OrderType implements ValueObject<OrderType> {
     BUY,
-    SELL
+    SELL;
+
+    public boolean sameValueAs(OrderType other) {
+        return this == other;
+    }
+
+    public OrderType copy() {
+        return this;
+    }
 }

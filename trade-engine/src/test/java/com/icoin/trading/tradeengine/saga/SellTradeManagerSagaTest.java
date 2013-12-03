@@ -158,8 +158,8 @@ public class SellTradeManagerSagaTest {
                 .whenAggregate(orderbookIdentifier).publishes(new TradeExecutedEvent(orderbookIdentifier,
                 BigDecimal.valueOf(100),
                 BigDecimal.valueOf(102),
-                buyOrderIdentifier,
-                sellOrderIdentifier,
+                buyOrderIdentifier.toString(),//todo change
+                sellOrderIdentifier.toString(),//todo change
                 buyTransactionIdentifier,
                 transactionIdentifier))
                 .expectActiveSagas(1)
@@ -186,8 +186,8 @@ public class SellTradeManagerSagaTest {
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
                 BigDecimal.valueOf(100),
                 BigDecimal.valueOf(102),
-                buyOrderIdentifier,
-                sellOrderIdentifier,
+                buyOrderIdentifier.toString(),//todo change
+                sellOrderIdentifier.toString(),//todo change
                 buyTransactionIdentifier,
                 transactionIdentifier))
                 .whenAggregate(transactionIdentifier)
@@ -223,8 +223,8 @@ public class SellTradeManagerSagaTest {
                 .andThenAggregate(orderbookIdentifier).published(new TradeExecutedEvent(orderbookIdentifier,
                 BigDecimal.valueOf(100),
                 BigDecimal.valueOf(102),
-                buyOrderIdentifier,
-                sellOrderIdentifier,
+                buyOrderIdentifier.toString(),//todo change
+                sellOrderIdentifier.toString(),//todo change
                 buyTransactionIdentifier,
                 transactionIdentifier))
                 .whenAggregate(transactionIdentifier).publishes(

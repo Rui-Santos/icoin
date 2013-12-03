@@ -37,8 +37,8 @@ public class TradeExecutedEvent implements Serializable {
 
     private final BigDecimal tradeAmount;
     private final BigDecimal tradePrice;
-    private final OrderId buyOrderId;
-    private final OrderId sellOrderId;
+    private final String buyOrderId;
+    private final String sellOrderId;
     private final TransactionId buyTransactionId;
     private final TransactionId sellTransactionId;
     private final OrderBookId orderBookId;
@@ -46,8 +46,8 @@ public class TradeExecutedEvent implements Serializable {
     public TradeExecutedEvent(OrderBookId orderBookId,
                               BigDecimal tradeAmount,
                               BigDecimal tradePrice,
-                              OrderId buyOrderId,
-                              OrderId sellOrderId,
+                              String buyOrderId,
+                              String sellOrderId,
                               TransactionId buyTransactionId,
                               TransactionId sellTransactionId) {
         this.tradeAmount = tradeAmount.setScale(8);
@@ -71,11 +71,11 @@ public class TradeExecutedEvent implements Serializable {
         return tradePrice;
     }
 
-    public OrderId getBuyOrderId() {
+    public String getBuyOrderId() {
         return buyOrderId;
     }
 
-    public OrderId getSellOrderId() {
+    public String getSellOrderId() {
         return sellOrderId;
     }
 

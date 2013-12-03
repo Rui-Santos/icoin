@@ -23,6 +23,8 @@
 
     <bean class="com.icoin.trading.tradeengine.application.command.order.OrderBookCommandHandler">
         <property name="repository" ref="orderBookRepository"/>
+        <property name="repository" ref="orderBookRepository"/>
+        <property name="repository" ref="orderBookRepository"/>
     </bean>
 
     <axon:event-sourcing-repository id="orderBookRepository"

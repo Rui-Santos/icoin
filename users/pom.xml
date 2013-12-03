@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.icoin.trading</groupId>
         <artifactId>icoin-trading</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>icoin-trading-users</artifactId>

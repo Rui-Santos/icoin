@@ -86,8 +86,10 @@ public class OrderBookListener {
 
     @EventHandler
     public void handleTradeExecuted(TradeExecutedEvent event) {
-        OrderId buyOrderId = event.getBuyOrderId();
-        OrderId sellOrderId = event.getSellOrderId();
+
+        //todo change, remove "new OrderId"
+        OrderId buyOrderId = new OrderId(event.getBuyOrderId());
+        OrderId sellOrderId = new OrderId(event.getSellOrderId());
 
         OrderBookId orderBookIdentifier = event.getOrderBookIdentifier();
         OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.toString());
