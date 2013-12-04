@@ -19,6 +19,7 @@ package com.icoin.trading.tradeengine.query.tradeexecuted;
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author Jettro Coenradie
@@ -29,6 +30,7 @@ public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEnt
     private BigDecimal tradePrice;
     private String coinName;
     private String orderBookIdentifier;
+    private Date tradeTime;
 
     public BigDecimal getTradeAmount() {
         return tradeAmount;
@@ -60,5 +62,13 @@ public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEnt
 
     public void setOrderBookIdentifier(String orderBookIdentifier) {
         this.orderBookIdentifier = orderBookIdentifier;
+    }
+
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
     }
 }

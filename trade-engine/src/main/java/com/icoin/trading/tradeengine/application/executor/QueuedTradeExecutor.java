@@ -45,7 +45,7 @@ public class QueuedTradeExecutor implements TradeExecutor {
         try {
             orderQueue.put(element);
         } catch (InterruptedException e) {
-            logger.warn("Interruppted Queue for orderbookId {} when En-queuing", orderBookId);
+            logger.warn("Interrupted Queue for orderbookId {} when En-queuing", orderBookId);
         }
     }
 

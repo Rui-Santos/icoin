@@ -1,23 +1,6 @@
-/*
- * Copyright (c) 2010-2012. Axon Framework
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.icoin.trading.tradeengine.query.orderbook;
+package com.icoin.trading.tradeengine.query.tradeexecuted;
 
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
-import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
@@ -33,7 +16,7 @@ import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.OrderBookListener;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
-import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
+import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,24 +36,25 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * @author Jettro Coenradie
+ * Created with IntelliJ IDEA.
+ * User: liougehooa
+ * Date: 13-12-5
+ * Time: AM1:19
+ * To change this template use File | Settings | File Templates.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("dev")
 @ContextConfiguration({"classpath:com/icoin/trading/tradeengine/infrastructure/persistence/mongo/tradeengine-persistence-mongo.xml"})
 @SuppressWarnings("SpringJavaAutowiringInspection")
-public class OrderBookListenerIntegrationTest {
+public class TradeExecutedListenerTest {
 
-    private OrderBookListener orderBookListener;
-
-    @Autowired
-    private OrderBookQueryRepository orderBookRepository;
+    private TradeExecutedListener tradeExecutedListener;
 
     @Autowired
     private TradeExecutedQueryRepository tradeExecutedRepository;
 
     @Autowired
-    private CoinQueryRepository coinRepository;
+    private OrderBookQueryRepository orderBookRepository;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -88,81 +72,11 @@ public class OrderBookListenerIntegrationTest {
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
 
         CoinListener coinListener = new CoinListener();
-        coinListener.setCoinRepository(coinRepository);
         coinListener.handleCoinCreatedEvent(
                 new CoinCreatedEvent(coinId, "Test Coin", BigDecimal.valueOf(100), BigDecimal.valueOf(100)));
 
-        orderBookListener = new OrderBookListener();
-        orderBookListener.setCoinRepository(coinRepository);
-        orderBookListener.setOrderBookRepository(orderBookRepository);
-        orderBookListener.setTradeExecutedRepository(tradeExecutedRepository);
-    }
-
-    @Test
-    public void testHandleOrderBookCreatedEvent() throws Exception {
-        OrderBookAddedToCoinEvent event = new OrderBookAddedToCoinEvent(coinId, orderBookId);
-
-        orderBookListener.handleOrderBookAddedToCoinEvent(event);
-        Iterable<OrderBookEntry> all = orderBookRepository.findAll();
-        OrderBookEntry orderBookEntry = all.iterator().next();
-        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
-        assertEquals("Test Coin", orderBookEntry.getCoinName());
-    }
-
-    @Test
-    public void testHandleBuyOrderPlaced() throws Exception {
-        CoinEntry coin = createCoin();
-        OrderBookEntry orderBook = createOrderBook(coin);
-
-        final Date placeDate = new Date();
-
-        BuyOrderPlacedEvent event =
-                new BuyOrderPlacedEvent(
-                        orderBookId,
-                        orderId,
-                        transactionId,
-                        BigDecimal.valueOf(300),
-                        BigDecimal.valueOf(100),
-                        portfolioId,
-                        CoinExchangePair.createCoinExchangePair("BTC", "USD"),
-                        placeDate);
-
-        orderBookListener.handleBuyOrderPlaced(event);
-        Iterable<OrderBookEntry> all = orderBookRepository.findAll();
-        OrderBookEntry orderBookEntry = all.iterator().next();
-        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
-        assertEquals("Test Coin", orderBookEntry.getCoinName());
-        assertEquals(1, orderBookEntry.buyOrders().size());
-//        assertEquals(300, orderBookEntry.buyOrders().get(0).getTradeAmount());
-        closeTo(300.00, orderBookEntry.buyOrders().get(0).getTradeAmount().doubleValue());
-    }
-
-    @Test
-    public void testHandleSellOrderPlaced() throws Exception {
-        CoinEntry coin = createCoin();
-        OrderBookEntry orderBook = createOrderBook(coin);
-
-        final Date placeDate = new Date();
-
-        OrderBookId orderBookId = new OrderBookId(orderBook.getPrimaryKey());
-        SellOrderPlacedEvent event =
-                new SellOrderPlacedEvent(
-                        orderBookId,
-                        orderId,
-                        transactionId,
-                        BigDecimal.valueOf(300),
-                        BigDecimal.valueOf(100),
-                        portfolioId,
-                        CoinExchangePair.createCoinExchangePair("BTC", "USD"),
-                        placeDate);
-
-        orderBookListener.handleSellOrderPlaced(event);
-        Iterable<OrderBookEntry> all = orderBookRepository.findAll();
-        OrderBookEntry orderBookEntry = all.iterator().next();
-        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
-        assertEquals("Test Coin", orderBookEntry.getCoinName());
-        assertEquals(1, orderBookEntry.sellOrders().size());
-        closeTo(300.00, orderBookEntry.sellOrders().get(0).getTradeAmount().doubleValue());
+        tradeExecutedListener = new TradeExecutedListener();
+        tradeExecutedListener.setOrderBookRepository(orderBookRepository);
     }
 
     @Test
@@ -184,7 +98,7 @@ public class OrderBookListenerIntegrationTest {
                         CoinExchangePair.createCoinExchangePair("BTC", "USD"),
                         sellPlaceDate);
 
-        orderBookListener.handleSellOrderPlaced(sellOrderPlacedEvent);
+        tradeExecutedListener.handleSellOrderPlaced(sellOrderPlacedEvent);
 
         final Date buyPlaceDate = new Date();
         OrderId buyOrderId = new OrderId();
@@ -198,9 +112,9 @@ public class OrderBookListenerIntegrationTest {
                 CoinExchangePair.createCoinExchangePair("BTC", "USD"),
                 buyPlaceDate);
 
-        orderBookListener.handleBuyOrderPlaced(buyOrderPlacedEvent);
+        tradeExecutedListener.handleBuyOrderPlaced(buyOrderPlacedEvent);
 
-        Iterable<OrderBookEntry> all = orderBookRepository.findAll();
+        Iterable<OrderBookEntry> all = orderRepository.findAll();
         OrderBookEntry orderBookEntry = all.iterator().next();
         assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
         assertEquals("Test Coin", orderBookEntry.getCoinName());
@@ -215,7 +129,7 @@ public class OrderBookListenerIntegrationTest {
                 sellOrderId.toString(),//todo change,
                 buyTransactionId,
                 sellTransactionId);
-        orderBookListener.handleTradeExecuted(event);
+        tradeExecutedListener.handleTradeExecuted(event);
 
         Iterable<TradeExecutedEntry> tradeExecutedEntries = tradeExecutedRepository.findAll();
         assertTrue(tradeExecutedEntries.iterator().hasNext());
@@ -224,33 +138,11 @@ public class OrderBookListenerIntegrationTest {
         closeTo(300.00, tradeExecutedEntry.getTradeAmount().doubleValue());
         closeTo(125, tradeExecutedEntry.getTradePrice().doubleValue());
 
-        all = orderBookRepository.findAll();
+        all = orderRepository.findAll();
         orderBookEntry = all.iterator().next();
         assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
         assertEquals("Test Coin", orderBookEntry.getCoinName());
         assertEquals(1, orderBookEntry.sellOrders().size());
         assertEquals(0, orderBookEntry.buyOrders().size());
-    }
-
-
-    private OrderBookEntry createOrderBook(CoinEntry coin) {
-        OrderBookEntry orderBookEntry = new OrderBookEntry();
-        orderBookEntry.setPrimaryKey(orderBookId.toString());
-        orderBookEntry.setCoinIdentifier(coin.getPrimaryKey());
-        orderBookEntry.setCoinName(coin.getName());
-        orderBookRepository.save(orderBookEntry);
-        return orderBookEntry;
-    }
-
-    private CoinEntry createCoin() {
-        CoinId coinId = new CoinId();
-        CoinEntry coinEntry = new CoinEntry();
-        coinEntry.setPrimaryKey(coinId.toString());
-        coinEntry.setName("Test Coin");
-        coinEntry.setCoinAmount(BigDecimal.valueOf(100000));
-        coinEntry.setTradeStarted(true);
-        coinEntry.setCoinPrice(BigDecimal.valueOf(1000));
-        coinRepository.save(coinEntry);
-        return coinEntry;
     }
 }

@@ -17,8 +17,13 @@
 package com.icoin.trading.tradeengine.query.order;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
+import static com.homhon.mongo.TimeUtils.currentTime;
 
 /**
  * @author Jettro Coenradie
@@ -30,6 +35,10 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
     private String userId;
     private BigDecimal itemsRemaining;
     private String type;
+    private Date completeDate;
+    private Date lastTradedTime;
+    private CoinExchangePair coinExchangePair;
+    private OrderStatus orderStatus = OrderStatus.PENDING;
 
     public BigDecimal getItemPrice() {
         return itemPrice;
@@ -78,5 +87,32 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
 
     void setType(String type) {
         this.type = type;
+    }
+
+    public CoinExchangePair getCoinExchangePair() {
+        return coinExchangePair;
+    }
+
+    public void setCoinExchangePair(CoinExchangePair coinExchangePair) {
+        this.coinExchangePair = coinExchangePair;
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    private void setCompleteDate(Date completeDate) {
+        this.completeDate = completeDate;
+    }
+
+    private void completeOrder(Date completeDate) {
+        this.completeDate = completeDate == null ? currentTime() : completeDate;
+        this.orderStatus = OrderStatus.DONE;
+    }
+
+    public void recordTraded(BigDecimal tradeAmount, Date lastTradedTime) {
+        this.itemsRemaining = itemsRemaining.subtract(tradeAmount);
+        this.lastTradedTime = lastTradedTime;
+
+        if (BigDecimal.ZERO.compareTo(itemsRemaining) >= 0) {
+            completeOrder(lastTradedTime);
+        }
     }
 }

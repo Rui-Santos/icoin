@@ -24,6 +24,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>A new trade has been executed. The event contains the amount of items that are traded and the price for the items
@@ -41,6 +42,7 @@ public class TradeExecutedEvent implements Serializable {
     private final TransactionId buyTransactionId;
     private final TransactionId sellTransactionId;
     private final OrderBookId orderBookId;
+    private final Date tradeTime;
 
     public TradeExecutedEvent(OrderBookId orderBookId,
                               BigDecimal tradeAmount,
@@ -48,7 +50,8 @@ public class TradeExecutedEvent implements Serializable {
                               String buyOrderId,
                               String sellOrderId,
                               TransactionId buyTransactionId,
-                              TransactionId sellTransactionId) {
+                              TransactionId sellTransactionId,
+                              Date tradeTime) {
         this.tradeAmount = tradeAmount.setScale(8);
         this.tradedPrice = tradedPrice.setScale(8);
         this.buyOrderId = buyOrderId;
@@ -56,6 +59,7 @@ public class TradeExecutedEvent implements Serializable {
         this.sellTransactionId = sellTransactionId;
         this.buyTransactionId = buyTransactionId;
         this.orderBookId = orderBookId;
+        this.tradeTime = tradeTime;
     }
 
     public OrderBookId getOrderBookIdentifier() {
@@ -84,6 +88,10 @@ public class TradeExecutedEvent implements Serializable {
 
     public TransactionId getSellTransactionId() {
         return sellTransactionId;
+    }
+
+    public Date getTradeTime() {
+        return tradeTime;
     }
 
     @Override

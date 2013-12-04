@@ -29,33 +29,23 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
-import static com.homhon.util.Collections.isEmpty;
 
 /**
  * @author Allard Buijze
  */
 public class OrderBook extends AbstractAnnotatedAggregateRoot {
-    public static final int MIN_THREHOLD = 1000;
-    public static final int MAX_THREHOLD = 20000;
-    private static Logger logger = LoggerFactory.getLogger(OrderBook.class);
     private static final long serialVersionUID = 6778782949492587631L;
-
 
     @AggregateIdentifier
     private OrderBookId orderBookId;
-
     private CoinExchangePair coinExchangePair;
-
     private CoinId coinId;
 
-    private BuyOrder highestBuy;
-    private SellOrder lowestSell;
+    private BigDecimal highestBuyPrice;
+    private BigDecimal lowestSellPrice;
     private BigDecimal tradedPrice;
 
     @SuppressWarnings("UnusedDeclaration")
@@ -131,74 +121,12 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
         }
     }*/
 
-    @EventHandler
-    protected void onOrderBookCreated(OrderBookCreatedEvent event) {
-        this.orderBookId = event.getOrderBookIdentifier();
-        this.coinExchangePair = event.getCoinExchangePair();
-        this.coinId = event.getCoinId();
-    }
-
-    @EventHandler
-    protected void onBuyPlaced(BuyOrderPlacedEvent event) {
-        final BuyOrder order = new BuyOrder();
-        order.setPrimaryKey(event.getOrderId().toString());
-        order.setTransactionId(event.getTransactionIdentifier());
-        order.setItemPrice(event.getItemPrice());
-        order.setTradeAmount(event.getTradeAmount());
-        order.setPortfolioId(event.getPortfolioId());
-        order.setCoinExchangePair(event.getCoinExchangePair());
-        order.setPlaceDate(event.getPlaceDate());
-    }
-
-    @EventHandler
-    protected void onSellPlaced(SellOrderPlacedEvent event) {
-        final SellOrder order = new SellOrder();
-        order.setPrimaryKey(event.getOrderId().toString());
-        order.setTransactionId(event.getTransactionIdentifier());
-        order.setItemPrice(event.getItemPrice());
-        order.setTradeAmount(event.getTradeAmount());
-        order.setPortfolioId(event.getPortfolioId());
-        order.setCoinExchangePair(event.getCoinExchangePair());
-        order.setPlaceDate(event.getPlaceDate());
-    }
-
-    @EventHandler
-    protected void onTradeExecuted(TradeExecutedEvent event) {
-        this.tradedPrice = event.getTradedPrice();
-    }
-
-
     public void resetHighestBuyPrice(BuyOrder highestBuy) {
-
-        //applying to event
-        this.highestBuy = highestBuy;
-        apply(new RefreshedHighestBuyPriceEvent());
+        apply(new RefreshedHighestBuyPriceEvent(orderBookId, highestBuy.getPrimaryKey(), highestBuy.getItemPrice()));
     }
 
     public void resetLowestSellPrice(SellOrder lowestSell) {
-        this.lowestSell = lowestSell;
-        apply(new RefreshedLowestSellPriceEvent());
-    }
-
-    public void resetExecutedPrice(BigDecimal executedPrice,
-                                   TransactionId buyTransactionId,
-                                   TransactionId sellTransactionId) {
-
-        //does it need the transaction id?
-        this.tradedPrice = executedPrice;
-        apply(new RefreshedCurrentTradedPriceEvent());
-    }
-
-    public BigDecimal getHighestBuyPrice() {
-        return highestBuy.getItemPrice();
-    }
-
-    public BigDecimal getLowestSellPrice() {
-        return lowestSell.getItemPrice();
-    }
-
-    public BigDecimal getTradedPrice() {
-        return tradedPrice;
+        apply(new RefreshedLowestSellPriceEvent(orderBookId, lowestSell.getPrimaryKey(), lowestSell.getItemPrice()));
     }
 
     //transaction: to add sell orders / buyer orders
@@ -207,14 +135,16 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                                String buyOrderId,
                                String sellOrderId,
                                TransactionId buyTransactionId,
-                               TransactionId sellTransactionId) {
+                               TransactionId sellTransactionId,
+                               Date tradedDate) {
         apply(new TradeExecutedEvent(orderBookId,
                 matchedTradeAmount,
                 matchedTradePrice,
                 buyOrderId,
                 sellOrderId,
                 buyTransactionId,
-                sellTransactionId));
+                sellTransactionId,
+                tradedDate));
     }
 
     public void executeBuying(BigDecimal matchedTradeAmount,
@@ -222,13 +152,49 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                               String buyOrderId,
                               String sellOrderId,
                               TransactionId buyTransactionId,
-                              TransactionId sellTransactionId) {
+                              TransactionId sellTransactionId,
+                              Date tradedDate) {
         apply(new TradeExecutedEvent(orderBookId,
                 matchedTradeAmount,
                 matchedTradePrice,
                 buyOrderId,
                 sellOrderId,
                 buyTransactionId,
-                sellTransactionId));
+                sellTransactionId,
+                tradedDate));
+    }
+
+    @EventHandler
+    protected void onOrderBookCreated(OrderBookCreatedEvent event) {
+        this.orderBookId = event.getOrderBookIdentifier();
+        this.coinExchangePair = event.getCoinExchangePair();
+        this.coinId = event.getCoinId();
+    }
+
+    @EventHandler
+    protected void onTradeExecuted(TradeExecutedEvent event) {
+        this.tradedPrice = event.getTradedPrice();
+    }
+
+    @EventHandler
+    protected void onRefreshedLowestSellPrice(RefreshedLowestSellPriceEvent event) {
+        this.lowestSellPrice = event.getPrice();
+    }
+
+    @EventHandler
+    protected void onRefreshedHighestBuyPrice(RefreshedHighestBuyPriceEvent event) {
+        this.highestBuyPrice = event.getPrice();
+    }
+
+    public BigDecimal getHighestBuyPrice() {
+        return highestBuyPrice;
+    }
+
+    public BigDecimal getLowestSellPrice() {
+        return lowestSellPrice;
+    }
+
+    public BigDecimal getTradedPrice() {
+        return tradedPrice;
     }
 }

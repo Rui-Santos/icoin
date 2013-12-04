@@ -18,6 +18,14 @@ import static com.homhon.util.Asserts.notNull;
  * Time: PM10:42
  * To change this template use File | Settings | File Templates.
  */
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: liougehooa
+ * Date: 13-12-2
+ * Time: PM10:42
+ * To change this template use File | Settings | File Templates.
+ */
 public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySupport<T, String, Long> {
     private TransactionId transactionId;
     private BigDecimal itemPrice;
@@ -120,20 +128,25 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         return completeDate;
     }
 
+    public Date getLastTradedTime() {
+        return lastTradedTime;
+    }
+
     @SuppressWarnings("UnusedDeclaration")
     private void setCompleteDate(Date completeDate) {
         this.completeDate = completeDate;
     }
 
-    private void completeOrder(Date completeDate){
-        this.completeDate = completeDate == null? currentTime(): completeDate;
+    private void completeOrder(Date completeDate) {
+        this.completeDate = completeDate == null ? currentTime() : completeDate;
         this.orderStatus = OrderStatus.DONE;
     }
 
     public void recordTraded(BigDecimal tradeAmount, Date lastTradedTime) {
-        itemsRemaining = itemsRemaining.subtract(tradeAmount);
+        this.itemsRemaining = itemsRemaining.subtract(tradeAmount);
+        this.lastTradedTime = lastTradedTime;
 
-        if(BigDecimal.ZERO.compareTo(itemsRemaining) >= 0){
+        if (BigDecimal.ZERO.compareTo(itemsRemaining) >= 0) {
             completeOrder(lastTradedTime);
         }
     }

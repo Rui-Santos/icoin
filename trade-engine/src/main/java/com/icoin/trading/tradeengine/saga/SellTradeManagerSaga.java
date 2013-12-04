@@ -128,9 +128,9 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         //todo after whole completion for this exec event, refresh data
 
         //orderbookhandler to handle refresh data
-        commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
-        commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
-        commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
+//        commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
+//        commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
+//        commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
     }
 
     @SagaEventHandler(associationProperty = "sellTransactionId", keyName = "transactionIdentifier")
@@ -166,10 +166,10 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         //todo after whole completion for this exec event, refresh high/lower data
 
         //orderbookhandler to handle refresh data
-        commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
-        commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
-        commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
-        commandGateway.sendAndWait(new AddBackLeftReservedCommand());
+//        commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
+//        commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
+//        commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
+//        commandGateway.sendAndWait(new AddBackLeftReservedCommand());
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")

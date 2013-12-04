@@ -1,5 +1,9 @@
 package com.icoin.trading.tradeengine.domain.events.order;
 
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+
+import java.math.BigDecimal;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -8,4 +12,14 @@ package com.icoin.trading.tradeengine.domain.events.order;
  * To change this template use File | Settings | File Templates.
  */
 public class RefreshedHighestBuyPriceEvent extends AbstractRefreshedPriceEvent<RefreshedHighestBuyPriceEvent> {
+    private String highestBuyOrderId;
+
+    public RefreshedHighestBuyPriceEvent(OrderBookId orderBookId, String highestBuyOrderId, BigDecimal price) {
+        super(orderBookId, price);
+        this.highestBuyOrderId = highestBuyOrderId;
+    }
+
+    public String getHighestBuyOrderId() {
+        return highestBuyOrderId;
+    }
 }

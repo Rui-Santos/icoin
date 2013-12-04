@@ -17,17 +17,13 @@
 package com.icoin.trading.tradeengine.query.order;
 
 import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
-import com.icoin.trading.tradeengine.domain.events.order.AbstractOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
+import com.icoin.trading.tradeengine.domain.events.order.RefreshedHighestBuyPriceEvent;
+import com.icoin.trading.tradeengine.domain.events.order.RefreshedLowestSellPriceEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
-import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
-import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,7 +42,7 @@ public class OrderBookListener {
 
     private OrderBookQueryRepository orderBookRepository;
     private CoinQueryRepository coinRepository;
-    private TradeExecutedQueryRepository tradeExecutedRepository;
+
 
     //@Value("#{trading.lowestTradePrice}")
     public void setLowestPrice(double lowestPrice) {
@@ -64,81 +60,32 @@ public class OrderBookListener {
     }
 
     @EventHandler
-    public void handleBuyOrderPlaced(BuyOrderPlacedEvent event) {
-        OrderBookEntry orderBook = orderBookRepository.findOne(event.orderBookIdentifier().toString());
-
-        OrderEntry buyOrder = createPlacedOrder(event, BUY);
-        orderBook.buyOrders().add(buyOrder);
-
+    public void handleRefreshedHighestBuyPrice(RefreshedHighestBuyPriceEvent event) {
+        OrderBookEntry orderBook = orderBookRepository.findOne(event.getOrderBookId().toString());
+        orderBook.setHighestBuyId(event.getHighestBuyOrderId());
+        orderBook.setHighestBuyPrice(event.getPrice());
         orderBookRepository.save(orderBook);
     }
 
     @EventHandler
-    public void handleSellOrderPlaced(SellOrderPlacedEvent event) {
-        OrderBookEntry orderBook = orderBookRepository.findOne(event.orderBookIdentifier().toString());
-
-        OrderEntry sellOrder = createPlacedOrder(event, SELL);
-        orderBook.sellOrders().add(sellOrder);
-
+    public void handleRefreshedLowestSellPrice(RefreshedLowestSellPriceEvent event) {
+        OrderBookEntry orderBook = orderBookRepository.findOne(event.getOrderBookId().toString());
+        orderBook.setLowestSellId(event.getLowestSellOrderId());
+        orderBook.setLowestSellPrice(event.getPrice());
         orderBookRepository.save(orderBook);
     }
 
     @EventHandler
     public void handleTradeExecuted(TradeExecutedEvent event) {
 
-        //todo change, remove "new OrderId"
-        OrderId buyOrderId = new OrderId(event.getBuyOrderId());
-        OrderId sellOrderId = new OrderId(event.getSellOrderId());
 
         OrderBookId orderBookIdentifier = event.getOrderBookIdentifier();
         OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.toString());
 
-        TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();
-        tradeExecutedEntry.setCoinName(orderBookEntry.getCoinName());
-        tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getPrimaryKey());
-        tradeExecutedEntry.setTradeAmount(event.getTradeAmount());
-        tradeExecutedEntry.setTradePrice(event.getTradedPrice());
-
-        tradeExecutedRepository.save(tradeExecutedEntry);
-
-        // TODO find a better solution or maybe pull them apart
-        OrderEntry foundBuyOrder = null;
-        for (OrderEntry order : orderBookEntry.buyOrders()) {
-            if (order.getPrimaryKey().equals(buyOrderId.toString())) {
-                BigDecimal itemsRemaining = order.getItemsRemaining();
-                order.setItemsRemaining(itemsRemaining.subtract(event.getTradeAmount()));
-                foundBuyOrder = order;
-                break;
-            }
-        }
-        if (null != foundBuyOrder && foundBuyOrder.getItemsRemaining().compareTo(lowestPrice) < 0) {
-            orderBookEntry.buyOrders().remove(foundBuyOrder);
-        }
-        OrderEntry foundSellOrder = null;
-        for (OrderEntry order : orderBookEntry.sellOrders()) {
-            if (order.getPrimaryKey().equals(sellOrderId.toString())) {
-                BigDecimal itemsRemaining = order.getItemsRemaining();
-                order.setItemsRemaining(itemsRemaining.subtract(event.getTradeAmount()));
-                foundSellOrder = order;
-                break;
-            }
-        }
-        if (null != foundSellOrder && foundSellOrder.getItemsRemaining().compareTo(lowestPrice) < 0) {
-            orderBookEntry.sellOrders().remove(foundSellOrder);
-        }
+        orderBookEntry.setTradedPrice(event.getTradedPrice());
+        orderBookEntry.setBuyTransactionId(event.getBuyTransactionId().toString());
+        orderBookEntry.setSellTransactionId(event.getSellTransactionId().toString());
         orderBookRepository.save(orderBookEntry);
-    }
-
-    private OrderEntry createPlacedOrder(AbstractOrderPlacedEvent event, String type) {
-        OrderEntry entry = new OrderEntry();
-        entry.setPrimaryKey(event.getOrderId().toString());
-        entry.setItemsRemaining(event.getTradeAmount());
-        entry.setTradeAmount(event.getTradeAmount());
-        entry.setUserId(event.getPortfolioId().toString());
-        entry.setType(type);
-        entry.setItemPrice(event.getItemPrice());
-
-        return entry;
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -151,11 +98,5 @@ public class OrderBookListener {
     @Autowired
     public void setCoinRepository(CoinQueryRepository coinRepository) {
         this.coinRepository = coinRepository;
-    }
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setTradeExecutedRepository(TradeExecutedQueryRepository tradeExecutedRepository) {
-        this.tradeExecutedRepository = tradeExecutedRepository;
     }
 }

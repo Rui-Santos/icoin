@@ -1,4 +1,5 @@
 package com.icoin.trading.tradeengine.application.executor;
+
 import com.icoin.trading.tradeengine.domain.model.order.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,8 +34,8 @@ public class QueuedTradeExecutorIT {
         executor = new QueuedTradeExecutor(orderBookPool);
 
         final Random random = new Random();
-        executor.setBuyOrderRepository(createBuyOrderRepository(random));
-        executor.setSellOrderRepository(createSellOrderRepository(random));
+//        executor.setBuyOrderRepository(createBuyOrderRepository(random));
+//        executor.setSellOrderRepository(createSellOrderRepository(random));
     }
 
     private SellOrderRepository createSellOrderRepository(final Random random) {
@@ -85,7 +86,7 @@ public class QueuedTradeExecutorIT {
     public void testPerformance() {
 
 
-        executor.setup();
+        executor.start();
 
         for (OrderBookId orderBookId : orderBookPool.keySet()) {
 
@@ -104,17 +105,12 @@ public class QueuedTradeExecutorIT {
         public void run() {
             try {
                 while (true) {
-                    executor.put(new SellOrder());
+                    executor.execute(new SellOrder());
                     TimeUnit.MILLISECONDS.sleep(random.nextInt(100));
                 }
             } catch (InterruptedException ex) {
 
             }
         }
-
-        Object produce() {
-
-        }
-
     }
 }

@@ -1,5 +1,6 @@
 package com.icoin.trading.tradeengine.application.executor;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
@@ -9,6 +10,7 @@ import org.axonframework.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -24,7 +26,7 @@ import static com.homhon.util.Collections.isEmpty;
  * Time: 1:12 PM
  * To change this template use File | Settings | File Templates.
  */
-//todo put them int executor
+@Component
 public class BuyOrderExecutor implements OrderExecutor<BuyOrder> {
     private static Logger logger = LoggerFactory.getLogger(BuyOrderExecutor.class);
     private SellOrderRepository sellOrderRepository;
@@ -44,7 +46,7 @@ public class BuyOrderExecutor implements OrderExecutor<BuyOrder> {
     private void executeBuying(BuyOrder order) {
         OrderBook orderBook = orderBookRepository.load(order.getOrderBookId());
 
-        //buying price is less than the current buying price
+        //buying price >= current buying price
         if (orderBook.getHighestBuyPrice().compareTo(order.getItemPrice()) >= 0) {
             return;
         }
@@ -92,16 +94,17 @@ public class BuyOrderExecutor implements OrderExecutor<BuyOrder> {
                             sellOrder.getPrimaryKey(),
                             order.getPrimaryKey(),
                             sellOrder.getTransactionId(),
-                            order.getTransactionId());
+                            order.getTransactionId(),
+                            currentTime());
                 }
 
-                sellOrder.recordTraded(matchedTradeAmount,currentTime());
-                order.recordTraded(matchedTradeAmount,currentTime());
+                sellOrder.recordTraded(matchedTradeAmount, currentTime());
+                order.recordTraded(matchedTradeAmount, currentTime());
 
                 sellOrderRepository.save(sellOrder);
                 buyOrderRepository.save(order);
 
-                if (BigDecimal.ZERO.compareTo(order.getItemsRemaining()) >= 0) {
+                if (Constants.IGNORED_PRICE.compareTo(order.getItemsRemaining()) >= 0) {
                     done = true;
                     break;
                 }
@@ -110,8 +113,8 @@ public class BuyOrderExecutor implements OrderExecutor<BuyOrder> {
     }
 
     @Autowired
-    public SellOrderRepository getSellOrderRepository() {
-        return sellOrderRepository;
+    public void setSellOrderRepository(SellOrderRepository sellOrderRepository) {
+        this.sellOrderRepository = sellOrderRepository;
     }
 
     @Autowired

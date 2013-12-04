@@ -17,9 +17,10 @@
 package com.icoin.trading.tradeengine.query.order;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -28,16 +29,17 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
 
     private String coinIdentifier;
     private String coinName;
-    private List<OrderEntry> sellOrders = new ArrayList<OrderEntry>();
-    private List<OrderEntry> buyOrders = new ArrayList<OrderEntry>();
+    private CoinExchangePair coinExchangePair;
+    private CoinId coinId;
 
-    public List<OrderEntry> sellOrders() {
-        return sellOrders;
-    }
+    private String highestBuyId;
+    private String lowestSellId;
+    private BigDecimal tradedPrice;
+    private BigDecimal highestBuyPrice;
+    private BigDecimal lowestSellPrice;
 
-    public List<OrderEntry> buyOrders() {
-        return buyOrders;
-    }
+    private String buyTransactionId;
+    private String sellTransactionId;
 
     public String getCoinIdentifier() {
         return coinIdentifier;
@@ -55,19 +57,75 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
         this.coinName = coinName;
     }
 
-    public List<OrderEntry> getBuyOrders() {
-        return buyOrders;
+    public CoinExchangePair getCoinExchangePair() {
+        return coinExchangePair;
     }
 
-    public void setBuyOrders(List<OrderEntry> buyOrders) {
-        this.buyOrders = buyOrders;
+    public void setCoinExchangePair(CoinExchangePair coinExchangePair) {
+        this.coinExchangePair = coinExchangePair;
     }
 
-    public List<OrderEntry> getSellOrders() {
-        return sellOrders;
+    public CoinId getCoinId() {
+        return coinId;
     }
 
-    public void setSellOrders(List<OrderEntry> sellOrders) {
-        this.sellOrders = sellOrders;
+    public void setCoinId(CoinId coinId) {
+        this.coinId = coinId;
+    }
+
+    public String getHighestBuyId() {
+        return highestBuyId;
+    }
+
+    public void setHighestBuyId(String highestBuyId) {
+        this.highestBuyId = highestBuyId;
+    }
+
+    public String getLowestSellId() {
+        return lowestSellId;
+    }
+
+    public void setLowestSellId(String lowestSellId) {
+        this.lowestSellId = lowestSellId;
+    }
+
+    public BigDecimal getTradedPrice() {
+        return tradedPrice;
+    }
+
+    public void setTradedPrice(BigDecimal tradedPrice) {
+        this.tradedPrice = tradedPrice;
+    }
+
+    public BigDecimal getHighestBuyPrice() {
+        return highestBuyPrice;
+    }
+
+    public void setHighestBuyPrice(BigDecimal highestBuyPrice) {
+        this.highestBuyPrice = highestBuyPrice;
+    }
+
+    public BigDecimal getLowestSellPrice() {
+        return lowestSellPrice;
+    }
+
+    public void setLowestSellPrice(BigDecimal lowestSellPrice) {
+        this.lowestSellPrice = lowestSellPrice;
+    }
+
+    public String getBuyTransactionId() {
+        return buyTransactionId;
+    }
+
+    public void setBuyTransactionId(String buyTransactionId) {
+        this.buyTransactionId = buyTransactionId;
+    }
+
+    public String getSellTransactionId() {
+        return sellTransactionId;
+    }
+
+    public void setSellTransactionId(String sellTransactionId) {
+        this.sellTransactionId = sellTransactionId;
     }
 }
