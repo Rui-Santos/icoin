@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.application.command.order;
 
+import com.icoin.trading.tradeengine.application.executor.TradeExecutor;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
@@ -23,6 +24,9 @@ import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Resource;
 
 /**
  * @author Allard Buijze
@@ -41,16 +45,15 @@ public class OrderBookCommandHandler {
         buyOrderRepository.save(buyOrder);
 
 
-//        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
+        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
 
-        tradeExecutor.put(buyOrder);
-
-//        orderBook.addBuyOrder(command.getOrderId(),
-//                command.getTransactionId(),
-//                command.getTradeAmount(),
-//                command.getItemPrice(),
-//                command.getPortfolioId(),
-//                command.getPlaceDate());
+        orderBook.addBuyOrder(command.getOrderId(),
+                command.getTransactionId(),
+                command.getTradeAmount(),
+                command.getItemPrice(),
+                command.getPortfolioId(),
+                command.getPlaceDate());
+        tradeExecutor.execute(buyOrder);
     }
 
     private BuyOrder createBuyOrder(CreateBuyOrderCommand command) {
@@ -62,15 +65,15 @@ public class OrderBookCommandHandler {
         final SellOrder sellOrder = createSellOrder(command);
 
         sellOrderRepository.save(sellOrder);
-        tradeExecutor.put(sellOrder);
+        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
+        orderBook.addSellOrder(command.getOrderId(),
+                command.getTransactionId(),
+                command.getTradeAmount(),
+                command.getItemPrice(),
+                command.getPortfolioId(),
+                command.getPlaceDate());
 
-//        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
-//        orderBook.addSellOrder(command.getOrderId(),
-//                command.getTransactionId(),
-//                command.getTradeAmount(),
-//                command.getItemPrice(),
-//                command.getPortfolioId(),
-//                command.getPlaceDate());
+        tradeExecutor.execute(sellOrder);
     }
 
     private SellOrder createSellOrder(CreateSellOrderCommand command) {
@@ -91,7 +94,23 @@ public class OrderBookCommandHandler {
         repository.add(orderBook);
     }
 
+    @Resource(name = "orderBookRepository")
     public void setRepository(Repository<OrderBook> orderBookRepository) {
         this.repository = orderBookRepository;
+    }
+
+    @Autowired
+    public void setSellOrderRepository(SellOrderRepository sellOrderRepository) {
+        this.sellOrderRepository = sellOrderRepository;
+    }
+
+    @Autowired
+    public void setBuyOrderRepository(BuyOrderRepository buyOrderRepository) {
+        this.buyOrderRepository = buyOrderRepository;
+    }
+
+    @Autowired
+    public void setTradeExecutor(TradeExecutor tradeExecutor) {
+        this.tradeExecutor = tradeExecutor;
     }
 }

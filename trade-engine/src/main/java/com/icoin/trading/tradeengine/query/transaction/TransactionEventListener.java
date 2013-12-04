@@ -30,8 +30,8 @@ import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionEx
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionPartiallyExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
-import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.transaction.repositories.TransactionQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;

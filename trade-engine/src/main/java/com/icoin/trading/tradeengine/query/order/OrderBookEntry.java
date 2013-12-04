@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.tradeengine.query.orderbook;
+package com.icoin.trading.tradeengine.query.order;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 

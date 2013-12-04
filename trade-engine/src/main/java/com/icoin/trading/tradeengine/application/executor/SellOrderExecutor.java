@@ -4,6 +4,7 @@ import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
+import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
 import org.axonframework.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.homhon.mongo.TimeUtils.currentTime;
 import static com.homhon.util.Collections.isEmpty;
 
 /**
@@ -26,6 +28,7 @@ import static com.homhon.util.Collections.isEmpty;
 public class SellOrderExecutor implements OrderExecutor<SellOrder> {
     private static Logger logger = LoggerFactory.getLogger(SellOrderExecutor.class);
     private BuyOrderRepository buyOrderRepository;
+    private SellOrderRepository sellOrderRepository;
 
     private Repository<OrderBook> orderBookRepository;
 
@@ -91,6 +94,12 @@ public class SellOrderExecutor implements OrderExecutor<SellOrder> {
                             order.getTransactionId());
                 }
 
+                buyOrder.recordTraded(matchedTradeAmount,currentTime());
+                order.recordTraded(matchedTradeAmount,currentTime());
+
+                buyOrderRepository.save(buyOrder);
+                sellOrderRepository.save(order);
+
                 if (BigDecimal.ZERO.compareTo(order.getItemsRemaining()) >= 0) {
                     done = true;
                     break;
@@ -103,6 +112,11 @@ public class SellOrderExecutor implements OrderExecutor<SellOrder> {
     @Autowired
     public void setBuyOrderRepository(BuyOrderRepository buyOrderRepository) {
         this.buyOrderRepository = buyOrderRepository;
+    }
+
+    @Autowired
+    public SellOrderRepository getSellOrderRepository() {
+        return sellOrderRepository;
     }
 
     @Resource(name = "orderBookRepository")

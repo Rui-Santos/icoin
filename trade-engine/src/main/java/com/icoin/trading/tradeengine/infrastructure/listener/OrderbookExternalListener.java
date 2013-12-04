@@ -92,7 +92,7 @@ public class OrderbookExternalListener {
         g.writeObjectFieldStart("tradeExecuted");
         g.writeStringField("orderbookId", event.getOrderBookIdentifier().toString());
         g.writeStringField("amount", String.valueOf(event.getTradeAmount()));
-        g.writeStringField("price", String.valueOf(event.getTradePrice()));
+        g.writeStringField("price", String.valueOf(event.getTradedPrice()));
         g.writeEndObject(); // for trade-executed
         g.close();
         return writer.toString();

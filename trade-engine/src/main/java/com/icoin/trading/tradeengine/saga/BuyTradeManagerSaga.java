@@ -145,10 +145,10 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "buyTransactionId", keyName = "transactionIdentifier")
     public void handle(TradeExecutedEvent event) {
         logger.debug("Buy Transaction {} is executed, items for transaction are {} for a price of {}",
-                new Object[]{getTransactionIdentifier(), event.getTradeAmount(), event.getTradePrice()});
+                new Object[]{getTransactionIdentifier(), event.getTradeAmount(), event.getTradedPrice()});
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(getTransactionIdentifier(),
                 event.getTradeAmount(),
-                event.getTradePrice());
+                event.getTradedPrice());
         getCommandBus().dispatch(new GenericCommandMessage<ExecutedTransactionCommand>(command));
     }
 
@@ -176,6 +176,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
         commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
         commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
+        commandGateway.sendAndWait(new AddBackLeftReservedCommand());
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")

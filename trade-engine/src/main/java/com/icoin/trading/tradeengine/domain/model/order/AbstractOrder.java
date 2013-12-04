@@ -8,6 +8,7 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import static com.homhon.mongo.TimeUtils.currentTime;
 import static com.homhon.util.Asserts.notNull;
 
 /**
@@ -27,6 +28,9 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     private CoinExchangePair coinExchangePair;
     private final OrderType orderType;
     private OrderBookId orderBookId;
+    private Date completeDate;
+    private Date lastTradedTime;
+    private OrderStatus orderStatus = OrderStatus.PENDING;
 
 
     public OrderBookId getOrderBookId() {
@@ -101,5 +105,36 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
 
     public void setCoinExchangePair(CoinExchangePair coinExchangePair) {
         this.coinExchangePair = coinExchangePair;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    private void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public Date getCompleteDate() {
+        return completeDate;
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    private void setCompleteDate(Date completeDate) {
+        this.completeDate = completeDate;
+    }
+
+    private void completeOrder(Date completeDate){
+        this.completeDate = completeDate == null? currentTime(): completeDate;
+        this.orderStatus = OrderStatus.DONE;
+    }
+
+    public void recordTraded(BigDecimal tradeAmount, Date lastTradedTime) {
+        itemsRemaining = itemsRemaining.subtract(tradeAmount);
+
+        if(BigDecimal.ZERO.compareTo(itemsRemaining) >= 0){
+            completeOrder(lastTradedTime);
+        }
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.tradeengine.query.orderbook;
+package com.icoin.trading.tradeengine.query.order;
 
 import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
 import com.icoin.trading.tradeengine.domain.events.order.AbstractOrderPlacedEvent;
@@ -25,7 +25,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
-import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -97,7 +97,7 @@ public class OrderBookListener {
         tradeExecutedEntry.setCoinName(orderBookEntry.getCoinName());
         tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getPrimaryKey());
         tradeExecutedEntry.setTradeAmount(event.getTradeAmount());
-        tradeExecutedEntry.setTradePrice(event.getTradePrice());
+        tradeExecutedEntry.setTradePrice(event.getTradedPrice());
 
         tradeExecutedRepository.save(tradeExecutedEntry);
 

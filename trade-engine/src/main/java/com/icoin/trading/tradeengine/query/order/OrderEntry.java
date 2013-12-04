@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.tradeengine.query.orderbook;
+package com.icoin.trading.tradeengine.query.order;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 
@@ -24,7 +24,7 @@ import java.math.BigDecimal;
  * @author Jettro Coenradie
  */
 public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long> {
-    private OrderBookEntry orderBookEntry;
+    private String orderBookIdentifier;
     private BigDecimal tradeAmount;
     private BigDecimal itemPrice;
     private String userId;
@@ -47,12 +47,13 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
         this.itemsRemaining = itemsRemaining;
     }
 
-    public OrderBookEntry getOrderBookEntry() {
-        return orderBookEntry;
+
+    public String getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
-    void setOrderBookEntry(OrderBookEntry orderBookEntry) {
-        this.orderBookEntry = orderBookEntry;
+    public void setOrderBookIdentifier(String orderBookIdentifier) {
+        this.orderBookIdentifier = orderBookIdentifier;
     }
 
     public BigDecimal getTradeAmount() {

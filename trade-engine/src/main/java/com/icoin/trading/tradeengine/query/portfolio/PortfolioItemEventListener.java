@@ -20,8 +20,8 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservatio
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsAddedToPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
-import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;

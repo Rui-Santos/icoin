@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.tradeengine.query.orderbook.repositories;
+package com.icoin.trading.tradeengine.query.order.repositories;
 
 import com.homhon.base.domain.repository.GenericCrudRepository;
-import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.order.OrderEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * @author Jettro Coenradie
  */
-public interface OrderBookQueryRepository extends PagingAndSortingRepository<OrderBookEntry, String>, GenericCrudRepository<OrderBookEntry, String> {
+public interface OrderQueryRepository extends PagingAndSortingRepository<OrderEntry, String>, GenericCrudRepository<OrderEntry, String> {
 
-    List<OrderBookEntry> findByCoinIdentifier(String coinIdentifier);
+    List<OrderBookEntry> findByOrderBookIdentifier(String orderBookIdentifier);
 }

@@ -1,6 +1,7 @@
 package com.icoin.trading.tradeengine.application.executor;
 
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.homhon.mongo.TimeUtils.currentTime;
 import static com.homhon.util.Collections.isEmpty;
 
 /**
@@ -26,6 +28,7 @@ import static com.homhon.util.Collections.isEmpty;
 public class BuyOrderExecutor implements OrderExecutor<BuyOrder> {
     private static Logger logger = LoggerFactory.getLogger(BuyOrderExecutor.class);
     private SellOrderRepository sellOrderRepository;
+    private BuyOrderRepository buyOrderRepository;
 
     private Repository<OrderBook> orderBookRepository;
 
@@ -92,6 +95,12 @@ public class BuyOrderExecutor implements OrderExecutor<BuyOrder> {
                             order.getTransactionId());
                 }
 
+                sellOrder.recordTraded(matchedTradeAmount,currentTime());
+                order.recordTraded(matchedTradeAmount,currentTime());
+
+                sellOrderRepository.save(sellOrder);
+                buyOrderRepository.save(order);
+
                 if (BigDecimal.ZERO.compareTo(order.getItemsRemaining()) >= 0) {
                     done = true;
                     break;
@@ -103,6 +112,11 @@ public class BuyOrderExecutor implements OrderExecutor<BuyOrder> {
     @Autowired
     public SellOrderRepository getSellOrderRepository() {
         return sellOrderRepository;
+    }
+
+    @Autowired
+    public void setBuyOrderRepository(BuyOrderRepository buyOrderRepository) {
+        this.buyOrderRepository = buyOrderRepository;
     }
 
     @Resource(name = "orderBookRepository")
