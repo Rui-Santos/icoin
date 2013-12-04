@@ -18,7 +18,6 @@ package com.icoin.trading.tradeengine.query.transaction;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
-import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 

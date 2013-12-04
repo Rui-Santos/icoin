@@ -59,8 +59,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
 
     private CoinId coinId;
 
-    private BigDecimal highestBuyPrice;
-    private BigDecimal lowestSellPrice;
+    private BuyOrder highestBuy;
+    private SellOrder lowestSell;
     private BigDecimal executedPrice;
 
     private transient OrderComparator<SellOrder> sellOrderOrderComparator =
@@ -214,7 +214,6 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
         order.setPlaceDate(event.getPlaceDate());
 
 
-
         buyOrders.add(order);
     }
 
@@ -230,9 +229,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
         order.setPlaceDate(event.getPlaceDate());
 
 
-
         final SellOrder last = sellOrders.first();
-        sellOrderOrderComparator.compare(last,order);
+        sellOrderOrderComparator.compare(last, order);
 
 
         sellOrders.add(order);
@@ -251,18 +249,25 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
     }
 
 
-    public void resetHighestBuyPrice(BigDecimal highestBuyPrice) {
+    public void resetHighestBuyPrice(BuyOrder highestBuy) {
 
         //applying to event
-        this.highestBuyPrice = highestBuyPrice;
+        this.highestBuy = highestBuy;
+        apply(new RefreshedHighestBuyPriceEvent());
     }
 
-    public void resetExecutedPrice(BigDecimal executedPrice) {
+    public void resetLowestSellPrice(SellOrder lowestSell) {
+        this.lowestSell = lowestSell;
+        apply(new RefreshedHighestSellPriceEvent());
+    }
+
+    public void resetExecutedPrice(BigDecimal executedPrice,
+                                   TransactionId buyTransactionId,
+                                   TransactionId sellTransactionId) {
+
+        //does it need the transaction id?
         this.executedPrice = executedPrice;
-    }
-
-    public void resetLowestSellPrice(BigDecimal lowestSellPrice) {
-        this.lowestSellPrice = lowestSellPrice;
+        apply(new RefreshedCurrentTradedPriceEvent());
     }
 
     public BigDecimal getHighestBuyPrice() {
@@ -275,5 +280,36 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
 
     public BigDecimal getExecutedPrice() {
         return executedPrice;
+    }
+
+    //transaction: to add sell orders / buyer orders
+    public void executeSelling(BigDecimal matchedTradeAmount,
+                               BigDecimal matchedTradePrice,
+                               String buyOrderId,
+                               String sellOrderId,
+                               TransactionId buyTransactionId,
+                               TransactionId sellTransactionId) {
+        apply(new TradeExecutedEvent(orderBookId,
+                matchedTradeAmount,
+                matchedTradePrice,
+                buyOrderId,
+                sellOrderId,
+                buyTransactionId,
+                sellTransactionId));
+    }
+
+    public void executeBuying(BigDecimal matchedTradeAmount,
+                              BigDecimal matchedTradePrice,
+                              String buyOrderId,
+                              String sellOrderId,
+                              TransactionId buyTransactionId,
+                              TransactionId sellTransactionId) {
+        apply(new TradeExecutedEvent(orderBookId,
+                matchedTradeAmount,
+                matchedTradePrice,
+                buyOrderId,
+                sellOrderId,
+                buyTransactionId,
+                sellTransactionId));
     }
 }

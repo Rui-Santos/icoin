@@ -16,18 +16,18 @@
 
 package com.icoin.trading.tradeengine.application.command.portfolio;
 
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveAmountCommand;
-import com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio;
-import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.repository.Repository;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.CancelCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ReserveCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.WithdrawCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveAmountCommand;
+import com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio;
+import org.axonframework.commandhandling.annotation.CommandHandler;
+import org.axonframework.repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -105,7 +105,7 @@ public class PortfolioCommandHandler {
             ConfirmCashReservationCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
-                command.getAmountOfMoneyToConfirmInCents());
+                command.getAmountOfMoneyToConfirm());
     }
 
     @Autowired

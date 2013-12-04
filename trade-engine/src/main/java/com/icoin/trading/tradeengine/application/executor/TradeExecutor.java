@@ -1,14 +1,14 @@
-package com.icoin.trading.tradeengine.application.command.order;
+package com.icoin.trading.tradeengine.application.executor;
 
 import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
 
 /**
  * Created with IntelliJ IDEA.
- * User: liougehooa
- * Date: 13-12-3
- * Time: AM8:02
+ * User: jihual
+ * Date: 12/3/13
+ * Time: 11:15 AM
  * To change this template use File | Settings | File Templates.
  */
 public interface TradeExecutor {
-    <T extends AbstractOrder> void put(T element);
+    <T extends AbstractOrder> void execute(T element);
 }

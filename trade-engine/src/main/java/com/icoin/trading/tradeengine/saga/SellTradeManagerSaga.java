@@ -121,6 +121,16 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                         getTransactionIdentifier(),
                         amountOfCancelledItems);
         getCommandBus().dispatch(new GenericCommandMessage<CancelAmountReservationForPortfolioCommand>(command));
+
+        //is it necessary
+        //when the whole saga complete, change the price here
+        //todo after whole completion for this exec event, refresh done price
+        //todo after whole completion for this exec event, refresh data
+
+        //orderbookhandler to handle refresh data
+        commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
+        commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
+        commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
     }
 
     @SagaEventHandler(associationProperty = "sellTransactionId", keyName = "transactionIdentifier")
@@ -150,6 +160,15 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                 new DepositCashCommand(getPortfolioIdentifier(),
                         event.getItemPrice().multiply(event.getAmountOfItems()));
         getCommandBus().dispatch(new GenericCommandMessage<DepositCashCommand>(depositCommand));
+
+        //when the whole saga complete, change the price here
+        //todo after whole completion for this exec event, refresh done price
+        //todo after whole completion for this exec event, refresh high/lower data
+
+        //orderbookhandler to handle refresh data
+        commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
+        commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
+        commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")

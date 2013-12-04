@@ -17,7 +17,6 @@
 package com.icoin.trading.tradeengine.query.orderbook;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 import java.util.List;

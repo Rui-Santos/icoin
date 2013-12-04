@@ -103,9 +103,9 @@ public class TransactionEventListener {
         TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier()
                 .toString());
 
-        BigDecimal value = transactionEntry.getAmountOfExecutedItems().multiply(transactionEntry.getPricePerItem()) ;
+        BigDecimal value = transactionEntry.getAmountOfExecutedItems().multiply(transactionEntry.getPricePerItem());
         BigDecimal additionalValue = event.getAmountOfExecutedItems().multiply(event.getItemPrice());
-        BigDecimal newPrice = (value.add(additionalValue)).divide(event.getTotalOfExecutedItems(),2, RoundingMode.HALF_EVEN);
+        BigDecimal newPrice = (value.add(additionalValue)).divide(event.getTotalOfExecutedItems(), 2, RoundingMode.HALF_EVEN);
 
         transactionEntry.setState(TransactionState.PARTIALLYEXECUTED);
         transactionEntry.setAmountOfExecutedItems(event.getTotalOfExecutedItems());
@@ -119,7 +119,7 @@ public class TransactionEventListener {
 
         BigDecimal value = transactionEntry.getAmountOfExecutedItems().multiply(transactionEntry.getPricePerItem());
         BigDecimal additionalValue = event.getAmountOfItems().multiply(event.getItemPrice());
-        BigDecimal newPrice = (value.add(additionalValue) ).divide(transactionEntry.getAmountOfItems(),
+        BigDecimal newPrice = (value.add(additionalValue)).divide(transactionEntry.getAmountOfItems(),
                 8, RoundingMode.HALF_EVEN);
 
         transactionEntry.setState(TransactionState.EXECUTED);

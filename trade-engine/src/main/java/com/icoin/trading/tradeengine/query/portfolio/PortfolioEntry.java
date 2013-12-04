@@ -18,7 +18,6 @@ package com.icoin.trading.tradeengine.query.portfolio;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -42,6 +41,7 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
     public void setLowestPrice(BigDecimal lowestPrice) {
         this.lowestPrice = lowestPrice;
     }
+
     /*-------------------------------------------------------------------------------------------*/
     /* utility functions                                                                         */
     /*-------------------------------------------------------------------------------------------*/
@@ -170,7 +170,7 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
         if (items.containsKey(itemIdentifier)) {
             ItemEntry foundEntry = items.get(itemIdentifier);
             foundEntry.setAmount(foundEntry.getAmount().subtract(amount));
-            if (foundEntry.getAmount().compareTo(lowestPrice)<0) {
+            if (foundEntry.getAmount().compareTo(lowestPrice) < 0) {
                 items.remove(foundEntry.getPrimaryKey());
             }
         }

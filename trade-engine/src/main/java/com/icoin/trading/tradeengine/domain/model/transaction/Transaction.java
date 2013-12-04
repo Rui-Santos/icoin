@@ -44,7 +44,7 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     @AggregateIdentifier
     private TransactionId transactionId;
     private BigDecimal amountOfItems = BigDecimal.ZERO;
-    private BigDecimal amountOfExecutedItems= BigDecimal.ZERO;
+    private BigDecimal executedAmount = BigDecimal.ZERO;
     private TransactionType type;
 
 
@@ -90,10 +90,10 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     public void cancel() {
         switch (this.type) {
             case BUY:
-                apply(new BuyTransactionCancelledEvent(transactionId, amountOfItems, amountOfExecutedItems));
+                apply(new BuyTransactionCancelledEvent(transactionId, amountOfItems, executedAmount));
                 break;
             case SELL:
-                apply(new SellTransactionCancelledEvent(transactionId, amountOfItems, amountOfExecutedItems));
+                apply(new SellTransactionCancelledEvent(transactionId, amountOfItems, executedAmount));
                 break;
         }
     }
@@ -104,7 +104,7 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                 if (isPartiallyExecuted(amountOfItems)) {
                     apply(new BuyTransactionPartiallyExecutedEvent(transactionId,
                             amountOfItems,
-                            amountOfItems.add(amountOfExecutedItems) ,
+                            amountOfItems.add(executedAmount),
                             itemPrice));
                 } else {
                     apply(new BuyTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
@@ -114,7 +114,7 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                 if (isPartiallyExecuted(amountOfItems)) {
                     apply(new SellTransactionPartiallyExecutedEvent(transactionId,
                             amountOfItems,
-                            amountOfItems.add(amountOfExecutedItems),
+                            amountOfItems.add(executedAmount),
                             itemPrice));
                 } else {
                     apply(new SellTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
@@ -124,7 +124,7 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     }
 
     private boolean isPartiallyExecuted(BigDecimal amountOfItems) {
-        return this.amountOfExecutedItems.add(amountOfItems).compareTo(this.amountOfItems) < 0;
+        return this.executedAmount.add(amountOfItems).compareTo(this.amountOfItems) < 0;
     }
 
     @EventHandler
@@ -143,22 +143,22 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onTransactionExecuted(BuyTransactionExecutedEvent event) {
-        this.amountOfExecutedItems = this.amountOfItems;
+        this.executedAmount = this.amountOfItems;
     }
 
     @EventHandler
     public void onTransactionExecuted(SellTransactionExecutedEvent event) {
-        this.amountOfExecutedItems = this.amountOfItems;
+        this.executedAmount = this.amountOfItems;
     }
 
     @EventHandler
     public void onTransactionPartiallyExecuted(SellTransactionPartiallyExecutedEvent event) {
-        this.amountOfExecutedItems =  amountOfExecutedItems.add(event.getAmountOfExecutedItems());
+        this.executedAmount = executedAmount.add(event.getAmountOfExecutedItems());
     }
 
     @EventHandler
     public void onTransactionPartiallyExecuted(BuyTransactionPartiallyExecutedEvent event) {
-        this.amountOfExecutedItems = amountOfExecutedItems.add(event.getAmountOfExecutedItems());
+        this.executedAmount = executedAmount.add(event.getAmountOfExecutedItems());
     }
 
     @Override

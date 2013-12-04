@@ -8,6 +8,8 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import static com.homhon.util.Asserts.notNull;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -37,6 +39,7 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
 
 
     public AbstractOrder(OrderType orderType) {
+        notNull(orderType);
         this.orderType = orderType;
     }
 

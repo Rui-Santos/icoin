@@ -7,10 +7,12 @@ package com.icoin.trading.tradeengine.domain.model.user;
  * Time: PM11:39
  * To change this template use File | Settings | File Templates.
  */
-import org.axonframework.common.Assert;
+
 import org.axonframework.domain.IdentifierFactory;
 
 import java.io.Serializable;
+
+import static com.homhon.util.Asserts.notNull;
 
 /**
  * @author Jettro Coenradie
@@ -25,7 +27,7 @@ public class UserId implements Serializable {
     }
 
     public UserId(String identifier) {
-        Assert.notNull(identifier, "Identifier may not be null");
+        notNull(identifier, "Identifier may not be null");
         this.identifier = identifier;
     }
 

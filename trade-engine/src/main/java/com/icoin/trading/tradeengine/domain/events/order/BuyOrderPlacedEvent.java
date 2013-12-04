@@ -36,6 +36,6 @@ public class BuyOrderPlacedEvent extends AbstractOrderPlacedEvent {
                                BigDecimal itemPrice, PortfolioId portfolioId,
                                CoinExchangePair coinExchangePair,
                                Date placeDate) {
-        super(orderBookId, orderId, transactionId, tradeAmount, itemPrice, portfolioId, coinExchangePair,placeDate);
+        super(orderBookId, orderId, transactionId, tradeAmount, itemPrice, portfolioId, coinExchangePair, placeDate);
     }
 }

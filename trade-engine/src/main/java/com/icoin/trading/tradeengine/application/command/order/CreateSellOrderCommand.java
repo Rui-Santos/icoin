@@ -35,6 +35,6 @@ public class CreateSellOrderCommand extends AbstractOrderCommand {
     public CreateSellOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
                                   TransactionId transactionId, BigDecimal tradeCount, BigDecimal itemPrice,
                                   Date placeDate) {
-        super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice,placeDate);
+        super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice, placeDate);
     }
 }

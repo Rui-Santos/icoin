@@ -17,14 +17,9 @@
 package com.icoin.trading.tradeengine.application.command.order;
 
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
-
-import javax.validation.constraints.DecimalMin;
-import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * <p>Abstract parent class for all commands that are order related.</p>

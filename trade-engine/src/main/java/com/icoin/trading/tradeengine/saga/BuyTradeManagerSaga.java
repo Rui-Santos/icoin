@@ -106,6 +106,15 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 new Object[]{getTransactionIdentifier(),
                         event.getPortfolioIdentifier(),
                         event.getAmountToPayInCents()});
+        //is is necessary?
+        //when the whole saga complete, change the price here
+        //todo after whole completion for this exec event, refresh done price
+        //todo after whole completion for this exec event, refresh data
+
+        //orderbookhandler to handle refresh data
+        commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
+        commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
+        commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -158,6 +167,15 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                         getOrderbookIdentifier(),
                         event.getAmountOfItems());
         getCommandBus().dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(addItemsCommand));
+
+        //when the whole saga complete, change the price here
+        //todo after whole completion for this exec event, refresh done price
+        //todo after whole completion for this exec event, refresh data
+
+        //orderbookhandler to handle refresh data
+        commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
+        commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
+        commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")

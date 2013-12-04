@@ -14,5 +14,11 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface SellOrderRepository extends GenericCrudRepository<SellOrder, String> {
-    List<SellOrder> findOrderedPendingOrdersByPriceTime(Date toTime, BigDecimal price, OrderBookId orderBookId, int size);
+
+    //when the price&time are equal, should put biggest amount first
+    List<SellOrder> findAscPendingOrdersByPriceTime(Date toTime, BigDecimal price, OrderBookId orderBookId, int size);
+
+    SellOrder findPendingOrder(String id);
+
+    SellOrder findLowestPricePendingOrder();
 }

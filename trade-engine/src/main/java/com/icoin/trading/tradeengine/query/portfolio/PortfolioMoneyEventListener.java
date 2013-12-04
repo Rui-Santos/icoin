@@ -92,8 +92,8 @@ public class PortfolioMoneyEventListener {
     public void handleEvent(CashReservationConfirmedEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         BigDecimal reservedAmountOfMoney = portfolioEntry.getReservedAmountOfMoney();
-        BigDecimal amountOfMoneyConfirmed = event.getAmountOfMoneyConfirmedInCents();
-        if (amountOfMoneyConfirmed.compareTo(reservedAmountOfMoney)< 0) {
+        BigDecimal amountOfMoneyConfirmed = event.getAmountOfConfirmedMoney();
+        if (amountOfMoneyConfirmed.compareTo(reservedAmountOfMoney) < 0) {
             portfolioEntry.setReservedAmountOfMoney(reservedAmountOfMoney.add(amountOfMoneyConfirmed));
         } else {
             portfolioEntry.setReservedAmountOfMoney(BigDecimal.ZERO);

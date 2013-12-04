@@ -23,7 +23,6 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.util.Date;
 

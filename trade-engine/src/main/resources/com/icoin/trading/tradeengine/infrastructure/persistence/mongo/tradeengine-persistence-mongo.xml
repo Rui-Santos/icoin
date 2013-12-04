@@ -80,7 +80,8 @@
         <constructor-arg ref="trade.mongoDbFactory"/>
     </bean>
 
-    <bean id="mongoSagaTemplate" class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.CFSagaMongoTemplate">
+    <bean id="mongoSagaTemplate"
+          class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.CFSagaMongoTemplate">
         <constructor-arg ref="trade.mongoDbFactory"/>
     </bean>
 
@@ -102,11 +103,11 @@
 
 
     <!--<beans profile="default">-->
-        <!--<mongo:db-factory id="mongoDbFactory" dbname="icointrading" host="127.0.0.1" port="27017"/>-->
+    <!--<mongo:db-factory id="mongoDbFactory" dbname="icointrading" host="127.0.0.1" port="27017"/>-->
     <!--</beans>-->
 
     <!--<beans profile="cloud">-->
-        <!--<cloud:mongo-db-factory id="mongoDbFactory"/>-->
+    <!--<cloud:mongo-db-factory id="mongoDbFactory"/>-->
     <!--</beans>-->
 
 </beans>

@@ -30,7 +30,6 @@ import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -112,7 +111,7 @@ public class OrderBookListener {
                 break;
             }
         }
-        if (null != foundBuyOrder && foundBuyOrder.getItemsRemaining().compareTo(lowestPrice)<0) {
+        if (null != foundBuyOrder && foundBuyOrder.getItemsRemaining().compareTo(lowestPrice) < 0) {
             orderBookEntry.buyOrders().remove(foundBuyOrder);
         }
         OrderEntry foundSellOrder = null;
@@ -124,7 +123,7 @@ public class OrderBookListener {
                 break;
             }
         }
-        if (null != foundSellOrder && foundSellOrder.getItemsRemaining().compareTo(lowestPrice)<0) {
+        if (null != foundSellOrder && foundSellOrder.getItemsRemaining().compareTo(lowestPrice) < 0) {
             orderBookEntry.sellOrders().remove(foundSellOrder);
         }
         orderBookRepository.save(orderBookEntry);

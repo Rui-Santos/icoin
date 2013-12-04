@@ -189,7 +189,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onMoneyReservationConfirmed(CashReservationConfirmedEvent event) {
-        reservedAmountOfMoney = reservedAmountOfMoney.subtract(event.getAmountOfMoneyConfirmedInCents());
+        reservedAmountOfMoney = reservedAmountOfMoney.subtract(event.getAmountOfConfirmedMoney());
     }
 
     /* UTILITY METHODS */

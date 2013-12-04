@@ -16,10 +16,11 @@
 
 package com.icoin.trading.tradeengine.domain.model.coin;
 
-import org.axonframework.common.Assert;
 import org.axonframework.domain.IdentifierFactory;
 
 import java.io.Serializable;
+
+import static com.homhon.util.Asserts.notNull;
 
 /**
  * @author Jettro Coenradie
@@ -36,7 +37,7 @@ public class CoinId implements Serializable {
     }
 
     public CoinId(String identifier) {
-        Assert.notNull(identifier, "Identifier may not be null");
+        notNull(identifier, "Identifier may not be null");
         this.identifier = identifier;
         this.hashCode = identifier.hashCode();
     }

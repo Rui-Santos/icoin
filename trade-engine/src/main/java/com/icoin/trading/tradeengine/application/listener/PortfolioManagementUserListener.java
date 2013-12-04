@@ -16,12 +16,12 @@
 
 package com.icoin.trading.tradeengine.application.listener;
 
+import com.icoin.trading.tradeengine.application.command.portfolio.CreatePortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.users.domain.event.UserCreatedEvent;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import com.icoin.trading.tradeengine.application.command.portfolio.CreatePortfolioCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

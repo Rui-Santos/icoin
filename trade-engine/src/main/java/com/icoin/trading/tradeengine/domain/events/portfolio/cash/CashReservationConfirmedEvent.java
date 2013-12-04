@@ -46,7 +46,7 @@ public class CashReservationConfirmedEvent {
         return transactionIdentifier;
     }
 
-    public BigDecimal getAmountOfMoneyConfirmedInCents() {
+    public BigDecimal getAmountOfConfirmedMoney() {
         return amountOfMoneyConfirmedInCents;
     }
 }

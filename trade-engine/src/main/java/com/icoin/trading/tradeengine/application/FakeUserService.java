@@ -24,7 +24,7 @@ public class FakeUserService implements UserService {
         return new FakeUser();
     }
 
-    private static class FakeUser extends ValueObjectSupport<FakeUser> implements User<FakeUser>{
+    private static class FakeUser extends ValueObjectSupport<FakeUser> implements User<FakeUser> {
         @Override
         public String getId() {
             return "falcon";  //To change body of implemented methods use File | Settings | File Templates.

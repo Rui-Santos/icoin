@@ -29,19 +29,19 @@ public class ConfirmCashReservationCommand {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    private BigDecimal amountOfMoneyToConfirmInCents;
+    private BigDecimal amountOfMoneyToConfirm;
 
 
     public ConfirmCashReservationCommand(PortfolioId portfolioIdentifier,
                                          TransactionId transactionIdentifier,
-                                         BigDecimal amountOfMoneyToConfirmInCents) {
+                                         BigDecimal amountOfMoneyToConfirm) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfMoneyToConfirmInCents = amountOfMoneyToConfirmInCents;
+        this.amountOfMoneyToConfirm = amountOfMoneyToConfirm;
     }
 
-    public BigDecimal getAmountOfMoneyToConfirmInCents() {
-        return amountOfMoneyToConfirmInCents;
+    public BigDecimal getAmountOfMoneyToConfirm() {
+        return amountOfMoneyToConfirm;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -55,7 +55,7 @@ public class ConfirmCashReservationCommand {
     @Override
     public String toString() {
         return "ConfirmCashReservationCommand{" +
-                "amountOfMoneyToConfirmInCents=" + amountOfMoneyToConfirmInCents +
+                "amountOfMoneyToConfirm=" + amountOfMoneyToConfirm +
                 ", portfolioIdentifier=" + portfolioIdentifier +
                 ", transactionIdentifier=" + transactionIdentifier +
                 '}';

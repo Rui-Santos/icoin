@@ -83,7 +83,7 @@ public class Order extends AbstractAnnotatedEntity {
         return transactionId;
     }
 
-   public Date getPlaceDate() {
+    public Date getPlaceDate() {
         return placeDate;
     }
 

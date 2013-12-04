@@ -28,7 +28,7 @@ public abstract class AbstractTransactionConfirmedEvent {
     private TransactionId transactionIdentifier;
     private Date confirmedDate;
 
-    protected AbstractTransactionConfirmedEvent(TransactionId transactionIdentifier,Date confirmedDate) {
+    protected AbstractTransactionConfirmedEvent(TransactionId transactionIdentifier, Date confirmedDate) {
         this.transactionIdentifier = transactionIdentifier;
         this.confirmedDate = confirmedDate;
     }

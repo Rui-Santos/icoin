@@ -26,7 +26,7 @@ public class CoinExchangePair extends ValueObjectSupport<CoinExchangePair> {
         if (ccy1.compareTo(ccy2) > 0) {
             this.ccy2 = ccy1;
             this.ccy1 = ccy2;
-        }else{
+        } else {
             this.ccy1 = ccy1;
             this.ccy2 = ccy2;
         }
