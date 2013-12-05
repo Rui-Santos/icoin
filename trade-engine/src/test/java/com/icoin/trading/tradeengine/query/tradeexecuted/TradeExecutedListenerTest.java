@@ -1,10 +1,7 @@
 package com.icoin.trading.tradeengine.query.tradeexecuted;
 
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
-import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
@@ -12,11 +9,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.CoinListener;
-import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.order.OrderBookListener;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
-import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,9 +24,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import static org.hamcrest.Matchers.closeTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static com.homhon.mongo.TimeUtils.currentTime;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -81,46 +75,11 @@ public class TradeExecutedListenerTest {
 
     @Test
     public void testHandleTradeExecuted() throws Exception {
-        CoinEntry coin = createCoin();
-        OrderBookEntry orderBook = createOrderBook(coin);
-
-        final Date sellPlaceDate = new Date();
         OrderId sellOrderId = new OrderId();
-        TransactionId sellTransactionId = new TransactionId();
-        SellOrderPlacedEvent sellOrderPlacedEvent =
-                new SellOrderPlacedEvent(
-                        orderBookId,
-                        sellOrderId,
-                        sellTransactionId,
-                        BigDecimal.valueOf(400),
-                        BigDecimal.valueOf(100),
-                        portfolioId,
-                        CoinExchangePair.createCoinExchangePair("BTC", "USD"),
-                        sellPlaceDate);
-
-        tradeExecutedListener.handleSellOrderPlaced(sellOrderPlacedEvent);
-
-        final Date buyPlaceDate = new Date();
         OrderId buyOrderId = new OrderId();
+        TransactionId sellTransactionId = new TransactionId();
         TransactionId buyTransactionId = new TransactionId();
-        BuyOrderPlacedEvent buyOrderPlacedEvent = new BuyOrderPlacedEvent(orderBookId
-                , buyOrderId,
-                buyTransactionId,
-                BigDecimal.valueOf(300),
-                BigDecimal.valueOf(150),
-                portfolioId,
-                CoinExchangePair.createCoinExchangePair("BTC", "USD"),
-                buyPlaceDate);
-
-        tradeExecutedListener.handleBuyOrderPlaced(buyOrderPlacedEvent);
-
-        Iterable<OrderBookEntry> all = orderRepository.findAll();
-        OrderBookEntry orderBookEntry = all.iterator().next();
-        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
-        assertEquals("Test Coin", orderBookEntry.getCoinName());
-        assertEquals(1, orderBookEntry.sellOrders().size());
-        assertEquals(1, orderBookEntry.buyOrders().size());
-
+        final Date tradeTime = currentTime();
 
         TradeExecutedEvent event = new TradeExecutedEvent(orderBookId,
                 BigDecimal.valueOf(300),
@@ -128,21 +87,20 @@ public class TradeExecutedListenerTest {
                 buyOrderId.toString(),//todo change,
                 sellOrderId.toString(),//todo change,
                 buyTransactionId,
-                sellTransactionId);
+                sellTransactionId,
+                tradeTime);
         tradeExecutedListener.handleTradeExecuted(event);
 
         Iterable<TradeExecutedEntry> tradeExecutedEntries = tradeExecutedRepository.findAll();
         assertTrue(tradeExecutedEntries.iterator().hasNext());
-        TradeExecutedEntry tradeExecutedEntry = tradeExecutedEntries.iterator().next();
-        assertEquals("Test Coin", tradeExecutedEntry.getCoinName());
-        closeTo(300.00, tradeExecutedEntry.getTradeAmount().doubleValue());
-        closeTo(125, tradeExecutedEntry.getTradePrice().doubleValue());
 
-        all = orderRepository.findAll();
-        orderBookEntry = all.iterator().next();
-        assertNotNull("The first item of the iterator for orderbooks should not be null", orderBookEntry);
-        assertEquals("Test Coin", orderBookEntry.getCoinName());
-        assertEquals(1, orderBookEntry.sellOrders().size());
-        assertEquals(0, orderBookEntry.buyOrders().size());
+        TradeExecutedEntry tradeExecutedEntry = tradeExecutedEntries.iterator().next();
+
+        assertThat(tradeExecutedEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
+        assertThat(tradeExecutedEntry.getCoinName(), equalTo("Test Coin"));
+        assertThat(tradeExecutedEntry.getTradeAmount(), equalTo(BigDecimal.valueOf(300)));
+        assertThat(tradeExecutedEntry.getTradePrice(), equalTo(BigDecimal.valueOf(125)));
+        assertThat(tradeExecutedEntry.getTradeTime(), equalTo(tradeTime));
+        assertThat(tradeExecutedEntry.getTradePrice(), equalTo(BigDecimal.valueOf(125)));
     }
 }

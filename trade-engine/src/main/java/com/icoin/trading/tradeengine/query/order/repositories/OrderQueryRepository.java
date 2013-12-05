@@ -17,8 +17,10 @@
 package com.icoin.trading.tradeengine.query.order.repositories;
 
 import com.homhon.base.domain.repository.GenericCrudRepository;
+import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;
+import com.icoin.trading.tradeengine.query.order.OrderType;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
@@ -28,5 +30,7 @@ import java.util.List;
  */
 public interface OrderQueryRepository extends PagingAndSortingRepository<OrderEntry, String>, GenericCrudRepository<OrderEntry, String> {
 
-    List<OrderBookEntry> findByOrderBookIdentifier(String orderBookIdentifier);
+    List<OrderEntry> findByOrderBookIdentifier(String orderBookIdentifier);
+    List<OrderEntry> findByOrderBookIdentifierAndOrderStatus(String orderBookIdentifier, OrderStatus orderStatus);
+    List<OrderEntry> findByOrderBookIdentifierAndType(String orderBookIdentifier, OrderType type);
 }

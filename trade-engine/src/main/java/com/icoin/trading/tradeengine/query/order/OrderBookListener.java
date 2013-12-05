@@ -77,8 +77,6 @@ public class OrderBookListener {
 
     @EventHandler
     public void handleTradeExecuted(TradeExecutedEvent event) {
-
-
         OrderBookId orderBookIdentifier = event.getOrderBookIdentifier();
         OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.toString());
 

@@ -53,6 +53,8 @@ public class CoinOrderBookListener {
                         CoinExchangePair.createExchangeToDefault(coinId.toString()));
         commandBus.dispatch(new GenericCommandMessage<CreateOrderBookCommand>(createOrderBookCommand));
 
+
+        //todo list:
         //add coin to default Currency always for exchange
         //coin to coin change, will added later
         AddOrderBookToCoinCommand addOrderBookToCoinCommand =

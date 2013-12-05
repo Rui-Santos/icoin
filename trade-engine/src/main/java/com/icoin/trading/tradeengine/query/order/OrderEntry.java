@@ -34,7 +34,7 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
     private BigDecimal itemPrice;
     private String userId;
     private BigDecimal itemsRemaining;
-    private String type;
+    private OrderType type;
     private Date completeDate;
     private Date lastTradedTime;
     private CoinExchangePair coinExchangePair;
@@ -81,11 +81,11 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
         this.userId = userId;
     }
 
-    public String getType() {
+    public OrderType getType() {
         return type;
     }
 
-    void setType(String type) {
+    void setType(OrderType type) {
         this.type = type;
     }
 
@@ -100,6 +100,18 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
     @SuppressWarnings("UnusedDeclaration")
     private void setCompleteDate(Date completeDate) {
         this.completeDate = completeDate;
+    }
+
+    public Date getCompleteDate() {
+        return completeDate;
+    }
+
+    public Date getLastTradedTime() {
+        return lastTradedTime;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
     private void completeOrder(Date completeDate) {

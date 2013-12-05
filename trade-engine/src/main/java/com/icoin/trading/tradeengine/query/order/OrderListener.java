@@ -34,8 +34,6 @@ import java.math.BigDecimal;
  */
 @Component
 public class OrderListener {
-    private static final String BUY = "Buy";
-    private static final String SELL = "Sell";
     private BigDecimal lowestPrice = Constants.IGNORED_PRICE;
 
     private OrderQueryRepository orderRepository;
@@ -47,13 +45,13 @@ public class OrderListener {
 
     @EventHandler
     public void handleBuyOrderPlaced(BuyOrderPlacedEvent event) {
-        OrderEntry buyOrder = createPlacedOrder(event, BUY);
+        OrderEntry buyOrder = createPlacedOrder(event,OrderType.BUY);
         orderRepository.save(buyOrder);
     }
 
     @EventHandler
     public void handleSellOrderPlaced(SellOrderPlacedEvent event) {
-        OrderEntry sellOrder = createPlacedOrder(event, SELL);
+        OrderEntry sellOrder = createPlacedOrder(event, OrderType.SELL);
         orderRepository.save(sellOrder);
     }
 
@@ -71,7 +69,7 @@ public class OrderListener {
         orderRepository.save(sellOrder);
     }
 
-    private OrderEntry createPlacedOrder(AbstractOrderPlacedEvent event, String type) {
+    private OrderEntry createPlacedOrder(AbstractOrderPlacedEvent event, OrderType type) {
         OrderEntry entry = new OrderEntry();
         entry.setPrimaryKey(event.getOrderId().toString());
         entry.setOrderBookIdentifier(event.orderBookIdentifier().toString());
