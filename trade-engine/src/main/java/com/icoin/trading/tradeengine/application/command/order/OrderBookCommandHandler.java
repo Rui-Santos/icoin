@@ -17,6 +17,8 @@
 package com.icoin.trading.tradeengine.application.command.order;
 
 import com.icoin.trading.tradeengine.application.executor.TradeExecutor;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
@@ -41,11 +43,9 @@ public class OrderBookCommandHandler {
 
     @CommandHandler
     public void handleBuyOrder(CreateBuyOrderCommand command) {
-        final BuyOrder buyOrder = createBuyOrder(command);
-        buyOrderRepository.save(buyOrder);
-
-
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
+        final BuyOrder buyOrder = createBuyOrder(command, orderBook.getCoinExchangePair());
+        buyOrderRepository.save(buyOrder);
 
         orderBook.addBuyOrder(command.getOrderId(),
                 command.getTransactionId(),
@@ -56,16 +56,17 @@ public class OrderBookCommandHandler {
         tradeExecutor.execute(buyOrder);
     }
 
-    private BuyOrder createBuyOrder(CreateBuyOrderCommand command) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+    private BuyOrder createBuyOrder(CreateBuyOrderCommand command, CoinExchangePair coinExchangePair) {
+        final BuyOrder buyOrder = new BuyOrder();
+        return fillOrder(buyOrder, command, coinExchangePair);
     }
 
     @CommandHandler
     public void handleSellOrder(CreateSellOrderCommand command) {
-        final SellOrder sellOrder = createSellOrder(command);
+        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
+        final SellOrder sellOrder = createSellOrder(command, orderBook.getCoinExchangePair());
 
         sellOrderRepository.save(sellOrder);
-        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
         orderBook.addSellOrder(command.getOrderId(),
                 command.getTransactionId(),
                 command.getTradeAmount(),
@@ -76,21 +77,37 @@ public class OrderBookCommandHandler {
         tradeExecutor.execute(sellOrder);
     }
 
-    private SellOrder createSellOrder(CreateSellOrderCommand command) {
-        return null;
+    private SellOrder createSellOrder(CreateSellOrderCommand command, CoinExchangePair coinExchangePair) {
+        SellOrder sellOrder = new SellOrder();
+        return fillOrder(sellOrder, command, coinExchangePair);
+    }
+
+    private <T extends AbstractOrder> T fillOrder(T order,
+                                                AbstractOrderCommand command,
+                                                CoinExchangePair coinExchangePair){
+        order.setPrimaryKey(command.getOrderId().toString());
+        order.setTransactionId(command.getTransactionId());
+        order.setCoinExchangePair(coinExchangePair);
+        order.setPlaceDate(command.getPlaceDate());
+        order.setItemPrice(command.getItemPrice());
+        order.setTradeAmount(command.getTradeAmount());
+        order.setItemsRemaining(command.getTradeAmount());
+        order.setPortfolioId(command.getPortfolioId());
+
+        return order;
     }
 
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) {
         OrderBook orderBook =
-                new OrderBook(command.getOrderBookIdentifier(), command.getCoinId(), command.getCoinExchangePair());
+                new OrderBook(command.getOrderBookIdentifier(), command.getCoinExchangePair());
         repository.add(orderBook);
     }
 
     @CommandHandler
     public void handleRefreshOrderBook(CreateOrderBookCommand command) {
         OrderBook orderBook =
-                new OrderBook(command.getOrderBookIdentifier(), command.getCoinId(), command.getCoinExchangePair());
+                new OrderBook(command.getOrderBookIdentifier(), command.getCoinExchangePair());
         repository.add(orderBook);
     }
 

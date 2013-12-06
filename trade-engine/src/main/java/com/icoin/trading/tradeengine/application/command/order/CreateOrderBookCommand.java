@@ -27,22 +27,16 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
  * @author Jettro Coenradie
  */
 public class CreateOrderBookCommand {
-    private CoinId coinId;
     private OrderBookId orderBookId;
     private CoinExchangePair coinExchangePair;
 
-    public CreateOrderBookCommand(OrderBookId orderBookId, CoinId coinId, CoinExchangePair coinExchangePair) {
+    public CreateOrderBookCommand(OrderBookId orderBookId, CoinExchangePair coinExchangePair) {
         this.orderBookId = orderBookId;
-        this.coinId = coinId;
         this.coinExchangePair = coinExchangePair;
     }
 
     public OrderBookId getOrderBookIdentifier() {
         return this.orderBookId;
-    }
-
-    public CoinId getCoinId() {
-        return coinId;
     }
 
     public CoinExchangePair getCoinExchangePair() {

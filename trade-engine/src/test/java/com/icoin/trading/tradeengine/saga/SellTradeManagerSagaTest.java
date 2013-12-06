@@ -42,6 +42,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import static com.homhon.mongo.TimeUtils.currentTime;
 import static org.axonframework.test.matchers.Matchers.andNoMore;
 import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
 
@@ -146,6 +147,8 @@ public class SellTradeManagerSagaTest {
         OrderId buyOrderIdentifier = new OrderId();
         OrderId sellOrderIdentifier = new OrderId();
         TransactionId buyTransactionIdentifier = new TransactionId();
+        final Date tradeTime = currentTime();
+
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
@@ -161,7 +164,8 @@ public class SellTradeManagerSagaTest {
                 buyOrderIdentifier.toString(),//todo change
                 sellOrderIdentifier.toString(),//todo change
                 buyTransactionIdentifier,
-                transactionIdentifier))
+                transactionIdentifier,
+                tradeTime))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new ExecutedTransactionCommandMatcher(BigDecimal.valueOf(100),
                         BigDecimal.valueOf(102),
@@ -174,6 +178,8 @@ public class SellTradeManagerSagaTest {
         OrderId buyOrderIdentifier = new OrderId();
         OrderId sellOrderIdentifier = new OrderId();
         TransactionId buyTransactionIdentifier = new TransactionId();
+        final Date tradeTime = currentTime();
+
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
                 portfolioIdentifier,
@@ -189,7 +195,8 @@ public class SellTradeManagerSagaTest {
                 buyOrderIdentifier.toString(),//todo change
                 sellOrderIdentifier.toString(),//todo change
                 buyTransactionIdentifier,
-                transactionIdentifier))
+                transactionIdentifier,
+                tradeTime))
                 .whenAggregate(transactionIdentifier)
                 .publishes(
                         new SellTransactionExecutedEvent(
@@ -210,6 +217,7 @@ public class SellTradeManagerSagaTest {
         OrderId buyOrderIdentifier = new OrderId();
         OrderId sellOrderIdentifier = new OrderId();
         TransactionId buyTransactionIdentifier = new TransactionId();
+        final Date tradeTime = currentTime();
 
         fixture.givenAggregate(transactionIdentifier).published(new SellTransactionStartedEvent(transactionIdentifier,
                 orderbookIdentifier,
@@ -226,7 +234,8 @@ public class SellTradeManagerSagaTest {
                 buyOrderIdentifier.toString(),//todo change
                 sellOrderIdentifier.toString(),//todo change
                 buyTransactionIdentifier,
-                transactionIdentifier))
+                transactionIdentifier,
+                tradeTime))
                 .whenAggregate(transactionIdentifier).publishes(
                 new SellTransactionPartiallyExecutedEvent(transactionIdentifier, BigDecimal.valueOf(50), BigDecimal.valueOf(75), BigDecimal.valueOf(102)))
                 .expectActiveSagas(1)

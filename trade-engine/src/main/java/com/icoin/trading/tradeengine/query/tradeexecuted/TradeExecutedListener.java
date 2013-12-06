@@ -28,7 +28,7 @@ public class TradeExecutedListener {
         tradeExecutedEntry.setCoinName(orderBookEntry.getCoinName());
         tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getPrimaryKey());
         tradeExecutedEntry.setTradeAmount(event.getTradeAmount());
-        tradeExecutedEntry.setTradePrice(event.getTradedPrice());
+        tradeExecutedEntry.setTradedPrice(event.getTradedPrice());
         tradeExecutedEntry.setTradeTime(event.getTradeTime());
 
         tradeExecutedRepository.save(tradeExecutedEntry);

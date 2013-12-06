@@ -104,7 +104,7 @@
             <c:forEach items="${executedTrades}" var="trade">
                 <tr>
                     <td><c:out value='${trade.tradeAmount}'/></td>
-                    <td><c:out value='${trade.tradePrice}'/></td>
+                    <td><c:out value='${trade.tradedPrice}'/></td>
                 </tr>
             </c:forEach>
             </tbody>

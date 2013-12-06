@@ -28,12 +28,10 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 public class OrderBookCreatedEvent {
 
     private OrderBookId orderBookId;
-    private CoinId coinId;
     private CoinExchangePair coinExchangePair;
 
-    public OrderBookCreatedEvent(OrderBookId orderBookId, CoinId coinId, CoinExchangePair coinExchangePair) {
+    public OrderBookCreatedEvent(OrderBookId orderBookId, CoinExchangePair coinExchangePair) {
         this.orderBookId = orderBookId;
-        this.coinId = coinId;
         this.coinExchangePair = coinExchangePair;
     }
 
@@ -43,9 +41,5 @@ public class OrderBookCreatedEvent {
 
     public CoinExchangePair getCoinExchangePair() {
         return coinExchangePair;
-    }
-
-    public CoinId getCoinId() {
-        return coinId;
     }
 }

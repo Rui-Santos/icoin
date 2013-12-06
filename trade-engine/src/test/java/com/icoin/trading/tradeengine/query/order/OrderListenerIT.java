@@ -15,25 +15,17 @@
  */
 
 package com.icoin.trading.tradeengine.query.order;
-
 import com.google.common.collect.Lists;
-import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import com.icoin.trading.tradeengine.query.coin.CoinEntry;
-import com.icoin.trading.tradeengine.query.coin.CoinListener;
-import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
-import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
-import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,12 +42,10 @@ import java.util.List;
 
 import static com.homhon.mongo.TimeUtils.currentTime;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Jettro Coenradie
@@ -72,30 +62,16 @@ public class OrderListenerIT {
     private OrderQueryRepository orderRepository;
 
     @Autowired
-    private TradeExecutedQueryRepository tradeExecutedRepository;
-
-    @Autowired
-    private CoinQueryRepository coinRepository;
-
-    @Autowired
     private MongoTemplate mongoTemplate;
 
     OrderId orderId = new OrderId();
     PortfolioId portfolioId = new PortfolioId();
     TransactionId transactionId = new TransactionId();
     OrderBookId orderBookId = new OrderBookId();
-    CoinId coinId = new CoinId();
 
     @Before
     public void setUp() throws Exception {
-        mongoTemplate.dropCollection(OrderBookEntry.class);
-        mongoTemplate.dropCollection(CoinEntry.class);
-        mongoTemplate.dropCollection(TradeExecutedEntry.class);
-
-        CoinListener coinListener = new CoinListener();
-        coinListener.setCoinRepository(coinRepository);
-        coinListener.handleCoinCreatedEvent(
-                new CoinCreatedEvent(coinId, "Test Coin", BigDecimal.valueOf(100), BigDecimal.valueOf(100)));
+        mongoTemplate.dropCollection(OrderEntry.class);
 
         orderListener = new OrderListener();
         orderListener.setOrderRepository(orderRepository);
@@ -193,6 +169,7 @@ public class OrderListenerIT {
         final Date sellPlaceDate = new Date();
         OrderId sellOrderId = new OrderId();
         TransactionId sellTransactionId = new TransactionId();
+        CoinExchangePair coinExchangePair = CoinExchangePair.createCoinExchangePair("BTC", "USD");
         SellOrderPlacedEvent sellOrderPlacedEvent =
                 new SellOrderPlacedEvent(
                         orderBookId,
@@ -201,7 +178,7 @@ public class OrderListenerIT {
                         BigDecimal.valueOf(400),
                         BigDecimal.valueOf(100),
                         portfolioId,
-                        CoinExchangePair.createCoinExchangePair("BTC", "USD"),
+                        coinExchangePair,
                         sellPlaceDate);
 
         orderListener.handleSellOrderPlaced(sellOrderPlacedEvent);
@@ -215,7 +192,7 @@ public class OrderListenerIT {
                 BigDecimal.valueOf(300),
                 BigDecimal.valueOf(150),
                 portfolioId,
-                CoinExchangePair.createCoinExchangePair("BTC", "USD"),
+                coinExchangePair,
                 buyPlaceDate);
 
         orderListener.handleBuyOrderPlaced(buyOrderPlacedEvent);
@@ -241,13 +218,7 @@ public class OrderListenerIT {
                 tradeTime);
         orderListener.handleTradeExecuted(event);
 
-        pendingAll =
-                orderRepository.findByOrderBookIdentifierAndOrderStatus(
-                        orderBookId.toString(),
-                        OrderStatus.PENDING
-                );
-
-        List<OrderEntry> sellOrders=
+        List<OrderEntry> sellOrders =
                 orderRepository.findByOrderBookIdentifierAndType(
                         orderBookId.toString(),
                         OrderType.SELL
@@ -256,19 +227,19 @@ public class OrderListenerIT {
         assertThat(sellOrders, hasSize(1));
         final OrderEntry sellOrderEntry = sellOrders.get(0);
 
-        assertThat(sellOrderEntry.getOrderBookIdentifier(), equalTo());
-        assertThat(sellOrderEntry.getPrimaryKey(), equalTo());
-        assertThat(sellOrderEntry.getOrderStatus(), equalTo(OrderStatus.DONE));
-        assertThat(sellOrderEntry.getItemPrice(), equalTo());
-        assertThat(sellOrderEntry.getTradeAmount(), equalTo());
-        assertThat(sellOrderEntry.getItemsRemaining(), equalTo());
+        assertThat(sellOrderEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
+        assertThat(sellOrderEntry.getPrimaryKey(), equalTo(sellOrderId.toString()));
+        assertThat(sellOrderEntry.getOrderStatus(), equalTo(OrderStatus.PENDING));
+        assertThat(sellOrderEntry.getTradeAmount(), equalTo(BigDecimal.valueOf(400)));
+        assertThat(sellOrderEntry.getItemPrice(), equalTo(BigDecimal.valueOf(100)));
+        assertThat(sellOrderEntry.getItemsRemaining(), equalTo(BigDecimal.valueOf(100)));
         assertThat(sellOrderEntry.getType(), equalTo(OrderType.SELL));
-        assertThat(sellOrderEntry.getUserId(), equalTo());
-        assertThat(sellOrderEntry.getCoinExchangePair(), equalTo());
+        assertThat(sellOrderEntry.getUserId(), equalTo(portfolioId.toString()));
+        assertThat(sellOrderEntry.getCoinExchangePair(), equalTo(coinExchangePair));
         assertThat(sellOrderEntry.getCompleteDate(), equalTo(tradeTime));
         assertThat(sellOrderEntry.getLastTradedTime(), equalTo(tradeTime));
 
-        List<OrderEntry> buyOrders=
+        List<OrderEntry> buyOrders =
                 orderRepository.findByOrderBookIdentifierAndType(
                         orderBookId.toString(),
                         OrderType.BUY
@@ -276,16 +247,24 @@ public class OrderListenerIT {
 
         final OrderEntry buyOrderEntry = buyOrders.get(0);
 
-        assertThat(buyOrderEntry.getOrderBookIdentifier(), equalTo());
-        assertThat(buyOrderEntry.getPrimaryKey(), equalTo());
+        assertThat(buyOrderEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
+        assertThat(buyOrderEntry.getPrimaryKey(), equalTo(buyOrderId.toString()));
         assertThat(buyOrderEntry.getOrderStatus(), equalTo(OrderStatus.DONE));
-        assertThat(buyOrderEntry.getItemPrice(), equalTo());
-        assertThat(buyOrderEntry.getTradeAmount(), equalTo());
-        assertThat(buyOrderEntry.getItemsRemaining(), equalTo());
-        assertThat(buyOrderEntry.getType(), equalTo(OrderType.SELL));
-        assertThat(buyOrderEntry.getUserId(), equalTo());
-        assertThat(buyOrderEntry.getCoinExchangePair(), equalTo());
+        assertThat(buyOrderEntry.getTradeAmount(), equalTo(BigDecimal.valueOf(300)));
+        assertThat(buyOrderEntry.getItemPrice(), equalTo(BigDecimal.valueOf(100)));
+        assertThat(buyOrderEntry.getItemsRemaining(), equalTo(BigDecimal.ZERO));
+        assertThat(buyOrderEntry.getType(), equalTo(OrderType.BUY));
+        assertThat(buyOrderEntry.getUserId(), equalTo(portfolioId.toString()));
+        assertThat(buyOrderEntry.getCoinExchangePair(), equalTo(coinExchangePair));
         assertThat(buyOrderEntry.getCompleteDate(), equalTo(tradeTime));
         assertThat(buyOrderEntry.getLastTradedTime(), equalTo(tradeTime));
+
+        pendingAll =
+                orderRepository.findByOrderBookIdentifierAndOrderStatus(
+                        orderBookId.toString(),
+                        OrderStatus.PENDING
+                );
+
+        assertThat(pendingAll, contains(sellOrderEntry));
     }
 }

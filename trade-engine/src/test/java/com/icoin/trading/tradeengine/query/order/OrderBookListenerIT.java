@@ -68,9 +68,6 @@ public class OrderBookListenerIT {
     private OrderBookQueryRepository orderBookRepository;
 
     @Autowired
-    private TradeExecutedQueryRepository tradeExecutedRepository;
-
-    @Autowired
     private CoinQueryRepository coinRepository;
 
     @Autowired

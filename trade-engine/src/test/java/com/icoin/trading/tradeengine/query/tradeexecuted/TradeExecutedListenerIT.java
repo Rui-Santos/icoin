@@ -1,6 +1,7 @@
 package com.icoin.trading.tradeengine.query.tradeexecuted;
 
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
+import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
@@ -9,7 +10,9 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.CoinListener;
+import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.order.OrderBookListener;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.junit.Before;
@@ -26,6 +29,7 @@ import java.util.Date;
 
 import static com.homhon.mongo.TimeUtils.currentTime;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertTrue;
 
@@ -40,7 +44,7 @@ import static org.junit.Assert.assertTrue;
 @ActiveProfiles("dev")
 @ContextConfiguration({"classpath:com/icoin/trading/tradeengine/infrastructure/persistence/mongo/tradeengine-persistence-mongo.xml"})
 @SuppressWarnings("SpringJavaAutowiringInspection")
-public class TradeExecutedListenerTest {
+public class TradeExecutedListenerIT {
 
     private TradeExecutedListener tradeExecutedListener;
 
@@ -53,11 +57,14 @@ public class TradeExecutedListenerTest {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Autowired
+    private CoinQueryRepository coinRepository;
+
+    CoinId coinId = new CoinId();
     OrderId orderId = new OrderId();
     PortfolioId portfolioId = new PortfolioId();
     TransactionId transactionId = new TransactionId();
     OrderBookId orderBookId = new OrderBookId();
-    CoinId coinId = new CoinId();
 
     @Before
     public void setUp() throws Exception {
@@ -65,12 +72,21 @@ public class TradeExecutedListenerTest {
         mongoTemplate.dropCollection(CoinEntry.class);
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
 
+
         CoinListener coinListener = new CoinListener();
+        coinListener.setCoinRepository(coinRepository);
         coinListener.handleCoinCreatedEvent(
                 new CoinCreatedEvent(coinId, "Test Coin", BigDecimal.valueOf(100), BigDecimal.valueOf(100)));
 
         tradeExecutedListener = new TradeExecutedListener();
         tradeExecutedListener.setOrderBookRepository(orderBookRepository);
+        tradeExecutedListener.setTradeExecutedRepository(tradeExecutedRepository);
+
+        OrderBookListener orderBookListener = new OrderBookListener();
+        orderBookListener.setCoinRepository(coinRepository);
+        orderBookListener.setOrderBookRepository(orderBookRepository);
+
+        orderBookListener.handleOrderBookAddedToCoinEvent(new OrderBookAddedToCoinEvent(coinId, orderBookId));
     }
 
     @Test
@@ -98,9 +114,9 @@ public class TradeExecutedListenerTest {
 
         assertThat(tradeExecutedEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
         assertThat(tradeExecutedEntry.getCoinName(), equalTo("Test Coin"));
-        assertThat(tradeExecutedEntry.getTradeAmount(), equalTo(BigDecimal.valueOf(300)));
-        assertThat(tradeExecutedEntry.getTradePrice(), equalTo(BigDecimal.valueOf(125)));
         assertThat(tradeExecutedEntry.getTradeTime(), equalTo(tradeTime));
-        assertThat(tradeExecutedEntry.getTradePrice(), equalTo(BigDecimal.valueOf(125)));
+        closeTo(tradeExecutedEntry.getTradeAmount(), BigDecimal.valueOf(300));
+        closeTo(tradeExecutedEntry.getTradedPrice(), BigDecimal.valueOf(125));
+        closeTo(tradeExecutedEntry.getTradedPrice(), BigDecimal.valueOf(125));
     }
 }

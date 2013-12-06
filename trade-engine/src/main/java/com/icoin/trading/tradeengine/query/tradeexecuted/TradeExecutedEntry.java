@@ -27,7 +27,7 @@ import java.util.Date;
 public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEntry, String, Long> {
 
     private BigDecimal tradeAmount;
-    private BigDecimal tradePrice;
+    private BigDecimal tradedPrice;
     private String coinName;
     private String orderBookIdentifier;
     private Date tradeTime;
@@ -48,12 +48,12 @@ public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEnt
         this.coinName = coinName;
     }
 
-    public BigDecimal getTradePrice() {
-        return tradePrice;
+    public BigDecimal getTradedPrice() {
+        return tradedPrice;
     }
 
-    public void setTradePrice(BigDecimal tradePrice) {
-        this.tradePrice = tradePrice;
+    public void setTradedPrice(BigDecimal tradedPrice) {
+        this.tradedPrice = tradedPrice;
     }
 
     public String getOrderBookIdentifier() {
