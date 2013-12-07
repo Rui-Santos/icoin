@@ -16,8 +16,8 @@
 
 package com.icoin.trading.webui.rest;
 
-import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.thoughtworks.xstream.XStream;

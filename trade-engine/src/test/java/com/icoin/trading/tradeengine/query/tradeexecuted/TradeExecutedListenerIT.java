@@ -115,7 +115,7 @@ public class TradeExecutedListenerIT {
         assertThat(tradeExecutedEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
         assertThat(tradeExecutedEntry.getCoinName(), equalTo("Test Coin"));
         assertThat(tradeExecutedEntry.getTradeTime(), equalTo(tradeTime));
-        closeTo(tradeExecutedEntry.getTradeAmount(), BigDecimal.valueOf(300));
+        closeTo(tradeExecutedEntry.getTradedAmount(), BigDecimal.valueOf(300));
         closeTo(tradeExecutedEntry.getTradedPrice(), BigDecimal.valueOf(125));
         closeTo(tradeExecutedEntry.getTradedPrice(), BigDecimal.valueOf(125));
     }

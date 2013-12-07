@@ -40,6 +40,12 @@
                         mongo-template-ref="trade.mongoTemplate"
                         factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean"/>
 
+    <!--domain query here-->
+    <mongo:repositories base-package="com.icoin.trading.tradeengine.infrastructure.persistence.mongo"
+                        mongo-template-ref="trade.mongoTemplate"
+                        factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean"/>
+
+    <!--Read query here-->
     <mongo:repositories base-package="com.icoin.trading.**.query.*.repositories"
                         mongo-template-ref="trade.mongoTemplate"
                         factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean">
@@ -58,7 +64,6 @@
     </bean>
 
     <!--homhon mongo repo config-->
-
     <bean id="trade.customConversions"
           class="org.springframework.data.mongodb.core.convert.CustomConversions">
         <constructor-arg name="converters">
@@ -68,7 +73,9 @@
                 <bean class="com.homhon.mongo.converter.ProbabilityReadConverter"/>
                 <bean class="com.homhon.mongo.converter.ProbabilityWriteConverter"/>
                 <bean class="com.homhon.mongo.converter.BigDecimalToDoubleConverter"/>
-                <bean class="com.homhon.mongo.converter.BigDecimalToDoubleConverter"/>
+                <bean class="com.homhon.mongo.converter.DoubleToBigDecimalConverter"/>
+                <!--<bean class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters.SellOrderReadConverter"/>-->
+                <!--<bean class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters.SellOrderWriteConverter"/>-->
             </util:list>
         </constructor-arg>
     </bean>

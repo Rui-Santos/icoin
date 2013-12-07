@@ -36,7 +36,7 @@ public class Order extends AbstractAnnotatedEntity {
     private final BigDecimal itemPrice;
     private final BigDecimal tradeAmount;
     private final PortfolioId portfolioId;
-    private BigDecimal itemsRemaining;
+    private BigDecimal itemRemaining;
     private Date placeDate;
     private CoinExchangePair coinExchangePair;
     private OrderType orderType;
@@ -49,7 +49,7 @@ public class Order extends AbstractAnnotatedEntity {
         this.transactionId = transactionId;
         this.itemPrice = itemPrice;
         this.tradeAmount = tradeAmount;
-        this.itemsRemaining = tradeAmount;
+        this.itemRemaining = tradeAmount;
         this.portfolioId = portfolioId;
         this.coinExchangePair = coinExchangePair;
         this.placeDate = placeDate;
@@ -67,8 +67,8 @@ public class Order extends AbstractAnnotatedEntity {
         return portfolioId;
     }
 
-    public BigDecimal getItemsRemaining() {
-        return itemsRemaining;
+    public BigDecimal getItemRemaining() {
+        return itemRemaining;
     }
 
     public OrderId getOrderId() {
@@ -76,7 +76,7 @@ public class Order extends AbstractAnnotatedEntity {
     }
 
     private void recordTraded(BigDecimal tradeAmount) {
-        itemsRemaining = itemsRemaining.subtract(tradeAmount);
+        itemRemaining = itemRemaining.subtract(tradeAmount);
     }
 
     public TransactionId getTransactionId() {
@@ -99,7 +99,7 @@ public class Order extends AbstractAnnotatedEntity {
                 ", itemPrice=" + itemPrice +
                 ", tradeAmount=" + tradeAmount +
                 ", portfolioId=" + portfolioId +
-                ", itemsRemaining=" + itemsRemaining +
+                ", itemRemaining=" + itemRemaining +
                 ", placeDate=" + placeDate.getTime() +
                 ", coinExchangePair=" + coinExchangePair +
                 '}';

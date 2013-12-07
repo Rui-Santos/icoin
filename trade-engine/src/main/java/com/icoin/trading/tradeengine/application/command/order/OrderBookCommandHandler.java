@@ -27,12 +27,14 @@ import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 /**
  * @author Allard Buijze
  */
+@Component
 public class OrderBookCommandHandler {
 
     private Repository<OrderBook> repository;
@@ -86,12 +88,13 @@ public class OrderBookCommandHandler {
                                                 AbstractOrderCommand command,
                                                 CoinExchangePair coinExchangePair){
         order.setPrimaryKey(command.getOrderId().toString());
+        order.setOrderBookId(command.getOrderBookId());
         order.setTransactionId(command.getTransactionId());
         order.setCoinExchangePair(coinExchangePair);
         order.setPlaceDate(command.getPlaceDate());
         order.setItemPrice(command.getItemPrice());
         order.setTradeAmount(command.getTradeAmount());
-        order.setItemsRemaining(command.getTradeAmount());
+        order.setItemRemaining(command.getTradeAmount());
         order.setPortfolioId(command.getPortfolioId());
 
         return order;
@@ -104,12 +107,12 @@ public class OrderBookCommandHandler {
         repository.add(orderBook);
     }
 
-    @CommandHandler
-    public void handleRefreshOrderBook(CreateOrderBookCommand command) {
-        OrderBook orderBook =
-                new OrderBook(command.getOrderBookIdentifier(), command.getCoinExchangePair());
-        repository.add(orderBook);
-    }
+//    @CommandHandler
+//    public void handleRefreshOrderBook(CreateOrderBookCommand command) {
+//        OrderBook orderBook =
+//                new OrderBook(command.getOrderBookIdentifier(), command.getCoinExchangePair());
+//        repository.add(orderBook);
+//    }
 
     @Resource(name = "orderBookRepository")
     public void setRepository(Repository<OrderBook> orderBookRepository) {

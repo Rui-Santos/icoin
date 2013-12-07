@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.query.test
+package com.icoin.trading.test
 
-import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry
+import com.icoin.trading.tradeengine.query.order.OrderBookEntry
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry
 import com.thoughtworks.xstream.XStream
 import groovyx.net.http.ContentType

@@ -34,7 +34,7 @@
             <td><c:out value='${order.type}'/></td>
             <td><c:out value='${order.tradeAmount}'/></td>
             <td><c:out value='${order.itemPrice}'/></td>
-            <td><c:out value='${order.itemsRemaining}'/></td>
+            <td><c:out value='${order.itemRemaining}'/></td>
             <td><c:out value='${order.userId}'/></td>
         </tr>
     </c:forEach>

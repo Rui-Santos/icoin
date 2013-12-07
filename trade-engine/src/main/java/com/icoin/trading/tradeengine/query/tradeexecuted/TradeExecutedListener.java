@@ -7,6 +7,7 @@ import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepo
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Time: AM12:31
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class TradeExecutedListener {
     private OrderBookQueryRepository orderBookRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
@@ -27,7 +29,7 @@ public class TradeExecutedListener {
         TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();
         tradeExecutedEntry.setCoinName(orderBookEntry.getCoinName());
         tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getPrimaryKey());
-        tradeExecutedEntry.setTradeAmount(event.getTradeAmount());
+        tradeExecutedEntry.setTradedAmount(event.getTradeAmount());
         tradeExecutedEntry.setTradedPrice(event.getTradedPrice());
         tradeExecutedEntry.setTradeTime(event.getTradeTime());
 

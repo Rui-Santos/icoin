@@ -1,11 +1,13 @@
 package com.icoin.trading.tradeengine.application.executor;
 
 import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.application.command.order.ExecuteBuyOrderCommand;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
+import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,48 +29,49 @@ import static com.homhon.util.Collections.isEmpty;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class BuyOrderExecutor implements OrderExecutor<BuyOrder> {
+public class BuyOrderExecutor {
     private static Logger logger = LoggerFactory.getLogger(BuyOrderExecutor.class);
     private SellOrderRepository sellOrderRepository;
     private BuyOrderRepository buyOrderRepository;
 
     private Repository<OrderBook> orderBookRepository;
 
-    @Override
-    public void execute(BuyOrder element) {
-        if (element == null) {
+    @SuppressWarnings("unused")
+    @CommandHandler
+    public void executeBuyOrder(ExecuteBuyOrderCommand command) {
+        if (command == null) {
             return;
         }
 
-        executeBuying(element);
+        executeBuying(command);
     }
 
-    private void executeBuying(BuyOrder order) {
-        OrderBook orderBook = orderBookRepository.load(order.getOrderBookId());
+    private void executeBuying(ExecuteBuyOrderCommand buyCommand) {
+        OrderBook orderBook = orderBookRepository.load(buyCommand.getOrderBookId());
 
         //buying price >= current buying price
-        if (orderBook.getHighestBuyPrice().compareTo(order.getItemPrice()) >= 0) {
+        if (orderBook.getHighestBuyPrice().compareTo(buyCommand.getItemPrice()) >= 0) {
             return;
         }
 
         //refresh current buy price
-        orderBook.resetHighestBuyPrice(order);
+        orderBook.resetHighestBuyPrice(buyCommand.getOrderId().toString(),buyCommand.getItemPrice());
 
         //lowest sell > the current buying price
-        if (orderBook.getLowestSellPrice().compareTo(order.getItemPrice()) > 0) {
-            return;
-        }
+//        if (orderBook.getLowestSellPrice().compareTo(buyCommand.getItemPrice()) > 0) {
+//            return;
+//        }
 
         //buying price >= than the current highest selling  price
-        logger.info("Executing Buying order {}", order);
+        logger.info("Executing Buying order {}", buyCommand);
 
         boolean done = true;
         do {
             final List<SellOrder> sellOrders =
                     sellOrderRepository.findAscPendingOrdersByPriceTime(
-                            order.getPlaceDate(),
-                            order.getItemPrice(),
-                            order.getOrderBookId(),
+                            buyCommand.getPlaceDate(),
+                            buyCommand.getItemPrice(),
+                            buyCommand.getOrderBookId(),
                             100);
 
             //no selling order matched
@@ -78,33 +81,35 @@ public class BuyOrderExecutor implements OrderExecutor<BuyOrder> {
 
             for (SellOrder sellOrder : sellOrders) {
                 //should not happen here, coz the repo does not return the right result
-                if (sellOrder.getItemPrice().compareTo(order.getItemPrice()) > 0) {
+                if (sellOrder.getItemPrice().compareTo(buyCommand.getItemPrice()) > 0) {
                     logger.warn("Strange here, why sell orders from repo have price greater than current buy price!");
                     break;
                 }
 
+                final BuyOrder buyOrder = buyOrderRepository.findOne(buyCommand.getOrderId().toString());
+
                 BigDecimal matchedTradePrice = sellOrder.getItemPrice();
-                BigDecimal matchedTradeAmount = sellOrder.getItemsRemaining().min(order.getItemsRemaining());
+                BigDecimal matchedTradeAmount = sellOrder.getItemRemaining().min(buyOrder.getItemRemaining());
 
                 if (logger.isDebugEnabled()) {
                     logger.debug("Executing orders with amount {}, price {}: highest buying order {}, lowest selling order {}",
-                            matchedTradeAmount, matchedTradePrice, sellOrder, order);
+                            matchedTradeAmount, matchedTradePrice, sellOrder, buyCommand);
                     orderBook.executeBuying(matchedTradeAmount,
                             matchedTradePrice,
                             sellOrder.getPrimaryKey(),
-                            order.getPrimaryKey(),
+                            buyOrder.getPrimaryKey(),
                             sellOrder.getTransactionId(),
-                            order.getTransactionId(),
+                            buyCommand.getTransactionId(),
                             currentTime());
                 }
 
                 sellOrder.recordTraded(matchedTradeAmount, currentTime());
-                order.recordTraded(matchedTradeAmount, currentTime());
+                buyOrder.recordTraded(matchedTradeAmount, currentTime());
 
                 sellOrderRepository.save(sellOrder);
-                buyOrderRepository.save(order);
+                buyOrderRepository.save(buyOrder);
 
-                if (Constants.IGNORED_PRICE.compareTo(order.getItemsRemaining()) >= 0) {
+                if (Constants.IGNORED_PRICE.compareTo(buyOrder.getItemRemaining()) >= 0) {
                     done = true;
                     break;
                 }

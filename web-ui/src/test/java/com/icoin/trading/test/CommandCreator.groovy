@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.query.test
+package com.icoin.trading.test
 
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand

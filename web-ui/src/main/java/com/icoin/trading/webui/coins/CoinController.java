@@ -19,12 +19,16 @@ package com.icoin.trading.webui.coins;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
-import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.order.OrderEntry;
+import com.icoin.trading.tradeengine.query.order.OrderType;
+import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
@@ -64,6 +68,7 @@ public class CoinController {
     private TradeExecutedQueryRepository tradeExecutedRepository;
     private PortfolioQueryRepository portfolioQueryRepository;
     private CommandBus commandBus;
+    private OrderQueryRepository orderQueryRepository;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
@@ -71,6 +76,7 @@ public class CoinController {
                           CommandBus commandBus,
                           UserQueryRepository userRepository,
                           OrderBookQueryRepository orderBookRepository,
+                          OrderQueryRepository orderQueryRepository,
                           TradeExecutedQueryRepository tradeExecutedRepository,
                           PortfolioQueryRepository portfolioQueryRepository) {
         this.coinRepository = coinRepository;
@@ -79,6 +85,7 @@ public class CoinController {
         this.orderBookRepository = orderBookRepository;
         this.tradeExecutedRepository = tradeExecutedRepository;
         this.portfolioQueryRepository = portfolioQueryRepository;
+        this.orderQueryRepository = orderQueryRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -92,11 +99,24 @@ public class CoinController {
         CoinEntry coin = coinRepository.findOne(coinId);
         final List<OrderBookEntry> bookEntryList = orderBookRepository.findByCoinIdentifier(coin.getPrimaryKey());
         OrderBookEntry bookEntry = bookEntryList.get(0);
+
+        final List<OrderEntry> buyOrders =
+                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
+                        bookEntry.getPrimaryKey(),
+                        OrderType.BUY,
+                        OrderStatus.PENDING);
+
+        final List<OrderEntry> sellOrders =
+                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
+                        bookEntry.getPrimaryKey(),
+                        OrderType.SELL,
+                        OrderStatus.PENDING);
+
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
                 .getPrimaryKey());
         model.addAttribute("coin", coin);
-        model.addAttribute("sellOrders", bookEntry.sellOrders());
-        model.addAttribute("buyOrders", bookEntry.buyOrders());
+        model.addAttribute("sellOrders", sellOrders);
+        model.addAttribute("buyOrders", buyOrders);
         model.addAttribute("executedTrades", executedTrades);
         return "coin/details";
     }

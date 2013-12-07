@@ -33,7 +33,7 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
     private BigDecimal tradeAmount;
     private BigDecimal itemPrice;
     private String userId;
-    private BigDecimal itemsRemaining;
+    private BigDecimal itemRemaining;
     private OrderType type;
     private Date completeDate;
     private Date lastTradedTime;
@@ -48,12 +48,12 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
         this.itemPrice = itemPrice;
     }
 
-    public BigDecimal getItemsRemaining() {
-        return itemsRemaining;
+    public BigDecimal getItemRemaining() {
+        return itemRemaining;
     }
 
-    void setItemsRemaining(BigDecimal itemsRemaining) {
-        this.itemsRemaining = itemsRemaining;
+    void setItemRemaining(BigDecimal itemRemaining) {
+        this.itemRemaining = itemRemaining;
     }
 
 
@@ -120,10 +120,10 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
     }
 
     public void recordTraded(BigDecimal tradeAmount, Date lastTradedTime) {
-        this.itemsRemaining = itemsRemaining.subtract(tradeAmount);
+        this.itemRemaining = itemRemaining.subtract(tradeAmount);
         this.lastTradedTime = lastTradedTime;
 
-        if (BigDecimal.ZERO.compareTo(itemsRemaining) >= 0) {
+        if (BigDecimal.ZERO.compareTo(itemRemaining) >= 0) {
             completeOrder(lastTradedTime);
         }
     }

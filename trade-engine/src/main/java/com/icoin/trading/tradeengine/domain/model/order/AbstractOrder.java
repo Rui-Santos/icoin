@@ -27,11 +27,12 @@ import static com.homhon.util.Asserts.notNull;
  * To change this template use File | Settings | File Templates.
  */
 public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySupport<T, String, Long> {
+    public static final BigDecimal SCAL = BigDecimal.valueOf(100000000);
     private TransactionId transactionId;
-    private BigDecimal itemPrice;
-    private BigDecimal tradeAmount;
+    private long itemPrice;
+    private long tradeAmount;
     private PortfolioId portfolioId;
-    private BigDecimal itemsRemaining;
+    private long itemRemaining;
     private Date placeDate;
     private CoinExchangePair coinExchangePair;
     private final OrderType orderType;
@@ -68,19 +69,19 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     }
 
     public BigDecimal getItemPrice() {
-        return itemPrice;
+        return BigDecimal.valueOf(itemPrice).divide(SCAL);
     }
 
     public void setItemPrice(BigDecimal itemPrice) {
-        this.itemPrice = itemPrice;
+        this.itemPrice = itemPrice.multiply(SCAL).longValue();
     }
 
     public BigDecimal getTradeAmount() {
-        return tradeAmount;
+       return BigDecimal.valueOf(tradeAmount).divide(SCAL);
     }
 
     public void setTradeAmount(BigDecimal tradeAmount) {
-        this.tradeAmount = tradeAmount;
+        this.tradeAmount = tradeAmount.multiply(SCAL).longValue();
     }
 
     public PortfolioId getPortfolioId() {
@@ -91,12 +92,12 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         this.portfolioId = portfolioId;
     }
 
-    public BigDecimal getItemsRemaining() {
-        return itemsRemaining;
+    public BigDecimal getItemRemaining() {
+        return BigDecimal.valueOf(itemRemaining).divide(SCAL);
     }
 
-    public void setItemsRemaining(BigDecimal itemsRemaining) {
-        this.itemsRemaining = itemsRemaining;
+    public void setItemRemaining(BigDecimal itemRemaining) {
+        this.itemRemaining = itemRemaining.multiply(SCAL).longValue();
     }
 
     public Date getPlaceDate() {
@@ -120,7 +121,7 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    private void setOrderStatus(OrderStatus orderStatus) {
+    public void setOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
 
@@ -128,12 +129,18 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         return completeDate;
     }
 
+    public void setLastTradedTime(Date lastTradedTime) {
+        this.lastTradedTime = lastTradedTime;
+    }
+
+
+
     public Date getLastTradedTime() {
         return lastTradedTime;
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    private void setCompleteDate(Date completeDate) {
+    public void setCompleteDate(Date completeDate) {
         this.completeDate = completeDate;
     }
 
@@ -143,10 +150,10 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     }
 
     public void recordTraded(BigDecimal tradeAmount, Date lastTradedTime) {
-        this.itemsRemaining = itemsRemaining.subtract(tradeAmount);
+        this.itemRemaining = itemRemaining - tradeAmount.multiply(SCAL).longValue();
         this.lastTradedTime = lastTradedTime;
 
-        if (BigDecimal.ZERO.compareTo(itemsRemaining) >= 0) {
+        if (itemRemaining <= 0) {
             completeOrder(lastTradedTime);
         }
     }

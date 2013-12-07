@@ -113,7 +113,7 @@ public class OrderListenerIT {
         assertThat(orderEntry.getOrderStatus(), equalTo(OrderStatus.PENDING));
         assertThat(orderEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
         assertThat(orderEntry.getTradeAmount(), equalTo(BigDecimal.valueOf(300)));
-        assertThat(orderEntry.getItemsRemaining(), equalTo(BigDecimal.valueOf(300)));
+        assertThat(orderEntry.getItemRemaining(), equalTo(BigDecimal.valueOf(300)));
         assertThat(orderEntry.getItemPrice(), equalTo(BigDecimal.valueOf(100)));
         assertThat(orderEntry.getUserId(), equalTo(portfolioId.toString()));
         assertThat(orderEntry.getCoinExchangePair(), equalTo(coinExchangePair));
@@ -155,7 +155,7 @@ public class OrderListenerIT {
         assertThat(orderEntry.getOrderStatus(), equalTo(OrderStatus.PENDING));
         assertThat(orderEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
         assertThat(orderEntry.getTradeAmount(), equalTo(BigDecimal.valueOf(300)));
-        assertThat(orderEntry.getItemsRemaining(), equalTo(BigDecimal.valueOf(300)));
+        assertThat(orderEntry.getItemRemaining(), equalTo(BigDecimal.valueOf(300)));
         assertThat(orderEntry.getItemPrice(), equalTo(BigDecimal.valueOf(100)));
         assertThat(orderEntry.getUserId(), equalTo(portfolioId.toString()));
         assertThat(orderEntry.getCoinExchangePair(), equalTo(coinExchangePair));
@@ -232,7 +232,7 @@ public class OrderListenerIT {
         assertThat(sellOrderEntry.getOrderStatus(), equalTo(OrderStatus.PENDING));
         assertThat(sellOrderEntry.getTradeAmount(), equalTo(BigDecimal.valueOf(400)));
         assertThat(sellOrderEntry.getItemPrice(), equalTo(BigDecimal.valueOf(100)));
-        assertThat(sellOrderEntry.getItemsRemaining(), equalTo(BigDecimal.valueOf(100)));
+        assertThat(sellOrderEntry.getItemRemaining(), equalTo(BigDecimal.valueOf(100)));
         assertThat(sellOrderEntry.getType(), equalTo(OrderType.SELL));
         assertThat(sellOrderEntry.getUserId(), equalTo(portfolioId.toString()));
         assertThat(sellOrderEntry.getCoinExchangePair(), equalTo(coinExchangePair));
@@ -252,7 +252,7 @@ public class OrderListenerIT {
         assertThat(buyOrderEntry.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(buyOrderEntry.getTradeAmount(), equalTo(BigDecimal.valueOf(300)));
         assertThat(buyOrderEntry.getItemPrice(), equalTo(BigDecimal.valueOf(100)));
-        assertThat(buyOrderEntry.getItemsRemaining(), equalTo(BigDecimal.ZERO));
+        assertThat(buyOrderEntry.getItemRemaining(), equalTo(BigDecimal.ZERO));
         assertThat(buyOrderEntry.getType(), equalTo(OrderType.BUY));
         assertThat(buyOrderEntry.getUserId(), equalTo(portfolioId.toString()));
         assertThat(buyOrderEntry.getCoinExchangePair(), equalTo(coinExchangePair));

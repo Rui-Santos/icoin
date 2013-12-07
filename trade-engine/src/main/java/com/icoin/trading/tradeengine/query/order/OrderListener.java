@@ -21,7 +21,6 @@ import com.icoin.trading.tradeengine.domain.events.order.AbstractOrderPlacedEven
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +72,7 @@ public class OrderListener {
         OrderEntry entry = new OrderEntry();
         entry.setPrimaryKey(event.getOrderId().toString());
         entry.setOrderBookIdentifier(event.orderBookIdentifier().toString());
-        entry.setItemsRemaining(event.getTradeAmount());
+        entry.setItemRemaining(event.getTradeAmount());
         entry.setTradeAmount(event.getTradeAmount());
         entry.setUserId(event.getPortfolioId().toString());
         entry.setType(type);

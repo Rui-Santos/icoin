@@ -44,9 +44,9 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
     private CoinExchangePair coinExchangePair;
     private CoinId coinId;
 
-    private BigDecimal highestBuyPrice;
-    private BigDecimal lowestSellPrice;
-    private BigDecimal tradedPrice;
+    private BigDecimal highestBuyPrice = BigDecimal.ZERO;
+    private BigDecimal lowestSellPrice = BigDecimal.valueOf(100000000000000000l);
+    private BigDecimal tradedPrice = BigDecimal.ZERO;
 
     @SuppressWarnings("UnusedDeclaration")
     protected OrderBook() {
@@ -97,7 +97,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
             SellOrder lowestSeller = sellOrders.first();
             if (highestBuyer.getItemPrice().compareTo(lowestSeller.getItemPrice()) >= 0) {
                 //highestBuyer.price >= lowestSeller.price
-                BigDecimal matchedTradeAmount = highestBuyer.getItemsRemaining().min(lowestSeller.getItemsRemaining());
+                BigDecimal matchedTradeAmount = highestBuyer.getItemRemaining().min(lowestSeller.getItemRemaining());
 
                 //todo price method
                 BigDecimal matchedTradePrice = (highestBuyer.getItemPrice().add(lowestSeller.getItemPrice()).divide(
@@ -121,12 +121,12 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
         }
     }*/
 
-    public void resetHighestBuyPrice(BuyOrder highestBuy) {
-        apply(new RefreshedHighestBuyPriceEvent(orderBookId, highestBuy.getPrimaryKey(), highestBuy.getItemPrice()));
+    public void resetHighestBuyPrice(String buyOrderId, BigDecimal highestBuyPrice) {
+        apply(new RefreshedHighestBuyPriceEvent(orderBookId, buyOrderId, highestBuyPrice));
     }
 
-    public void resetLowestSellPrice(SellOrder lowestSell) {
-        apply(new RefreshedLowestSellPriceEvent(orderBookId, lowestSell.getPrimaryKey(), lowestSell.getItemPrice()));
+    public void resetLowestSellPrice(String sellOrderId, BigDecimal lowestSellPrice) {
+        apply(new RefreshedLowestSellPriceEvent(orderBookId, sellOrderId, lowestSellPrice));
     }
 
     //transaction: to add sell orders / buyer orders

@@ -33,4 +33,5 @@ public interface OrderQueryRepository extends PagingAndSortingRepository<OrderEn
     List<OrderEntry> findByOrderBookIdentifier(String orderBookIdentifier);
     List<OrderEntry> findByOrderBookIdentifierAndOrderStatus(String orderBookIdentifier, OrderStatus orderStatus);
     List<OrderEntry> findByOrderBookIdentifierAndType(String orderBookIdentifier, OrderType type);
+    List<OrderEntry> findByOrderBookIdentifierAndTypeAndOrderStatus(String orderBookIdentifier, OrderType type, OrderStatus orderStatus);
 }

@@ -22,6 +22,6 @@ public class OrderComparator<T extends AbstractOrder> implements Comparator<T>, 
         result = result == 0 ? o1.getPlaceDate().compareTo(o2.getPlaceDate()) : result;
 
         //biggest amount first for the largest trade volume
-        return result == 0 ? o1.getItemsRemaining().compareTo(o2.getItemsRemaining()) : result;
+        return result == 0 ? (-1 * o1.getItemRemaining().compareTo(o2.getItemRemaining())) : result;
     }
 }

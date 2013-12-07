@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.query.test
+package com.icoin.trading.test
 
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry
 
@@ -28,7 +28,7 @@ import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry
  */
 
 
-def commandSender = new com.icoin.trading.query.test.CommandSender()
+def commandSender = new com.icoin.trading.test.CommandSender()
 
 def portfolios = []
 commandSender.obtainPortfolios().each() {
@@ -41,7 +41,7 @@ commandSender.obtainOrderBooks().each() {
     orderBooks.add it.identifier
     coinNames.put(it.identifier, it.getCoinName)
 }
-def commandCreator = new com.icoin.trading.query.test.CommandCreator(orderBooks)
+def commandCreator = new com.icoin.trading.test.CommandCreator(orderBooks)
 
 def numUsers = portfolios.size()
 def numUser = 1;

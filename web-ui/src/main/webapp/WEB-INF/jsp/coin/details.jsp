@@ -64,7 +64,7 @@
                 <tr>
                     <td><c:out value='${order.tradeAmount}'/></td>
                     <td><c:out value='${order.itemPrice}'/></td>
-                    <td><c:out value='${order.itemsRemaining}'/></td>
+                    <td><c:out value='${order.itemRemaining}'/></td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -85,7 +85,7 @@
                 <tr>
                     <td><c:out value='${order.tradeAmount}'/></td>
                     <td><c:out value='${order.itemPrice}'/></td>
-                    <td><c:out value='${order.itemsRemaining}'/></td>
+                    <td><c:out value='${order.itemRemaining}'/></td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -103,7 +103,7 @@
             <tbody>
             <c:forEach items="${executedTrades}" var="trade">
                 <tr>
-                    <td><c:out value='${trade.tradeAmount}'/></td>
+                    <td><c:out value='${trade.tradedAmount}'/></td>
                     <td><c:out value='${trade.tradedPrice}'/></td>
                 </tr>
             </c:forEach>

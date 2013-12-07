@@ -90,24 +90,4 @@ public abstract class AbstractOrderPlacedEvent {
     public Date getPlaceDate() {
         return placeDate;
     }
-
-    /**
-     * <p>A new OrderBook is created for the coin with the provided identifier.</p>
-     *
-     * @author Jettro Coenradie
-     */
-//    public static class OrderBookCreatedEvent {
-//
-//        private OrderBookId orderBookId;
-//        private CoinExchangePair coinExchangePair;
-//
-//        public OrderBookCreatedEvent(OrderBookId orderBookId, CoinExchangePair coinExchangePair) {
-//            this.orderBookId = orderBookId;
-//            this.coinExchangePair = coinExchangePair;
-//        }
-//
-//        public OrderBookId getOrderBookIdentifier() {
-//            return this.orderBookId;
-//        }
-//    }
 }

@@ -16,8 +16,8 @@
 
 package com.icoin.trading.webui.order;
 
-import com.icoin.trading.tradeengine.query.orderbook.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.orderbook.repositories.OrderBookQueryRepository;
+import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;

@@ -1,6 +1,7 @@
 package com.icoin.trading.tradeengine.application.executor;
 
 import com.icoin.trading.tradeengine.domain.model.order.*;
+import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
@@ -13,6 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -27,6 +29,7 @@ public class QueuedTradeExecutorIT {
     private BuyOrderRepository buyOrderRepository;
     private QueuedTradeExecutor executor;
     private Map<OrderBookId, BlockingQueue<AbstractOrder>> orderBookPool;
+    private OrderBookQueryRepository orderBookRepository = mock(OrderBookQueryRepository.class);
 
     @Before
     public void setUp() throws Exception {
