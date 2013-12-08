@@ -30,7 +30,7 @@ import java.util.Date;
  *
  * @author Allard Buijze
  */
-public class ExecuteSellOrderCommand extends AbstractOrderCommand {
+public class ExecuteSellOrderCommand extends ExecuteOrderCommand<ExecuteSellOrderCommand> {
 
     public ExecuteSellOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
                                    TransactionId transactionId, BigDecimal tradeCount, BigDecimal itemPrice,

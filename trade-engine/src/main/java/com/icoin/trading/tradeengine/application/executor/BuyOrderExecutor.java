@@ -26,7 +26,7 @@ import static com.homhon.util.Collections.isEmpty;
  * User: jihual
  * Date: 12/3/13
  * Time: 1:12 PM
- * To change this template use File | Settings | File Templates.
+ * Execute buy order.
  */
 @Component
 public class BuyOrderExecutor {
@@ -55,7 +55,7 @@ public class BuyOrderExecutor {
         }
 
         //refresh current buy price
-        orderBook.resetHighestBuyPrice(buyCommand.getOrderId().toString(),buyCommand.getItemPrice());
+        orderBook.resetHighestBuyPrice(buyCommand.getOrderId().toString(), buyCommand.getItemPrice());
 
         //lowest sell > the current buying price
 //        if (orderBook.getLowestSellPrice().compareTo(buyCommand.getItemPrice()) > 0) {
@@ -103,18 +103,20 @@ public class BuyOrderExecutor {
                             currentTime());
                 }
 
-                sellOrder.recordTraded(matchedTradeAmount, currentTime());
-                buyOrder.recordTraded(matchedTradeAmount, currentTime());
-
-                sellOrderRepository.save(sellOrder);
-                buyOrderRepository.save(buyOrder);
-
+                OrderExecutorHelper.recordTraded(
+                        buyOrder,
+                        sellOrder,
+                        matchedTradeAmount,
+                        sellOrderRepository,
+                        buyOrderRepository);
                 if (Constants.IGNORED_PRICE.compareTo(buyOrder.getItemRemaining()) >= 0) {
                     done = true;
                     break;
                 }
             }
         } while (!done);
+
+        OrderExecutorHelper.refresh(orderBook, sellOrderRepository, buyOrderRepository);
     }
 
     @Autowired

@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.application.command.order;
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -31,7 +32,7 @@ import java.util.Date;
  *
  * @author Allard Buijze
  */
-public abstract class AbstractOrderCommand {
+public abstract class AbstractOrderCommand<T extends AbstractOrderCommand> extends CommandSupport<T> {
 
     private PortfolioId portfolioId;
     @TargetAggregateIdentifier

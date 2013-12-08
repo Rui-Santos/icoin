@@ -23,7 +23,6 @@ import com.icoin.trading.tradeengine.domain.events.order.RefreshedLowestSellPric
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -42,7 +41,6 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
     @AggregateIdentifier
     private OrderBookId orderBookId;
     private CoinExchangePair coinExchangePair;
-    private CoinId coinId;
 
     private BigDecimal highestBuyPrice = BigDecimal.ZERO;
     private BigDecimal lowestSellPrice = BigDecimal.valueOf(100000000000000000l);
@@ -164,22 +162,26 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 tradedDate));
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     protected void onOrderBookCreated(OrderBookCreatedEvent event) {
         this.orderBookId = event.getOrderBookIdentifier();
         this.coinExchangePair = event.getCoinExchangePair();
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     protected void onTradeExecuted(TradeExecutedEvent event) {
         this.tradedPrice = event.getTradedPrice();
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     protected void onRefreshedLowestSellPrice(RefreshedLowestSellPriceEvent event) {
         this.lowestSellPrice = event.getPrice();
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     protected void onRefreshedHighestBuyPrice(RefreshedHighestBuyPriceEvent event) {
         this.highestBuyPrice = event.getPrice();
@@ -201,7 +203,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
         return coinExchangePair;
     }
 
-    public CoinId getCoinId() {
-        return coinId;
+    public OrderBookId getOrderBookId() {
+        return orderBookId;
     }
 }

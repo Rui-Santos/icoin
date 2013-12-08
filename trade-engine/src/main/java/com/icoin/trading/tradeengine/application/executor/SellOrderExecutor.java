@@ -28,7 +28,7 @@ import static com.homhon.util.Objects.nullSafe;
  * User: jihual
  * Date: 12/3/13
  * Time: 1:12 PM
- * To change this template use File | Settings | File Templates.
+ * Execute sell order.
  */
 @Component
 public class SellOrderExecutor {
@@ -107,11 +107,12 @@ public class SellOrderExecutor {
                             currentTime());
                 }
 
-                buyOrder.recordTraded(matchedTradeAmount, currentTime());
-                sellOrder.recordTraded(matchedTradeAmount, currentTime());
-
-                buyOrderRepository.save(buyOrder);
-                sellOrderRepository.save(sellOrder);
+                OrderExecutorHelper.recordTraded(
+                        buyOrder,
+                        sellOrder,
+                        matchedTradeAmount,
+                        sellOrderRepository,
+                        buyOrderRepository);
 
                 if (Constants.IGNORED_PRICE.compareTo(sellOrder.getItemRemaining()) >= 0) {
                     done = true;
@@ -120,6 +121,7 @@ public class SellOrderExecutor {
             }
         } while (!done);
 
+        OrderExecutorHelper.refresh(orderBook, sellOrderRepository, buyOrderRepository);
     }
 
     @Autowired
