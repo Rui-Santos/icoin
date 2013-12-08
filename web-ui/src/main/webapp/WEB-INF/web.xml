@@ -83,7 +83,9 @@
 
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>*</url-pattern>
+        <url-pattern>/*</url-pattern>
+        <!--<dispatcher>REQUEST</dispatcher>-->
+        <!--<dispatcher>ERROR</dispatcher>-->
         <!--<url-pattern>/coin/*</url-pattern>-->
         <!--<url-pattern>/orderbook/*</url-pattern>-->
         <!--<url-pattern>/spring_security_login</url-pattern>-->

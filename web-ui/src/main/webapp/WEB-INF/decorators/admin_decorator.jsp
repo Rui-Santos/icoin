@@ -108,9 +108,20 @@
         <!--/.navbar-collapse -->
     </div>
 </div>
+<div class="container">
+
+    <%--<h4><decorator:getProperty property="page.herounit"/></h4>--%>
+    <div class="page-header">
+        <h1><decorator:getProperty property="page.title"/>
+            <small><decorator:getProperty property="page.tagline"/></small>
+        </h1>
+    </div>
+    <decorator:getProperty property="page.breadcrumb"/>
+    <decorator:body/>
+
+</div>
 
 
-<decorator:body/>
 
 <footer>
     <div class="container">

@@ -17,7 +17,12 @@
   -->
 
 <decorators defaultdir="/WEB-INF/decorators">
+    <decorator name="admin" page="admin_decorator.jsp">
+        <pattern>/dashboard*</pattern>
+    </decorator>
+
     <decorator name="master" page="master.jsp">
         <pattern>/*</pattern>
     </decorator>
+
 </decorators>

@@ -28,11 +28,11 @@
     <span><c:out value="${coin.coinAmount}"/></span>
 </content>
 <content tag="breadcrumb">
-    <ul class="breadcrumb">
-        <li><a href="${ctx}/">Home</a> <span class="divider">/</span></li>
-        <li><a href="${ctx}/coin">Coins</a> <span class="divider">/</span></li>
+    <ol class="breadcrumb">
+        <li><a href="${ctx}/">Home</a></li>
+        <li><a href="${ctx}/coin">Coins</a></li>
         <li class="active"><c:out value='${coin.name}'/></li>
-    </ul>
+    </ol>
 </content>
 
 

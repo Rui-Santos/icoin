@@ -31,6 +31,8 @@
 
     <mvc:resources mapping="/js/**" location="/js/" cache-period="31556926"/>
     <mvc:resources mapping="/style/**" location="/style/" cache-period="31556926"/>
+    <mvc:resources mapping="/fonts/**" location="/fonts/" cache-period="31556926"/>
+    <mvc:resources mapping="/image/**" location="/image/" cache-period="31556926"/>
 
     <mvc:default-servlet-handler/>
 
@@ -51,6 +53,23 @@
                 <value>/WEB-INF/messages/fields</value>
             </list>
         </property>
+        <property name="cacheSeconds" value="6000"/>
     </bean>
 
+
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="zh_CN"/>
+    </bean>
+
+    <bean id="localeChangeInterceptor"
+          class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="lang" />
+    </bean>
+
+    <bean id="handlerMapping"
+          class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <property name="interceptors">
+            <ref bean="localeChangeInterceptor" />
+        </property>
+    </bean>
 </beans>

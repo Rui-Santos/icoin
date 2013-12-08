@@ -20,7 +20,16 @@
 </head>
 <body>
 <content tag="title">Dashboard</content>
-<content tag="tagline">Your overview of everything you have and want to know</content>
+<content tag="tagline">
+    Your overview of everything you have and want to know
+</content>
+<content tag="breadcrumb">
+    <ol class="breadcrumb">
+        <li><a href="${ctx}/">Home</a></li>
+        <li class="active"><a href="${ctx}/dashboard">Dashboard</a></li>
+    </ol>
+</content>
+
 <div class="row">
     <div class="span7">
         <h2>Portfolio</h2>
