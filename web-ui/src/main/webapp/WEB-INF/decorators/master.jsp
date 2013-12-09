@@ -19,6 +19,7 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
+<%--merge the sitemesh decorators, at least use include to change the admin decorator--%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +30,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Website for BTC & Alt-BTC Trading">
-    <meta name="keywords" content="BTC, обмен BTC, биржа BTC, обменник BTC, Bitcoin, биткоин, обмен биткоин, биржа биткоин, обменник биткоин, покупка BTC, продажа BTC, покупка bitcoin, продажа bitcoin, биржа bitcoin, обменник bitcoin">
+    <meta name="keywords" content="BTC, обмен BTC, биржа BTC, обменник BTC, Bitcoin, биткоин, обмен биткоин, биржа биткоин, обменник биткоин, покупка BTC, продажа BTC, покупка bitcoin, продажа bitcoin, биржа bitcoin, обменник bitcoin, echange trading">
     <meta name="author" content="cooder">
     <meta name="description" content="Website contaning the Axon sample using a trader application">
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->

@@ -53,7 +53,8 @@
                 <value>/WEB-INF/messages/fields</value>
             </list>
         </property>
-        <property name="cacheSeconds" value="6000"/>
+        <!--todo add profile for this-->
+        <property name="cacheSeconds" value="10"/>
     </bean>
 
 

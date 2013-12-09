@@ -1,37 +1,17 @@
-/*
- * Copyright (c) 2010-2012. Axon Framework
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.icoin.trading.webui.coins;
+package com.icoin.trading.webui.trade;
 
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.order.OrderEntry;
-import com.icoin.trading.tradeengine.query.order.OrderType;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
@@ -48,7 +28,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -56,12 +35,16 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * @author Jettro Coenradie
+ * Created with IntelliJ IDEA.
+ * User: liougehooa
+ * Date: 13-12-9
+ * Time: AM1:21
+ * Trade controller.
  */
 @Controller
-@RequestMapping("/coin")
-public class CoinController {
-    private static Logger logger = LoggerFactory.getLogger(CoinController.class);
+@RequestMapping("/")
+public class TradeController {
+    private static Logger logger = LoggerFactory.getLogger(TradeController.class);
     private CoinQueryRepository coinRepository;
     private OrderBookQueryRepository orderBookRepository;
     private UserQueryRepository userRepository;
@@ -72,13 +55,13 @@ public class CoinController {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public CoinController(CoinQueryRepository coinRepository,
-                          CommandBus commandBus,
-                          UserQueryRepository userRepository,
-                          OrderBookQueryRepository orderBookRepository,
-                          OrderQueryRepository orderQueryRepository,
-                          TradeExecutedQueryRepository tradeExecutedRepository,
-                          PortfolioQueryRepository portfolioQueryRepository) {
+    public TradeController(CoinQueryRepository coinRepository,
+                           CommandBus commandBus,
+                           UserQueryRepository userRepository,
+                           OrderBookQueryRepository orderBookRepository,
+                           OrderQueryRepository orderQueryRepository,
+                           TradeExecutedQueryRepository tradeExecutedRepository,
+                           PortfolioQueryRepository portfolioQueryRepository) {
         this.coinRepository = coinRepository;
         this.commandBus = commandBus;
         this.userRepository = userRepository;
@@ -88,62 +71,72 @@ public class CoinController {
         this.orderQueryRepository = orderQueryRepository;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "index", method = RequestMethod.GET)
     public String get(Model model) {
-        model.addAttribute("items", coinRepository.findAll());
-        return "coin/list";
+        OrderBookEntry orderBookEntry = obtainOrderBookForCoin("BTC");
+        model.addAttribute("orderBook", orderBookEntry);
+
+        SellOrder sellOrder = new SellOrder();
+        prepareInitialOrder("BTC", sellOrder);
+        model.addAttribute("sellOrder", sellOrder);
+
+        BuyOrder buyOrder = new BuyOrder();
+        prepareInitialOrder("BTC", buyOrder);
+        model.addAttribute("buyOrder", buyOrder);
+//        model.addAttribute("items", coinRepository.findAll());
+        return "index";
     }
 
-    @RequestMapping(value = "/{coinId}", method = RequestMethod.GET)
-    public String details(@PathVariable String coinId, Model model) {
-        CoinEntry coin = coinRepository.findOne(coinId);
-        final List<OrderBookEntry> bookEntryList = orderBookRepository.findByCoinIdentifier(coin.getPrimaryKey());
-        OrderBookEntry bookEntry = bookEntryList.get(0);
+//    @RequestMapping(value = "/{coinId}", method = RequestMethod.GET)
+//    public String details(@PathVariable String coinId, Model model) {
+//        CoinEntry coin = coinRepository.findOne(coinId);
+//        final List<OrderBookEntry> bookEntryList = orderBookRepository.findByCoinIdentifier(coin.getPrimaryKey());
+//        OrderBookEntry bookEntry = bookEntryList.get(0);
+//
+//        final List<OrderEntry> buyOrders =
+//                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
+//                        bookEntry.getPrimaryKey(),
+//                        OrderType.BUY,
+//                        OrderStatus.PENDING);
+//
+//        final List<OrderEntry> sellOrders =
+//                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
+//                        bookEntry.getPrimaryKey(),
+//                        OrderType.SELL,
+//                        OrderStatus.PENDING);
+//
+//        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
+//                .getPrimaryKey());
+//        model.addAttribute("coin", coin);
+//        model.addAttribute("sellOrders", sellOrders);
+//        model.addAttribute("buyOrders", buyOrders);
+//        model.addAttribute("executedTrades", executedTrades);
+//        return "coin/details";
+//    }
 
-        final List<OrderEntry> buyOrders =
-                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
-                        bookEntry.getPrimaryKey(),
-                        OrderType.BUY,
-                        OrderStatus.PENDING);
 
-        final List<OrderEntry> sellOrders =
-                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
-                        bookEntry.getPrimaryKey(),
-                        OrderType.SELL,
-                        OrderStatus.PENDING);
+//    @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.GET)
+//    public String buyForm(@PathVariable String coinId, Model model) {
+//        addPortfolioMoneyInfoToModel(model);
+//
+//        BuyOrder order = new BuyOrder();
+//        prepareInitialOrder(coinId, order);
+//        model.addAttribute("order", order);
+//        return "coin/buy";
+//    }
 
-        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
-                .getPrimaryKey());
-        model.addAttribute("coin", coin);
-        model.addAttribute("sellOrders", sellOrders);
-        model.addAttribute("buyOrders", buyOrders);
-        model.addAttribute("executedTrades", executedTrades);
-        return "coin/details";
-    }
-
-
-    @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.GET)
-    public String buyForm(@PathVariable String coinId, Model model) {
-        addPortfolioMoneyInfoToModel(model);
-
-        BuyOrder order = new BuyOrder();
-        prepareInitialOrder(coinId, order);
-        model.addAttribute("order", order);
-        return "coin/buy";
-    }
-
-    @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.GET)
-    public String sellForm(@PathVariable String coinId, Model model) {
-        addPortfolioItemInfoToModel(coinId, model);
-
-        SellOrder order = new SellOrder();
-        prepareInitialOrder(coinId, order);
-        model.addAttribute("order", order);
-        return "coin/sell";
-    }
+//    @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.GET)
+//    public String sellForm(@PathVariable String coinId, Model model) {
+//        addPortfolioItemInfoToModel(coinId, model);
+//
+//        SellOrder order = new SellOrder();
+//        prepareInitialOrder(coinId, order);
+//        model.addAttribute("order", order);
+//        return "coin/sell";
+//    }
 
     @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.POST)
-    public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult, Model model) {
+    public String sell(@ModelAttribute("sellOrder") @Valid SellOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
             OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
@@ -153,10 +146,10 @@ public class CoinController {
                         "error.order.sell.tomanyitems",
                         "Not enough items available to create sell order.");
                 addPortfolioItemInfoToModel(order.getCoinId(), model);
-                return "coin/sell";
+                return "/index";
             }
 
-            logger.info("placing a buy order: {}.", order);
+            logger.info("placing a sell order: {}.", order);
 
             StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
                     new OrderBookId(bookEntry.getPrimaryKey()),
@@ -167,15 +160,15 @@ public class CoinController {
             commandBus.dispatch(new GenericCommandMessage<StartSellTransactionCommand>(command));
             logger.info("Sell order {} dispatched... ", order);
 
-            return "redirect:/coin/{coinId}";
+            return "redirect:/index";
         }
 
         addPortfolioItemInfoToModel(order.getCoinId(), model);
-        return "coin/sell";
+        return "/index";
     }
 
     @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.POST)
-    public String buy(@ModelAttribute("order") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
+    public String buy(@ModelAttribute("buyOrder") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
 
             OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
@@ -186,10 +179,10 @@ public class CoinController {
                         "error.order.buy.notenoughmoney",
                         "Not enough cash to spend to buy the items for the price you want");
                 addPortfolioMoneyInfoToModel(portfolioEntry, model);
-                return "coin/buy";
+                return "/index";
             }
 
-            logger.info("placing a buy order: {}.",  order);
+            logger.info("placing a buy order: {}.", order);
 
             StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
                     new OrderBookId(bookEntry.getPrimaryKey()),
@@ -198,11 +191,11 @@ public class CoinController {
                     order.getItemPrice());
             commandBus.dispatch(new GenericCommandMessage<StartBuyTransactionCommand>(command));
             logger.info("Buy order {} dispatched... ", order);
-            return "redirect:/coin/{coinId}";
+            return "redirect:/index";
         }
 
         addPortfolioMoneyInfoToModel(model);
-        return "coin/buy";
+        return "/index";
     }
 
     private void addPortfolioItemInfoToModel(String identifier, Model model) {
@@ -233,7 +226,11 @@ public class CoinController {
      * @return Found OrderBook for the coin belonging to the provided identifier
      */
     private OrderBookEntry obtainOrderBookForCoin(String coinId) {
-        return orderBookRepository.findByCoinIdentifier(coinId).get(0);
+        final List<OrderBookEntry> byCoinIdentifier = orderBookRepository.findByCoinIdentifier(coinId);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Find by coin Id {} : {}", coinId, byCoinIdentifier);
+        }
+        return byCoinIdentifier.get(0);
     }
 
     /**
@@ -242,7 +239,8 @@ public class CoinController {
      * @return The found portfolio for the logged in user.
      */
     private PortfolioEntry obtainPortfolioForUser() {
-        UserEntry username = userRepository.findByUsername(SecurityUtil.obtainLoggedinUsername());
+        final String user = SecurityUtil.obtainLoggedinUsername();
+        UserEntry username = userRepository.findByUsername(user);
         return portfolioQueryRepository.findByUserIdentifier(username.getPrimaryKey());
     }
 

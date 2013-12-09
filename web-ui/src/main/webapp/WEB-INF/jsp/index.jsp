@@ -1,3 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@include file="include.jsp" %>
 <%--
   ~ Copyright (c) 2010-2012. Axon Framework
@@ -21,7 +24,7 @@
 </head>
 <body>
 <content tag="title">Welcome</content>
-<content tag="tagline">Have fun playing with the trader</content>
+<content tag="tagline">Have fun playing with the iCoin Exchange</content>
 <content tag="herounit">
     <div class="hero-unit">
         <h1>The trader</h1>
@@ -101,10 +104,36 @@
     <div class="col-md-6">
         <div class="panel panel-sell">
             <div class="panel-body">
-                <form class="form-horizontal" role="form" method="POST">
+                <%--<form:form commandName="order">--%>
+
+                    <%--<table>--%>
+                        <%--<tr>--%>
+                            <%--<td><spring:message code="order.price"/>:</td>--%>
+                            <%--<td><form:input path="itemPrice"/></td>--%>
+                            <%--<td><form:errors path="itemPrice" cssClass="errorBox"/></td>--%>
+                        <%--</tr>--%>
+                        <%--<tr>--%>
+                            <%--<td><spring:message code="order.tradeAmount"/>:</td>--%>
+                            <%--<td><form:input path="tradeAmount"/></td>--%>
+                            <%--<td><form:errors path="tradeAmount" cssClass="error"/></td>--%>
+                        <%--</tr>--%>
+                        <%--<tr>--%>
+                            <%--<td colspan="3">--%>
+                                <%--<input class="btn primary" type="submit" name="submit" value="Place Order"/>--%>
+                                <%--<input class="btn" type="reset" name="reset" value="Reset"/>--%>
+                                <%--<a href="${ctx}/coin/${order.coinId}" class="btn">Cancel</a>--%>
+                            <%--</td>--%>
+                        <%--</tr>--%>
+                    <%--</table>--%>
+                <%--</form:form>--%>
+
+                <form:form commandName="sellOrder" action="/sell/BTC" class="form-horizontal" role="form">
+                    <form:hidden path="coinId"/>
+                    <form:hidden path="coinName"/>
+
                     <div class="form-group">
-                        <label for="highestAsk" class="col-sm-5 control-label">Highest Ask Price</label>
-                        <label id="highestAsk" class="col-sm-2  form-control-static text-success">5.0098</label>
+                        <label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>
+                        <label id="highestBid" class="col-sm-2  form-control-static text-success">5.0098</label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
                     <div class="form-group">
@@ -113,16 +142,16 @@
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
                     <div class="form-group">
-                        <label for="amountToSell" class="col-sm-5 control-label">Amount</label>
+                        <label for="amountToSell" class="col-sm-5 control-label"><spring:message code="order.tradeAmount"/></label>
                         <div class="input-group col-sm-7">
-                            <input type="text" class="form-control" placeholder="Sell Amount" id="amountToSell">
+                            <form:input path="tradeAmount" class="form-control" placeholder="Sell Amount" id="amountToSell"/>
                             <span class="input-group-addon alert-warning">BTC</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="priceToSell" class="col-sm-5 control-label">Price per BTC</label>
+                        <label for="priceToSell" class="col-sm-5 control-label"><spring:message code="order.price"/></label>
                         <div class="input-group col-sm-7">
-                            <input type="text" class="form-control" placeholder="Price" id="priceToSell">
+                            <form:input path="itemPrice" type="text" class="form-control" placeholder="Price" id="priceToSell"/>
                             <span class="input-group-addon alert-warning">CNY</span>
                         </div>
                     </div>
@@ -136,8 +165,59 @@
                         <label id="feeToSell" class="col-sm-2  form-control-static text-danger">1</label>
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
-                    <button type="submit" class="btn btn-block btn-danger col-lg-offset-5 col-lg-3">Sell</button>
-                </form>
+                    <spring:hasBindErrors name="sellOrder">
+                        <div class="alert alert-warning alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <form:errors path="*" element="div"/>
+                        </div>
+                    </spring:hasBindErrors>
+
+                    <%--<input class="btn primary" type="submit" name="submit" value="Place Order"/>--%>
+                    <button type="submit" class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
+                </form:form>
+
+                <%--<form class="form-horizontal" role="form" method="POST">--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>--%>
+                        <%--<label id="highestBid" class="col-sm-2  form-control-static text-success">5.0098</label>--%>
+                        <%--<label class="col-sm-1  form-control-static text-info">CNY</label>--%>
+                    <%--</div>--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="balanceToSell" class="col-sm-5 control-label">Balance</label>--%>
+                        <%--<label id="balanceToSell" class="col-sm-2  form-control-static text-success">50.098</label>--%>
+                        <%--<label class="col-sm-1  form-control-static text-info">BTC</label>--%>
+                    <%--</div>--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="amountToSell" class="col-sm-5 control-label">Amount</label>--%>
+                        <%--<div class="input-group col-sm-7">--%>
+                            <%--<input type="text" class="form-control" placeholder="Sell Amount" id="amountToSell">--%>
+                            <%--<span class="input-group-addon alert-warning">BTC</span>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="priceToSell" class="col-sm-5 control-label"><spring:message code="order.price"/></label>--%>
+
+                        <%--<td><form:input path="itemPrice"/></td>--%>
+                        <%--<td><form:errors path="itemPrice" cssClass="errorBox"/></td>--%>
+
+                        <%--<div class="input-group col-sm-7">--%>
+                            <%--<form:input path="itemPrice"/>--%>
+                            <%--<input type="text" class="form-control" placeholder="Price" id="priceToSell">--%>
+                            <%--<span class="input-group-addon alert-warning">CNY</span>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="totalToSell" class="col-sm-5 control-label">Total</label>--%>
+                        <%--<label id="totalToSell" class="col-sm-2  form-control-static text-danger">50.098</label>--%>
+                        <%--<label class="col-sm-1  form-control-static text-info">CNY</label>--%>
+                    <%--</div>--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="feeToSell" class="col-sm-5 control-label">Fee</label>--%>
+                        <%--<label id="feeToSell" class="col-sm-2  form-control-static text-danger">1</label>--%>
+                        <%--<label class="col-sm-1  form-control-static text-info">BTC</label>--%>
+                    <%--</div>--%>
+                    <%--<button type="submit" class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>--%>
+                <%--</form>--%>
             </div>
         </div>
     </div>
@@ -146,8 +226,8 @@
             <div class="panel-body">
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>
-                        <label id="highestBid" class="col-sm-2  form-control-static text-success">5.0098</label>
+                        <label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>
+                        <label id="lowestAsk" class="col-sm-2  form-control-static text-success">5.0098</label>
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
                     <div class="form-group">
