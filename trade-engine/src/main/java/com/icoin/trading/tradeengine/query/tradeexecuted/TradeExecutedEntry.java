@@ -32,6 +32,8 @@ public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEnt
     private String orderBookIdentifier;
     private Date tradeTime;
 
+    private TradeType tradeType;
+
     public BigDecimal getTradedAmount() {
         return tradedAmount;
     }
@@ -70,5 +72,13 @@ public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEnt
 
     public void setTradeTime(Date tradeTime) {
         this.tradeTime = tradeTime;
+    }
+
+    public TradeType getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(TradeType tradeType) {
+        this.tradeType = tradeType;
     }
 }

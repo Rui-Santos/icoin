@@ -16,9 +16,21 @@
 
 package com.icoin.trading.tradeengine.query.transaction;
 
+import com.homhon.base.domain.ValueObject;
+
 /**
  * @author Jettro Coenradie
  */
-public enum TransactionState {
-    STARTED, CONFIRMED, CANCELLED, EXECUTED, PARTIALLYEXECUTED
+public enum TransactionState implements ValueObject<TransactionState>{
+    STARTED, CONFIRMED, CANCELLED, EXECUTED, PARTIALLYEXECUTED;
+
+    @Override
+    public boolean sameValueAs(TransactionState transactionState) {
+        return this == transactionState;
+    }
+
+    @Override
+    public TransactionState copy() {
+        return this;
+    }
 }

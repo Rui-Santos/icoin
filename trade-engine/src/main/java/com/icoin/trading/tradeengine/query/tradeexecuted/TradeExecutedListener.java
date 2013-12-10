@@ -32,6 +32,7 @@ public class TradeExecutedListener {
         tradeExecutedEntry.setTradedAmount(event.getTradeAmount());
         tradeExecutedEntry.setTradedPrice(event.getTradedPrice());
         tradeExecutedEntry.setTradeTime(event.getTradeTime());
+        tradeExecutedEntry.setTradeType(TradeType.convert(event.getTradeType()));
 
         tradeExecutedRepository.save(tradeExecutedEntry);
     }

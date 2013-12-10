@@ -3,6 +3,8 @@ package com.icoin.trading.tradeengine.query.tradeexecuted;
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.tradeengine.domain.model.*;
+import com.icoin.trading.tradeengine.domain.model.TradeType;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
@@ -100,11 +102,12 @@ public class TradeExecutedListenerIT {
         TradeExecutedEvent event = new TradeExecutedEvent(orderBookId,
                 BigDecimal.valueOf(300),
                 BigDecimal.valueOf(125),
-                buyOrderId.toString(),//todo change,
-                sellOrderId.toString(),//todo change,
+                buyOrderId.toString(),
+                sellOrderId.toString(),
                 buyTransactionId,
                 sellTransactionId,
-                tradeTime);
+                tradeTime,
+                TradeType.BUY);
         tradeExecutedListener.handleTradeExecuted(event);
 
         Iterable<TradeExecutedEntry> tradeExecutedEntries = tradeExecutedRepository.findAll();
@@ -115,6 +118,7 @@ public class TradeExecutedListenerIT {
         assertThat(tradeExecutedEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
         assertThat(tradeExecutedEntry.getCoinName(), equalTo("Test Coin"));
         assertThat(tradeExecutedEntry.getTradeTime(), equalTo(tradeTime));
+        assertThat(tradeExecutedEntry.getTradeType(), equalTo(com.icoin.trading.tradeengine.query.tradeexecuted.TradeType.Buy));
         closeTo(tradeExecutedEntry.getTradedAmount(), BigDecimal.valueOf(300));
         closeTo(tradeExecutedEntry.getTradedPrice(), BigDecimal.valueOf(125));
         closeTo(tradeExecutedEntry.getTradedPrice(), BigDecimal.valueOf(125));

@@ -24,6 +24,7 @@ import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCo
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionPartiallyExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
+import com.icoin.trading.tradeengine.domain.model.TradeType;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -165,7 +166,8 @@ public class SellTradeManagerSagaTest {
                 sellOrderIdentifier.toString(),//todo change
                 buyTransactionIdentifier,
                 transactionIdentifier,
-                tradeTime))
+                tradeTime,
+                TradeType.BUY))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new ExecutedTransactionCommandMatcher(BigDecimal.valueOf(100),
                         BigDecimal.valueOf(102),
@@ -196,7 +198,8 @@ public class SellTradeManagerSagaTest {
                 sellOrderIdentifier.toString(),//todo change
                 buyTransactionIdentifier,
                 transactionIdentifier,
-                tradeTime))
+                tradeTime,
+                TradeType.BUY))
                 .whenAggregate(transactionIdentifier)
                 .publishes(
                         new SellTransactionExecutedEvent(
@@ -235,7 +238,8 @@ public class SellTradeManagerSagaTest {
                 sellOrderIdentifier.toString(),//todo change
                 buyTransactionIdentifier,
                 transactionIdentifier,
-                tradeTime))
+                tradeTime,
+                TradeType.BUY))
                 .whenAggregate(transactionIdentifier).publishes(
                 new SellTransactionPartiallyExecutedEvent(transactionIdentifier, BigDecimal.valueOf(50), BigDecimal.valueOf(75), BigDecimal.valueOf(102)))
                 .expectActiveSagas(1)

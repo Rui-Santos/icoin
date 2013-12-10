@@ -16,9 +16,22 @@
 
 package com.icoin.trading.tradeengine.domain.model.transaction;
 
+import com.homhon.base.domain.ValueObject;
+
 /**
  * @author Jettro Coenradie
  */
-public enum TransactionType {
-    SELL, BUY
+public enum TransactionType implements ValueObject<TransactionType>{
+    SELL, BUY;
+
+    @Override
+    public boolean sameValueAs(TransactionType transactionType) {
+        return this == transactionType;
+    }
+
+    @Override
+    public TransactionType copy() {
+        return this;
+    }
+
 }

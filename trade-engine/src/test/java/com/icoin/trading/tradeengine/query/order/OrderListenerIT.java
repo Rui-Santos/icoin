@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.tradeengine.domain.model.TradeType;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
@@ -215,7 +216,8 @@ public class OrderListenerIT {
                 sellOrderId.toString(),//todo change,
                 buyTransactionId,
                 sellTransactionId,
-                tradeTime);
+                tradeTime,
+                TradeType.BUY);
         orderListener.handleTradeExecuted(event);
 
         List<OrderEntry> sellOrders =

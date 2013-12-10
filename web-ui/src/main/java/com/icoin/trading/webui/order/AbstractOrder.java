@@ -27,6 +27,10 @@ public class AbstractOrder {
 
     private String coinId;
     private String coinName;
+    private BigDecimal suggestedPrice;
+    private BigDecimal balance;
+    private String ccy1;//to sell
+    private String ccy2;//price ccy
     private OrderType orderType;
 
     @DecimalMin(value = "0.01", message = "trading.minimal.amount")
@@ -78,12 +82,56 @@ public class AbstractOrder {
         this.coinName = coinName;
     }
 
+    public BigDecimal getSuggestedPrice() {
+        return suggestedPrice;
+    }
+
+    public void setSuggestedPrice(BigDecimal suggestedPrice) {
+        this.suggestedPrice = suggestedPrice;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public String getCcy1() {
+        return ccy1;
+    }
+
+    public void setCcy1(String ccy1) {
+        this.ccy1 = ccy1;
+    }
+
+    public String getCcy2() {
+        return ccy2;
+    }
+
+    public void setCcy2(String ccy2) {
+        this.ccy2 = ccy2;
+    }
+
+    public OrderType getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(OrderType orderType) {
+        this.orderType = orderType;
+    }
+
     @Override
     public String toString() {
-        return "Order{" +
+        return getClass().getSimpleName()+ "{" +
                 "coinId='" + coinId + '\'' +
                 ", coinName='" + coinName + '\'' +
-                ", orderType=" + orderType +
+                ", orderType='" + orderType + '\'' +
+                ", suggestedPrice=" + suggestedPrice +
+                ", balance=" + balance +
+                ", ccy1='" + ccy1 + '\'' +
+                ", ccy2='" + ccy2 + '\'' +
                 ", tradeAmount=" + tradeAmount +
                 ", itemPrice=" + itemPrice +
                 '}';

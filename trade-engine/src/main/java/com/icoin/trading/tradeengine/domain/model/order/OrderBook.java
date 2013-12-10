@@ -22,6 +22,7 @@ import com.icoin.trading.tradeengine.domain.events.order.RefreshedHighestBuyPric
 import com.icoin.trading.tradeengine.domain.events.order.RefreshedLowestSellPriceEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.tradeengine.domain.model.TradeType;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -142,7 +143,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 sellOrderId,
                 buyTransactionId,
                 sellTransactionId,
-                tradedDate));
+                tradedDate,
+                TradeType.SELL));
     }
 
     public void executeBuying(BigDecimal matchedTradeAmount,
@@ -159,7 +161,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 sellOrderId,
                 buyTransactionId,
                 sellTransactionId,
-                tradedDate));
+                tradedDate,
+                TradeType.BUY));
     }
 
     @SuppressWarnings("unused")

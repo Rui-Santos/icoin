@@ -17,6 +17,7 @@
 package com.icoin.trading.webui.util;
 
 import com.icoin.trading.users.domain.UserAccount;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -40,5 +41,19 @@ public class SecurityUtil {
         } else {
             throw new IllegalStateException("Wrong security implementation, expecting a UserAccount as principal");
         }
+    }
+
+    public static String obtainLoggedinUserIdentifierSafely() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.isAuthenticated()){
+            return null;
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserAccount) {
+            return ((UserAccount) principal).getPrimaryKey();
+        }
+
+        return null;
     }
 }

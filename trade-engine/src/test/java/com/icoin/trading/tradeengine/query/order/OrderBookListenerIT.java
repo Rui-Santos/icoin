@@ -21,6 +21,7 @@ import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEven
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.tradeengine.domain.model.TradeType;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
@@ -119,7 +120,8 @@ public class OrderBookListenerIT {
                 sellOrderId.toString(),//todo change,
                 buyTransactionId,
                 sellTransactionId,
-                tradeTime);
+                tradeTime,
+                TradeType.BUY);
 
         //execute
         orderBookListener.handleTradeExecuted(event);

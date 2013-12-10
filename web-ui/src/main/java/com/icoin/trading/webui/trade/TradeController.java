@@ -1,17 +1,22 @@
 package com.icoin.trading.webui.trade;
 
+import com.homhon.util.Strings;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
+import com.icoin.trading.tradeengine.query.order.OrderEntry;
+import com.icoin.trading.tradeengine.query.order.OrderType;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
+import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
@@ -28,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -44,6 +50,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class TradeController {
+    public static final String DEFUALT_COIN = "BTC";
     private static Logger logger = LoggerFactory.getLogger(TradeController.class);
     private CoinQueryRepository coinRepository;
     private OrderBookQueryRepository orderBookRepository;
@@ -73,67 +80,77 @@ public class TradeController {
 
     @RequestMapping(value = "index", method = RequestMethod.GET)
     public String get(Model model) {
-        OrderBookEntry orderBookEntry = obtainOrderBookForCoin("BTC");
+        OrderBookEntry orderBookEntry = obtainOrderBookForCoin(DEFUALT_COIN);
         model.addAttribute("orderBook", orderBookEntry);
 
         SellOrder sellOrder = new SellOrder();
-        prepareInitialOrder("BTC", sellOrder);
+        prepareInitialOrder(DEFUALT_COIN, sellOrder);
         model.addAttribute("sellOrder", sellOrder);
 
         BuyOrder buyOrder = new BuyOrder();
-        prepareInitialOrder("BTC", buyOrder);
+        prepareInitialOrder(DEFUALT_COIN, buyOrder);
         model.addAttribute("buyOrder", buyOrder);
 //        model.addAttribute("items", coinRepository.findAll());
+
+        CoinEntry coin = coinRepository.findOne(DEFUALT_COIN);
+        final List<OrderBookEntry> bookEntryList = orderBookRepository.findByCoinIdentifier(coin.getPrimaryKey());
+        OrderBookEntry bookEntry = bookEntryList.get(0);
+
+        final List<OrderEntry> buyOrders =
+                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
+                        bookEntry.getPrimaryKey(),
+                        OrderType.BUY,
+                        OrderStatus.PENDING);
+
+        final String userId = SecurityUtil.obtainLoggedinUserIdentifierSafely();
+        if(Strings.hasLength(userId)){
+            final List<OrderEntry> activeOrders = orderQueryRepository.findUserActiveOrders(userId, bookEntry.getPrimaryKey());
+            model.addAttribute("activeOrders", activeOrders);
+        }
+
+
+        final List<OrderEntry> sellOrders =
+                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
+                        bookEntry.getPrimaryKey(),
+                        OrderType.SELL,
+                        OrderStatus.PENDING);
+
+        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
+                .getPrimaryKey());
+        model.addAttribute("coin", coin);
+        model.addAttribute("sellOrders", sellOrders);
+        model.addAttribute("buyOrders", buyOrders);
+        model.addAttribute("executedTrades", executedTrades);
+
         return "index";
     }
 
-//    @RequestMapping(value = "/{coinId}", method = RequestMethod.GET)
-//    public String details(@PathVariable String coinId, Model model) {
-//        CoinEntry coin = coinRepository.findOne(coinId);
-//        final List<OrderBookEntry> bookEntryList = orderBookRepository.findByCoinIdentifier(coin.getPrimaryKey());
-//        OrderBookEntry bookEntry = bookEntryList.get(0);
-//
-//        final List<OrderEntry> buyOrders =
-//                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
-//                        bookEntry.getPrimaryKey(),
-//                        OrderType.BUY,
-//                        OrderStatus.PENDING);
-//
-//        final List<OrderEntry> sellOrders =
-//                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
-//                        bookEntry.getPrimaryKey(),
-//                        OrderType.SELL,
-//                        OrderStatus.PENDING);
-//
-//        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
-//                .getPrimaryKey());
-//        model.addAttribute("coin", coin);
-//        model.addAttribute("sellOrders", sellOrders);
-//        model.addAttribute("buyOrders", buyOrders);
-//        model.addAttribute("executedTrades", executedTrades);
-//        return "coin/details";
-//    }
+    @RequestMapping(value = "/{coinId}", method = RequestMethod.GET)
+    public String details(@PathVariable String coinId, Model model) {
+        CoinEntry coin = coinRepository.findOne(coinId);
+        final List<OrderBookEntry> bookEntryList = orderBookRepository.findByCoinIdentifier(coin.getPrimaryKey());
+        OrderBookEntry bookEntry = bookEntryList.get(0);
 
+        final List<OrderEntry> buyOrders =
+                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
+                        bookEntry.getPrimaryKey(),
+                        OrderType.BUY,
+                        OrderStatus.PENDING);
 
-//    @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.GET)
-//    public String buyForm(@PathVariable String coinId, Model model) {
-//        addPortfolioMoneyInfoToModel(model);
-//
-//        BuyOrder order = new BuyOrder();
-//        prepareInitialOrder(coinId, order);
-//        model.addAttribute("order", order);
-//        return "coin/buy";
-//    }
+        final List<OrderEntry> sellOrders =
+                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
+                        bookEntry.getPrimaryKey(),
+                        OrderType.SELL,
+                        OrderStatus.PENDING);
 
-//    @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.GET)
-//    public String sellForm(@PathVariable String coinId, Model model) {
-//        addPortfolioItemInfoToModel(coinId, model);
-//
-//        SellOrder order = new SellOrder();
-//        prepareInitialOrder(coinId, order);
-//        model.addAttribute("order", order);
-//        return "coin/sell";
-//    }
+        List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
+                .getPrimaryKey());
+        model.addAttribute("coin", coin);
+        model.addAttribute("sellOrders", sellOrders);
+        model.addAttribute("buyOrders", buyOrders);
+        model.addAttribute("executedTrades", executedTrades);
+        return "/index";
+    }
 
     @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.POST)
     public String sell(@ModelAttribute("sellOrder") @Valid SellOrder order, BindingResult bindingResult, Model model) {

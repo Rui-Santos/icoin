@@ -16,6 +16,7 @@ import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionCon
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionPartiallyExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
+import com.icoin.trading.tradeengine.domain.model.TradeType;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -167,7 +168,8 @@ public class BuyTradeManagerSagaTest {
                 sellOrderIdentifier.toString(), //todo change
                 transactionIdentifier,
                 sellTransactionIdentifier,
-                tradeTime))
+                tradeTime,
+                TradeType.SELL))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(new ExecutedTransactionCommandMatcher(TOTAL_ITEMS,
                         BigDecimal.valueOf(99),
@@ -197,7 +199,8 @@ public class BuyTradeManagerSagaTest {
                 sellOrderIdentifier.toString(),//todo change
                 transactionIdentifier,
                 sellTransactionIdentifier,
-                tradeTime))
+                tradeTime,
+                TradeType.SELL))
                 .whenAggregate(transactionIdentifier).publishes(new BuyTransactionExecutedEvent(transactionIdentifier, TOTAL_ITEMS, BigDecimal.valueOf(99)))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(
@@ -232,7 +235,8 @@ public class BuyTradeManagerSagaTest {
                 sellOrderIdentifier.toString(),//todo change
                 transactionIdentifier,
                 sellTransactionIdentifier,
-                tradeTime))
+                tradeTime,
+                TradeType.SELL))
                 .whenAggregate(transactionIdentifier).publishes(new BuyTransactionPartiallyExecutedEvent(transactionIdentifier,
                 BigDecimal.valueOf(50), BigDecimal.valueOf(50), BigDecimal.valueOf(99)))
                 .expectActiveSagas(1)
@@ -265,7 +269,8 @@ public class BuyTradeManagerSagaTest {
                 sellOrderIdentifier.toString(),//todo change
                 transactionIdentifier,
                 sellTransactionIdentifier,
-                tradeTime))
+                tradeTime,
+                TradeType.SELL))
                 .whenAggregate(transactionIdentifier).publishes(
                 new BuyTransactionPartiallyExecutedEvent(
                         transactionIdentifier, BigDecimal.valueOf(50), BigDecimal.valueOf(50), BigDecimal.valueOf(99)))

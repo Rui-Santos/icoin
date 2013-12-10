@@ -1,6 +1,8 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@include file="include.jsp" %>
 <%--
   ~ Copyright (c) 2010-2012. Axon Framework
@@ -175,49 +177,6 @@
                     <%--<input class="btn primary" type="submit" name="submit" value="Place Order"/>--%>
                     <button type="submit" class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
                 </form:form>
-
-                <%--<form class="form-horizontal" role="form" method="POST">--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>--%>
-                        <%--<label id="highestBid" class="col-sm-2  form-control-static text-success">5.0098</label>--%>
-                        <%--<label class="col-sm-1  form-control-static text-info">CNY</label>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="balanceToSell" class="col-sm-5 control-label">Balance</label>--%>
-                        <%--<label id="balanceToSell" class="col-sm-2  form-control-static text-success">50.098</label>--%>
-                        <%--<label class="col-sm-1  form-control-static text-info">BTC</label>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="amountToSell" class="col-sm-5 control-label">Amount</label>--%>
-                        <%--<div class="input-group col-sm-7">--%>
-                            <%--<input type="text" class="form-control" placeholder="Sell Amount" id="amountToSell">--%>
-                            <%--<span class="input-group-addon alert-warning">BTC</span>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="priceToSell" class="col-sm-5 control-label"><spring:message code="order.price"/></label>--%>
-
-                        <%--<td><form:input path="itemPrice"/></td>--%>
-                        <%--<td><form:errors path="itemPrice" cssClass="errorBox"/></td>--%>
-
-                        <%--<div class="input-group col-sm-7">--%>
-                            <%--<form:input path="itemPrice"/>--%>
-                            <%--<input type="text" class="form-control" placeholder="Price" id="priceToSell">--%>
-                            <%--<span class="input-group-addon alert-warning">CNY</span>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="totalToSell" class="col-sm-5 control-label">Total</label>--%>
-                        <%--<label id="totalToSell" class="col-sm-2  form-control-static text-danger">50.098</label>--%>
-                        <%--<label class="col-sm-1  form-control-static text-info">CNY</label>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="feeToSell" class="col-sm-5 control-label">Fee</label>--%>
-                        <%--<label id="feeToSell" class="col-sm-2  form-control-static text-danger">1</label>--%>
-                        <%--<label class="col-sm-1  form-control-static text-info">BTC</label>--%>
-                    <%--</div>--%>
-                    <%--<button type="submit" class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>--%>
-                <%--</form>--%>
             </div>
         </div>
     </div>
@@ -277,31 +236,20 @@
                     <thead>
                     <tr>
                         <th>Price</th>
-                        <th>Volume</th>
+                        <th>Amount</th>
                         <th>CNY</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="table">
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
+                    <c:forEach items="${sellOrders}" var="order">
+                        <tr>
+                            <td><c:out value='${order.itemPrice}'/></td>
+                            <td><c:out value='${order.itemRemaining}'/></td>
+                            <td>
+                                <fmt:formatNumber value="${order.itemRemaining * order.itemPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                            </td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
@@ -317,31 +265,20 @@
                     <thead>
                     <tr>
                         <th>Price</th>
-                        <th>Volume</th>
+                        <th>Amount</th>
                         <th>CNY</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
+                    <c:forEach items="${buyOrders}" var="order">
+                        <tr>
+                            <td><c:out value='${order.itemPrice}'/></td>
+                            <td><c:out value='${order.itemRemaining}'/></td>
+                            <td>
+                                <fmt:formatNumber value="${order.itemRemaining * order.itemPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                            </td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
@@ -349,59 +286,87 @@
     </div>
 </div>
 
-<div class="panel panel-trading">
-    <div class="panel-heading text-center">
-        <h3 class="panel-title">Your current active orders</h3>
+<sec:authorize access="isAuthenticated()">
+    <div class="panel panel-trading">
+        <div class="panel-heading text-center">
+            <h3 class="panel-title">Your current active orders</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-condensed table-hover">
+                <thead>
+                <tr >
+                    <th>Buy/Sell</th>
+                    <th>Price</th>
+                    <th>Amount</th>
+                    <th>CNY</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <c:forEach items="${activeOrders}" var="trade">
+                    <c:choose>
+                        <c:when test="${trade.tradeType == Sell}">
+                            <tr class="danger">
+                        </c:when>
+                        <c:otherwise>
+                            <tr class="success">
+                        </c:otherwise>
+                    </c:choose>
+
+                    <td class="text-center"><c:out value="${trade.tradeType}"/></td>
+                    <td class="text-center"><c:out value='${trade.tradedAmount}'/></td>
+                    <td class="text-center"><c:out value='${trade.tradedPrice}'/></td>
+                    <td class="text-center">
+                        <fmt:formatNumber value="${trade.tradedAmount * trade.tradedPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                    </td>
+                    <td class="text-center">
+                        <fmt:formatDate pattern="MM-dd HH:mm:ss" value="${trade.tradeTime}" />
+                    </td>
+                    <td class="text-center"><a href="#">Undo</a></td>
+                    </tr>
+                </c:forEach>
+
+                <%--<tr class="success">--%>
+                    <%--<td>Buy</td>--%>
+                    <%--<td>593.998</td>--%>
+                    <%--<td>0.01</td>--%>
+                    <%--<td>5.93998</td>--%>
+                    <%--<td>21.11.13 15:35</td>--%>
+                    <%--<td><a href="#">Undo</a></td>--%>
+                <%--</tr>--%>
+                <%--<tr class="success">--%>
+                    <%--<td>Buy</td>--%>
+                    <%--<td>593.998</td>--%>
+                    <%--<td>0.01</td>--%>
+                    <%--<td>5.93998</td>--%>
+                    <%--<td>21.11.13 15:35</td>--%>
+                    <%--<td><a href="#">Undo</a></td>--%>
+                <%--</tr>--%>
+                <%--<tr class="danger">--%>
+                    <%--<td>Sell</td>--%>
+                    <%--<td>593.998</td>--%>
+                    <%--<td>0.01</td>--%>
+                    <%--<td>5.93998</td>--%>
+                    <%--<td>21.11.13 15:35</td>--%>
+                    <%--<td><a href="#">Undo</a></td>--%>
+                <%--</tr>--%>
+                <%--<tr class="danger">--%>
+                    <%--<td>Sell</td>--%>
+                    <%--<td>593.998</td>--%>
+                    <%--<td>0.01</td>--%>
+                    <%--<td>5.93998</td>--%>
+                    <%--<td>21.11.13 15:35</td>--%>
+                    <%--<td><a href="#">Undo</a></td>--%>
+                <%--</tr>--%>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="panel-body">
-        <table class="table table-condensed table-hover">
-            <thead>
-            <tr >
-                <th>Buy/Sell</th>
-                <th>Price</th>
-                <th>Amount</th>
-                <th>CNY</th>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="success">
-                <td>Buy</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-                <td>21.11.13 15:35</td>
-                <td><a href="#">Undo</a></td>
-            </tr>
-            <tr class="success">
-                <td>Buy</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-                <td>21.11.13 15:35</td>
-                <td><a href="#">Undo</a></td>
-            </tr>
-            <tr class="danger">
-                <td>Sell</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-                <td>21.11.13 15:35</td>
-                <td><a href="#">Undo</a></td>
-            </tr>
-            <tr class="danger">
-                <td>Sell</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-                <td>21.11.13 15:35</td>
-                <td><a href="#">Undo</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+</sec:authorize>
+
+
 
 <div class="panel panel-history">
     <div class="panel-heading text-center">
@@ -412,49 +377,37 @@
         <table class="table table-condensed table-hover">
             <thead>
             <tr>
-                <th>Date</th>
-                <th>Buy/Sell</th>
-                <th>Price</th>
-                <th>Amount</th>
-                <th>CNY</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Buy/Sell</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Amount</th>
+                <th class="text-center">CNY</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="success">
-                <td>21.11.13 15:35</td>
-                <td>Buy</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-            </tr>
-            <tr class="danger">
-                <td>21.11.13 15:35</td>
-                <td>Sell</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-            </tr>
-            <tr class="success">
-                <td>21.11.13 15:35</td>
-                <td>Buy</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-            </tr>
-            <tr class="success">
-                <td>21.11.13 15:35</td>
-                <td>Buy</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-            </tr>
-            <tr class="danger">
-                <td>21.11.13 15:35</td>
-                <td>Sell</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-            </tr>
+
+
+            <c:forEach items="${executedTrades}" var="trade">
+                <c:choose>
+                    <c:when test="${trade.tradeType == Buy}">
+                        <tr class="success">
+                    </c:when>
+                    <c:otherwise>
+                        <tr class="danger">
+                    </c:otherwise>
+                </c:choose>
+
+                    <td class="text-center">
+                        <fmt:formatDate pattern="MM-dd HH:mm:ss" value="${trade.tradeTime}" />
+                    </td>
+                    <td class="text-center"><c:out value="${trade.tradeType}"/></td>
+                    <td class="text-center"><c:out value='${trade.tradedAmount}'/></td>
+                    <td class="text-center"><c:out value='${trade.tradedPrice}'/></td>
+                    <td class="text-center">
+                        <fmt:formatNumber value="${trade.tradedAmount * trade.tradedPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                    </td>
+                </tr>
+            </c:forEach>
             </tbody>
         </table>
     </div>
@@ -487,10 +440,6 @@
 </div>
 </div>
 </div>
-
-
-
-
 
 <%--longon/ singup page--%>
 <%--<p>There are a few things implemented. You can choose the coin to trade stock items for. Before you can--%>

@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.trade;
 
 
+import com.icoin.trading.tradeengine.domain.model.TradeType;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -43,6 +44,7 @@ public class TradeExecutedEvent implements Serializable {
     private final TransactionId sellTransactionId;
     private final OrderBookId orderBookId;
     private final Date tradeTime;
+    private final TradeType tradeType;
 
     public TradeExecutedEvent(OrderBookId orderBookId,
                               BigDecimal tradeAmount,
@@ -51,7 +53,8 @@ public class TradeExecutedEvent implements Serializable {
                               String sellOrderId,
                               TransactionId buyTransactionId,
                               TransactionId sellTransactionId,
-                              Date tradeTime) {
+                              Date tradeTime,
+                              TradeType tradeType) {
         this.tradeAmount = tradeAmount.setScale(8);
         this.tradedPrice = tradedPrice.setScale(8);
         this.buyOrderId = buyOrderId;
@@ -60,6 +63,7 @@ public class TradeExecutedEvent implements Serializable {
         this.buyTransactionId = buyTransactionId;
         this.orderBookId = orderBookId;
         this.tradeTime = tradeTime;
+        this.tradeType = tradeType;
     }
 
     public OrderBookId getOrderBookIdentifier() {
@@ -94,6 +98,10 @@ public class TradeExecutedEvent implements Serializable {
         return tradeTime;
     }
 
+    public TradeType getTradeType() {
+        return tradeType;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
@@ -115,6 +123,7 @@ public class TradeExecutedEvent implements Serializable {
                 .append(sellTransactionId, other.sellTransactionId)
                 .append(buyTransactionId, other.buyTransactionId)
                 .append(orderBookId, other.orderBookId)
+                .append(tradeType, other.tradeType)
                 .build();
 
     }
@@ -124,6 +133,7 @@ public class TradeExecutedEvent implements Serializable {
         return new HashCodeBuilder()
                 .append(tradeAmount.setScale(8))
                 .append(tradedPrice.setScale(8))
+                .append(tradeType)
                 .append(buyOrderId)
                 .append(sellOrderId)
                 .append(sellTransactionId)
