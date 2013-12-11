@@ -21,12 +21,12 @@
     <parent>
         <artifactId>icoin-trading</artifactId>
         <groupId>com.icoin.trading</groupId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.3-SNAPSHOT</version>
     </parent>
 
     <groupId>com.icoin.trading</groupId>
     <artifactId>icoin-trading-webui</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
     <name>iCoin Trader - Web ui</name>
     <packaging>war</packaging>
 

@@ -21,14 +21,14 @@
     <groupId>com.icoin.trading</groupId>
     <artifactId>icoin-trading</artifactId>
     <packaging>pom</packaging>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
 
     <name>iCoin Trader Project</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <axon.version>2.0.6</axon.version>
-        <homhon.version>1.0-SNAPSHOT</homhon.version>
+        <homhon.version>1.1-SNAPSHOT</homhon.version>
         <logback.version>1.0.13</logback.version>
         <slf4j.version>1.7.5</slf4j.version>
         <spring.version>3.2.2.RELEASE</spring.version>
@@ -38,7 +38,7 @@
         <hamcrest.version>1.3</hamcrest.version>
         <mongodb.java.version>2.11.3</mongodb.java.version>
         <!--<springdata.mongodb.version>1.3.2.RELEASE</springdata.mongodb.version>-->
-        <springdata.mongodb.version>1.2.3.RELEASE</springdata.mongodb.version>
+        <springdata.mongodb.version>1.3.2.RELEASE</springdata.mongodb.version>
     </properties>
 
     <modules>

@@ -27,7 +27,7 @@ import static com.homhon.util.Asserts.notNull;
  * To change this template use File | Settings | File Templates.
  */
 public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySupport<T, String, Long> {
-    public static final BigDecimal SCAL = BigDecimal.valueOf(100000000);
+    public static final BigDecimal SCALE = BigDecimal.valueOf(100000000);
     private TransactionId transactionId;
     private long itemPrice;
     private long tradeAmount;
@@ -69,19 +69,19 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     }
 
     public BigDecimal getItemPrice() {
-        return BigDecimal.valueOf(itemPrice).divide(SCAL);
+        return BigDecimal.valueOf(itemPrice).divide(SCALE);
     }
 
     public void setItemPrice(BigDecimal itemPrice) {
-        this.itemPrice = itemPrice.multiply(SCAL).longValue();
+        this.itemPrice = itemPrice.multiply(SCALE).longValue();
     }
 
     public BigDecimal getTradeAmount() {
-       return BigDecimal.valueOf(tradeAmount).divide(SCAL);
+       return BigDecimal.valueOf(tradeAmount).divide(SCALE);
     }
 
     public void setTradeAmount(BigDecimal tradeAmount) {
-        this.tradeAmount = tradeAmount.multiply(SCAL).longValue();
+        this.tradeAmount = tradeAmount.multiply(SCALE).longValue();
     }
 
     public PortfolioId getPortfolioId() {
@@ -93,11 +93,11 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     }
 
     public BigDecimal getItemRemaining() {
-        return BigDecimal.valueOf(itemRemaining).divide(SCAL);
+        return BigDecimal.valueOf(itemRemaining).divide(SCALE);
     }
 
     public void setItemRemaining(BigDecimal itemRemaining) {
-        this.itemRemaining = itemRemaining.multiply(SCAL).longValue();
+        this.itemRemaining = itemRemaining.multiply(SCALE).longValue();
     }
 
     public Date getPlaceDate() {
@@ -150,7 +150,7 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     }
 
     public void recordTraded(BigDecimal tradeAmount, Date lastTradedTime) {
-        this.itemRemaining = itemRemaining - tradeAmount.multiply(SCAL).longValue();
+        this.itemRemaining = itemRemaining - tradeAmount.multiply(SCALE).longValue();
         this.lastTradedTime = lastTradedTime;
 
         if (itemRemaining <= 0) {

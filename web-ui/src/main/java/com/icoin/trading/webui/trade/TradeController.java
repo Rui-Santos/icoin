@@ -12,6 +12,7 @@ import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;
 import com.icoin.trading.tradeengine.query.order.OrderType;
+import com.icoin.trading.tradeengine.query.order.PriceAggregate;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
@@ -84,11 +85,11 @@ public class TradeController {
         model.addAttribute("orderBook", orderBookEntry);
 
         SellOrder sellOrder = new SellOrder();
-        prepareInitialOrder(DEFUALT_COIN, sellOrder);
+        prepareInitialOrder(DEFUALT_COIN, sellOrder, orderBookEntry, OrderType.SELL);
         model.addAttribute("sellOrder", sellOrder);
 
         BuyOrder buyOrder = new BuyOrder();
-        prepareInitialOrder(DEFUALT_COIN, buyOrder);
+        prepareInitialOrder(DEFUALT_COIN, buyOrder, orderBookEntry,OrderType.BUY);
         model.addAttribute("buyOrder", buyOrder);
 //        model.addAttribute("items", coinRepository.findAll());
 
@@ -96,30 +97,28 @@ public class TradeController {
         final List<OrderBookEntry> bookEntryList = orderBookRepository.findByCoinIdentifier(coin.getPrimaryKey());
         OrderBookEntry bookEntry = bookEntryList.get(0);
 
-        final List<OrderEntry> buyOrders =
-                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
-                        bookEntry.getPrimaryKey(),
-                        OrderType.BUY,
-                        OrderStatus.PENDING);
-
         final String userId = SecurityUtil.obtainLoggedinUserIdentifierSafely();
-        if(Strings.hasLength(userId)){
+        if (Strings.hasLength(userId)) {
             final List<OrderEntry> activeOrders = orderQueryRepository.findUserActiveOrders(userId, bookEntry.getPrimaryKey());
+            logger.info("queried active orders for user{}: {}", userId, activeOrders);
             model.addAttribute("activeOrders", activeOrders);
         }
 
-
-        final List<OrderEntry> sellOrders =
-                orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
+        final List<PriceAggregate> buyOrders =
+                orderQueryRepository.findOrderAggregatedPrice(
                         bookEntry.getPrimaryKey(),
-                        OrderType.SELL,
-                        OrderStatus.PENDING);
+                        OrderType.BUY);
+
+        final List<PriceAggregate> sellOrders =
+                orderQueryRepository.findOrderAggregatedPrice(
+                        bookEntry.getPrimaryKey(),
+                        OrderType.SELL);
 
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
                 .getPrimaryKey());
         model.addAttribute("coin", coin);
-        model.addAttribute("sellOrders", sellOrders);
         model.addAttribute("buyOrders", buyOrders);
+        model.addAttribute("sellOrders", sellOrders);
         model.addAttribute("executedTrades", executedTrades);
 
         return "index";
@@ -261,9 +260,17 @@ public class TradeController {
         return portfolioQueryRepository.findByUserIdentifier(username.getPrimaryKey());
     }
 
-    private void prepareInitialOrder(String identifier, AbstractOrder order) {
+    private void prepareInitialOrder(String identifier, AbstractOrder order, OrderBookEntry orderBook, OrderType type) {
         CoinEntry coin = coinRepository.findOne(identifier);
         order.setCoinId(identifier);
         order.setCoinName(coin.getName());
+
+        switch (type) {
+            case BUY:
+                order.setSuggestedPrice(orderBook.getLowestSellPrice());
+                break;
+            default:
+                order.setSuggestedPrice(orderBook.getHighestBuyPrice());
+        }
     }
 }

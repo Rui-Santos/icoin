@@ -1,0 +1,29 @@
+db.orderEntry.aggregate([
+                      { "$match" : { "orderStatus" : "PENDING" , "type" : "SELL"} },
+                      { "$group" : { "_id" : "$itemPrice" , "amount" : { "$sum" : "$itemRemaining"}}} ,
+                      { "$sort" : { "_id" : -1} }
+                      ])
+
+db.orderEntry.aggregate([ { "$group" : { "_id" : "$itemPrice" , "amount" : { "$sum" : "$itemRemaining"}}} ,
+{ "$sort" : { "_id" : -1 }} ,
+{ "$match" : { "orderStatus" : "PENDING" , "type" : "SELL"}}
+])
+
+db.orderEntry.aggregate([
+                      { "$group": { _id: "$itemPrice", amount: { $sum: "$itemRemaining" } } },
+                      { "$sort": { "_id": -1 } },
+                                            { "$match": { "orderStatus" : "PENDING" , "type" : "SELL"} }
+])
+
+
+db.orderEntry.aggregate([
+                      { "$group": { _id: "$itemPrice", amount: { $sum: "$itemRemaining" } } },
+                      { "$sort": { _id: -1 } },
+                      { "$match": { "orderStatus" : "PENDING" , "type" : "SELL"} }
+                   ])
+
+db.orderEntry.aggregate([
+                          { "$match": { "orderStatus" : "PENDING" , "type" : "SELL"} },
+                          { "$group": { _id: "$itemPrice", amount: { $sum: "$itemRemaining" } } },
+                          { "$sort": { _id: -1 } }
+                   ])

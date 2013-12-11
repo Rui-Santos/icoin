@@ -59,7 +59,7 @@ public class SellOrderRepositoryMongoImpl implements SellOrderRepositoryMongoCus
         final Query query = new Query()
                 .addCriteria(Criteria.where("orderBookId").is(orderBookId))
                 //perform a '<=' function
-                .addCriteria(Criteria.where("itemPrice").lte(price.multiply(AbstractOrder.SCAL).longValue()))
+                .addCriteria(Criteria.where("itemPrice").lte(price.multiply(AbstractOrder.SCALE).longValue()))
                 .addCriteria(Criteria.where("placeDate").lte(toTime))
                 .addCriteria(Criteria.where("orderStatus").is(OrderStatus.PENDING))
                 .addCriteria(Criteria.where("orderType").is(OrderType.SELL))

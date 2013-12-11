@@ -27,8 +27,8 @@ public class AbstractOrder {
 
     private String coinId;
     private String coinName;
-    private BigDecimal suggestedPrice;
-    private BigDecimal balance;
+    private BigDecimal suggestedPrice = BigDecimal.ZERO;
+    private BigDecimal balance = BigDecimal.ZERO;
     private String ccy1;//to sell
     private String ccy2;//price ccy
     private OrderType orderType;

@@ -106,41 +106,22 @@
     <div class="col-md-6">
         <div class="panel panel-sell">
             <div class="panel-body">
-                <%--<form:form commandName="order">--%>
-
-                    <%--<table>--%>
-                        <%--<tr>--%>
-                            <%--<td><spring:message code="order.price"/>:</td>--%>
-                            <%--<td><form:input path="itemPrice"/></td>--%>
-                            <%--<td><form:errors path="itemPrice" cssClass="errorBox"/></td>--%>
-                        <%--</tr>--%>
-                        <%--<tr>--%>
-                            <%--<td><spring:message code="order.tradeAmount"/>:</td>--%>
-                            <%--<td><form:input path="tradeAmount"/></td>--%>
-                            <%--<td><form:errors path="tradeAmount" cssClass="error"/></td>--%>
-                        <%--</tr>--%>
-                        <%--<tr>--%>
-                            <%--<td colspan="3">--%>
-                                <%--<input class="btn primary" type="submit" name="submit" value="Place Order"/>--%>
-                                <%--<input class="btn" type="reset" name="reset" value="Reset"/>--%>
-                                <%--<a href="${ctx}/coin/${order.coinId}" class="btn">Cancel</a>--%>
-                            <%--</td>--%>
-                        <%--</tr>--%>
-                    <%--</table>--%>
-                <%--</form:form>--%>
-
                 <form:form commandName="sellOrder" action="/sell/BTC" class="form-horizontal" role="form">
                     <form:hidden path="coinId"/>
                     <form:hidden path="coinName"/>
 
                     <div class="form-group">
                         <label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>
-                        <label id="highestBid" class="col-sm-2  form-control-static text-success">5.0098</label>
+                        <label id="highestBid" class="col-sm-2  form-control-static text-success">
+                            <c:out value='${sellOrder.suggestedPrice}'/>
+                        </label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
                     <div class="form-group">
                         <label for="balanceToSell" class="col-sm-5 control-label">Balance</label>
-                        <label id="balanceToSell" class="col-sm-2  form-control-static text-success">50.098</label>
+                        <label id="balanceToSell" class="col-sm-2  form-control-static text-success">
+                            <c:out value='${sellOrder.balance}'/>
+                        </label>
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
                     <div class="form-group">
@@ -179,52 +160,112 @@
                 </form:form>
             </div>
         </div>
-    </div>
+    </div> <%--end of sell panel--%>
+
     <div class="col-md-6">
         <div class="panel panel-buy">
             <div class="panel-body">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>
-                        <label id="lowestAsk" class="col-sm-2  form-control-static text-success">5.0098</label>
-                        <label class="col-sm-1  form-control-static text-info">BTC</label>
+                <form:form commandName="buyOrder" action="/buy/BTC" class="form-horizontal" role="form">
+                <form:hidden path="coinId"/>
+                <form:hidden path="coinName"/>
+
+                <div class="form-group">
+                    <label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>
+                    <label id="lowestAsk" class="col-sm-2  form-control-static text-success">
+                        <c:out value='${buyOrder.suggestedPrice}'/>
+                    </label>
+                    <label class="col-sm-1  form-control-static text-info">BTC</label>
+                </div>
+                <div class="form-group">
+                    <label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>
+                    <label id="balanceToBuy" class="col-sm-2  form-control-static text-success">
+                        <c:out value='${buyOrder.balance}'/>
+                    </label>
+                    <label class="col-sm-1  form-control-static text-info">CNY</label>
+                </div>
+                <div class="form-group">
+                    <label for="amountToBuy" class="col-sm-5 control-label"><spring:message code="order.tradeAmount"/></label>
+                    <div class="input-group col-sm-7">
+                        <form:input path="tradeAmount" class="form-control" placeholder="Buy Amount" id="amountToBuy"/>
+                        <span class="input-group-addon alert-warning">CNY</span>
                     </div>
-                    <div class="form-group">
-                        <label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>
-                        <label id="balanceToBuy" class="col-sm-2  form-control-static text-success">50.098</label>
-                        <label class="col-sm-1  form-control-static text-info">CNY</label>
+                </div>
+                <div class="form-group">
+                    <label for="priceToBuy" class="col-sm-5 control-label"><spring:message code="order.price"/></label>
+                    <div class="input-group col-sm-7">
+                        <form:input path="itemPrice" type="text" class="form-control" placeholder="Price" id="priceToBuy"/>
+                        <span class="input-group-addon alert-warning">BTC</span>
                     </div>
-                    <div class="form-group">
-                        <label for="amountToBuy" class="col-sm-5 control-label">Amount</label>
-                        <div class="input-group col-sm-7">
-                            <input type="text" class="form-control" placeholder="Buy Amount" id="amountToBuy">
-                            <span class="input-group-addon alert-warning">CNY</span>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label for="totalToBuy" class="col-sm-5 control-label">Total</label>
+                    <label id="totalToBuy" class="col-sm-2  form-control-static text-danger">50.098</label>
+                    <label class="col-sm-1  form-control-static text-info">BTC</label>
+                </div>
+                <div class="form-group">
+                    <label for="feeToBuy" class="col-sm-5 control-label">Fee</label>
+                    <label id="feeToBuy" class="col-sm-2  form-control-static text-danger">1</label>
+                    <label class="col-sm-1  form-control-static text-info">CNY</label>
+                </div>
+                <spring:hasBindErrors name="buyOrder">
+                    <div class="alert alert-warning alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <form:errors path="*" element="div"/>
                     </div>
-                    <div class="form-group">
-                        <label for="priceToBuy" class="col-sm-5 control-label">Price per BTC</label>
-                        <div class="input-group col-sm-7">
-                            <input type="text" class="form-control" placeholder="Price" id="priceToBuy">
-                            <span class="input-group-addon alert-warning">BTC</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="totalToBuy" class="col-sm-5 control-label">Total</label>
-                        <label id="totalToBuy" class="col-sm-2  form-control-static text-danger">50.098</label>
-                        <label class="col-sm-1  form-control-static text-info">BTC</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="feeToBuy" class="col-sm-5 control-label">Fee</label>
-                        <label id="feeToBuy" class="col-sm-2  form-control-static text-danger">1</label>
-                        <label class="col-sm-1  form-control-static text-info">CNY</label>
-                    </div>
+                </spring:hasBindErrors>
 
                     <button type="submit" class="btn btn-success col-lg-offset-5 col-lg-3">Buy</button>
-                </form>
+                </form:form>
             </div>
         </div>
-    </div>
+    </div> <%--end of buy panel--%>
+
+    <%--<div class="col-md-6">--%>
+        <%--<div class="panel panel-buy">--%>
+            <%--<div class="panel-body">--%>
+                <%--<form class="form-horizontal" role="form">--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>--%>
+                        <%--<label id="lowestAsk" class="col-sm-2  form-control-static text-success">5.0098</label>--%>
+                        <%--<label class="col-sm-1  form-control-static text-info">BTC</label>--%>
+                    <%--</div>--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>--%>
+                        <%--<label id="balanceToBuy" class="col-sm-2  form-control-static text-success">50.098</label>--%>
+                        <%--<label class="col-sm-1  form-control-static text-info">CNY</label>--%>
+                    <%--</div>--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="amountToBuy" class="col-sm-5 control-label">Amount</label>--%>
+                        <%--<div class="input-group col-sm-7">--%>
+                            <%--<input type="text" class="form-control" placeholder="Buy Amount" id="amountToBuy">--%>
+                            <%--<span class="input-group-addon alert-warning">CNY</span>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="priceToBuy" class="col-sm-5 control-label">Price per BTC</label>--%>
+                        <%--<div class="input-group col-sm-7">--%>
+                            <%--<input type="text" class="form-control" placeholder="Price" id="priceToBuy">--%>
+                            <%--<span class="input-group-addon alert-warning">BTC</span>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="totalToBuy" class="col-sm-5 control-label">Total</label>--%>
+                        <%--<label id="totalToBuy" class="col-sm-2  form-control-static text-danger">50.098</label>--%>
+                        <%--<label class="col-sm-1  form-control-static text-info">BTC</label>--%>
+                    <%--</div>--%>
+                    <%--<div class="form-group">--%>
+                        <%--<label for="feeToBuy" class="col-sm-5 control-label">Fee</label>--%>
+                        <%--<label id="feeToBuy" class="col-sm-2  form-control-static text-danger">1</label>--%>
+                        <%--<label class="col-sm-1  form-control-static text-info">CNY</label>--%>
+                    <%--</div>--%>
+
+                    <%--<button type="submit" class="btn btn-success col-lg-offset-5 col-lg-3">Buy</button>--%>
+                <%--</form>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>  --%>
 </div>
+
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-sell">
@@ -235,18 +276,18 @@
                 <table class="table table-condensed table-hover">
                     <thead>
                     <tr>
-                        <th>Price</th>
-                        <th>Amount</th>
-                        <th>CNY</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Amount</th>
+                        <th class="text-center">CNY</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${sellOrders}" var="order">
                         <tr>
-                            <td><c:out value='${order.itemPrice}'/></td>
-                            <td><c:out value='${order.itemRemaining}'/></td>
-                            <td>
-                                <fmt:formatNumber value="${order.itemRemaining * order.itemPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                            <td class="text-center"><c:out value='${order.price}'/></td>
+                            <td class="text-center"><c:out value='${order.amount}'/></td>
+                            <td class="text-center">
+                                <fmt:formatNumber value="${order.total}" type="number" pattern="#.##" currencyCode="CNY"/>
                             </td>
                         </tr>
                     </c:forEach>
@@ -264,18 +305,18 @@
                 <table class="table table-condensed table-hover">
                     <thead>
                     <tr>
-                        <th>Price</th>
-                        <th>Amount</th>
-                        <th>CNY</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Amount</th>
+                        <th class="text-center">CNY</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${buyOrders}" var="order">
                         <tr>
-                            <td><c:out value='${order.itemPrice}'/></td>
-                            <td><c:out value='${order.itemRemaining}'/></td>
-                            <td>
-                                <fmt:formatNumber value="${order.itemRemaining * order.itemPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                            <td class="text-center"><c:out value='${order.price}'/></td>
+                            <td class="text-center"><c:out value='${order.amount}'/></td>
+                            <td class="text-center">
+                                <fmt:formatNumber value="${order.total}" type="number" pattern="#.##" currencyCode="CNY"/>
                             </td>
                         </tr>
                     </c:forEach>
@@ -295,12 +336,12 @@
             <table class="table table-condensed table-hover">
                 <thead>
                 <tr >
-                    <th>Buy/Sell</th>
-                    <th>Price</th>
-                    <th>Amount</th>
-                    <th>CNY</th>
-                    <th>Date</th>
-                    <th>Action</th>
+                    <th class="text-center">Buy/Sell</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Amount</th>
+                    <th class="text-center">CNY</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -328,38 +369,6 @@
                     </tr>
                 </c:forEach>
 
-                <%--<tr class="success">--%>
-                    <%--<td>Buy</td>--%>
-                    <%--<td>593.998</td>--%>
-                    <%--<td>0.01</td>--%>
-                    <%--<td>5.93998</td>--%>
-                    <%--<td>21.11.13 15:35</td>--%>
-                    <%--<td><a href="#">Undo</a></td>--%>
-                <%--</tr>--%>
-                <%--<tr class="success">--%>
-                    <%--<td>Buy</td>--%>
-                    <%--<td>593.998</td>--%>
-                    <%--<td>0.01</td>--%>
-                    <%--<td>5.93998</td>--%>
-                    <%--<td>21.11.13 15:35</td>--%>
-                    <%--<td><a href="#">Undo</a></td>--%>
-                <%--</tr>--%>
-                <%--<tr class="danger">--%>
-                    <%--<td>Sell</td>--%>
-                    <%--<td>593.998</td>--%>
-                    <%--<td>0.01</td>--%>
-                    <%--<td>5.93998</td>--%>
-                    <%--<td>21.11.13 15:35</td>--%>
-                    <%--<td><a href="#">Undo</a></td>--%>
-                <%--</tr>--%>
-                <%--<tr class="danger">--%>
-                    <%--<td>Sell</td>--%>
-                    <%--<td>593.998</td>--%>
-                    <%--<td>0.01</td>--%>
-                    <%--<td>5.93998</td>--%>
-                    <%--<td>21.11.13 15:35</td>--%>
-                    <%--<td><a href="#">Undo</a></td>--%>
-                <%--</tr>--%>
                 </tbody>
             </table>
         </div>
