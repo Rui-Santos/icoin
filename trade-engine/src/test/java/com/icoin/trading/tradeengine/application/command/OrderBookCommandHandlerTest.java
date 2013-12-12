@@ -23,9 +23,7 @@ import com.icoin.trading.tradeengine.application.executor.TradeExecutor;
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.OrderBookCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
@@ -87,15 +85,15 @@ public class OrderBookCommandHandlerTest {
         OrderId buyOrder = new OrderId();
         TransactionId buyTransactionId = new TransactionId();
         PortfolioId buyPortfolioId = new PortfolioId();
-        final CoinExchangePair coinExchangePair = CoinExchangePair.createCoinExchangePair("BTC", "CNY");
+        final CurrencyPair currencyPair = CurrencyPair.createCoinExchangePair("BTC", "CNY");
 
-        fixture.given(new OrderBookCreatedEvent(orderBookId, coinExchangePair),
+        fixture.given(new OrderBookCreatedEvent(orderBookId, currencyPair),
                 new BuyOrderPlacedEvent(
                         orderBookId, buyOrder, buyTransactionId,
                         BigDecimal.valueOf(200),
                         BigDecimal.valueOf(100),
                         buyPortfolioId,
-                        coinExchangePair,
+                        currencyPair,
                         buyPlaceDate))
                 .when(orderCommand)
                 .expectEvents(new SellOrderPlacedEvent(
@@ -105,7 +103,7 @@ public class OrderBookCommandHandlerTest {
                         BigDecimal.valueOf(100),
                         BigDecimal.valueOf(100),
                         sellingUser,
-                        coinExchangePair,
+                        currencyPair,
                         sellPlaceDate));
     }
 
@@ -136,16 +134,16 @@ public class OrderBookCommandHandlerTest {
                 BigDecimal.valueOf(200),
                 BigDecimal.valueOf(100),
                 sellPlaceDate);
-        final CoinExchangePair coinExchangePair = CoinExchangePair.createCoinExchangePair("XPM", "CNY");
+        final CurrencyPair currencyPair = CurrencyPair.createCoinExchangePair("XPM", "CNY");
 
-        fixture.given(new OrderBookCreatedEvent(orderBookId, coinExchangePair),
+        fixture.given(new OrderBookCreatedEvent(orderBookId, currencyPair),
                 new BuyOrderPlacedEvent(orderBookId,
                         buyOrder1,
                         buyTransaction1,
                         BigDecimal.valueOf(100),
                         BigDecimal.valueOf(100),
                         new PortfolioId(),
-                        coinExchangePair,
+                        currencyPair,
                         buyPlaceDate1),
                 new BuyOrderPlacedEvent(orderBookId,
                         buyOrder2,
@@ -153,17 +151,17 @@ public class OrderBookCommandHandlerTest {
                         BigDecimal.valueOf(66),
                         BigDecimal.valueOf(120),
                         new PortfolioId(),
-                        coinExchangePair,
+                        currencyPair,
                         buyPlaceDate2),
                 new BuyOrderPlacedEvent(orderBookId, buyOrder3, buyTransaction3, BigDecimal.valueOf(44), BigDecimal.valueOf(140),
-                        new PortfolioId(), coinExchangePair, buyPlaceDate3))
+                        new PortfolioId(), currencyPair, buyPlaceDate3))
                 .when(sellOrder)
                 .expectEvents(new SellOrderPlacedEvent(orderBookId,
                         sellOrderId,
                         sellingTransaction,
                         BigDecimal.valueOf(200),
                         BigDecimal.valueOf(100),
-                        sellingUser, coinExchangePair,
+                        sellingUser, currencyPair,
                         sellPlaceDate));
     }
 
@@ -171,9 +169,9 @@ public class OrderBookCommandHandlerTest {
     public void testCreateOrderBook() {
         OrderBookId orderBookId = new OrderBookId();
         CreateOrderBookCommand createOrderBookCommand =
-                new CreateOrderBookCommand(orderBookId, CoinExchangePair.createExchangeToDefault("XPM"));
+                new CreateOrderBookCommand(orderBookId, CurrencyPair.createExchangeToDefault("XPM"));
         fixture.given()
                 .when(createOrderBookCommand)
-                .expectEvents(new OrderBookCreatedEvent(orderBookId, CoinExchangePair.createCoinExchangePair("XPM", "CNY")));
+                .expectEvents(new OrderBookCreatedEvent(orderBookId, CurrencyPair.createCoinExchangePair("XPM", "CNY")));
     }
 }

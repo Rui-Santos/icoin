@@ -17,7 +17,7 @@
 package com.icoin.trading.tradeengine.application.command.order;
 
 import com.icoin.trading.tradeengine.application.executor.TradeExecutor;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
@@ -46,7 +46,7 @@ public class OrderBookCommandHandler {
     @CommandHandler
     public void handleBuyOrder(CreateBuyOrderCommand command) {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
-        final BuyOrder buyOrder = createBuyOrder(command, orderBook.getCoinExchangePair());
+        final BuyOrder buyOrder = createBuyOrder(command, orderBook.getCurrencyPair());
         buyOrderRepository.save(buyOrder);
 
         orderBook.addBuyOrder(command.getOrderId(),
@@ -58,15 +58,15 @@ public class OrderBookCommandHandler {
         tradeExecutor.execute(buyOrder);
     }
 
-    private BuyOrder createBuyOrder(CreateBuyOrderCommand command, CoinExchangePair coinExchangePair) {
+    private BuyOrder createBuyOrder(CreateBuyOrderCommand command, CurrencyPair currencyPair) {
         final BuyOrder buyOrder = new BuyOrder();
-        return fillOrder(buyOrder, command, coinExchangePair);
+        return fillOrder(buyOrder, command, currencyPair);
     }
 
     @CommandHandler
     public void handleSellOrder(CreateSellOrderCommand command) {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
-        final SellOrder sellOrder = createSellOrder(command, orderBook.getCoinExchangePair());
+        final SellOrder sellOrder = createSellOrder(command, orderBook.getCurrencyPair());
 
         sellOrderRepository.save(sellOrder);
         orderBook.addSellOrder(command.getOrderId(),
@@ -79,18 +79,18 @@ public class OrderBookCommandHandler {
         tradeExecutor.execute(sellOrder);
     }
 
-    private SellOrder createSellOrder(CreateSellOrderCommand command, CoinExchangePair coinExchangePair) {
+    private SellOrder createSellOrder(CreateSellOrderCommand command, CurrencyPair currencyPair) {
         SellOrder sellOrder = new SellOrder();
-        return fillOrder(sellOrder, command, coinExchangePair);
+        return fillOrder(sellOrder, command, currencyPair);
     }
 
     private <T extends AbstractOrder> T fillOrder(T order,
                                                 AbstractOrderCommand command,
-                                                CoinExchangePair coinExchangePair){
+                                                CurrencyPair currencyPair){
         order.setPrimaryKey(command.getOrderId().toString());
         order.setOrderBookId(command.getOrderBookId());
         order.setTransactionId(command.getTransactionId());
-        order.setCoinExchangePair(coinExchangePair);
+        order.setCurrencyPair(currencyPair);
         order.setPlaceDate(command.getPlaceDate());
         order.setItemPrice(command.getItemPrice());
         order.setTradeAmount(command.getTradeAmount());
@@ -103,14 +103,14 @@ public class OrderBookCommandHandler {
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) {
         OrderBook orderBook =
-                new OrderBook(command.getOrderBookIdentifier(), command.getCoinExchangePair());
+                new OrderBook(command.getOrderBookIdentifier(), command.getCurrencyPair());
         repository.add(orderBook);
     }
 
 //    @CommandHandler
 //    public void handleRefreshOrderBook(CreateOrderBookCommand command) {
 //        OrderBook orderBook =
-//                new OrderBook(command.getOrderBookIdentifier(), command.getCoinExchangePair());
+//                new OrderBook(command.getOrderBookIdentifier(), command.getCurrencyPair());
 //        repository.add(orderBook);
 //    }
 

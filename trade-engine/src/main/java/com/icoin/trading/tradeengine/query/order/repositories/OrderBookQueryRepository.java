@@ -17,7 +17,7 @@
 package com.icoin.trading.tradeengine.query.order.repositories;
 
 import com.homhon.base.domain.repository.GenericCrudRepository;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -29,5 +29,5 @@ import java.util.List;
 public interface OrderBookQueryRepository extends PagingAndSortingRepository<OrderBookEntry, String>, GenericCrudRepository<OrderBookEntry, String> {
 
     List<OrderBookEntry> findByCoinIdentifier(String coinIdentifier);
-    OrderBookEntry findByCoinExchangePair(CoinExchangePair coinExchangePair);
+    OrderBookEntry findByCoinExchangePair(CurrencyPair currencyPair);
 }

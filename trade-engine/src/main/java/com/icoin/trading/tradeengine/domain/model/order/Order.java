@@ -17,7 +17,7 @@
 package com.icoin.trading.tradeengine.domain.model.order;
 
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -38,12 +38,12 @@ public class Order extends AbstractAnnotatedEntity {
     private final PortfolioId portfolioId;
     private BigDecimal itemRemaining;
     private Date placeDate;
-    private CoinExchangePair coinExchangePair;
+    private CurrencyPair currencyPair;
     private OrderType orderType;
 
     public Order(OrderId orderId, TransactionId transactionId, BigDecimal itemPrice,
                  BigDecimal tradeAmount, PortfolioId portfolioId,
-                 CoinExchangePair coinExchangePair,
+                 CurrencyPair currencyPair,
                  Date placeDate) {
         this.orderId = orderId;
         this.transactionId = transactionId;
@@ -51,7 +51,7 @@ public class Order extends AbstractAnnotatedEntity {
         this.tradeAmount = tradeAmount;
         this.itemRemaining = tradeAmount;
         this.portfolioId = portfolioId;
-        this.coinExchangePair = coinExchangePair;
+        this.currencyPair = currencyPair;
         this.placeDate = placeDate;
     }
 
@@ -87,8 +87,8 @@ public class Order extends AbstractAnnotatedEntity {
         return placeDate;
     }
 
-    public CoinExchangePair getCoinExchangePair() {
-        return coinExchangePair;
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 
     @Override
@@ -101,7 +101,7 @@ public class Order extends AbstractAnnotatedEntity {
                 ", portfolioId=" + portfolioId +
                 ", itemRemaining=" + itemRemaining +
                 ", placeDate=" + placeDate.getTime() +
-                ", coinExchangePair=" + coinExchangePair +
+                ", currencyPair=" + currencyPair +
                 '}';
     }
 

@@ -23,7 +23,7 @@ import com.icoin.trading.tradeengine.domain.events.order.RefreshedLowestSellPric
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.domain.model.TradeType;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -41,7 +41,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
 
     @AggregateIdentifier
     private OrderBookId orderBookId;
-    private CoinExchangePair coinExchangePair;
+    private CurrencyPair currencyPair;
 
     private BigDecimal highestBuyPrice = BigDecimal.ZERO;
     private BigDecimal lowestSellPrice = BigDecimal.valueOf(100000000000000000l);
@@ -51,8 +51,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
     protected OrderBook() {
     }
 
-    public OrderBook(OrderBookId orderBookId, CoinExchangePair coinExchangePair) {
-        apply(new OrderBookCreatedEvent(orderBookId, coinExchangePair));
+    public OrderBook(OrderBookId orderBookId, CurrencyPair currencyPair) {
+        apply(new OrderBookCreatedEvent(orderBookId, currencyPair));
     }
 
     public void addBuyOrder(OrderId orderId,
@@ -69,7 +69,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 tradeCount,
                 itemPrice,
                 portfolioId,
-                coinExchangePair,
+                currencyPair,
                 placeDate));
     }
 
@@ -83,7 +83,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 tradeCount,
                 itemPrice,
                 portfolioId,
-                coinExchangePair,
+                currencyPair,
                 placeDate));
     }
 
@@ -169,7 +169,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     protected void onOrderBookCreated(OrderBookCreatedEvent event) {
         this.orderBookId = event.getOrderBookIdentifier();
-        this.coinExchangePair = event.getCoinExchangePair();
+        this.currencyPair = event.getCurrencyPair();
     }
 
     @SuppressWarnings("unused")
@@ -202,8 +202,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
         return tradedPrice;
     }
 
-    public CoinExchangePair getCoinExchangePair() {
-        return coinExchangePair;
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 
     public OrderBookId getOrderBookId() {

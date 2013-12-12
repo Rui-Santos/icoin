@@ -19,7 +19,7 @@ package com.icoin.trading.tradeengine.application.listener;
 import com.icoin.trading.tradeengine.application.command.coin.AddOrderBookToCoinCommand;
 import com.icoin.trading.tradeengine.application.command.order.CreateOrderBookCommand;
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import org.axonframework.commandhandling.CommandBus;
@@ -49,7 +49,7 @@ public class CoinOrderBookListener {
         final CoinId coinId = event.getCoinIdentifier();
         CreateOrderBookCommand createOrderBookCommand =
                 new CreateOrderBookCommand(orderBookId,
-                        CoinExchangePair.createExchangeToDefault(coinId.toString()));
+                        CurrencyPair.createExchangeToDefault(coinId.toString()));
         commandBus.dispatch(new GenericCommandMessage<CreateOrderBookCommand>(createOrderBookCommand));
 
 
@@ -60,7 +60,7 @@ public class CoinOrderBookListener {
                 new AddOrderBookToCoinCommand(
                         event.getCoinIdentifier(),
                         orderBookId,
-                        CoinExchangePair.createExchangeToDefault(coinId.toString()));
+                        CurrencyPair.createExchangeToDefault(coinId.toString()));
 
         commandBus.dispatch(new GenericCommandMessage<AddOrderBookToCoinCommand>(addOrderBookToCoinCommand));
     }

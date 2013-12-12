@@ -99,8 +99,12 @@ public class TradeController {
 
         final String userId = SecurityUtil.obtainLoggedinUserIdentifierSafely();
         if (Strings.hasLength(userId)) {
-            final List<OrderEntry> activeOrders = orderQueryRepository.findUserActiveOrders(userId, bookEntry.getPrimaryKey());
-            logger.info("queried active orders for user{}: {}", userId, activeOrders);
+            final PortfolioEntry portfolioEntry = obtainPortfolioForUser();
+            sellOrder.setBalance(portfolioEntry.obtainAmountOfAvailableItemsFor(DEFUALT_COIN));
+            buyOrder.setBalance(portfolioEntry.getAmountOfMoney());
+
+            final List<OrderEntry> activeOrders = orderQueryRepository.findUserActiveOrders(portfolioEntry.getPrimaryKey(), bookEntry.getPrimaryKey());
+            logger.info("queried active orders for user {} with order book {}: {}", portfolioEntry.getPrimaryKey(), bookEntry.getPrimaryKey(), activeOrders);
             model.addAttribute("activeOrders", activeOrders);
         }
 

@@ -113,14 +113,14 @@
                     <div class="form-group">
                         <label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>
                         <label id="highestBid" class="col-sm-2  form-control-static text-success">
-                            <c:out value='${sellOrder.suggestedPrice}'/>
+                            <fmt:formatNumber value="${sellOrder.suggestedPrice}" type="number" pattern="#.##"/>
                         </label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
                     <div class="form-group">
                         <label for="balanceToSell" class="col-sm-5 control-label">Balance</label>
                         <label id="balanceToSell" class="col-sm-2  form-control-static text-success">
-                            <c:out value='${sellOrder.balance}'/>
+                            <fmt:formatNumber value="${sellOrder.balance}" type="number" pattern="#.####"/>
                         </label>
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
@@ -172,14 +172,14 @@
                 <div class="form-group">
                     <label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>
                     <label id="lowestAsk" class="col-sm-2  form-control-static text-success">
-                        <c:out value='${buyOrder.suggestedPrice}'/>
+                        <fmt:formatNumber value="${buyOrder.suggestedPrice}" type="number" pattern="#.##"/>
                     </label>
                     <label class="col-sm-1  form-control-static text-info">BTC</label>
                 </div>
                 <div class="form-group">
                     <label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>
                     <label id="balanceToBuy" class="col-sm-2  form-control-static text-success">
-                        <c:out value='${buyOrder.balance}'/>
+                        <fmt:formatNumber value="${buyOrder.balance}" type="number" pattern="#.##"/>
                     </label>
                     <label class="col-sm-1  form-control-static text-info">CNY</label>
                 </div>
@@ -219,51 +219,6 @@
             </div>
         </div>
     </div> <%--end of buy panel--%>
-
-    <%--<div class="col-md-6">--%>
-        <%--<div class="panel panel-buy">--%>
-            <%--<div class="panel-body">--%>
-                <%--<form class="form-horizontal" role="form">--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>--%>
-                        <%--<label id="lowestAsk" class="col-sm-2  form-control-static text-success">5.0098</label>--%>
-                        <%--<label class="col-sm-1  form-control-static text-info">BTC</label>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>--%>
-                        <%--<label id="balanceToBuy" class="col-sm-2  form-control-static text-success">50.098</label>--%>
-                        <%--<label class="col-sm-1  form-control-static text-info">CNY</label>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="amountToBuy" class="col-sm-5 control-label">Amount</label>--%>
-                        <%--<div class="input-group col-sm-7">--%>
-                            <%--<input type="text" class="form-control" placeholder="Buy Amount" id="amountToBuy">--%>
-                            <%--<span class="input-group-addon alert-warning">CNY</span>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="priceToBuy" class="col-sm-5 control-label">Price per BTC</label>--%>
-                        <%--<div class="input-group col-sm-7">--%>
-                            <%--<input type="text" class="form-control" placeholder="Price" id="priceToBuy">--%>
-                            <%--<span class="input-group-addon alert-warning">BTC</span>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="totalToBuy" class="col-sm-5 control-label">Total</label>--%>
-                        <%--<label id="totalToBuy" class="col-sm-2  form-control-static text-danger">50.098</label>--%>
-                        <%--<label class="col-sm-1  form-control-static text-info">BTC</label>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group">--%>
-                        <%--<label for="feeToBuy" class="col-sm-5 control-label">Fee</label>--%>
-                        <%--<label id="feeToBuy" class="col-sm-2  form-control-static text-danger">1</label>--%>
-                        <%--<label class="col-sm-1  form-control-static text-info">CNY</label>--%>
-                    <%--</div>--%>
-
-                    <%--<button type="submit" class="btn btn-success col-lg-offset-5 col-lg-3">Buy</button>--%>
-                <%--</form>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-    <%--</div>  --%>
 </div>
 
 <div class="row">
@@ -284,8 +239,12 @@
                     <tbody>
                     <c:forEach items="${sellOrders}" var="order">
                         <tr>
-                            <td class="text-center"><c:out value='${order.price}'/></td>
-                            <td class="text-center"><c:out value='${order.amount}'/></td>
+                            <td class="text-center">
+                                <fmt:formatNumber value="${order.price}" type="number" pattern="#.##"/>
+                            </td>
+                            <td class="text-center">
+                                <fmt:formatNumber value="${order.amount}" type="number" pattern="#.####"/>
+                            </td>
                             <td class="text-center">
                                 <fmt:formatNumber value="${order.total}" type="number" pattern="#.##" currencyCode="CNY"/>
                             </td>
@@ -313,8 +272,12 @@
                     <tbody>
                     <c:forEach items="${buyOrders}" var="order">
                         <tr>
-                            <td class="text-center"><c:out value='${order.price}'/></td>
-                            <td class="text-center"><c:out value='${order.amount}'/></td>
+                            <td class="text-center">
+                                <fmt:formatNumber value="${order.price}" type="number" pattern="#.##" currencyCode="CNY"/>
+                            </td>
+                            <td class="text-center">
+                                <fmt:formatNumber value="${order.amount}" type="number" pattern="#.####"/>
+                            </td>
                             <td class="text-center">
                                 <fmt:formatNumber value="${order.total}" type="number" pattern="#.##" currencyCode="CNY"/>
                             </td>
@@ -348,7 +311,7 @@
 
                 <c:forEach items="${activeOrders}" var="trade">
                     <c:choose>
-                        <c:when test="${trade.tradeType == Sell}">
+                        <c:when test="${trade.type == Sell}">
                             <tr class="danger">
                         </c:when>
                         <c:otherwise>
@@ -356,14 +319,18 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <td class="text-center"><c:out value="${trade.tradeType}"/></td>
-                    <td class="text-center"><c:out value='${trade.tradedAmount}'/></td>
-                    <td class="text-center"><c:out value='${trade.tradedPrice}'/></td>
+                    <td class="text-center"><c:out value="${trade.type}"/></td>
                     <td class="text-center">
-                        <fmt:formatNumber value="${trade.tradedAmount * trade.tradedPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                        <fmt:formatNumber value="${trade.itemRemaining}" type="number" pattern="#.####"/>
                     </td>
                     <td class="text-center">
-                        <fmt:formatDate pattern="MM-dd HH:mm:ss" value="${trade.tradeTime}" />
+                        <fmt:formatNumber value="${trade.itemPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                    </td>
+                    <td class="text-center">
+                        <fmt:formatNumber value="${trade.itemRemaining * trade.itemPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                    </td>
+                    <td class="text-center">
+                        <fmt:formatDate pattern="MM-dd HH:mm:ss" value="${trade.placedDate}" />
                     </td>
                     <td class="text-center"><a href="#">Undo</a></td>
                     </tr>
@@ -410,8 +377,12 @@
                         <fmt:formatDate pattern="MM-dd HH:mm:ss" value="${trade.tradeTime}" />
                     </td>
                     <td class="text-center"><c:out value="${trade.tradeType}"/></td>
-                    <td class="text-center"><c:out value='${trade.tradedAmount}'/></td>
-                    <td class="text-center"><c:out value='${trade.tradedPrice}'/></td>
+                    <td class="text-center">
+                        <fmt:formatNumber value="${trade.tradedAmount}" type="number" pattern="#.####"/>
+                    </td>
+                    <td class="text-center">
+                        <fmt:formatNumber value="${trade.tradedPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                    </td>
                     <td class="text-center">
                         <fmt:formatNumber value="${trade.tradedAmount * trade.tradedPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
                     </td>
@@ -443,7 +414,7 @@
             <li class="list-group-item palette-green-sea text-inverse"><span class="glyphicon glyphicon-earphone"></span> 021 3456789</li>
             <li class="list-group-item palette-amethyst text-inverse"> <span class="fui-user"> QQ<sup>1</sup></span> 232845696</li>
             <li class="list-group-item palette-wisteria text-inverse"> <span class="fui-user"> QQ<sup>2</sup></span> 232845696</li>
-            <li class="list-group-item palette-turquoise text-inverse"> <span class="fui-user"> Technic<sup></sup></span> 232845696</li>
+            <li class="list-group-item palette-turquoise text-inverse"> <span class="fui-user"> Tech<sup></sup></span> 232845696</li>
         </ul>
     </div>
 </div>

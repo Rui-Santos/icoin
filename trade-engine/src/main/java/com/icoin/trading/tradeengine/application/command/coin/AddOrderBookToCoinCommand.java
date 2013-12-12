@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.application.command.coin;
 
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 
@@ -28,12 +28,12 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 public class AddOrderBookToCoinCommand {
     private CoinId coinId;
     private OrderBookId orderBookId;
-    private CoinExchangePair coinExchangePair;
+    private CurrencyPair currencyPair;
 
-    public AddOrderBookToCoinCommand(CoinId coinId, OrderBookId orderBookId, CoinExchangePair coinExchangePair) {
+    public AddOrderBookToCoinCommand(CoinId coinId, OrderBookId orderBookId, CurrencyPair currencyPair) {
         this.coinId = coinId;
         this.orderBookId = orderBookId;
-        this.coinExchangePair = coinExchangePair;
+        this.currencyPair = currencyPair;
     }
 
     public CoinId getCoinId() {
@@ -44,7 +44,7 @@ public class AddOrderBookToCoinCommand {
         return orderBookId;
     }
 
-    public CoinExchangePair getCoinExchangePair() {
-        return coinExchangePair;
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 }

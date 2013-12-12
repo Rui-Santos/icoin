@@ -20,7 +20,7 @@ import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.domain.model.TradeType;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
@@ -81,7 +81,7 @@ public class OrderListenerIT {
     @Test
     public void testHandleBuyOrderPlaced() throws Exception {
         final Date placeDate = new Date();
-        final CoinExchangePair coinExchangePair = CoinExchangePair.createCoinExchangePair("BTC", "USD");
+        final CurrencyPair currencyPair = CurrencyPair.createCoinExchangePair("BTC", "USD");
 
         BuyOrderPlacedEvent event =
                 new BuyOrderPlacedEvent(
@@ -91,7 +91,7 @@ public class OrderListenerIT {
                         BigDecimal.valueOf(300),
                         BigDecimal.valueOf(100),
                         portfolioId,
-                        coinExchangePair,
+                        currencyPair,
                         placeDate);
 
         orderListener.handleBuyOrderPlaced(event);
@@ -117,13 +117,13 @@ public class OrderListenerIT {
         assertThat(orderEntry.getItemRemaining(), equalTo(BigDecimal.valueOf(300)));
         assertThat(orderEntry.getItemPrice(), equalTo(BigDecimal.valueOf(100)));
         assertThat(orderEntry.getUserId(), equalTo(portfolioId.toString()));
-        assertThat(orderEntry.getCoinExchangePair(), equalTo(coinExchangePair));
+        assertThat(orderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(orderEntry.getType(), equalTo(OrderType.BUY));
     }
 
     @Test
     public void testHandleSellOrderPlaced() throws Exception {
-        final CoinExchangePair coinExchangePair = CoinExchangePair.createExchangeToDefault("LTC");
+        final CurrencyPair currencyPair = CurrencyPair.createExchangeToDefault("LTC");
 
         final Date placeDate = new Date();
 
@@ -135,7 +135,7 @@ public class OrderListenerIT {
                         BigDecimal.valueOf(300),
                         BigDecimal.valueOf(100),
                         portfolioId,
-                        coinExchangePair,
+                        currencyPair,
                         placeDate);
 
         orderListener.handleSellOrderPlaced(event);
@@ -159,7 +159,7 @@ public class OrderListenerIT {
         assertThat(orderEntry.getItemRemaining(), equalTo(BigDecimal.valueOf(300)));
         assertThat(orderEntry.getItemPrice(), equalTo(BigDecimal.valueOf(100)));
         assertThat(orderEntry.getUserId(), equalTo(portfolioId.toString()));
-        assertThat(orderEntry.getCoinExchangePair(), equalTo(coinExchangePair));
+        assertThat(orderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(orderEntry.getType(), equalTo(OrderType.SELL));
     }
 
@@ -170,7 +170,7 @@ public class OrderListenerIT {
         final Date sellPlaceDate = new Date();
         OrderId sellOrderId = new OrderId();
         TransactionId sellTransactionId = new TransactionId();
-        CoinExchangePair coinExchangePair = CoinExchangePair.createCoinExchangePair("BTC", "USD");
+        CurrencyPair currencyPair = CurrencyPair.createCoinExchangePair("BTC", "USD");
         SellOrderPlacedEvent sellOrderPlacedEvent =
                 new SellOrderPlacedEvent(
                         orderBookId,
@@ -179,7 +179,7 @@ public class OrderListenerIT {
                         BigDecimal.valueOf(400),
                         BigDecimal.valueOf(100),
                         portfolioId,
-                        coinExchangePair,
+                        currencyPair,
                         sellPlaceDate);
 
         orderListener.handleSellOrderPlaced(sellOrderPlacedEvent);
@@ -193,7 +193,7 @@ public class OrderListenerIT {
                 BigDecimal.valueOf(300),
                 BigDecimal.valueOf(150),
                 portfolioId,
-                coinExchangePair,
+                currencyPair,
                 buyPlaceDate);
 
         orderListener.handleBuyOrderPlaced(buyOrderPlacedEvent);
@@ -237,7 +237,7 @@ public class OrderListenerIT {
         assertThat(sellOrderEntry.getItemRemaining(), equalTo(BigDecimal.valueOf(100)));
         assertThat(sellOrderEntry.getType(), equalTo(OrderType.SELL));
         assertThat(sellOrderEntry.getUserId(), equalTo(portfolioId.toString()));
-        assertThat(sellOrderEntry.getCoinExchangePair(), equalTo(coinExchangePair));
+        assertThat(sellOrderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(sellOrderEntry.getCompleteDate(), equalTo(tradeTime));
         assertThat(sellOrderEntry.getLastTradedTime(), equalTo(tradeTime));
 
@@ -257,7 +257,7 @@ public class OrderListenerIT {
         assertThat(buyOrderEntry.getItemRemaining(), equalTo(BigDecimal.ZERO));
         assertThat(buyOrderEntry.getType(), equalTo(OrderType.BUY));
         assertThat(buyOrderEntry.getUserId(), equalTo(portfolioId.toString()));
-        assertThat(buyOrderEntry.getCoinExchangePair(), equalTo(coinExchangePair));
+        assertThat(buyOrderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(buyOrderEntry.getCompleteDate(), equalTo(tradeTime));
         assertThat(buyOrderEntry.getLastTradedTime(), equalTo(tradeTime));
 

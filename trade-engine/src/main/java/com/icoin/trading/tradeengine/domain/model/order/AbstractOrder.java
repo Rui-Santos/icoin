@@ -1,7 +1,7 @@
 package com.icoin.trading.tradeengine.domain.model.order;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
@@ -34,7 +34,7 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     private PortfolioId portfolioId;
     private long itemRemaining;
     private Date placeDate;
-    private CoinExchangePair coinExchangePair;
+    private CurrencyPair currencyPair;
     private final OrderType orderType;
     private OrderBookId orderBookId;
     private Date completeDate;
@@ -108,12 +108,12 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         this.placeDate = placeDate;
     }
 
-    public CoinExchangePair getCoinExchangePair() {
-        return coinExchangePair;
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 
-    public void setCoinExchangePair(CoinExchangePair coinExchangePair) {
-        this.coinExchangePair = coinExchangePair;
+    public void setCurrencyPair(CurrencyPair currencyPair) {
+        this.currencyPair = currencyPair;
     }
 
     public OrderStatus getOrderStatus() {

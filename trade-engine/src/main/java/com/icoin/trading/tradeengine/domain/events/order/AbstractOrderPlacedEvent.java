@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.domain.events.order;
 
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -38,7 +38,7 @@ public abstract class AbstractOrderPlacedEvent {
     private final BigDecimal tradeAmount;
     private final BigDecimal itemPrice;
     private final PortfolioId portfolioId;
-    private final CoinExchangePair coinExchangePair;
+    private final CurrencyPair currencyPair;
     private final Date placeDate;
 
     protected AbstractOrderPlacedEvent(OrderBookId orderBookId,
@@ -47,7 +47,7 @@ public abstract class AbstractOrderPlacedEvent {
                                        BigDecimal tradeAmount,
                                        BigDecimal itemPrice,
                                        PortfolioId portfolioId,
-                                       CoinExchangePair coinExchangePair,
+                                       CurrencyPair currencyPair,
                                        Date placeDate) {
         this.orderId = orderId;
         this.transactionId = transactionId;
@@ -55,7 +55,7 @@ public abstract class AbstractOrderPlacedEvent {
         this.itemPrice = itemPrice;
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
-        this.coinExchangePair = coinExchangePair;
+        this.currencyPair = currencyPair;
         this.placeDate = placeDate;
     }
 
@@ -83,8 +83,8 @@ public abstract class AbstractOrderPlacedEvent {
         return portfolioId;
     }
 
-    public CoinExchangePair getCoinExchangePair() {
-        return coinExchangePair;
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 
     public Date getPlaceDate() {

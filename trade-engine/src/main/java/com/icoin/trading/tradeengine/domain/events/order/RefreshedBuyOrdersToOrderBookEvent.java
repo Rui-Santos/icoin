@@ -1,7 +1,7 @@
 package com.icoin.trading.tradeengine.domain.events.order;
 
 import com.homhon.base.domain.model.ValueObjectSupport;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
@@ -18,16 +18,16 @@ import java.util.List;
 public class RefreshedBuyOrdersToOrderBookEvent
         extends ValueObjectSupport<RefreshedBuyOrdersToOrderBookEvent> {
     private OrderBookId orderBookId;
-    private CoinExchangePair coinExchangePair;
+    private CurrencyPair currencyPair;
     private CoinId coinId;
     private List<BuyOrder> priorityBuyOrders;
 
     public RefreshedBuyOrdersToOrderBookEvent(OrderBookId orderBookId,
-                                              CoinExchangePair coinExchangePair,
+                                              CurrencyPair currencyPair,
                                               CoinId coinId,
                                               List<BuyOrder> priorityBuyOrders) {
         this.orderBookId = orderBookId;
-        this.coinExchangePair = coinExchangePair;
+        this.currencyPair = currencyPair;
         this.coinId = coinId;
         this.priorityBuyOrders = priorityBuyOrders;
     }
@@ -36,8 +36,8 @@ public class RefreshedBuyOrdersToOrderBookEvent
         return orderBookId;
     }
 
-    public CoinExchangePair getCoinExchangePair() {
-        return coinExchangePair;
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 
     public CoinId getCoinId() {

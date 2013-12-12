@@ -76,8 +76,9 @@ public class OrderListener {
         entry.setTradeAmount(event.getTradeAmount());
         entry.setUserId(event.getPortfolioId().toString());
         entry.setType(type);
+        entry.setPlacedDate(event.getPlaceDate());
         entry.setItemPrice(event.getItemPrice());
-        entry.setCoinExchangePair(event.getCoinExchangePair());
+        entry.setCurrencyPair(event.getCurrencyPair());
 
         return entry;
     }

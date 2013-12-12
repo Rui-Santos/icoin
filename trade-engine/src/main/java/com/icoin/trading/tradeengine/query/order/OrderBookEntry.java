@@ -17,7 +17,7 @@
 package com.icoin.trading.tradeengine.query.order;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 
 import java.math.BigDecimal;
@@ -29,7 +29,7 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
 
     private String coinIdentifier;
     private String coinName;
-    private CoinExchangePair coinExchangePair;
+    private CurrencyPair currencyPair;
     private CoinId coinId;
 
     private String highestBuyId;
@@ -57,12 +57,12 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
         this.coinName = coinName;
     }
 
-    public CoinExchangePair getCoinExchangePair() {
-        return coinExchangePair;
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 
-    public void setCoinExchangePair(CoinExchangePair coinExchangePair) {
-        this.coinExchangePair = coinExchangePair;
+    public void setCurrencyPair(CurrencyPair currencyPair) {
+        this.currencyPair = currencyPair;
     }
 
     public CoinId getCoinId() {

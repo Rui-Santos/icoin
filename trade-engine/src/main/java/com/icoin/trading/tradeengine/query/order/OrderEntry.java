@@ -17,7 +17,7 @@
 package com.icoin.trading.tradeengine.query.order;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinExchangePair;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 
 import java.math.BigDecimal;
@@ -31,17 +31,27 @@ import static com.homhon.mongo.TimeUtils.currentTime;
 public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long> {
     private String orderBookIdentifier;
     private BigDecimal tradeAmount;
-    private BigDecimal itemPrice;
     private String userId;
-    private BigDecimal itemRemaining;
+    private BigDecimal itemPrice = BigDecimal.ZERO;
+    private BigDecimal itemRemaining = BigDecimal.ZERO;
     private OrderType type;
     private Date completeDate;
     private Date lastTradedTime;
-    private CoinExchangePair coinExchangePair;
+    //todo placedDate in test
+    private Date placedDate;
+    private CurrencyPair currencyPair;
     private OrderStatus orderStatus = OrderStatus.PENDING;
 
     public BigDecimal getItemPrice() {
         return itemPrice;
+    }
+
+    public Date getPlacedDate() {
+        return placedDate;
+    }
+
+    public void setPlacedDate(Date placedDate) {
+        this.placedDate = placedDate;
     }
 
     void setItemPrice(BigDecimal itemPrice) {
@@ -89,12 +99,12 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
         this.type = type;
     }
 
-    public CoinExchangePair getCoinExchangePair() {
-        return coinExchangePair;
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 
-    public void setCoinExchangePair(CoinExchangePair coinExchangePair) {
-        this.coinExchangePair = coinExchangePair;
+    public void setCurrencyPair(CurrencyPair currencyPair) {
+        this.currencyPair = currencyPair;
     }
 
     @SuppressWarnings("UnusedDeclaration")

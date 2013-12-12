@@ -44,7 +44,7 @@ public interface OrderQueryRepository extends
                                                                     OrderStatus orderStatus);
 
     @Query(value = "{ 'userId' : ?0 , " +
-            "'orderBookIdentifier' : '?1' , " +
+            "'orderBookIdentifier' : ?1 , " +
             "'orderStatus' : 'PENDING' }, " +
             "Sort: { 'placeDate' : -1 }")
     List<OrderEntry> findUserActiveOrders(String userId, String orderBookId);
