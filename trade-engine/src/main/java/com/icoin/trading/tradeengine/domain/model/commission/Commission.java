@@ -16,14 +16,13 @@
 package com.icoin.trading.tradeengine.domain.model.commission;
 
 import com.homhon.base.domain.model.ValueObjectSupport;
-import com.homhon.base.domain.model.money.Money;
 import com.homhon.base.domain.model.probability.Probability;
+import org.joda.money.Money;
 
 /**
  * @author Slawek
  */
 public class Commission<U> extends ValueObjectSupport<Commission> {
-    public static Commission ZERO_COMMISSION = new Commission(Money.ZERO, "0.0% (D)");
     private Probability commission;
     private U unit;
     private String description;

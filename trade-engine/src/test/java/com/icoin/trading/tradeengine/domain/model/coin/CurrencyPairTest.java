@@ -60,6 +60,9 @@ public class CurrencyPairTest {
         assertThat(CurrencyPair.BTC_CAD.baseCurrency, equalTo("BTC"));
         assertThat(CurrencyPair.BTC_CAD.counterCurrency, equalTo("CAD"));
 
+        assertThat(CurrencyPair.BTC_CNY.baseCurrency, equalTo("BTC"));
+        assertThat(CurrencyPair.BTC_CNY.counterCurrency, equalTo("CNY"));
+
     }
 
 }

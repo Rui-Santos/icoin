@@ -39,13 +39,14 @@ public class DefaultCommissionPolicy implements CommissionPolicy {
 
 //        Money effectiveCost = order.getItemRemaining();
 
-        final Probability commision = probability.combinedWith(Probability.from(order.getItemRemaining()));
-
-        if (effectiveCost == null || Money.lessOrEqualsZero(effectiveCost)) {
-            return Commission.ZERO_COMMISSION;
-        }
-        Money tax = effectiveCost.multiplyBy(ratio);
-        return new Commission(tax, desc);
+//        final Probability commision = probability.combinedWith(Probability.from(order.getItemRemaining()));
+//
+//        if (effectiveCost == null || Money.lessOrEqualsZero(effectiveCost)) {
+//            return Commission.ZERO_COMMISSION;
+//        }
+//        Money tax = effectiveCost.multiplyBy(ratio);
+//        return new Commission(tax, desc);
+        return null;
     }
 
 }

@@ -81,7 +81,7 @@ public class OrderListenerIT {
     @Test
     public void testHandleBuyOrderPlaced() throws Exception {
         final Date placeDate = new Date();
-        final CurrencyPair currencyPair = CurrencyPair.createCoinExchangePair("BTC", "USD");
+        final CurrencyPair currencyPair = new CurrencyPair("BTC", "USD");
 
         BuyOrderPlacedEvent event =
                 new BuyOrderPlacedEvent(
@@ -123,7 +123,7 @@ public class OrderListenerIT {
 
     @Test
     public void testHandleSellOrderPlaced() throws Exception {
-        final CurrencyPair currencyPair = CurrencyPair.createExchangeToDefault("LTC");
+        final CurrencyPair currencyPair = new CurrencyPair("LTC");
 
         final Date placeDate = new Date();
 
@@ -170,7 +170,7 @@ public class OrderListenerIT {
         final Date sellPlaceDate = new Date();
         OrderId sellOrderId = new OrderId();
         TransactionId sellTransactionId = new TransactionId();
-        CurrencyPair currencyPair = CurrencyPair.createCoinExchangePair("BTC", "USD");
+        CurrencyPair currencyPair = new CurrencyPair("BTC", "USD");
         SellOrderPlacedEvent sellOrderPlacedEvent =
                 new SellOrderPlacedEvent(
                         orderBookId,

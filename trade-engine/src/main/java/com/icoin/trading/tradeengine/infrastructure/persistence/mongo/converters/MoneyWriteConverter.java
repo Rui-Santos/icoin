@@ -1,9 +1,13 @@
 package com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters;
 
-import com.homhon.base.domain.model.money.Money;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 import org.springframework.core.convert.converter.Converter;
+
+import java.math.BigDecimal;
+import static com.homhon.util.Asserts.notNull;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,12 +23,22 @@ public class MoneyWriteConverter implements Converter<Money, DBObject> {
         if (source == null) {
             return null;
         }
-        BasicDBObject result = new BasicDBObject();
-        if (source.getAmount() != null)
-            result.put("amount", (long)(source.getAmount().doubleValue()*MoneyReadConverter.MONEY_PRECISION));
-        if (source.getCurrency() != null)
-            result.put("ccy", source.getCurrencyCode());
 
+        notNull(source.getAmount());
+        notNull(source.getCurrencyUnit());
+
+        final CurrencyUnit currency = source.getCurrencyUnit();
+        final int decimalPlaces = currency.getDecimalPlaces();
+
+        if(decimalPlaces<0){
+           throw new UnsupportedOperationException("not support for ccy " + currency);
+        }
+
+        final BigDecimal unit = BigDecimal.TEN.pow(decimalPlaces);
+
+        BasicDBObject result = new BasicDBObject();
+        result.put("amount", source.getAmount().multiply(unit).longValue());
+        result.put("ccy", currency.getCurrencyCode());
         return result;
     }
 }

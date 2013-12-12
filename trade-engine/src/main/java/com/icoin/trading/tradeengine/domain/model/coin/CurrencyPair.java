@@ -3,8 +3,6 @@ package com.icoin.trading.tradeengine.domain.model.coin;
 
 import com.homhon.base.domain.model.ValueObjectSupport;
 
-import static com.homhon.util.Asserts.notNull;
-
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -16,15 +14,15 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
     public static final String CCY_DEFAULT = "CNY";
     public static final String CCY_USD = "USD";
     // Provide some standard major symbols
-    public static final CurrencyPair EUR_USD = new CurrencyPair("EUR");
-    public static final CurrencyPair GBP_USD = new CurrencyPair("GBP");
+    public static final CurrencyPair EUR_USD = new CurrencyPair("EUR","USD");
+    public static final CurrencyPair GBP_USD = new CurrencyPair("GBP","USD");
     public static final CurrencyPair USD_JPY = new CurrencyPair("USD", "JPY");
     public static final CurrencyPair USD_CHF = new CurrencyPair("USD", "CHF");
     public static final CurrencyPair USD_AUD = new CurrencyPair("USD", "AUD");
     public static final CurrencyPair USD_CAD = new CurrencyPair("USD", "CAD");
 
     // Provide some courtesy BTC major symbols
-    public static final CurrencyPair BTC_USD = new CurrencyPair("BTC");
+    public static final CurrencyPair BTC_USD = new CurrencyPair("BTC", "USD");
     public static final CurrencyPair BTC_GBP = new CurrencyPair("BTC", "GBP");
     public static final CurrencyPair BTC_EUR = new CurrencyPair("BTC", "EUR");
     public static final CurrencyPair BTC_JPY = new CurrencyPair("BTC", "JPY");

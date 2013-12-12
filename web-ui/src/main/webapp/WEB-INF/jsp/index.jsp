@@ -112,14 +112,14 @@
 
                     <div class="form-group">
                         <label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>
-                        <label id="highestBid" class="col-sm-2  form-control-static text-success">
+                        <label id="highestBid" class="col-sm-5  form-control-static text-success">
                             <fmt:formatNumber value="${sellOrder.suggestedPrice}" type="number" pattern="#.##"/>
                         </label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
                     <div class="form-group">
                         <label for="balanceToSell" class="col-sm-5 control-label">Balance</label>
-                        <label id="balanceToSell" class="col-sm-2  form-control-static text-success">
+                        <label id="balanceToSell" class="col-sm-5  form-control-static text-success">
                             <fmt:formatNumber value="${sellOrder.balance}" type="number" pattern="#.####"/>
                         </label>
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
@@ -140,12 +140,12 @@
                     </div>
                     <div class="form-group">
                         <label for="totalToSell" class="col-sm-5 control-label">Total</label>
-                        <label id="totalToSell" class="col-sm-2  form-control-static text-danger">50.098</label>
+                        <label id="totalToSell" class="col-sm-5  form-control-static text-danger">50.098</label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
                     <div class="form-group">
                         <label for="feeToSell" class="col-sm-5 control-label">Fee</label>
-                        <label id="feeToSell" class="col-sm-2  form-control-static text-danger">1</label>
+                        <label id="feeToSell" class="col-sm-5  form-control-static text-danger">1</label>
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
                     <spring:hasBindErrors name="sellOrder">
@@ -171,14 +171,14 @@
 
                 <div class="form-group">
                     <label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>
-                    <label id="lowestAsk" class="col-sm-2  form-control-static text-success">
+                    <label id="lowestAsk" class="col-sm-5  form-control-static text-success">
                         <fmt:formatNumber value="${buyOrder.suggestedPrice}" type="number" pattern="#.##"/>
                     </label>
                     <label class="col-sm-1  form-control-static text-info">BTC</label>
                 </div>
                 <div class="form-group">
                     <label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>
-                    <label id="balanceToBuy" class="col-sm-2  form-control-static text-success">
+                    <label id="balanceToBuy" class="col-sm-5  form-control-static text-success">
                         <fmt:formatNumber value="${buyOrder.balance}" type="number" pattern="#.##"/>
                     </label>
                     <label class="col-sm-1  form-control-static text-info">CNY</label>
@@ -199,12 +199,12 @@
                 </div>
                 <div class="form-group">
                     <label for="totalToBuy" class="col-sm-5 control-label">Total</label>
-                    <label id="totalToBuy" class="col-sm-2  form-control-static text-danger">50.098</label>
+                    <label id="totalToBuy" class="col-sm-5  form-control-static text-danger">50.098</label>
                     <label class="col-sm-1  form-control-static text-info">BTC</label>
                 </div>
                 <div class="form-group">
                     <label for="feeToBuy" class="col-sm-5 control-label">Fee</label>
-                    <label id="feeToBuy" class="col-sm-2  form-control-static text-danger">1</label>
+                    <label id="feeToBuy" class="col-sm-5  form-control-static text-danger">1</label>
                     <label class="col-sm-1  form-control-static text-info">CNY</label>
                 </div>
                 <spring:hasBindErrors name="buyOrder">
@@ -311,7 +311,7 @@
 
                 <c:forEach items="${activeOrders}" var="trade">
                     <c:choose>
-                        <c:when test="${trade.type == Sell}">
+                        <c:when test="${trade.type == 'SELL'}">
                             <tr class="danger">
                         </c:when>
                         <c:otherwise>
@@ -365,7 +365,7 @@
 
             <c:forEach items="${executedTrades}" var="trade">
                 <c:choose>
-                    <c:when test="${trade.tradeType == Buy}">
+                    <c:when test="${trade.tradeType == 'Buy'}">
                         <tr class="success">
                     </c:when>
                     <c:otherwise>

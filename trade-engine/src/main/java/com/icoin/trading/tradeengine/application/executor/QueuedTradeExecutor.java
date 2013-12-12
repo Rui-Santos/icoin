@@ -34,8 +34,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class QueuedTradeExecutor implements TradeExecutor {
     private static Logger logger = LoggerFactory.getLogger(QueuedTradeExecutor.class);
     private Map<OrderBookId, BlockingQueue<AbstractOrder>> orderBookPool;
-    private SellOrderExecutor sellOrderExecutor;
-    private BuyOrderExecutor buyOrderExecutor;
     private CommandGateway commandGateway;
 
     //todo, load orderbook id from the repo
@@ -143,15 +141,5 @@ public class QueuedTradeExecutor implements TradeExecutor {
     public void start() {
         final Runnable setup = new Setup();
         new Thread(setup).start();
-    }
-
-    @Autowired
-    public void setSellOrderExecutor(SellOrderExecutor sellOrderExecutor) {
-        this.sellOrderExecutor = sellOrderExecutor;
-    }
-
-    @Autowired
-    public void setBuyOrderExecutor(BuyOrderExecutor buyOrderExecutor) {
-        this.buyOrderExecutor = buyOrderExecutor;
     }
 }

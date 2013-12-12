@@ -36,8 +36,6 @@ import java.math.BigDecimal;
 @Component
 public class OrderBookListener {
 
-    private static final String BUY = "Buy";
-    private static final String SELL = "Sell";
     private BigDecimal lowestPrice = BigDecimal.valueOf(0.00000001);
 
     private OrderBookQueryRepository orderBookRepository;

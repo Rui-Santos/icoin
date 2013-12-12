@@ -48,8 +48,7 @@ public class CoinOrderBookListener {
         OrderBookId orderBookId = new OrderBookId();
         final CoinId coinId = event.getCoinIdentifier();
         CreateOrderBookCommand createOrderBookCommand =
-                new CreateOrderBookCommand(orderBookId,
-                        CurrencyPair.createExchangeToDefault(coinId.toString()));
+                new CreateOrderBookCommand(orderBookId, new CurrencyPair(coinId.toString()));
         commandBus.dispatch(new GenericCommandMessage<CreateOrderBookCommand>(createOrderBookCommand));
 
 
@@ -60,7 +59,7 @@ public class CoinOrderBookListener {
                 new AddOrderBookToCoinCommand(
                         event.getCoinIdentifier(),
                         orderBookId,
-                        CurrencyPair.createExchangeToDefault(coinId.toString()));
+                        new CurrencyPair(coinId.toString()));
 
         commandBus.dispatch(new GenericCommandMessage<AddOrderBookToCoinCommand>(addOrderBookToCoinCommand));
     }
