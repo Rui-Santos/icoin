@@ -18,7 +18,11 @@ package com.icoin.trading.tradeengine.infrastructure.profiling;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
 /**
@@ -27,7 +31,7 @@ import org.springframework.util.StopWatch;
 //@Aspect
 //@Component
 public class ProfilingAspect {
-
+    private static Logger logger = LoggerFactory.getLogger(ProfilingAspect.class);
     @Around("methodsToBeProfiled()")
     public Object profile(ProceedingJoinPoint pjp) throws Throwable {
         StopWatch sw = new StopWatch(getClass().getSimpleName());
@@ -36,7 +40,8 @@ public class ProfilingAspect {
             return pjp.proceed();
         } finally {
             sw.stop();
-            System.out.println(sw.getLastTaskName() + sw.shortSummary());
+//            System.out.println(sw.getLastTaskName() + sw.shortSummary());
+            logger.info(sw.getLastTaskName() + sw.shortSummary());
         }
     }
 

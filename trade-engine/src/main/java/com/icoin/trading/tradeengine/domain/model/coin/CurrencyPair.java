@@ -2,6 +2,7 @@ package com.icoin.trading.tradeengine.domain.model.coin;
 
 
 import com.homhon.base.domain.model.ValueObjectSupport;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 /**
  * Created with IntelliJ IDEA.
@@ -88,6 +89,8 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
      * @param baseCurrency The base symbol (single unit)
      * @param counterCurrency The counter symbol (multiple units)
      */
+
+    @PersistenceConstructor
     public CurrencyPair(String baseCurrency, String counterCurrency) {
 
         this.baseCurrency = baseCurrency;
