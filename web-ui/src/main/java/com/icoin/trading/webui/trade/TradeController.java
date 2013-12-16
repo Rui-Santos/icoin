@@ -1,6 +1,7 @@
 package com.icoin.trading.webui.trade;
 
 import com.homhon.util.Strings;
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
@@ -27,6 +28,8 @@ import com.icoin.trading.webui.order.SellOrder;
 import com.icoin.trading.webui.util.SecurityUtil;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -89,9 +94,8 @@ public class TradeController {
         model.addAttribute("sellOrder", sellOrder);
 
         BuyOrder buyOrder = new BuyOrder();
-        prepareInitialOrder(DEFUALT_COIN, buyOrder, orderBookEntry,OrderType.BUY);
+        prepareInitialOrder(DEFUALT_COIN, buyOrder, orderBookEntry, OrderType.BUY);
         model.addAttribute("buyOrder", buyOrder);
-//        model.addAttribute("items", coinRepository.findAll());
 
         CoinEntry coin = coinRepository.findOne(DEFUALT_COIN);
         final List<OrderBookEntry> bookEntryList = orderBookRepository.findByCoinIdentifier(coin.getPrimaryKey());
@@ -100,8 +104,10 @@ public class TradeController {
         final String userId = SecurityUtil.obtainLoggedinUserIdentifierSafely();
         if (Strings.hasLength(userId)) {
             final PortfolioEntry portfolioEntry = obtainPortfolioForUser();
-            sellOrder.setBalance(portfolioEntry.obtainAmountOfAvailableItemsFor(DEFUALT_COIN));
-            buyOrder.setBalance(portfolioEntry.getAmountOfMoney());
+            sellOrder.setBalance(portfolioEntry
+                    .obtainAmountOfAvailableItemsFor(DEFUALT_COIN, orderBookEntry.getBaseCurrency())
+                    .getAmount());
+            buyOrder.setBalance(portfolioEntry.getAmountOfMoney().getAmount());
 
             final List<OrderEntry> activeOrders = orderQueryRepository.findUserActiveOrders(portfolioEntry.getPrimaryKey(), bookEntry.getPrimaryKey());
             logger.info("queried active orders for user {} with order book {}: {}", portfolioEntry.getPrimaryKey(), bookEntry.getPrimaryKey(), activeOrders);
@@ -161,21 +167,30 @@ public class TradeController {
             OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
-            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getPrimaryKey()).compareTo(order.getTradeAmount()) < 0) {
+            final BigDecimal tradeAmount = order.getTradeAmount();
+            final BigDecimal itemPrice = order.getItemPrice();
+
+            final Money price = Money.of(Constants.DEFAULT_CURRENCY_UNIT, itemPrice, RoundingMode.HALF_EVEN);
+            final Money btcAmount = Money.of(Constants.CURRENCY_UNIT_BTC, tradeAmount, RoundingMode.HALF_EVEN);
+
+            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getPrimaryKey(), Constants.CURRENCY_UNIT_BTC).isLessThan(btcAmount)) {
                 bindingResult.rejectValue("tradeAmount",
                         "error.order.sell.tomanyitems",
                         "Not enough items available to create sell order.");
-                addPortfolioItemInfoToModel(order.getCoinId(), model);
+                BuyOrder buyOrder = new BuyOrder();
+                prepareInitialOrder(DEFUALT_COIN, buyOrder, bookEntry, OrderType.BUY);
+                model.addAttribute("buyOrder", buyOrder);
+//                addPortfolioItemInfoToModel(order.getCoinId(), model);
                 return "/index";
             }
 
-            logger.info("placing a sell order: {}.", order);
+            logger.info("placing a sell order with price {}, amount {}: {}.", price, btcAmount, order);
 
             StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
                     new OrderBookId(bookEntry.getPrimaryKey()),
                     new PortfolioId(portfolioEntry.getIdentifier()),
-                    order.getTradeAmount(),
-                    order.getItemPrice());
+                    btcAmount.toBigMoney(),
+                    price.toBigMoney());
 
             commandBus.dispatch(new GenericCommandMessage<StartSellTransactionCommand>(command));
             logger.info("Sell order {} dispatched... ", order);
@@ -183,7 +198,7 @@ public class TradeController {
             return "redirect:/index";
         }
 
-        addPortfolioItemInfoToModel(order.getCoinId(), model);
+//        addPortfolioItemInfoToModel(order.getCoinId(), model);
         return "/index";
     }
 
@@ -194,21 +209,32 @@ public class TradeController {
             OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
             PortfolioEntry portfolioEntry = obtainPortfolioForUser();
 
-            if (portfolioEntry.obtainMoneyToSpend().compareTo(order.getTradeAmount().multiply(order.getItemPrice())) < 0) {
+            final BigDecimal tradeAmount = order.getTradeAmount();
+            final BigDecimal itemPrice = order.getItemPrice();
+
+            final Money price = Money.of(Constants.DEFAULT_CURRENCY_UNIT, itemPrice, RoundingMode.HALF_EVEN);
+            final Money btcAmount = Money.of(Constants.CURRENCY_UNIT_BTC, tradeAmount, RoundingMode.HALF_EVEN);
+            final Money totalMoney = btcAmount.convertedTo(price.getCurrencyUnit(), btcAmount.getAmount(), RoundingMode.HALF_EVEN);
+
+
+            if (portfolioEntry.obtainMoneyToSpend().isLessThan(totalMoney)) {
                 bindingResult.rejectValue("tradeAmount",
                         "error.order.buy.notenoughmoney",
                         "Not enough cash to spend to buy the items for the price you want");
-                addPortfolioMoneyInfoToModel(portfolioEntry, model);
+                SellOrder sellOrder = new SellOrder();
+                prepareInitialOrder(DEFUALT_COIN, sellOrder, bookEntry, OrderType.SELL);
+                model.addAttribute("sellOrder", sellOrder);
+//                addPortfolioMoneyInfoToModel(portfolioEntry, model);
                 return "/index";
             }
 
-            logger.info("placing a buy order: {}.", order);
-
+            logger.info("placing a buy order with price {}, amount {}, total money {}: {}.", price, btcAmount, totalMoney, order);
             StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
                     new OrderBookId(bookEntry.getPrimaryKey()),
                     new PortfolioId(portfolioEntry.getIdentifier()),
-                    order.getTradeAmount(),
-                    order.getItemPrice());
+                    btcAmount.toBigMoney(),
+                    price.toBigMoney());
+
             commandBus.dispatch(new GenericCommandMessage<StartBuyTransactionCommand>(command));
             logger.info("Buy order {} dispatched... ", order);
             return "redirect:/index";
@@ -221,12 +247,12 @@ public class TradeController {
     private void addPortfolioItemInfoToModel(String identifier, Model model) {
         PortfolioEntry portfolioEntry = obtainPortfolioForUser();
         OrderBookEntry orderBookEntry = obtainOrderBookForCoin(identifier);
-        addPortfolioItemInfoToModel(portfolioEntry, orderBookEntry.getPrimaryKey(), model);
+        addPortfolioItemInfoToModel(portfolioEntry, orderBookEntry.getPrimaryKey(), orderBookEntry.getBaseCurrency(), model);
     }
 
-    private void addPortfolioItemInfoToModel(PortfolioEntry entry, String orderBookIdentifier, Model model) {
-        model.addAttribute("itemsInPossession", entry.obtainAmountOfItemsInPossessionFor(orderBookIdentifier));
-        model.addAttribute("itemsReserved", entry.obtainAmountOfReservedItemsFor(orderBookIdentifier));
+    private void addPortfolioItemInfoToModel(PortfolioEntry entry, String orderBookIdentifier, CurrencyUnit currencyUnit, Model model) {
+        model.addAttribute("itemsInPossession", entry.obtainAmountOfItemsInPossessionFor(orderBookIdentifier, currencyUnit));
+        model.addAttribute("itemsReserved", entry.obtainAmountOfReservedItemsFor(orderBookIdentifier, currencyUnit));
     }
 
     private void addPortfolioMoneyInfoToModel(Model model) {
@@ -269,12 +295,21 @@ public class TradeController {
         order.setCoinId(identifier);
         order.setCoinName(coin.getName());
 
+        BigDecimal amount = BigDecimal.ZERO;
+
         switch (type) {
             case BUY:
-                order.setSuggestedPrice(orderBook.getLowestSellPrice());
+                if(orderBook != null && orderBook.getLowestSellPrice() !=null){
+                    amount =  orderBook.getLowestSellPrice().getAmount();
+                }
+
+                order.setSuggestedPrice(amount);
                 break;
             default:
-                order.setSuggestedPrice(orderBook.getHighestBuyPrice());
+                if(orderBook != null && orderBook.getHighestBuyPrice() !=null){
+                    amount =  orderBook.getHighestBuyPrice().getAmount();
+                }
+                order.setSuggestedPrice(amount);
         }
     }
 }

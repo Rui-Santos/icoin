@@ -16,6 +16,8 @@
 
 package com.icoin.trading.webui.order;
 
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
+
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -29,11 +31,11 @@ public class AbstractOrder {
     private String coinName;
     private BigDecimal suggestedPrice = BigDecimal.ZERO;
     private BigDecimal balance = BigDecimal.ZERO;
-    private String ccy1;//to sell
-    private String ccy2;//price ccy
+    private String ccy1 = Currencies.BTC;// base ccy
+    private String ccy2 =Currencies.CNY;// counter ccy
     private OrderType orderType;
 
-    @DecimalMin(value = "0.01", message = "trading.minimal.amount")
+    @DecimalMin(value = "0.0001", message = "trading.minimal.amount")
     @NotNull(message = "trading.amount.required")
     private BigDecimal tradeAmount;
 

@@ -16,6 +16,8 @@
 
 package com.icoin.trading.webui.admin;
 
+import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -25,7 +27,7 @@ import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
+import org.joda.money.BigMoney;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,10 +70,9 @@ public class AdminController {
 
     @RequestMapping(value = "/portfolio/{identifier}/money")
     public String addMoney(@PathVariable("identifier") String portfolioIdentifier,
-                           @RequestParam("amount") BigDecimal amountOfMoney
-    ) {
+                           @RequestParam("amount") BigDecimal amountOfMoney) {
         DepositCashCommand command =
-                new DepositCashCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
+                new DepositCashCommand(new PortfolioId(portfolioIdentifier), BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, amountOfMoney));
         commandBus.dispatch(new GenericCommandMessage<DepositCashCommand>(command));
         return "redirect:/admin/portfolio/{identifier}";
     }
@@ -79,13 +80,14 @@ public class AdminController {
     @RequestMapping(value = "/portfolio/{identifier}/item")
     public String addItem(@PathVariable("identifier") String portfolioIdentifier,
                           @RequestParam("orderbook") String orderBookIdentifier,
-                          @RequestParam("amount") BigDecimal amount
-    ) {
-        AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(new PortfolioId(
-                portfolioIdentifier),
-                new OrderBookId(
-                        orderBookIdentifier),
-                amount);
+                          @RequestParam("amount") BigDecimal amount) {
+
+        final OrderBookEntry bookEntry = orderBookQueryRepository.findOne(orderBookIdentifier);
+
+        AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(
+                new PortfolioId(portfolioIdentifier),
+                new OrderBookId(orderBookIdentifier),
+                BigMoney.of(bookEntry.getBaseCurrency(), amount));
         commandBus.dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(command));
         return "redirect:/admin/portfolio/{identifier}";
     }

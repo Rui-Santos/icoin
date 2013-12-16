@@ -21,7 +21,7 @@
     <groupId>com.icoin.trading</groupId>
     <artifactId>icoin-trading</artifactId>
     <packaging>pom</packaging>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.4-SNAPSHOT</version>
 
     <name>iCoin Trader Project</name>
 

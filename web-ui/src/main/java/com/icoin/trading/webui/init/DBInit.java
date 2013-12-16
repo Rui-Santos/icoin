@@ -16,11 +16,15 @@
 
 package com.icoin.trading.webui.init;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.application.command.coin.CreateCoinCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
@@ -31,13 +35,14 @@ import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.transaction.TransactionEntry;
+import com.icoin.trading.users.application.command.CreateUserCommand;
 import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.users.query.UserEntry;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.saga.repository.mongo.MongoTemplate;
-import com.icoin.trading.users.query.UserEntry;
-import com.icoin.trading.users.application.command.CreateUserCommand;
+import org.joda.money.BigMoney;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -94,6 +99,8 @@ public class DBInit {
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
         mongoTemplate.dropCollection(PortfolioEntry.class);
         mongoTemplate.dropCollection(TransactionEntry.class);
+        mongoTemplate.dropCollection(SellOrder.class);
+        mongoTemplate.dropCollection(BuyOrder.class);
 
         UserId buyer1 = createuser("Buyer One", "buyer1");
         UserId buyer2 = createuser("Buyer two", "buyer2");
@@ -121,7 +128,7 @@ public class DBInit {
         AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
                 new OrderBookId(orderBookEntry.getPrimaryKey()),
-                amount);
+                BigMoney.of(Constants.CURRENCY_UNIT_BTC, amount));
         commandBus.dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(command));
     }
 
@@ -145,22 +152,36 @@ public class DBInit {
 
     public void depositMoneyToPortfolio(String portfolioIdentifier, BigDecimal amountOfMoney) {
         DepositCashCommand command =
-                new DepositCashCommand(new PortfolioId(portfolioIdentifier), amountOfMoney);
+                new DepositCashCommand(new PortfolioId(portfolioIdentifier), BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, amountOfMoney));
         commandBus.dispatch(new GenericCommandMessage<DepositCashCommand>(command));
     }
 
 
     private void createCoins() {
-        CreateCoinCommand command = new CreateCoinCommand(new CoinId("BTC"), "Bitcoin", BigDecimal.valueOf(1000), BigDecimal.valueOf(10000));
+        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10025.341));
+        BigMoney.of(Constants.CURRENCY_UNIT_BTC, BigDecimal.valueOf(10000));
+        CreateCoinCommand command = new CreateCoinCommand(
+                                            new CoinId(Currencies.BTC),
+                                            "Bitcoin",
+                                            BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10025.341)),
+                                            BigMoney.of(Constants.CURRENCY_UNIT_BTC, BigDecimal.valueOf(10000)));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCoinCommand(new CoinId("LTC"), "Litecoin", BigDecimal.valueOf(500), BigDecimal.valueOf(5000));
+        command = new CreateCoinCommand(
+                        new CoinId(Currencies.LTC),
+                        "Litecoin",
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(1026.341)),
+                        BigMoney.of(Constants.CURRENCY_UNIT_LTC, BigDecimal.valueOf(10000)));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCoinCommand(new CoinId("PPC"), "Peercoin", BigDecimal.valueOf(15000), BigDecimal.valueOf(100000));
+        command = new CreateCoinCommand(new CoinId(Currencies.PPC), "Peercoin",
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(66.341)),
+                BigMoney.of(Constants.CURRENCY_UNIT_PPC, BigDecimal.valueOf(5000)));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
-        command = new CreateCoinCommand(new CoinId("XPM"), "Primecoin", BigDecimal.valueOf(15000), BigDecimal.valueOf(100000));
+        command = new CreateCoinCommand(new CoinId(Currencies.XPM), "Primecoin",
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(56.341)),
+                BigMoney.of(Constants.CURRENCY_UNIT_XPM, BigDecimal.valueOf(10000)));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
     }

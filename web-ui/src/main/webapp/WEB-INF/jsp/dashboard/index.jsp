@@ -113,9 +113,9 @@
                 <tr>
                     <td><c:out value="${item.coinName}"/></td>
                     <td><c:out value="${item.type}"/></td>
-                    <td><c:out value="${item.amountOfItems}"/></td>
+                    <td><c:out value="${item.amountOfItem}"/></td>
                     <td><c:out value="${item.pricePerItem}"/></td>
-                    <td><c:out value="${item.amountOfExecutedItems}"/></td>
+                    <td><c:out value="${item.amountOfExecutedItem}"/></td>
                     <td><c:out value="${item.state}"/></td>
                 </tr>
             </c:forEach>
