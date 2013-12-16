@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.icoin.trading.tradeengine.application.command.order.ExecuteBuyOrderCommand;
 import com.icoin.trading.tradeengine.application.command.order.ExecuteSellOrderCommand;
 import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
@@ -109,12 +108,12 @@ public class QueuedTradeExecutor implements TradeExecutor {
                 case SELL:
                     final ExecuteSellOrderCommand executeSellOrderCommand =
                             new ExecuteSellOrderCommand(new OrderId(order.getPrimaryKey()),
-                            order.getPortfolioId(),
-                            order.getOrderBookId(),
-                            order.getTransactionId(),
-                            order.getItemRemaining(),
-                            order.getItemPrice(),
-                            order.getPlaceDate());
+                                    order.getPortfolioId(),
+                                    order.getOrderBookId(),
+                                    order.getTransactionId(),
+                                    order.getItemRemaining(),
+                                    order.getItemPrice(),
+                                    order.getPlaceDate());
                     commandGateway.send(executeSellOrderCommand);
                     break;
                 default:

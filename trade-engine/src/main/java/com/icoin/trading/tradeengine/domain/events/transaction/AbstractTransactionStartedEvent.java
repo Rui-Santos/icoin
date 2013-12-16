@@ -19,8 +19,7 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -29,18 +28,18 @@ public abstract class AbstractTransactionStartedEvent {
     private TransactionId transactionIdentifier;
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private BigDecimal totalItems;
-    private BigDecimal pricePerItem;
+    private BigMoney totalItem;
+    private BigMoney pricePerItem;
 
     public AbstractTransactionStartedEvent(TransactionId transactionIdentifier,
                                            OrderBookId orderbookIdentifier,
                                            PortfolioId portfolioIdentifier,
-                                           BigDecimal totalItems,
-                                           BigDecimal pricePerItem) {
+                                           BigMoney totalItem,
+                                           BigMoney pricePerItem) {
         this.transactionIdentifier = transactionIdentifier;
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
-        this.totalItems = totalItems;
+        this.totalItem = totalItem;
         this.pricePerItem = pricePerItem;
     }
 
@@ -56,11 +55,11 @@ public abstract class AbstractTransactionStartedEvent {
         return transactionIdentifier;
     }
 
-    public BigDecimal getPricePerItem() {
+    public BigMoney getPricePerItem() {
         return pricePerItem;
     }
 
-    public BigDecimal getTotalItems() {
-        return totalItems;
+    public BigMoney getTotalItem() {
+        return totalItem;
     }
 }

@@ -18,9 +18,8 @@ package com.icoin.trading.tradeengine.query.transaction;
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
 import org.hamcrest.Description;
+import org.joda.money.BigMoney;
 import org.mockito.ArgumentMatcher;
-
-import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -28,17 +27,16 @@ import java.math.BigDecimal;
 public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
 
     private String problem;
-    private float min = 0.00000001f;
     private TransactionState state;
     private TransactionType type;
     private String coinName;
-    private BigDecimal amountOfItems;
-    private BigDecimal amountOfItemsExecuted;
-    private BigDecimal pricePerItem;
+    private BigMoney amountOfItem;
+    private BigMoney amountOfItemsExecuted;
+    private BigMoney pricePerItem;
 
-    public TransactionEntryMatcher(BigDecimal amountOfItems, BigDecimal amountOfItemsExecuted, String coinName, BigDecimal pricePerItem,
+    public TransactionEntryMatcher(BigMoney amountOfItem, BigMoney amountOfItemsExecuted, String coinName, BigMoney pricePerItem,
                                    TransactionState state, TransactionType type) {
-        this.amountOfItems = amountOfItems;
+        this.amountOfItem = amountOfItem;
         this.amountOfItemsExecuted = amountOfItemsExecuted;
         this.coinName = coinName;
         this.pricePerItem = pricePerItem;
@@ -55,17 +53,17 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
             return false;
         }
         TransactionEntry transactionEntry = (TransactionEntry) argument;
-        if (Math.abs(amountOfItems.floatValue() - transactionEntry.getAmountOfItems().floatValue()) > min) {
-            problem = String.format("Amount of items is not %f but %f",
-                    amountOfItems,
+        if (amountOfItem.minus(transactionEntry.getAmountOfItems()).isPositive()) {
+            problem = String.format("Amount of items is not %s but %s",
+                    amountOfItem,
                     transactionEntry.getAmountOfItems());
             return false;
         }
 
-        if (Math.abs(amountOfItemsExecuted.floatValue() - transactionEntry.getAmountOfExecutedItems().floatValue()) > min) {
-            problem = String.format("Amount of executed items is not %f but %f",
-                    amountOfItemsExecuted.doubleValue(),
-                    transactionEntry.getAmountOfExecutedItems().doubleValue());
+        if (amountOfItemsExecuted.minus(transactionEntry.getAmountOfExecutedItems()).isPositive()) {
+            problem = String.format("Amount of executed items is not %s but %s",
+                    amountOfItemsExecuted,
+                    transactionEntry.getAmountOfExecutedItems());
             return false;
         }
         if (!coinName.equals(transactionEntry.getCoinName())) {
@@ -73,10 +71,10 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
             return false;
         }
 
-        if (Math.abs(pricePerItem.floatValue() - transactionEntry.getPricePerItem().floatValue()) > min) {
-            problem = String.format("Price per item is not %f but %f",
-                    pricePerItem.doubleValue(),
-                    transactionEntry.getPricePerItem().doubleValue());
+        if (pricePerItem.minus(transactionEntry.getPricePerItem()).isPositive()) {
+            problem = String.format("Price per item is not %s but %s",
+                    pricePerItem,
+                    transactionEntry.getPricePerItem());
             return false;
         }
         if (state != transactionEntry.getState()) {

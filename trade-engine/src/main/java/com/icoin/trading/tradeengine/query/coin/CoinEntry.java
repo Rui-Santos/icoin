@@ -9,8 +9,7 @@ package com.icoin.trading.tradeengine.query.coin;
  */
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -18,15 +17,15 @@ import java.math.BigDecimal;
 public class CoinEntry extends AuditAwareEntitySupport<CoinEntry, String, Long> {
 
     private String name;
-    private BigDecimal coinPrice;
-    private BigDecimal coinAmount;
+    private BigMoney coinPrice;
+    private BigMoney coinAmount;
     private boolean tradeStarted;
 
-    public BigDecimal getCoinAmount() {
+    public BigMoney getCoinAmount() {
         return coinAmount;
     }
 
-    public void setCoinAmount(BigDecimal coinAmount) {
+    public void setCoinAmount(BigMoney coinAmount) {
         this.coinAmount = coinAmount;
     }
 
@@ -46,11 +45,11 @@ public class CoinEntry extends AuditAwareEntitySupport<CoinEntry, String, Long> 
         this.tradeStarted = tradeStarted;
     }
 
-    public BigDecimal getCoinPrice() {
+    public BigMoney getCoinPrice() {
         return coinPrice;
     }
 
-    public void setCoinPrice(BigDecimal coinPrice) {
+    public void setCoinPrice(BigMoney coinPrice) {
         this.coinPrice = coinPrice;
     }
 }

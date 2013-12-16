@@ -1,16 +1,16 @@
 package com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters;
 
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * Created with IntelliJ IDEA.

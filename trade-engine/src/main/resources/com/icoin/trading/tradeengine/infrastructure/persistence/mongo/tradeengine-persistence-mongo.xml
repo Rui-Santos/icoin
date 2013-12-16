@@ -74,6 +74,8 @@
                 <bean class="com.homhon.mongo.converter.ProbabilityWriteConverter"/>
                 <bean class="com.homhon.mongo.converter.BigDecimalToDoubleConverter"/>
                 <bean class="com.homhon.mongo.converter.DoubleToBigDecimalConverter"/>
+                <bean class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters.MoneyReadConverter"/>
+                <bean class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters.MoneyWriteConverter"/>
                 <!--<bean class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters.SellOrderReadConverter"/>-->
                 <!--<bean class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters.SellOrderWriteConverter"/>-->
             </util:list>

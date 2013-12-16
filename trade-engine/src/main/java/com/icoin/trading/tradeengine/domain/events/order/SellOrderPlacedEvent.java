@@ -21,8 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import org.joda.money.BigMoney;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -35,8 +35,8 @@ public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent {
     public SellOrderPlacedEvent(OrderBookId orderBookId,
                                 OrderId orderId,
                                 TransactionId transactionId,
-                                BigDecimal tradeAmount,
-                                BigDecimal itemPrice,
+                                BigMoney tradeAmount,
+                                BigMoney itemPrice,
                                 PortfolioId portfolioId,
                                 CurrencyPair currencyPair,
                                 Date placeDate) {

@@ -18,15 +18,14 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
  */
 public class SellTransactionExecutedEvent extends AbstractTransactionExecutedEvent {
 
-    public SellTransactionExecutedEvent(TransactionId transactionIdentifier, BigDecimal amountOfItems, BigDecimal itemPrice) {
+    public SellTransactionExecutedEvent(TransactionId transactionIdentifier, BigMoney amountOfItems, BigMoney itemPrice) {
         super(transactionIdentifier, amountOfItems, itemPrice);
     }
 }

@@ -28,24 +28,15 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 /**
  * @author Jettro Coenradie
  */
 @Component
 public class OrderBookListener {
 
-    private BigDecimal lowestPrice = BigDecimal.valueOf(0.00000001);
-
     private OrderBookQueryRepository orderBookRepository;
     private CoinQueryRepository coinRepository;
 
-
-    //@Value("#{trading.lowestTradePrice}")
-    public void setLowestPrice(double lowestPrice) {
-        this.lowestPrice = BigDecimal.valueOf(lowestPrice);
-    }
 
     @EventHandler
     public void handleOrderBookAddedToCoinEvent(OrderBookAddedToCoinEvent event) {
@@ -53,6 +44,7 @@ public class OrderBookListener {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         orderBookEntry.setCoinIdentifier(event.getCoinId().toString());
         orderBookEntry.setCoinName(coinEntry.getName());
+        orderBookEntry.setCurrencyPair(event.getCurrencyPair());
         orderBookEntry.setPrimaryKey(event.getOrderBookId().toString());
         orderBookRepository.save(orderBookEntry);
     }

@@ -20,8 +20,7 @@ import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelAm
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -31,12 +30,12 @@ public class CancelItemReservationForPortfolioCommandMatcher
 
     private OrderBookId orderBookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private BigDecimal amountOfItemsToCancel;
+    private BigMoney amountOfItemToCancel;
 
     public CancelItemReservationForPortfolioCommandMatcher(OrderBookId orderBookIdentifier,
                                                            PortfolioId portfolioIdentifier,
-                                                           BigDecimal amountOfItemsToCancel) {
-        this.amountOfItemsToCancel = amountOfItemsToCancel;
+                                                           BigMoney amountOfItemToCancel) {
+        this.amountOfItemToCancel = amountOfItemToCancel;
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
     }
@@ -45,13 +44,13 @@ public class CancelItemReservationForPortfolioCommandMatcher
     protected boolean doMatches(CancelAmountReservationForPortfolioCommand command) {
         return command.getOrderBookIdentifier().equals(orderBookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && command.getAmountOfItemsToCancel().compareTo(amountOfItemsToCancel) == 0;
+                && command.getAmountOfItemsToCancel().compareTo(amountOfItemToCancel) == 0;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("CancelAmountReservationForPortfolioCommand with amountOfItemsToCancel [")
-                .appendValue(amountOfItemsToCancel)
+        description.appendText("CancelAmountReservationForPortfolioCommand with amountOfItemToCancel [")
+                .appendValue(amountOfItemToCancel)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
                 .appendText("] and for OrderBook with identifier [")

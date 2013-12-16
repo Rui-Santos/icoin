@@ -18,23 +18,24 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
  */
 public abstract class AbstractTransactionPartiallyExecutedEvent {
     private TransactionId transactionIdentifier;
-    private BigDecimal amountOfExecutedItems;
-    private BigDecimal totalOfExecutedItems;
-    private BigDecimal itemPrice;
+    private BigMoney amountOfExecutedItem;
+    private BigMoney totalOfExecutedItem;
+    private BigMoney itemPrice;
 
-    public AbstractTransactionPartiallyExecutedEvent(TransactionId transactionIdentifier, BigDecimal amountOfExecutedItems, BigDecimal totalOfExecutedItems,
-                                                     BigDecimal itemPrice) {
+    public AbstractTransactionPartiallyExecutedEvent(TransactionId transactionIdentifier,
+                                                     BigMoney amountOfExecutedItem,
+                                                     BigMoney totalOfExecutedItem,
+                                                     BigMoney itemPrice) {
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfExecutedItems = amountOfExecutedItems;
-        this.totalOfExecutedItems = totalOfExecutedItems;
+        this.amountOfExecutedItem = amountOfExecutedItem;
+        this.totalOfExecutedItem = totalOfExecutedItem;
         this.itemPrice = itemPrice;
     }
 
@@ -42,15 +43,15 @@ public abstract class AbstractTransactionPartiallyExecutedEvent {
         return transactionIdentifier;
     }
 
-    public BigDecimal getAmountOfExecutedItems() {
-        return amountOfExecutedItems;
+    public BigMoney getAmountOfExecutedItem() {
+        return amountOfExecutedItem;
     }
 
-    public BigDecimal getItemPrice() {
+    public BigMoney getItemPrice() {
         return itemPrice;
     }
 
-    public BigDecimal getTotalOfExecutedItems() {
-        return totalOfExecutedItems;
+    public BigMoney getTotalOfExecutedItem() {
+        return totalOfExecutedItem;
     }
 }

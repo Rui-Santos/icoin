@@ -2,8 +2,8 @@ package com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converter
 
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.mongodb.DBObject;
+import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,9 +22,9 @@ public class MoneyWriteConverterTest {
     public void testConvert() throws Exception {
         final MoneyWriteConverter converter = new MoneyWriteConverter();
 
-        final DBObject btc = converter.convert(Money.of(CurrencyUnit.of(Currencies.BTC), 100));
+        final DBObject btc = converter.convert(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 100));
         assertThat((Long) btc.get("amount"), equalTo(100 * 100000000L));
-        assertThat((String)btc.get("ccy"), equalTo(Currencies.BTC));
+        assertThat((String) btc.get("ccy"), equalTo(Currencies.BTC));
 
     }
 
@@ -32,9 +32,9 @@ public class MoneyWriteConverterTest {
     public void testConvertCNY() throws Exception {
         final MoneyWriteConverter converter = new MoneyWriteConverter();
 
-        final DBObject btc = converter.convert(Money.of(CurrencyUnit.of(Currencies.CNY), 100));
+        final DBObject btc = converter.convert(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 100));
 
-        assertThat((Long)btc.get("amount"), equalTo(100*100l));
-        assertThat((String)btc.get("ccy"), equalTo(Currencies.CNY));
+        assertThat((Long) btc.get("amount"), equalTo(1000 * 100l));
+        assertThat((String) btc.get("ccy"), equalTo(Currencies.CNY));
     }
 }

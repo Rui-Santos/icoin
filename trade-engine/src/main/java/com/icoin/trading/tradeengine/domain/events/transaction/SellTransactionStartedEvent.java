@@ -19,8 +19,7 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -30,8 +29,8 @@ public class SellTransactionStartedEvent extends AbstractTransactionStartedEvent
     public SellTransactionStartedEvent(TransactionId transactionIdentifier,
                                        OrderBookId orderbookIdentifier,
                                        PortfolioId portfolioIdentifier,
-                                       BigDecimal totalItems,
-                                       BigDecimal pricePerItem) {
-        super(transactionIdentifier, orderbookIdentifier, portfolioIdentifier, totalItems, pricePerItem);
+                                       BigMoney totalItem,
+                                       BigMoney pricePerItem) {
+        super(transactionIdentifier, orderbookIdentifier, portfolioIdentifier, totalItem, pricePerItem);
     }
 }

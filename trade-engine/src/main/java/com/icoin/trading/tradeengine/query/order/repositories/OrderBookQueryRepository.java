@@ -29,5 +29,6 @@ import java.util.List;
 public interface OrderBookQueryRepository extends PagingAndSortingRepository<OrderBookEntry, String>, GenericCrudRepository<OrderBookEntry, String> {
 
     List<OrderBookEntry> findByCoinIdentifier(String coinIdentifier);
+
     OrderBookEntry findByCurrencyPair(CurrencyPair currencyPair);
 }

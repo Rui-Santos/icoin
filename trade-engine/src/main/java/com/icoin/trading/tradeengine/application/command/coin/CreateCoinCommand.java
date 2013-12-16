@@ -18,8 +18,7 @@ package com.icoin.trading.tradeengine.application.command.coin;
 
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * <p>Create a new coin by proving the name, the estimated value of the coin and the amount of shares that are
@@ -30,17 +29,17 @@ import java.math.BigDecimal;
 public class CreateCoinCommand {
     private CoinId coinId;
     private String coinName;
-    private BigDecimal coinInitialPrice;
-    private BigDecimal coinInitialAmount;
+    private BigMoney coinInitialPrice;
+    private BigMoney coinInitialAmount;
 
-    public CreateCoinCommand(CoinId coinId, String coinName, BigDecimal coinInitialPrice, BigDecimal coinInitialAmount) {
+    public CreateCoinCommand(CoinId coinId, String coinName, BigMoney coinInitialPrice, BigMoney coinInitialAmount) {
         this.coinId = coinId;
         this.coinInitialAmount = coinInitialAmount;
         this.coinName = coinName;
         this.coinInitialPrice = coinInitialPrice;
     }
 
-    public BigDecimal getCoinInitialAmount() {
+    public BigMoney getCoinInitialAmount() {
         return coinInitialAmount;
     }
 
@@ -48,7 +47,7 @@ public class CreateCoinCommand {
         return coinName;
     }
 
-    public BigDecimal getCoinInitialPrice() {
+    public BigMoney getCoinInitialPrice() {
         return coinInitialPrice;
     }
 

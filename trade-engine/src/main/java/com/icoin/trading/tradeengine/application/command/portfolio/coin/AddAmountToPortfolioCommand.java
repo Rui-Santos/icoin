@@ -19,9 +19,7 @@ package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-
-import javax.validation.constraints.DecimalMin;
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * Try to add new items for a specific OrderBook to the portfolio.
@@ -32,25 +30,25 @@ public class AddAmountToPortfolioCommand {
 
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
-    @DecimalMin("0.00000001")
-    private BigDecimal amountOfItemsToAdd;
+    //    @DecimalMin("0.00000001")
+    private BigMoney amountOfItemToAdd;
 
     /**
      * Create a new command.
      *
      * @param portfolioIdentifier Identifier of the Portfolio to add items to
      * @param orderBookIdentifier Identifier of the OrderBook to add items for
-     * @param amountOfItemsToAdd  AMount of items to add
+     * @param amountOfItemToAdd   AMount of items to add
      */
     public AddAmountToPortfolioCommand(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier,
-                                       BigDecimal amountOfItemsToAdd) {
+                                       BigMoney amountOfItemToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
-        this.amountOfItemsToAdd = amountOfItemsToAdd;
+        this.amountOfItemToAdd = amountOfItemToAdd;
     }
 
-    public BigDecimal getAmountOfItemsToAdd() {
-        return amountOfItemsToAdd;
+    public BigMoney getAmountOfItemToAdd() {
+        return amountOfItemToAdd;
     }
 
     public OrderBookId getOrderBookIdentifier() {
@@ -64,7 +62,7 @@ public class AddAmountToPortfolioCommand {
     @Override
     public String toString() {
         return "AddAmountToPortfolioCommand{" +
-                "amountOfItemsToAdd=" + amountOfItemsToAdd +
+                "amountOfItemToAdd=" + amountOfItemToAdd +
                 ", portfolioIdentifier=" + portfolioIdentifier +
                 ", orderBookIdentifier=" + orderBookIdentifier +
                 '}';

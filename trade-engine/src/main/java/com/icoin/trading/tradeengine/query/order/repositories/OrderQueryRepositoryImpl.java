@@ -27,6 +27,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -35,6 +36,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.limi
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.previousOperation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -52,20 +54,27 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepositoryCustom {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type) {
+    public List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate) {
 
         //order is: match, order, sort, limit
         TypedAggregation<OrderEntry> aggregation = newAggregation(OrderEntry.class,
                 match(where("orderStatus").is(OrderStatus.PENDING.toString())
                         .and("type").is(type.toString())
-                        .and("itemRemaining").gt(0)
+                        .and("itemRemaining.amount").gt(0)
+                        .and("placedDate").lte(toDate)
                         .and("orderBookIdentifier").is(orderBookIdentifier)),
-                group("itemPrice").sum("itemRemaining").as("amount"),
+//                project("itemPrice.amount","itemRemaining.amount")
+//                .and("itemPrice.amount").as("amount1")
+//                .and("itemRemaining.amount").as("amount2"),
+                group("itemPrice.amount", "itemPrice.currency", "itemRemaining.currency").sum("itemRemaining.amount").as("sum"),
+                project("sum")
+                        .and("itemPrice.currency").as("ccy")
+                        .and("itemPrice.amount").as("amount"),
                 sort(DESC, previousOperation()),
                 limit(10)
         );
-
         AggregationResults<PriceAggregate> result = mongoTemplate.aggregate(aggregation, PriceAggregate.class);
+
         List<PriceAggregate> priceAggregateList = result.getMappedResults();
 
         if (logger.isDebugEnabled()) {

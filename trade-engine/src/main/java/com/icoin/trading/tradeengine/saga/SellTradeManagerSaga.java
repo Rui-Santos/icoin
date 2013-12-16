@@ -36,10 +36,10 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.saga.annotation.EndSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
+import org.joda.money.BigMoney;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -61,7 +61,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                     event.getOrderbookIdentifier());
             logger.debug("The sell transaction with identifier {} is for selling {} items for the price of {}",
                     event.getTransactionIdentifier(),
-                    event.getTotalItems(),
+                    event.getTotalItem(),
                     event.getPricePerItem());
         }
 
@@ -69,13 +69,13 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         setOrderbookIdentifier(event.getOrderbookIdentifier());
         setPortfolioIdentifier(event.getPortfolioIdentifier());
         setPricePerItem(event.getPricePerItem());
-        setTotalItems(event.getTotalItems());
+        setTotalItems(event.getTotalItem());
 
         ReserveAmountCommand reserveAmountCommand =
                 new ReserveAmountCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         getTransactionIdentifier(),
-                        event.getTotalItems());
+                        event.getTotalItem());
         getCommandBus().dispatch(new GenericCommandMessage<ReserveAmountCommand>(reserveAmountCommand));
     }
 
@@ -111,7 +111,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
     public void handle(SellTransactionCancelledEvent event) {
-        BigDecimal amountOfCancelledItems = event.getTotalAmountOfItems().subtract(event.getAmountOfExecutedItems());
+        BigMoney amountOfCancelledItems = event.getTotalAmountOfItems().minus(event.getAmountOfExecutedItem());
         logger.debug("Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}",
                 event.getTransactionIdentifier(),
                 amountOfCancelledItems);
@@ -156,19 +156,16 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                         getTransactionIdentifier(),
                         event.getAmountOfItems());
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmAmountReservationForPortfolioCommand>(confirmCommand));
+
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
-                        event.getItemPrice().multiply(event.getAmountOfItems()));
+                        event.getAmountOfItems().convertedTo(
+                                event.getItemPrice().getCurrencyUnit(),
+                                event.getItemPrice().getAmount()));
         getCommandBus().dispatch(new GenericCommandMessage<DepositCashCommand>(depositCommand));
 
-        //when the whole saga complete, change the price here
-        //todo after whole completion for this exec event, refresh done price
-        //todo after whole completion for this exec event, refresh high/lower data
+        //todo after whole completion add back left reserved
 
-        //orderbookhandler to handle refresh data
-//        commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
-//        commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
-//        commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
 //        commandGateway.sendAndWait(new AddBackLeftReservedCommand());
     }
 
@@ -176,18 +173,21 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     public void handle(SellTransactionPartiallyExecutedEvent event) {
         logger.debug("Sell Transaction {} is partially executed, amount of executed items is {} for a price of {}",
                 new Object[]{event.getTransactionIdentifier(),
-                        event.getAmountOfExecutedItems(),
+                        event.getAmountOfExecutedItem(),
                         event.getItemPrice()});
+
 
         ConfirmAmountReservationForPortfolioCommand confirmCommand =
                 new ConfirmAmountReservationForPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         getTransactionIdentifier(),
-                        event.getAmountOfExecutedItems());
+                        event.getAmountOfExecutedItem());
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmAmountReservationForPortfolioCommand>(confirmCommand));
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
-                        event.getItemPrice().multiply(event.getAmountOfExecutedItems()));
+                        event.getAmountOfExecutedItem().convertedTo(
+                                event.getItemPrice().getCurrencyUnit(),
+                                event.getItemPrice().getAmount()));
         getCommandBus().dispatch(new GenericCommandMessage<DepositCashCommand>(depositCommand));
     }
 }

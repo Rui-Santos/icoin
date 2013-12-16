@@ -21,7 +21,7 @@ import com.homhon.base.domain.ValueObject;
 /**
  * @author Jettro Coenradie
  */
-public enum TransactionState implements ValueObject<TransactionState>{
+public enum TransactionState implements ValueObject<TransactionState> {
     STARTED, CONFIRMED, CANCELLED, EXECUTED, PARTIALLYEXECUTED;
 
     @Override

@@ -18,9 +18,7 @@ package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import javax.validation.constraints.DecimalMin;
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -29,18 +27,18 @@ public class ReserveCashCommand {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    @DecimalMin("0.0000001")
-    private BigDecimal amountOfMoneyToReserve;
+    //    @DecimalMin("0.0000001")
+    private BigMoney amountOfMoneyToReserve;
 
     public ReserveCashCommand(PortfolioId portfolioIdentifier,
                               TransactionId transactionIdentifier,
-                              BigDecimal amountOfMoneyToReserve) {
+                              BigMoney amountOfMoneyToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoneyToReserve = amountOfMoneyToReserve;
     }
 
-    public BigDecimal getAmountOfMoneyToReserve() {
+    public BigMoney getAmountOfMoneyToReserve() {
         return amountOfMoneyToReserve;
     }
 

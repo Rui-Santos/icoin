@@ -15,8 +15,8 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
     public static final String CCY_DEFAULT = "CNY";
     public static final String CCY_USD = "USD";
     // Provide some standard major symbols
-    public static final CurrencyPair EUR_USD = new CurrencyPair("EUR","USD");
-    public static final CurrencyPair GBP_USD = new CurrencyPair("GBP","USD");
+    public static final CurrencyPair EUR_USD = new CurrencyPair("EUR", "USD");
+    public static final CurrencyPair GBP_USD = new CurrencyPair("GBP", "USD");
     public static final CurrencyPair USD_JPY = new CurrencyPair("USD", "JPY");
     public static final CurrencyPair USD_CHF = new CurrencyPair("USD", "CHF");
     public static final CurrencyPair USD_AUD = new CurrencyPair("USD", "AUD");
@@ -66,8 +66,8 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
     public static final CurrencyPair BTC_CZK = new CurrencyPair("BTC", "CZK");
     public static final CurrencyPair BTC_ILS = new CurrencyPair("BTC", "ILS");
 
-    public final String baseCurrency;
-    public final String counterCurrency;
+    private final String baseCurrency;
+    private final String counterCurrency;
 
     /**
      * <p>
@@ -86,7 +86,7 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
      * Full constructor
      * </p>
      *
-     * @param baseCurrency The base symbol (single unit)
+     * @param baseCurrency    The base symbol (single unit)
      * @param counterCurrency The counter symbol (multiple units)
      */
 
@@ -101,6 +101,14 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
     public String toString() {
 
         return baseCurrency + "/" + counterCurrency;
+    }
+
+    public String getBaseCurrency() {
+        return baseCurrency;
+    }
+
+    public String getCounterCurrency() {
+        return counterCurrency;
     }
 
     @Override
@@ -130,16 +138,14 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
             if (other.baseCurrency != null) {
                 return false;
             }
-        }
-        else if (!baseCurrency.equals(other.baseCurrency)) {
+        } else if (!baseCurrency.equals(other.baseCurrency)) {
             return false;
         }
         if (counterCurrency == null) {
             if (other.counterCurrency != null) {
                 return false;
             }
-        }
-        else if (!counterCurrency.equals(other.counterCurrency)) {
+        } else if (!counterCurrency.equals(other.counterCurrency)) {
             return false;
         }
         return true;

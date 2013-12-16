@@ -1,6 +1,5 @@
 package com.icoin.trading.tradeengine.application.executor;
 
-import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.application.command.order.ExecuteSellOrderCommand;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
@@ -9,19 +8,20 @@ import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
+import org.joda.money.BigMoney;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
 import static com.homhon.mongo.TimeUtils.currentTime;
 import static com.homhon.util.Collections.isEmpty;
 import static com.homhon.util.Objects.nullSafe;
+import static org.joda.money.MoneyUtils.min;
 
 /**
  * Created with IntelliJ IDEA.
@@ -85,15 +85,17 @@ public class SellOrderExecutor {
 
             for (BuyOrder buyOrder : buyOrders) {
                 //should not happen here, coz the repo does not return the right result
-                if (buyOrder.getItemPrice().compareTo(sellCommand.getItemPrice()) < 0) {
+                if (buyOrder.getItemPrice().isLessThan(sellCommand.getItemPrice())) {
                     logger.warn("Strange here, why buy orders from repo have price less than current selling price!");
                     break;
                 }
 
                 final SellOrder sellOrder = sellOrderRepository.findOne(sellCommand.getOrderId().toString());
 
-                BigDecimal matchedTradePrice = buyOrder.getItemPrice();
-                BigDecimal matchedTradeAmount = buyOrder.getItemRemaining().min(sellOrder.getItemRemaining());
+                BigMoney matchedTradePrice = buyOrder.getItemPrice();
+
+
+                BigMoney matchedTradeAmount = min(buyOrder.getItemRemaining(), sellOrder.getItemRemaining());
 
                 if (logger.isDebugEnabled()) {
                     logger.debug("Executing orders with amount {}, price {}: highest buying order {}, lowest selling order {}",
@@ -114,7 +116,7 @@ public class SellOrderExecutor {
                         sellOrderRepository,
                         buyOrderRepository);
 
-                if (Constants.IGNORED_PRICE.compareTo(sellOrder.getItemRemaining()) >= 0) {
+                if (sellOrder.getItemRemaining().isNegativeOrZero()) {
                     done = true;
                     break;
                 }

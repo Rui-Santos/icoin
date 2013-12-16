@@ -51,13 +51,13 @@ public class PortfolioCommandHandler {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.reserveItems(command.getOrderBookIdentifier(),
                 command.getTransactionIdentifier(),
-                command.getAmountOfItemsToReserve());
+                command.getAmountOfItemToReserve());
     }
 
     @CommandHandler
     public void handleAddItemsToPortfolioCommand(AddAmountToPortfolioCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.addItems(command.getOrderBookIdentifier(), command.getAmountOfItemsToAdd());
+        portfolio.addItems(command.getOrderBookIdentifier(), command.getAmountOfItemToAdd());
     }
 
     @CommandHandler
@@ -65,7 +65,7 @@ public class PortfolioCommandHandler {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.confirmReservation(command.getOrderBookIdentifier(),
                 command.getTransactionIdentifier(),
-                command.getAmountOfItemsToConfirm());
+                command.getAmountOfItemToConfirm());
     }
 
     @CommandHandler
@@ -85,7 +85,7 @@ public class PortfolioCommandHandler {
     @CommandHandler
     public void handleMakePaymentFromPortfolioCommand(WithdrawCashCommand command) {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.makePayment(command.getAmountToPayInCents());
+        portfolio.makePayment(command.getAmountToPay());
     }
 
     @CommandHandler
@@ -106,6 +106,16 @@ public class PortfolioCommandHandler {
         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
         portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
                 command.getAmountOfMoneyToConfirm());
+    }
+
+    @CommandHandler
+    public void handleAddBackLeftReservedCommand(
+            AddBackLeftReservedCommand command) {
+        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+
+        //todo add money back
+//        portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
+//                command.getAmountOfMoneyToConfirm());
     }
 
     @Autowired

@@ -17,25 +17,23 @@
 package com.icoin.trading.tradeengine.query.portfolio;
 
 import org.hamcrest.Description;
+import org.joda.money.BigMoney;
 import org.mockito.ArgumentMatcher;
-
-import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
  */
 public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
     private int itemsInPossession;
-    private String itemIdentifier;
-    private BigDecimal amountOfItemInPossession;
+    private String coinIdentifier;
+    private BigMoney amountOfItemInPossession;
     private int itemsInReservation;
-    private BigDecimal amountOfItemInReservation;
-    private float min = 0.00000000001F;
+    private BigMoney amountOfItemInReservation;
 
-    public PortfolioEntryMatcher(String itemIdentifier, int itemsInPossession, BigDecimal amountOfItemInPossession,
-                                 int itemsInReservation, BigDecimal amountOfItemInReservation) {
+    public PortfolioEntryMatcher(String coinIdentifier, int itemsInPossession, BigMoney amountOfItemInPossession,
+                                 int itemsInReservation, BigMoney amountOfItemInReservation) {
         this.itemsInPossession = itemsInPossession;
-        this.itemIdentifier = itemIdentifier;
+        this.coinIdentifier = coinIdentifier;
         this.amountOfItemInPossession = amountOfItemInPossession;
         this.itemsInReservation = itemsInReservation;
         this.amountOfItemInReservation = amountOfItemInReservation;
@@ -49,12 +47,10 @@ public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
         PortfolioEntry portfolioEntry = (PortfolioEntry) argument;
 
         return portfolioEntry.getItemsInPossession().size() == itemsInPossession
-                && Math.abs(amountOfItemInPossession.floatValue() -
-                portfolioEntry.findItemInPossession(itemIdentifier).getAmount().floatValue()) < min
+                && amountOfItemInPossession.minus(portfolioEntry.findItemInPossession(coinIdentifier).getAmount()).isNegativeOrZero()
                 && portfolioEntry.getItemsReserved().size() == itemsInReservation
-                && !(itemsInReservation != 0 &&
-                Math.abs(amountOfItemInReservation.floatValue() -
-                        portfolioEntry.findReservedItemByIdentifier(itemIdentifier).getAmount().floatValue()) > min);
+                && !(itemsInReservation != 0
+                && amountOfItemInReservation.minus(portfolioEntry.findReservedItemByIdentifier(coinIdentifier).getAmount()).isPositive());
     }
 
     @Override

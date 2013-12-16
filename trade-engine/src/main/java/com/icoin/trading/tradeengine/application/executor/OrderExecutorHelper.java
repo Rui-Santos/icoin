@@ -5,10 +5,9 @@ import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
+import org.joda.money.BigMoney;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.math.BigDecimal;
 
 import static com.homhon.mongo.TimeUtils.currentTime;
 
@@ -44,9 +43,9 @@ public abstract class OrderExecutorHelper {
 
     public static void recordTraded(BuyOrder buyOrder,
                                     SellOrder sellOrder,
-                                    BigDecimal matchedTradeAmount,
+                                    BigMoney matchedTradeAmount,
                                     SellOrderRepository sellOrderRepository,
-                                    BuyOrderRepository buyOrderRepository){
+                                    BuyOrderRepository buyOrderRepository) {
         buyOrder.recordTraded(matchedTradeAmount, currentTime());
         sellOrder.recordTraded(matchedTradeAmount, currentTime());
 

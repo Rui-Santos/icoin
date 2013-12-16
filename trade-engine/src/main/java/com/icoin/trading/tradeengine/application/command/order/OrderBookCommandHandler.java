@@ -85,8 +85,8 @@ public class OrderBookCommandHandler {
     }
 
     private <T extends AbstractOrder> T fillOrder(T order,
-                                                AbstractOrderCommand command,
-                                                CurrencyPair currencyPair){
+                                                  AbstractOrderCommand command,
+                                                  CurrencyPair currencyPair) {
         order.setPrimaryKey(command.getOrderId().toString());
         order.setOrderBookId(command.getOrderBookId());
         order.setTransactionId(command.getTransactionId());

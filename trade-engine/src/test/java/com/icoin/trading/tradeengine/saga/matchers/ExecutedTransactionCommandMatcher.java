@@ -19,8 +19,7 @@ package com.icoin.trading.tradeengine.saga.matchers;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.hamcrest.Description;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -28,10 +27,10 @@ import java.math.BigDecimal;
 public class ExecutedTransactionCommandMatcher extends BaseCommandMatcher<ExecutedTransactionCommand> {
 
     private TransactionId transactionIdentifier;
-    private BigDecimal amountOfItems;
-    private BigDecimal itemPrice;
+    private BigMoney amountOfItems;
+    private BigMoney itemPrice;
 
-    public ExecutedTransactionCommandMatcher(BigDecimal amountOfItems, BigDecimal itemPrice, TransactionId transactionIdentifier) {
+    public ExecutedTransactionCommandMatcher(BigMoney amountOfItems, BigMoney itemPrice, TransactionId transactionIdentifier) {
         this.amountOfItems = amountOfItems;
         this.itemPrice = itemPrice;
         this.transactionIdentifier = transactionIdentifier;
@@ -40,8 +39,8 @@ public class ExecutedTransactionCommandMatcher extends BaseCommandMatcher<Execut
     @Override
     protected boolean doMatches(ExecutedTransactionCommand command) {
         return command.getTransactionIdentifier().equals(transactionIdentifier)
-                && command.getAmountOfItems().subtract(amountOfItems).abs().doubleValue() < 0.000000000001
-                && command.getItemPrice().subtract(itemPrice).abs().doubleValue() < 0.000000000001;
+                && command.getAmountOfItems().minus(amountOfItems).isNegativeOrZero()
+                && command.getItemPrice().minus(itemPrice).isNegativeOrZero();
     }
 
     @Override

@@ -41,7 +41,7 @@ public class CoinCommandHandler {
     @CommandHandler
     public void handleAddOrderBook(AddOrderBookToCoinCommand command) {
         Coin coin = repository.load(command.getCoinId());
-        coin.addOrderBook(command.getOrderBookId());
+        coin.addOrderBook(command.getOrderBookId(), command.getCurrencyPair());
     }
 
     @Autowired

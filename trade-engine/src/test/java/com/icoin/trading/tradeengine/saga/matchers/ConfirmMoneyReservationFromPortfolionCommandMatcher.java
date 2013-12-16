@@ -19,8 +19,7 @@ package com.icoin.trading.tradeengine.saga.matchers;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmCashReservationCommand;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -29,24 +28,24 @@ public class ConfirmMoneyReservationFromPortfolionCommandMatcher
         extends BaseCommandMatcher<ConfirmCashReservationCommand> {
 
     private PortfolioId portfolioIdentifier;
-    private BigDecimal amountOfMoneyToconfirm;
+    private BigMoney amountOfMoneyToConfirm;
 
     public ConfirmMoneyReservationFromPortfolionCommandMatcher(PortfolioId portfolioIdentifier,
-                                                               BigDecimal amountOfMoneyToconfirm) {
+                                                               BigMoney amountOfMoneyToConfirm) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.amountOfMoneyToconfirm = amountOfMoneyToconfirm;
+        this.amountOfMoneyToConfirm = amountOfMoneyToConfirm;
     }
 
     @Override
     protected boolean doMatches(ConfirmCashReservationCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && command.getAmountOfMoneyToConfirm().compareTo(amountOfMoneyToconfirm) == 0;
+                && command.getAmountOfMoneyToConfirm().isEqual(amountOfMoneyToConfirm);
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("ConfirmCashReservationCommand with amountOfMoneyToConfirm [")
-                .appendValue(amountOfMoneyToconfirm)
+                .appendValue(amountOfMoneyToConfirm)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
                 .appendText("]");

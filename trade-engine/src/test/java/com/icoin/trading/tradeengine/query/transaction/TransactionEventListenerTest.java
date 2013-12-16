@@ -16,10 +16,12 @@
 
 package com.icoin.trading.tradeengine.query.transaction;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCancelledEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -27,6 +29,8 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.transaction.repositories.TransactionQueryRepository;
+import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -44,8 +48,8 @@ public class TransactionEventListenerTest {
     public static final PortfolioId portfolioIdentifier = new PortfolioId();
     public static final CoinId coinIdentifier = new CoinId();
 
-    public static final BigDecimal DEFAULT_TOTAL_ITEMS = BigDecimal.valueOf(100);
-    public static final BigDecimal DEFAULT_ITEM_PRICE = BigDecimal.TEN;
+    public static final BigMoney DEFAULT_TOTAL_ITEMS = BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100));
+    public static final BigMoney DEFAULT_ITEM_PRICE = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(8.01));
     private static final String DEFAULT_COIN_NAME = "Test Coin";
 
     private TransactionEventListener listener;
@@ -75,7 +79,7 @@ public class TransactionEventListenerTest {
 
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
-                BigDecimal.ZERO,
+                BigMoney.zero(CurrencyUnit.of(Currencies.BTC)),
                 DEFAULT_COIN_NAME,
                 DEFAULT_ITEM_PRICE,
                 TransactionState.STARTED,
@@ -95,7 +99,7 @@ public class TransactionEventListenerTest {
 
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
-                BigDecimal.ZERO,
+                BigMoney.zero(CurrencyUnit.of(Currencies.BTC)),
                 DEFAULT_COIN_NAME,
                 DEFAULT_ITEM_PRICE,
                 TransactionState.STARTED,
@@ -108,7 +112,7 @@ public class TransactionEventListenerTest {
     public void handleSellTransactionCancelledEvent() {
         TransactionEntry transactionEntry = new TransactionEntry();
         transactionEntry.setPrimaryKey(transactionIdentifier.toString());
-        transactionEntry.setAmountOfExecutedItems(BigDecimal.ZERO);
+        transactionEntry.setAmountOfExecutedItems(BigMoney.zero(CurrencyUnit.of(Currencies.BTC)));
         transactionEntry.setPricePerItem(DEFAULT_ITEM_PRICE);
         transactionEntry.setState(TransactionState.STARTED);
         transactionEntry.setAmountOfItems(DEFAULT_TOTAL_ITEMS);
@@ -123,7 +127,7 @@ public class TransactionEventListenerTest {
         listener.handleEvent(event);
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
-                BigDecimal.ZERO,
+                BigMoney.zero(CurrencyUnit.of(Currencies.BTC)),
                 DEFAULT_COIN_NAME,
                 DEFAULT_ITEM_PRICE,
                 TransactionState.CANCELLED,

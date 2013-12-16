@@ -2,8 +2,8 @@ package com.icoin.trading.tradeengine.infrastructure.persistence.mongo;
 
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
+import org.joda.money.BigMoney;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +16,10 @@ import java.util.List;
  */
 @SuppressWarnings("UnusedDeclaration")
 public interface SellOrderRepositoryMongoCustom {
-    List<SellOrder> findAscPendingOrdersByPriceTime(Date toTime, BigDecimal price, OrderBookId orderBookId, int size);
+    List<SellOrder> findAscPendingOrdersByPriceTime(Date toTime,
+                                                    BigMoney price,
+                                                    OrderBookId orderBookId,
+                                                    int size);
 
     SellOrder findPendingOrder(String id);
 

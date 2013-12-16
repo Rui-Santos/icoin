@@ -1,11 +1,10 @@
 package com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters;
 
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
+import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -31,7 +30,7 @@ public class MoneyReadConverterTest {
                 .append("ccy", Currencies.BTC)
                 .get();
 
-        final Money money = converter.convert(dbObject);
+        final BigMoney money = converter.convert(dbObject);
 
         assertThat(money, notNullValue());
         assertThat(money.getAmount(), notNullValue());
@@ -47,7 +46,7 @@ public class MoneyReadConverterTest {
                 .append("ccy", Currencies.CNY)
                 .get();
 
-        final Money money = converter.convert(dbObject);
+        final BigMoney money = converter.convert(dbObject);
 
         assertThat(money, notNullValue());
         assertThat(money.getAmount(), notNullValue());

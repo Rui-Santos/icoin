@@ -1,6 +1,8 @@
 package com.icoin.trading.tradeengine;
 
-import java.math.BigDecimal;
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
+import org.joda.money.CurrencyUnit;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,8 +12,9 @@ import java.math.BigDecimal;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class Constants {
-    public static final int MONEY_SCALE = 3;
-    public static final int COIN_SCALE = 8;
-    public static BigDecimal LOWEST_PRICE = BigDecimal.valueOf(0.00000001);
-    public static BigDecimal IGNORED_PRICE = BigDecimal.valueOf(0.000000005);
+    public static CurrencyUnit DEFAULT_CURRENCY_UNIT = CurrencyUnit.of(Currencies.CNY);
+    public static CurrencyUnit CURRENCY_UNIT_BTC = CurrencyUnit.of(Currencies.BTC);
+    public static CurrencyUnit CURRENCY_UNIT_LTC = CurrencyUnit.of(Currencies.LTC);
+    public static CurrencyUnit CURRENCY_UNIT_PPC = CurrencyUnit.of(Currencies.PPC);
+    public static CurrencyUnit CURRENCY_UNIT_XPM = CurrencyUnit.of(Currencies.XPM);
 }

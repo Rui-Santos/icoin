@@ -1,38 +1,7 @@
 package com.icoin.trading.tradeengine.application.executor;
 
-import com.google.common.collect.Lists;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import org.axonframework.repository.Repository;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.joda.money.BigMoney;
 
 /**
  * Created with IntelliJ IDEA.
@@ -350,7 +319,7 @@ public class SellOrderExecutorTest {
 //        assertThat(matchedPrice, equalTo(sellPrice));
 //    }
 
-    private BuyOrder createBuyOrder(BigDecimal price, BigDecimal itemRemaining) {
+    private BuyOrder createBuyOrder(BigMoney price, BigMoney itemRemaining) {
         BuyOrder sellOrder = new BuyOrder();
         sellOrder.setItemPrice(price);
         sellOrder.setItemRemaining(itemRemaining);

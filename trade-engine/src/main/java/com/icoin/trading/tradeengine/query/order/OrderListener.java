@@ -16,7 +16,6 @@
 
 package com.icoin.trading.tradeengine.query.order;
 
-import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.events.order.AbstractOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
@@ -26,25 +25,16 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 /**
  * @author Jettro Coenradie
  */
 @Component
 public class OrderListener {
-    private BigDecimal lowestPrice = Constants.IGNORED_PRICE;
-
     private OrderQueryRepository orderRepository;
-
-    //@Value("#{trading.lowestTradePrice}")
-    public void setLowestPrice(double lowestPrice) {
-        this.lowestPrice = BigDecimal.valueOf(lowestPrice);
-    }
 
     @EventHandler
     public void handleBuyOrderPlaced(BuyOrderPlacedEvent event) {
-        OrderEntry buyOrder = createPlacedOrder(event,OrderType.BUY);
+        OrderEntry buyOrder = createPlacedOrder(event, OrderType.BUY);
         orderRepository.save(buyOrder);
     }
 

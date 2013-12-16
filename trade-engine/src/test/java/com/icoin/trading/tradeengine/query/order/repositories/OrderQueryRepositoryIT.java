@@ -5,7 +5,6 @@ import com.icoin.trading.tradeengine.query.order.PriceAggregate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,9 +29,9 @@ public class OrderQueryRepositoryIT {
     @Test
     public void testFindOrderAggregatedPrice() throws Exception {
 
-        final List<PriceAggregate> orderAggregatedPrice =
-                repository.findOrderAggregatedPrice("0ce4f7bb-592c-4671-8e87-8e691f345bc5",OrderType.SELL);
-
-        System.out.println(orderAggregatedPrice);
+//        final List<PriceAggregate> orderAggregatedPrice =
+//                repository.findOrderAggregatedPrice("0ce4f7bb-592c-4671-8e87-8e691f345bc5", OrderType.SELL);
+//
+//        System.out.println(orderAggregatedPrice);
     }
 }

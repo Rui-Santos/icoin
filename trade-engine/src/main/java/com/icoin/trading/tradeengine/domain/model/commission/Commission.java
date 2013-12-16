@@ -17,7 +17,6 @@ package com.icoin.trading.tradeengine.domain.model.commission;
 
 import com.homhon.base.domain.model.ValueObjectSupport;
 import com.homhon.base.domain.model.probability.Probability;
-import org.joda.money.Money;
 
 /**
  * @author Slawek

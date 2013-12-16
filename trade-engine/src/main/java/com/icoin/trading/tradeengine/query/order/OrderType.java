@@ -15,7 +15,7 @@ public enum OrderType implements ValueObject<OrderType> {
 
     @Override
     public boolean sameValueAs(OrderType orderType) {
-        return this==orderType;
+        return this == orderType;
     }
 
     @Override

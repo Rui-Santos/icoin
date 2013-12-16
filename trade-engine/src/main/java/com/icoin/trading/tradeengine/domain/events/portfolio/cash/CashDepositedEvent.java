@@ -18,17 +18,16 @@ package com.icoin.trading.tradeengine.domain.events.portfolio.cash;
 
 
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
  */
 public class CashDepositedEvent {
     private PortfolioId portfolioId;
-    private BigDecimal moneyAdded;
+    private BigMoney moneyAdded;
 
-    public CashDepositedEvent(PortfolioId portfolioId, BigDecimal moneyAdded) {
+    public CashDepositedEvent(PortfolioId portfolioId, BigMoney moneyAdded) {
         this.portfolioId = portfolioId;
         this.moneyAdded = moneyAdded;
     }
@@ -37,7 +36,7 @@ public class CashDepositedEvent {
         return portfolioId;
     }
 
-    public BigDecimal getMoneyAdded() {
+    public BigMoney getMoneyAdded() {
         return moneyAdded;
     }
 }

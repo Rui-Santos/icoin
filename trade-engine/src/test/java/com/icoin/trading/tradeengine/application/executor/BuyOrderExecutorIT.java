@@ -1,6 +1,5 @@
 package com.icoin.trading.tradeengine.application.executor;
 
-import com.icoin.trading.tradeengine.application.command.order.OrderBookCommandHandler;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.mock;
 public class BuyOrderExecutorIT {
 
     private FixtureConfiguration fixture;
-    private SellOrderRepository sellOrderRepository= mock(SellOrderRepository.class);
+    private SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
     private BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
     private BuyOrderExecutor buyOrderExecutor = mock(BuyOrderExecutor.class);
 

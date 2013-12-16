@@ -20,8 +20,7 @@ import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveA
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -30,26 +29,26 @@ public class ReservedItemsCommandMatcher extends BaseCommandMatcher<ReserveAmoun
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private BigDecimal amountOfReservedItems;
+    private BigMoney amountOfReservedItem;
 
     public ReservedItemsCommandMatcher(OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
-                                       BigDecimal amountOfReservedItems) {
+                                       BigMoney amountOfReservedItem) {
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
-        this.amountOfReservedItems = amountOfReservedItems;
+        this.amountOfReservedItem = amountOfReservedItem;
     }
 
     @Override
     protected boolean doMatches(ReserveAmountCommand command) {
         return command.getOrderBookIdentifier().equals(orderbookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && amountOfReservedItems.compareTo(command.getAmountOfItemsToReserve()) == 0;
+                && amountOfReservedItem.compareTo(command.getAmountOfItemToReserve()) == 0;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("ReserveAmountCommand with amountOfReservedItems [")
-                .appendValue(amountOfReservedItems)
+        description.appendText("ReserveAmountCommand with amountOfReservedItem [")
+                .appendValue(amountOfReservedItem)
                 .appendText("] for OrderBook with identifier [")
                 .appendValue(orderbookIdentifier)
                 .appendText("] and for Portfolio with identifier [")

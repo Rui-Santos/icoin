@@ -15,9 +15,8 @@
  */
 package com.icoin.trading.tradeengine.domain.model.commission;
 
-import com.homhon.base.domain.model.money.Money;
 import com.homhon.base.domain.model.probability.Probability;
-import com.icoin.trading.tradeengine.domain.model.order.Order;
+import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
 
 import java.math.BigDecimal;
 
@@ -32,7 +31,7 @@ public class DefaultCommissionPolicy implements CommissionPolicy {
     private Probability probability = Probability.from(BigDecimal.valueOf(0.001));
 
     @Override
-    public Commission calculateCommission(Order order) {
+    public Commission calculateCommission(AbstractOrder order) {
         notNull(order);
         BigDecimal ratio = BigDecimal.valueOf(0.001);
         String desc = "0.1% (D)";

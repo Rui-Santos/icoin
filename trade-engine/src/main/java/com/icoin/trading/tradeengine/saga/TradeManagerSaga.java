@@ -21,9 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.saga.annotation.AbstractAnnotatedSaga;
+import org.joda.money.BigMoney;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -31,8 +30,8 @@ import java.math.BigDecimal;
 public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
 
     private transient CommandBus commandBus;
-    private BigDecimal totalItems;
-    private BigDecimal pricePerItem;
+    private BigMoney totalItems;
+    private BigMoney pricePerItem;
     private TransactionId transactionIdentifier;
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
@@ -65,19 +64,19 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
         this.portfolioIdentifier = portfolioIdentifier;
     }
 
-    protected BigDecimal getPricePerItem() {
+    protected BigMoney getPricePerItem() {
         return pricePerItem;
     }
 
-    protected void setPricePerItem(BigDecimal pricePerItem) {
+    protected void setPricePerItem(BigMoney pricePerItem) {
         this.pricePerItem = pricePerItem;
     }
 
-    protected BigDecimal getTotalItems() {
+    protected BigMoney getTotalItems() {
         return totalItems;
     }
 
-    protected void setTotalItems(BigDecimal totalItems) {
+    protected void setTotalItems(BigMoney totalItems) {
         this.totalItems = totalItems;
     }
 

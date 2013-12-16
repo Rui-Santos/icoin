@@ -16,18 +16,22 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationCancelledForPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsAddedToPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import com.icoin.trading.users.domain.UserId;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
+import com.icoin.trading.users.domain.UserId;
+import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -43,7 +47,7 @@ import java.math.BigDecimal;
  */
 public class PortfolioItemEventListenerTest {
 
-    public static final BigDecimal DEFAULT_AMOUNT_ITEMS = BigDecimal.valueOf(100);
+    public static final BigMoney DEFAULT_AMOUNT_ITEMS = BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100));
     private PortfolioQueryRepository portfolioQueryRepository;
     private PortfolioItemEventListener listener;
 
@@ -73,15 +77,19 @@ public class PortfolioItemEventListenerTest {
     @Test
     public void testHandleEventAddItems() throws Exception {
         ItemsAddedToPortfolioEvent event =
-                new ItemsAddedToPortfolioEvent(portfolioIdentifier, itemIdentifier, BigDecimal.valueOf(100));
+                new ItemsAddedToPortfolioEvent(
+                        portfolioIdentifier,
+                        itemIdentifier,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
         listener.handleEvent(event);
 
-        Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
-                itemIdentifier.toString(),
-                1,
-                DEFAULT_AMOUNT_ITEMS.multiply(BigDecimal.valueOf(2)),
-                1,
-                DEFAULT_AMOUNT_ITEMS)));
+        Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(
+                new PortfolioEntryMatcher(
+                        coinIdentifier.toString(),
+                        1,
+                        DEFAULT_AMOUNT_ITEMS.multipliedBy(BigDecimal.valueOf(2)),
+                        1,
+                        DEFAULT_AMOUNT_ITEMS)));
     }
 
     @Test
@@ -94,11 +102,11 @@ public class PortfolioItemEventListenerTest {
         listener.handleEvent(event);
 
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
-                itemIdentifier.toString(),
+                coinIdentifier.toString(),
                 1,
-                DEFAULT_AMOUNT_ITEMS.multiply(BigDecimal.valueOf(2)),
+                DEFAULT_AMOUNT_ITEMS.multipliedBy(BigDecimal.valueOf(2)),
                 0,
-                BigDecimal.ZERO)));
+                BigMoney.zero(CurrencyUnit.of(Currencies.BTC)))));
     }
 
     /**
@@ -112,15 +120,15 @@ public class PortfolioItemEventListenerTest {
                         portfolioIdentifier,
                         itemIdentifier,
                         transactionIdentifier,
-                        BigDecimal.valueOf(50));
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)));
         listener.handleEvent(event);
 
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
-                itemIdentifier.toString(),
+                coinIdentifier.toString(),
                 1,
-                DEFAULT_AMOUNT_ITEMS.subtract(BigDecimal.valueOf(50)),
+                DEFAULT_AMOUNT_ITEMS.minus(BigDecimal.valueOf(50)),
                 1,
-                DEFAULT_AMOUNT_ITEMS.subtract(BigDecimal.valueOf(50)))));
+                DEFAULT_AMOUNT_ITEMS.minus(BigDecimal.valueOf(50)))));
     }
 
     @Test
@@ -129,11 +137,11 @@ public class PortfolioItemEventListenerTest {
         listener.handleEvent(event);
 
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(
-                itemIdentifier.toString(),
+                coinIdentifier.toString(),
                 1,
                 DEFAULT_AMOUNT_ITEMS,
                 1,
-                DEFAULT_AMOUNT_ITEMS.multiply(BigDecimal.valueOf(2)))));
+                DEFAULT_AMOUNT_ITEMS.multipliedBy(BigDecimal.valueOf(2)))));
     }
 
     private PortfolioEntry createPortfolioEntry() {
@@ -141,10 +149,10 @@ public class PortfolioItemEventListenerTest {
         portfolioEntry.setIdentifier(portfolioIdentifier.toString());
         portfolioEntry.setUserIdentifier(userIdentifier.toString());
 
-        portfolioEntry.addItemInPossession(createItemEntry(itemIdentifier, coinIdentifier));
-        portfolioEntry.addReservedItem(createItemEntry(itemIdentifier, coinIdentifier));
-        portfolioEntry.setReservedAmountOfMoney(BigDecimal.valueOf(1000));
-        portfolioEntry.setAmountOfMoney(BigDecimal.valueOf(10000));
+        portfolioEntry.addItemInPossession(createItemEntry(coinIdentifier));
+        portfolioEntry.addReservedItem(createItemEntry(coinIdentifier));
+        portfolioEntry.setReservedAmountOfMoney(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1000)));
+        portfolioEntry.setAmountOfMoney(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10000)));
         return portfolioEntry;
     }
 
@@ -156,9 +164,8 @@ public class PortfolioItemEventListenerTest {
         return orderBookEntry;
     }
 
-    private ItemEntry createItemEntry(OrderBookId itemIdentifier, CoinId coinIdentifier) {
+    private ItemEntry createItemEntry(CoinId coinIdentifier) {
         ItemEntry itemInPossession = new ItemEntry();
-        itemInPossession.setPrimaryKey(itemIdentifier.toString());
         itemInPossession.setCoinIdentifier(coinIdentifier.toString());
         itemInPossession.setCoinName("Test coin");
         itemInPossession.setAmount(DEFAULT_AMOUNT_ITEMS);

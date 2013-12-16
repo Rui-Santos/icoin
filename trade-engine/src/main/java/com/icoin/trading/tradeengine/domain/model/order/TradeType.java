@@ -1,4 +1,4 @@
-package com.icoin.trading.tradeengine.domain.model;
+package com.icoin.trading.tradeengine.domain.model.order;
 
 import com.homhon.base.domain.ValueObject;
 

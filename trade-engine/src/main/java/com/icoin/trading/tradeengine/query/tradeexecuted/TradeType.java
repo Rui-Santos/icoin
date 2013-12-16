@@ -24,13 +24,14 @@ public enum TradeType implements ValueObject<TradeType> {
     }
 
 
-    public static TradeType convert(com.icoin.trading.tradeengine.domain.model.TradeType tradeType) {
+    public static TradeType convert(com.icoin.trading.tradeengine.domain.model.order.TradeType tradeType) {
         switch (tradeType) {
             case BUY:
                 return Buy;
             case SELL:
                 return Sell;
-            default: throw new IllegalArgumentException("Cannot transfer trade type" + tradeType);
+            default:
+                throw new IllegalArgumentException("Cannot transfer trade type" + tradeType);
         }
     }
 

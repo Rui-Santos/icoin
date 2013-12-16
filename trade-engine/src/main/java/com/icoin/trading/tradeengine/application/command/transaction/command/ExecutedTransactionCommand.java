@@ -18,8 +18,7 @@ package com.icoin.trading.tradeengine.application.command.transaction.command;
 
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -27,20 +26,20 @@ import java.math.BigDecimal;
 public class ExecutedTransactionCommand {
 
     private TransactionId transactionIdentifier;
-    private BigDecimal amountOfItems;
-    private BigDecimal itemPrice;
+    private BigMoney amountOfItems;
+    private BigMoney itemPrice;
 
-    public ExecutedTransactionCommand(TransactionId transactionIdentifier, BigDecimal amountOfItems, BigDecimal itemPrice) {
+    public ExecutedTransactionCommand(TransactionId transactionIdentifier, BigMoney amountOfItems, BigMoney itemPrice) {
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItems = amountOfItems;
         this.itemPrice = itemPrice;
     }
 
-    public BigDecimal getAmountOfItems() {
+    public BigMoney getAmountOfItems() {
         return amountOfItems;
     }
 
-    public BigDecimal getItemPrice() {
+    public BigMoney getItemPrice() {
         return itemPrice;
     }
 

@@ -20,8 +20,7 @@ package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -31,20 +30,20 @@ public class ReserveAmountCommand {
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
     private OrderBookId orderBookIdentifier;
-    private BigDecimal amountOfItemsToReserve;
+    private BigMoney amountOfItemToReserve;
 
     public ReserveAmountCommand(PortfolioId portfolioIdentifier,
                                 OrderBookId orderBookIdentifier,
                                 TransactionId transactionIdentifier,
-                                BigDecimal amountOfItemsToReserve) {
+                                BigMoney amountOfItemToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfItemsToReserve = amountOfItemsToReserve;
+        this.amountOfItemToReserve = amountOfItemToReserve;
         this.orderBookIdentifier = orderBookIdentifier;
     }
 
-    public BigDecimal getAmountOfItemsToReserve() {
-        return amountOfItemsToReserve;
+    public BigMoney getAmountOfItemToReserve() {
+        return amountOfItemToReserve;
     }
 
     public PortfolioId getPortfolioIdentifier() {

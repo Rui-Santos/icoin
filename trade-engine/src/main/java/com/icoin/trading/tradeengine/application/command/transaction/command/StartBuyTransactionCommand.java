@@ -20,8 +20,7 @@ package com.icoin.trading.tradeengine.application.command.transaction.command;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -29,7 +28,7 @@ import java.math.BigDecimal;
 public class StartBuyTransactionCommand extends AbstractStartTransactionCommand {
 
     public StartBuyTransactionCommand(TransactionId transactionId, OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
-                                      BigDecimal tradeCount, BigDecimal itemPrice) {
-        super(transactionId, orderbookIdentifier, portfolioIdentifier, tradeCount, itemPrice);
+                                      BigMoney tradeAmount, BigMoney itemPrice) {
+        super(transactionId, orderbookIdentifier, portfolioIdentifier, tradeAmount, itemPrice);
     }
 }

@@ -24,6 +24,7 @@ import com.icoin.trading.tradeengine.query.order.PriceAggregate;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,13 +33,16 @@ import java.util.List;
 public interface OrderQueryRepository extends
         PagingAndSortingRepository<OrderEntry, String>,
         OrderQueryRepositoryCustom,
-        GenericCrudRepository<OrderEntry, String>{
+        GenericCrudRepository<OrderEntry, String> {
 
     List<OrderEntry> findByOrderBookIdentifier(String orderBookIdentifier);
+
     List<OrderEntry> findByOrderBookIdentifierAndOrderStatus(String orderBookIdentifier,
                                                              OrderStatus orderStatus);
+
     List<OrderEntry> findByOrderBookIdentifierAndType(String orderBookIdentifier,
                                                       OrderType type);
+
     List<OrderEntry> findByOrderBookIdentifierAndTypeAndOrderStatus(String orderBookIdentifier,
                                                                     OrderType type,
                                                                     OrderStatus orderStatus);
@@ -49,5 +53,5 @@ public interface OrderQueryRepository extends
             "Sort: { 'placeDate' : -1 }")
     List<OrderEntry> findUserActiveOrders(String userId, String orderBookId);
 
-    List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type);
+    List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate);
 }

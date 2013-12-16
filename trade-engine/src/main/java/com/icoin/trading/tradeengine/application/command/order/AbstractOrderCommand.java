@@ -22,9 +22,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+import org.joda.money.BigMoney;
 
-import javax.validation.constraints.DecimalMin;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -38,15 +37,15 @@ public abstract class AbstractOrderCommand<T extends AbstractOrderCommand> exten
     @TargetAggregateIdentifier
     private OrderBookId orderBookId;
     private TransactionId transactionId;
-    @DecimalMin("0.00000001")
-    private BigDecimal tradeAmount;
-    @DecimalMin("0.00000001")
-    private BigDecimal itemPrice;
+    //    @DecimalMin("0.00000001")
+    private BigMoney tradeAmount;
+    //    @DecimalMin("0.00000001")
+    private BigMoney itemPrice;
     private OrderId orderId;
     private Date placeDate;
 
     protected AbstractOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
-                                   TransactionId transactionId, BigDecimal tradeAmount, BigDecimal itemPrice,
+                                   TransactionId transactionId, BigMoney tradeAmount, BigMoney itemPrice,
                                    Date placeDate) {
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
@@ -69,11 +68,11 @@ public abstract class AbstractOrderCommand<T extends AbstractOrderCommand> exten
         return transactionId;
     }
 
-    public BigDecimal getTradeAmount() {
+    public BigMoney getTradeAmount() {
         return tradeAmount;
     }
 
-    public BigDecimal getItemPrice() {
+    public BigMoney getItemPrice() {
         return itemPrice;
     }
 

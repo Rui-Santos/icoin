@@ -16,8 +16,12 @@
 
 package com.icoin.trading.tradeengine.query.coin.repositories;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
+import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +47,8 @@ public class CoinRepositoryIntegrationTest {
     public void storeCoinInRepository() {
         CoinEntry coinEntry = new CoinEntry();
         coinEntry.setPrimaryKey(new CoinId().toString());
-        coinEntry.setCoinAmount(BigDecimal.valueOf(100000));
-        coinEntry.setCoinPrice(BigDecimal.valueOf(1000));
+        coinEntry.setCoinAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100000)));
+        coinEntry.setCoinPrice(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(1000)));
         coinEntry.setTradeStarted(true);
 
         coinQueryRepository.save(coinEntry);

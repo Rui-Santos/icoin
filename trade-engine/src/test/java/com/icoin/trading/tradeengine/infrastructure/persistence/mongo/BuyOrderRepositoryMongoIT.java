@@ -1,12 +1,12 @@
 package com.icoin.trading.tradeengine.infrastructure.persistence.mongo;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderComparator;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.TreeSet;
 
 import static com.homhon.util.TimeUtils.currentLocalTime;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,30 +54,29 @@ public class BuyOrderRepositoryMongoIT {
 
         buyOrder1 = new BuyOrder();
         buyOrder1.setOrderBookId(orderBookId);
-        buyOrder1.setItemRemaining(BigDecimal.valueOf(100));
-        buyOrder1.setTradeAmount(BigDecimal.valueOf(90.9));
-        buyOrder1.setItemPrice(BigDecimal.valueOf(8.01));
+        buyOrder1.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
+        buyOrder1.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(90.9)));
+        buyOrder1.setItemPrice(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(8.01)));
         buyOrder1.setPlaceDate(placeDate.toDate());
 
         buyOrder2 = new BuyOrder();
         buyOrder2.setOrderBookId(orderBookId);
-        buyOrder2.setItemRemaining(BigDecimal.valueOf(100));
-        buyOrder2.setTradeAmount(BigDecimal.valueOf(100));
-        buyOrder2.setItemPrice(BigDecimal.valueOf(10.1));
+        buyOrder2.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
+        buyOrder2.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
+        buyOrder2.setItemPrice(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10.1)));
         buyOrder2.setPlaceDate(placeDate.plusMillis(2).toDate());
 
         buyOrder3 = new BuyOrder();
         buyOrder3.setOrderBookId(orderBookId);
-        buyOrder3.setItemRemaining(BigDecimal.valueOf(100));
-        buyOrder3.setTradeAmount(BigDecimal.valueOf(10));
-        buyOrder3.setItemPrice(BigDecimal.valueOf(10.1));
+        buyOrder3.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
+        buyOrder3.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)));
+        buyOrder3.setItemPrice(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10.1)));
         buyOrder3.setPlaceDate(placeDate.plusDays(2).toDate());
 
         anotherOrderBookBuyOrder = new BuyOrder();
-        anotherOrderBookBuyOrder.setOrderBookId(anotherOrderBookId);
-        anotherOrderBookBuyOrder.setItemRemaining(BigDecimal.valueOf(100));
-        anotherOrderBookBuyOrder.setTradeAmount(BigDecimal.valueOf(1000));
-        anotherOrderBookBuyOrder.setItemPrice(BigDecimal.valueOf(1));
+        anotherOrderBookBuyOrder.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
+        anotherOrderBookBuyOrder.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1000)));
+        anotherOrderBookBuyOrder.setItemPrice(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(1)));
         anotherOrderBookBuyOrder.setPlaceDate(placeDate.toDate());
 
         assertThat("Another order book id should not be equal to order book id to prepare the data"
@@ -143,7 +141,7 @@ public class BuyOrderRepositoryMongoIT {
 
         buyOrderList = buyOrderRepository.findDescPendingOrdersByPriceTime(
                 placeDate.plusDays(1).toDate(),
-                buyOrder1.getItemPrice().add(BigDecimal.valueOf(0.0000001)),
+                buyOrder1.getItemPrice().plus(BigDecimal.valueOf(0.01)),
                 orderBookId,
                 2);
 
@@ -152,7 +150,7 @@ public class BuyOrderRepositoryMongoIT {
 
         buyOrderList = buyOrderRepository.findDescPendingOrdersByPriceTime(
                 placeDate.plusDays(1).toDate(),
-                buyOrder3.getItemPrice().add(BigDecimal.valueOf(0.0000001)),
+                buyOrder3.getItemPrice().plus(BigDecimal.valueOf(0.01)),
                 orderBookId,
                 2);
 

@@ -2,9 +2,8 @@ package com.icoin.trading.tradeengine.infrastructure.persistence.mongo;
 
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
+import org.joda.money.BigMoney;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import java.util.List;
  */
 public interface BuyOrderRepositoryMongoCustom {
     List<BuyOrder> findDescPendingOrdersByPriceTime(Date toTime,
-                                                    BigDecimal price,
+                                                    BigMoney price,
                                                     OrderBookId orderBookId,
                                                     int size);
 

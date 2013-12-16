@@ -1,8 +1,7 @@
 package com.icoin.trading.tradeengine.domain.events.order;
 
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +13,7 @@ import java.math.BigDecimal;
 public class RefreshedLowestSellPriceEvent extends AbstractRefreshedPriceEvent<RefreshedLowestSellPriceEvent> {
     private String lowestSellOrderId;
 
-    public RefreshedLowestSellPriceEvent(OrderBookId orderBookId, String lowestSellOrderId, BigDecimal price) {
+    public RefreshedLowestSellPriceEvent(OrderBookId orderBookId, String lowestSellOrderId, BigMoney price) {
         super(orderBookId, price);
         this.lowestSellOrderId = lowestSellOrderId;
     }

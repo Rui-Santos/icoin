@@ -20,8 +20,7 @@ import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmA
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -31,26 +30,26 @@ public class ConfirmItemReservationForPortfolioCommandMatcher
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private BigDecimal amountOfConfirmedItems;
+    private BigMoney amountOfConfirmedItem;
 
     public ConfirmItemReservationForPortfolioCommandMatcher(
-            OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, BigDecimal amountOfConfirmedItems) {
+            OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, BigMoney amountOfConfirmedItem) {
         this.orderbookIdentifier = orderbookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
-        this.amountOfConfirmedItems = amountOfConfirmedItems;
+        this.amountOfConfirmedItem = amountOfConfirmedItem;
     }
 
     @Override
     protected boolean doMatches(ConfirmAmountReservationForPortfolioCommand command) {
         return command.getOrderBookIdentifier().equals(orderbookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && amountOfConfirmedItems.compareTo(command.getAmountOfItemsToConfirm()) == 0;
+                && amountOfConfirmedItem.compareTo(command.getAmountOfItemToConfirm()) == 0;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("ConfirmAmountReservationForPortfolioCommand with amountOfConfirmedItems [")
-                .appendValue(amountOfConfirmedItems)
+        description.appendText("ConfirmAmountReservationForPortfolioCommand with amountOfConfirmedItem [")
+                .appendValue(amountOfConfirmedItem)
                 .appendText("] for OrderBook with identifier [")
                 .appendValue(orderbookIdentifier)
                 .appendText("] and for Portfolio with identifier [")

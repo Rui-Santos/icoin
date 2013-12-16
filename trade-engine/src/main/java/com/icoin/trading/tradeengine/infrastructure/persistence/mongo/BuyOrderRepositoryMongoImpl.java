@@ -1,10 +1,11 @@
 package com.icoin.trading.tradeengine.infrastructure.persistence.mongo;
 
-import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.domain.model.order.OrderType;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class BuyOrderRepositoryMongoImpl implements BuyOrderRepositoryMongoCusto
 
     @Override
     public List<BuyOrder> findDescPendingOrdersByPriceTime(Date toTime,
-                                                           BigDecimal price,
+                                                           BigMoney price,
                                                            OrderBookId orderBookId,
                                                            int size) {
         notNull(toTime);
@@ -54,14 +56,25 @@ public class BuyOrderRepositoryMongoImpl implements BuyOrderRepositoryMongoCusto
                     toTime, price, orderBookId, size);
         }
 
+        CurrencyUnit unit = price.getCurrencyUnit();
+
+        //init stored long valued money
+        long stored = price.rounded(0, RoundingMode.HALF_EVEN).getAmount().longValue();
+
+        if (unit.getDecimalPlaces() >= 0) {
+            BigDecimal scale = BigDecimal.TEN.pow(unit.getDecimalPlaces());
+            stored = price.multipliedBy(scale).rounded(0, RoundingMode.HALF_EVEN).getAmount().longValue();
+        }
+
         final Query query = new Query()
                 .addCriteria(Criteria.where("orderBookId").is(orderBookId))
-                .addCriteria(Criteria.where("itemPrice").gte(price.multiply(AbstractOrder.SCALE).longValue()))
+                .addCriteria(Criteria.where("itemPrice.amount").gte(stored))
+                .addCriteria(Criteria.where("itemPrice.ccy").is(price.getCurrencyUnit().getCurrencyCode()))
                 .addCriteria(Criteria.where("placeDate").lte(toTime))
                 .addCriteria(Criteria.where("orderStatus").is(OrderStatus.PENDING))
                 .addCriteria(Criteria.where("orderType").is(OrderType.BUY))
-                .with(new Sort(Sort.Direction.DESC, "itemPrice")
-                        .and(new Sort(Sort.Direction.ASC, "placeDate")).and(new Sort(Sort.Direction.DESC, "itemRemaining")))
+                .with(new Sort(Sort.Direction.DESC, "itemPrice.amount")
+                        .and(new Sort(Sort.Direction.ASC, "placeDate")).and(new Sort(Sort.Direction.DESC, "itemRemaining.amount")))
                 .limit(size);
 
         //.with(new Sort(Sort.Direction.DESC, "itemPrice", "placeDate").and(new Sort(Sort.Direction.ASC, "placeDate")))
@@ -72,7 +85,6 @@ public class BuyOrderRepositoryMongoImpl implements BuyOrderRepositoryMongoCusto
         }
         return buyOrders;
     }
-
 
 
     @Override
@@ -88,7 +100,7 @@ public class BuyOrderRepositoryMongoImpl implements BuyOrderRepositoryMongoCusto
                 .addCriteria(Criteria.where("orderBookId").is(orderBookId))
                 .addCriteria(Criteria.where("orderStatus").is(OrderStatus.PENDING))
                 .addCriteria(Criteria.where("orderType").is(OrderType.BUY))
-                .with(new Sort(Sort.Direction.DESC, "itemPrice"))
+                .with(new Sort(Sort.Direction.DESC, "itemPrice.amount"))
                 .limit(1);
 
         final BuyOrder order = mongoTemplate.findOne(query, BuyOrder.class);

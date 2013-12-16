@@ -1,14 +1,23 @@
 package com.icoin.trading.tradeengine.application.executor;
 
-import com.icoin.trading.tradeengine.domain.model.order.*;
+import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
+import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
+import org.joda.money.BigMoney;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +53,7 @@ public class QueuedTradeExecutorIT {
     private SellOrderRepository createSellOrderRepository(final Random random) {
         when(sellOrderRepository.findAscPendingOrdersByPriceTime(
                 any(Date.class),
-                any(BigDecimal.class),
+                any(BigMoney.class),
                 any(OrderBookId.class),
                 any(Integer.class)
         )).thenAnswer(new Answer<List<SellOrder>>() {
@@ -61,7 +70,7 @@ public class QueuedTradeExecutorIT {
     private BuyOrderRepository createBuyOrderRepository(final Random random) {
         when(buyOrderRepository.findDescPendingOrdersByPriceTime(
                 any(Date.class),
-                any(BigDecimal.class),
+                any(BigMoney.class),
                 any(OrderBookId.class),
                 any(Integer.class)
         )).thenAnswer(new Answer<List<BuyOrder>>() {

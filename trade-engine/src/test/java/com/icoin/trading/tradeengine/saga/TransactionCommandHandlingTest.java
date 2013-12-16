@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.saga;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.application.command.transaction.TransactionCommandHandler;
 import com.icoin.trading.tradeengine.application.command.transaction.command.CancelTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ConfirmTransactionCommand;
@@ -28,12 +29,15 @@ import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionExe
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionPartiallyExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.Transaction;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
+import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,25 +64,53 @@ public class TransactionCommandHandlingTest {
 
     @Test
     public void testStartBuyTransaction() {
-        StartBuyTransactionCommand command = new StartBuyTransactionCommand(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20));
+        StartBuyTransactionCommand command =
+                new StartBuyTransactionCommand(
+                        transactionId,
+                        orderBook, portfolio,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)));
         fixture.given()
                 .when(command)
-                .expectEvents(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)));
+                .expectEvents(
+                        new BuyTransactionStartedEvent(
+                                transactionId,
+                                orderBook,
+                                portfolio,
+                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))));
     }
 
     @Test
     public void testStartSellTransaction() {
-        StartSellTransactionCommand command = new StartSellTransactionCommand(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20));
+        StartSellTransactionCommand command =
+                new StartSellTransactionCommand(
+                        transactionId,
+                        orderBook,
+                        portfolio,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)));
         fixture.given()
                 .when(command)
-                .expectEvents(new SellTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)));
+                .expectEvents(
+                        new SellTransactionStartedEvent(
+                                transactionId,
+                                orderBook,
+                                portfolio,
+                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))));
     }
 
     @Test
     public void testConfirmTransaction() {
         final Date confirmDate = new Date();
         ConfirmTransactionCommand command = new ConfirmTransactionCommand(transactionId, confirmDate);
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)))
+        fixture.given(new BuyTransactionStartedEvent(
+                transactionId,
+                orderBook,
+                portfolio,
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))))
                 .when(command)
                 .expectEvents(new BuyTransactionConfirmedEvent(transactionId, confirmDate));
     }
@@ -86,47 +118,95 @@ public class TransactionCommandHandlingTest {
     @Test
     public void testCancelTransaction() {
         CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)))
+        fixture.given(new BuyTransactionStartedEvent(
+                transactionId,
+                orderBook,
+                portfolio,
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))))
                 .when(command)
-                .expectEvents(new BuyTransactionCancelledEvent(transactionId, BigDecimal.valueOf(200), BigDecimal.valueOf(0)));
+                .expectEvents(new BuyTransactionCancelledEvent(
+                        transactionId,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                        BigMoney.zero(CurrencyUnit.of(Currencies.BTC))));
     }
 
     @Test
     public void testCancelTransaction_partiallyExecuted() {
         CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
-                new BuyTransactionPartiallyExecutedEvent(transactionId, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(20)))
+        fixture.given(new BuyTransactionStartedEvent(
+                transactionId,
+                orderBook,
+                portfolio,
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20))),
+                new BuyTransactionPartiallyExecutedEvent(transactionId,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20))))
                 .when(command)
-                .expectEvents(new BuyTransactionCancelledEvent(transactionId, BigDecimal.valueOf(200), BigDecimal.valueOf(100)));
+                .expectEvents(new BuyTransactionCancelledEvent(transactionId,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))));
     }
 
     @Test
     public void testExecuteTransaction() {
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, BigDecimal.valueOf(200), BigDecimal.valueOf(20));
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
-                new BuyTransactionConfirmedEvent(transactionId, new Date()))
+        ExecutedTransactionCommand command =
+                new ExecutedTransactionCommand(transactionId,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)));
+        fixture.given(new BuyTransactionStartedEvent(transactionId,
+                orderBook,
+                portfolio,
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))),
+                new BuyTransactionConfirmedEvent(transactionId,
+                        new Date()))
                 .when(command)
-                .expectEvents(new BuyTransactionExecutedEvent(transactionId, BigDecimal.valueOf(200), BigDecimal.valueOf(20)));
+                .expectEvents(new BuyTransactionExecutedEvent(transactionId,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))));
     }
 
     @Test
     public void testExecuteTransaction_partiallyExecuted() {
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, BigDecimal.valueOf(50), BigDecimal.valueOf(20));
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
-                new BuyTransactionConfirmedEvent(transactionId,new Date()))
+        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId,
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)));
+        fixture.given(new BuyTransactionStartedEvent(transactionId,
+                orderBook,
+                portfolio,
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))),
+                new BuyTransactionConfirmedEvent(transactionId, new Date()))
                 .when(command)
-                .expectEvents(new BuyTransactionPartiallyExecutedEvent(transactionId, BigDecimal.valueOf(50), BigDecimal.valueOf(50), BigDecimal.valueOf(20)));
+                .expectEvents(new BuyTransactionPartiallyExecutedEvent(transactionId,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))));
     }
 
     @Test
     public void testExecuteTransaction_completeAfterPartiallyExecuted() {
-        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId, BigDecimal.valueOf(150), BigDecimal.valueOf(20));
-        fixture.given(new BuyTransactionStartedEvent(transactionId, orderBook, portfolio, BigDecimal.valueOf(200), BigDecimal.valueOf(20)),
-                new BuyTransactionConfirmedEvent(transactionId,new Date()),
-                new BuyTransactionPartiallyExecutedEvent(transactionId, BigDecimal.valueOf(50), BigDecimal.valueOf(50), BigDecimal.valueOf(20))
-        )
+        ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId,
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(150)),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)));
+        fixture.given(new BuyTransactionStartedEvent(transactionId,
+                orderBook,
+                portfolio,
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))),
+                new BuyTransactionConfirmedEvent(transactionId, new Date()),
+                new BuyTransactionPartiallyExecutedEvent(transactionId,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))))
                 .when(command)
-                .expectEvents(new BuyTransactionExecutedEvent(transactionId, BigDecimal.valueOf(150), BigDecimal.valueOf(20)));
+                .expectEvents(new BuyTransactionExecutedEvent(
+                        transactionId,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(150)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))));
         // TODO moeten we nu ook nog een partially executed event gooien?
     }
 }

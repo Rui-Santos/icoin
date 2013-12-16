@@ -22,15 +22,15 @@ import com.icoin.trading.tradeengine.domain.events.order.RefreshedHighestBuyPric
 import com.icoin.trading.tradeengine.domain.events.order.RefreshedLowestSellPriceEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.TradeType;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
+import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -38,14 +38,15 @@ import java.util.Date;
  */
 public class OrderBook extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 6778782949492587631L;
+    public static final double INIT_SELL_AMOUNT = 10000000000000000D;
 
     @AggregateIdentifier
     private OrderBookId orderBookId;
     private CurrencyPair currencyPair;
 
-    private BigDecimal highestBuyPrice = BigDecimal.ZERO;
-    private BigDecimal lowestSellPrice = BigDecimal.valueOf(100000000000000000l);
-    private BigDecimal tradedPrice = BigDecimal.ZERO;
+    private BigMoney highestBuyPrice;
+    private BigMoney lowestSellPrice;
+    private BigMoney tradedPrice;
 
     @SuppressWarnings("UnusedDeclaration")
     protected OrderBook() {
@@ -57,8 +58,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
 
     public void addBuyOrder(OrderId orderId,
                             TransactionId transactionId,
-                            BigDecimal tradeCount,
-                            BigDecimal itemPrice,
+                            BigMoney tradeCount,
+                            BigMoney itemPrice,
                             PortfolioId portfolioId,
                             Date placeDate) {
 
@@ -73,8 +74,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 placeDate));
     }
 
-    public void addSellOrder(OrderId orderId, TransactionId transactionId, BigDecimal tradeCount,
-                             BigDecimal itemPrice, PortfolioId portfolioId, Date placeDate) {
+    public void addSellOrder(OrderId orderId, TransactionId transactionId, BigMoney tradeCount,
+                             BigMoney itemPrice, PortfolioId portfolioId, Date placeDate) {
 
         apply(new SellOrderPlacedEvent(
                 orderBookId,
@@ -120,17 +121,17 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
         }
     }*/
 
-    public void resetHighestBuyPrice(String buyOrderId, BigDecimal highestBuyPrice) {
+    public void resetHighestBuyPrice(String buyOrderId, BigMoney highestBuyPrice) {
         apply(new RefreshedHighestBuyPriceEvent(orderBookId, buyOrderId, highestBuyPrice));
     }
 
-    public void resetLowestSellPrice(String sellOrderId, BigDecimal lowestSellPrice) {
+    public void resetLowestSellPrice(String sellOrderId, BigMoney lowestSellPrice) {
         apply(new RefreshedLowestSellPriceEvent(orderBookId, sellOrderId, lowestSellPrice));
     }
 
     //transaction: to add sell orders / buyer orders
-    public void executeSelling(BigDecimal matchedTradeAmount,
-                               BigDecimal matchedTradePrice,
+    public void executeSelling(BigMoney matchedTradeAmount,
+                               BigMoney matchedTradePrice,
                                String buyOrderId,
                                String sellOrderId,
                                TransactionId buyTransactionId,
@@ -147,8 +148,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 TradeType.SELL));
     }
 
-    public void executeBuying(BigDecimal matchedTradeAmount,
-                              BigDecimal matchedTradePrice,
+    public void executeBuying(BigMoney matchedTradeAmount,
+                              BigMoney matchedTradePrice,
                               String buyOrderId,
                               String sellOrderId,
                               TransactionId buyTransactionId,
@@ -170,6 +171,10 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
     protected void onOrderBookCreated(OrderBookCreatedEvent event) {
         this.orderBookId = event.getOrderBookIdentifier();
         this.currencyPair = event.getCurrencyPair();
+
+        highestBuyPrice = BigMoney.zero(CurrencyUnit.of(currencyPair.getCounterCurrency()));
+        lowestSellPrice = BigMoney.of(CurrencyUnit.of(currencyPair.getCounterCurrency()), INIT_SELL_AMOUNT);
+        tradedPrice = BigMoney.zero(CurrencyUnit.of(currencyPair.getCounterCurrency()));
     }
 
     @SuppressWarnings("unused")
@@ -190,15 +195,15 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
         this.highestBuyPrice = event.getPrice();
     }
 
-    public BigDecimal getHighestBuyPrice() {
+    public BigMoney getHighestBuyPrice() {
         return highestBuyPrice;
     }
 
-    public BigDecimal getLowestSellPrice() {
+    public BigMoney getLowestSellPrice() {
         return lowestSellPrice;
     }
 
-    public BigDecimal getTradedPrice() {
+    public BigMoney getTradedPrice() {
         return tradedPrice;
     }
 

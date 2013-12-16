@@ -17,10 +17,10 @@
 package com.icoin.trading.tradeengine.query.order;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-
-import java.math.BigDecimal;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 
 /**
  * @author Jettro Coenradie
@@ -34,9 +34,9 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
 
     private String highestBuyId;
     private String lowestSellId;
-    private BigDecimal tradedPrice;
-    private BigDecimal highestBuyPrice;
-    private BigDecimal lowestSellPrice;
+    private BigMoney tradedPrice;
+    private BigMoney highestBuyPrice;
+    private BigMoney lowestSellPrice;
 
     private String buyTransactionId;
     private String sellTransactionId;
@@ -59,6 +59,14 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
 
     public CurrencyPair getCurrencyPair() {
         return currencyPair;
+    }
+
+    public CurrencyUnit getBaseCurrency() {
+        return CurrencyUnit.of(currencyPair.getBaseCurrency());
+    }
+
+    public CurrencyUnit getCounterCurrency() {
+        return CurrencyUnit.of(currencyPair.getCounterCurrency());
     }
 
     public void setCurrencyPair(CurrencyPair currencyPair) {
@@ -89,27 +97,27 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
         this.lowestSellId = lowestSellId;
     }
 
-    public BigDecimal getTradedPrice() {
+    public BigMoney getTradedPrice() {
         return tradedPrice;
     }
 
-    public void setTradedPrice(BigDecimal tradedPrice) {
+    public void setTradedPrice(BigMoney tradedPrice) {
         this.tradedPrice = tradedPrice;
     }
 
-    public BigDecimal getHighestBuyPrice() {
+    public BigMoney getHighestBuyPrice() {
         return highestBuyPrice;
     }
 
-    public void setHighestBuyPrice(BigDecimal highestBuyPrice) {
+    public void setHighestBuyPrice(BigMoney highestBuyPrice) {
         this.highestBuyPrice = highestBuyPrice;
     }
 
-    public BigDecimal getLowestSellPrice() {
+    public BigMoney getLowestSellPrice() {
         return lowestSellPrice;
     }
 
-    public void setLowestSellPrice(BigDecimal lowestSellPrice) {
+    public void setLowestSellPrice(BigMoney lowestSellPrice) {
         this.lowestSellPrice = lowestSellPrice;
     }
 

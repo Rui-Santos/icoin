@@ -1,12 +1,9 @@
 package com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters;
 
+import com.icoin.trading.tradeengine.MoneyUtils;
 import com.mongodb.DBObject;
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
+import org.joda.money.BigMoney;
 import org.springframework.core.convert.converter.Converter;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 
 /**
@@ -16,38 +13,21 @@ import java.math.RoundingMode;
  * Time: AM8:57
  * To change this homhon use File | Settings | File Templates.
  */
-public class MoneyReadConverter implements Converter<DBObject, Money> {
-
-    public static final int MONEY_PRECISION = 100;
+public class MoneyReadConverter implements Converter<DBObject, BigMoney> {
 
     @Override
-    public Money convert(DBObject source) {
+    public BigMoney convert(DBObject source) {
         if (source == null) {
             return null;
         }
 
-        String ccy = (String) source.get("ccy");
-        final CurrencyUnit currency = CurrencyUnit.of(ccy);
-
-        final int decimalPlaces = currency.getDecimalPlaces();
-        if (decimalPlaces < 0) {
-            throw new UnsupportedOperationException("not support for ccy " + currency);
-        }
-
+        final String ccy = (String) source.get("currency");
         final Object amount = source.get("amount");
 
         if (amount == null) {
             throw new UnsupportedOperationException("not support for nullable amount of " + source);
         }
 
-        if (!Long.class.isAssignableFrom(amount.getClass())) {
-            throw new UnsupportedOperationException("not support for amount " + amount + ", class " + amount.getClass());
-        }
-
-        final BigDecimal unit = BigDecimal.TEN.pow(decimalPlaces);
-        final BigDecimal value = BigDecimal.valueOf((Long) amount)
-                .divide(unit, decimalPlaces, RoundingMode.HALF_EVEN);
-
-        return Money.of(currency, value);
+        return MoneyUtils.convertToBigMoney(ccy, (Long) amount);
     }
 }

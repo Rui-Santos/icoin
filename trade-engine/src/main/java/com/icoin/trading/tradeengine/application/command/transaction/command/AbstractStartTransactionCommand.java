@@ -19,8 +19,7 @@ package com.icoin.trading.tradeengine.application.command.transaction.command;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -30,11 +29,11 @@ public abstract class AbstractStartTransactionCommand {
     private TransactionId transactionId;
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private BigDecimal tradeAmount;
-    private BigDecimal itemPrice;
+    private BigMoney tradeAmount;
+    private BigMoney itemPrice;
 
     public AbstractStartTransactionCommand(TransactionId transactionId, OrderBookId orderbookIdentifier,
-                                           PortfolioId portfolioIdentifier, BigDecimal tradeAmount, BigDecimal itemPrice) {
+                                           PortfolioId portfolioIdentifier, BigMoney tradeAmount, BigMoney itemPrice) {
         this.transactionId = transactionId;
         this.itemPrice = itemPrice;
         this.orderbookIdentifier = orderbookIdentifier;
@@ -42,7 +41,7 @@ public abstract class AbstractStartTransactionCommand {
         this.tradeAmount = tradeAmount;
     }
 
-    public BigDecimal getItemPrice() {
+    public BigMoney getItemPrice() {
         return itemPrice;
     }
 
@@ -58,7 +57,7 @@ public abstract class AbstractStartTransactionCommand {
         return transactionId;
     }
 
-    public BigDecimal getTradeAmount() {
+    public BigMoney getTradeAmount() {
         return tradeAmount;
     }
 }

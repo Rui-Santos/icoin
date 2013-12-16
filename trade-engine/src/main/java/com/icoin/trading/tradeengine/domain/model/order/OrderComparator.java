@@ -1,7 +1,8 @@
 package com.icoin.trading.tradeengine.domain.model.order;
 
+import org.joda.money.BigMoney;
+
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Comparator;
 
 /**
@@ -15,8 +16,8 @@ public class OrderComparator<T extends AbstractOrder> implements Comparator<T>, 
 
     public int compare(T o1, T o2) {
         // copied from Java 7 Long.compareTo to support java 6
-        BigDecimal x = o1.getItemPrice();
-        BigDecimal y = o2.getItemPrice();
+        BigMoney x = o1.getItemPrice();
+        BigMoney y = o2.getItemPrice();
         int result = x.compareTo(y);
 
         result = result == 0 ? o1.getPlaceDate().compareTo(o2.getPlaceDate()) : result;

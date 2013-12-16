@@ -4,8 +4,8 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import org.joda.money.BigMoney;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -16,7 +16,12 @@ import java.util.Date;
  * Abstract execute order command.
  */
 public abstract class ExecuteOrderCommand<T extends ExecuteOrderCommand> extends AbstractOrderCommand<T> {
-    protected ExecuteOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId, TransactionId transactionId, BigDecimal tradeAmount, BigDecimal itemPrice, Date placeDate) {
+    protected ExecuteOrderCommand(OrderId orderId,
+                                  PortfolioId portfolioId,
+                                  OrderBookId orderBookId,
+                                  TransactionId transactionId,
+                                  BigMoney tradeAmount,
+                                  BigMoney itemPrice, Date placeDate) {
         super(orderId, portfolioId, orderBookId, transactionId, tradeAmount, itemPrice, placeDate);
     }
 }

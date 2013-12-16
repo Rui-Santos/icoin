@@ -18,6 +18,7 @@ package com.icoin.trading.tradeengine.domain.events.coin;
 
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 
 /**
@@ -28,10 +29,12 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 public class OrderBookAddedToCoinEvent {
     private CoinId coinId;
     private OrderBookId orderBookId;
+    private CurrencyPair currencyPair;
 
-    public OrderBookAddedToCoinEvent(CoinId coinId, OrderBookId orderBookId) {
+    public OrderBookAddedToCoinEvent(CoinId coinId, OrderBookId orderBookId, CurrencyPair currencyPair) {
         this.coinId = coinId;
         this.orderBookId = orderBookId;
+        this.currencyPair = currencyPair;
     }
 
     public CoinId getCoinId() {
@@ -40,5 +43,9 @@ public class OrderBookAddedToCoinEvent {
 
     public OrderBookId getOrderBookId() {
         return orderBookId;
+    }
+
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 }

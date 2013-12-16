@@ -31,8 +31,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
+import org.joda.money.BigMoney;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -43,8 +43,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
 
     @AggregateIdentifier
     private TransactionId transactionId;
-    private BigDecimal amountOfItems = BigDecimal.ZERO;
-    private BigDecimal executedAmount = BigDecimal.ZERO;
+    private BigMoney amountOfItems;
+    private BigMoney executedAmount;
     private TransactionType type;
 
 
@@ -56,8 +56,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                        TransactionType type,
                        OrderBookId orderbookIdentifier,
                        PortfolioId portfolioIdentifier,
-                       BigDecimal amountOfItems,
-                       BigDecimal pricePerItem) {
+                       BigMoney amountOfItems,
+                       BigMoney pricePerItem) {
         switch (type) {
             case BUY:
                 apply(new BuyTransactionStartedEvent(transactionId,
@@ -98,13 +98,13 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    public void execute(BigDecimal amountOfItems, BigDecimal itemPrice) {
+    public void execute(BigMoney amountOfItems, BigMoney itemPrice) {
         switch (this.type) {
             case BUY:
                 if (isPartiallyExecuted(amountOfItems)) {
                     apply(new BuyTransactionPartiallyExecutedEvent(transactionId,
                             amountOfItems,
-                            amountOfItems.add(executedAmount),
+                            amountOfItems.plus(executedAmount),
                             itemPrice));
                 } else {
                     apply(new BuyTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
@@ -114,7 +114,7 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                 if (isPartiallyExecuted(amountOfItems)) {
                     apply(new SellTransactionPartiallyExecutedEvent(transactionId,
                             amountOfItems,
-                            amountOfItems.add(executedAmount),
+                            amountOfItems.plus(executedAmount),
                             itemPrice));
                 } else {
                     apply(new SellTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
@@ -123,21 +123,23 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    private boolean isPartiallyExecuted(BigDecimal amountOfItems) {
-        return this.executedAmount.add(amountOfItems).compareTo(this.amountOfItems) < 0;
+    private boolean isPartiallyExecuted(BigMoney amountOfItems) {
+        return this.executedAmount.plus(amountOfItems).compareTo(this.amountOfItems) < 0;
     }
 
     @EventHandler
     public void onBuyTransactionStarted(BuyTransactionStartedEvent event) {
         this.transactionId = event.getTransactionIdentifier();
-        this.amountOfItems = event.getTotalItems();
+        this.amountOfItems = event.getTotalItem();
+        this.executedAmount = BigMoney.zero(event.getTotalItem().getCurrencyUnit());
         this.type = TransactionType.BUY;
     }
 
     @EventHandler
     public void onSellTransactionStarted(SellTransactionStartedEvent event) {
         this.transactionId = event.getTransactionIdentifier();
-        this.amountOfItems = event.getTotalItems();
+        this.amountOfItems = event.getTotalItem();
+        this.executedAmount = BigMoney.zero(event.getTotalItem().getCurrencyUnit());
         this.type = TransactionType.SELL;
     }
 
@@ -153,12 +155,12 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onTransactionPartiallyExecuted(SellTransactionPartiallyExecutedEvent event) {
-        this.executedAmount = executedAmount.add(event.getAmountOfExecutedItems());
+        this.executedAmount = executedAmount.plus(event.getAmountOfExecutedItem());
     }
 
     @EventHandler
     public void onTransactionPartiallyExecuted(BuyTransactionPartiallyExecutedEvent event) {
-        this.executedAmount = executedAmount.add(event.getAmountOfExecutedItems());
+        this.executedAmount = executedAmount.plus(event.getAmountOfExecutedItem());
     }
 
     @Override

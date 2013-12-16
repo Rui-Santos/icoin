@@ -4,26 +4,37 @@ db.orderEntry.aggregate([
                       { "$sort" : { "_id" : -1} }
                       ])
 
-db.orderEntry.aggregate([ { "$group" : { "_id" : "$itemPrice" , "amount" : { "$sum" : "$itemRemaining"}}} ,
-{ "$sort" : { "_id" : -1 }} ,
-{ "$match" : { "orderStatus" : "PENDING" , "type" : "SELL"}}
-])
 
 db.orderEntry.aggregate([
-                      { "$group": { _id: "$itemPrice", amount: { $sum: "$itemRemaining" } } },
-                      { "$sort": { "_id": -1 } },
-                                            { "$match": { "orderStatus" : "PENDING" , "type" : "SELL"} }
-])
+{ "$match" : { "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} , "placeDate" : { "$lte" : { "$date" : "2013-12-15T16:00:00.000Z"}} , "orderBookIdentifier" : "6359bd3f-4196-442d-84bf-fba40df584d0"}} ,
+{ "$group" : { "_id" : "$itemPrice" , "amount" : { "$sum" : "$itemRemaining.amount"}}} ,
+{ "$sort" : { "_id" : -1}} , { "$limit" : 10}])
+
+
+"placedDate" : { "$lte" : ISODate("2013-12-15T16:00:00.000Z")} ,
+
+,"placeDate" : { "$lte" : ISODate("2013-12-16")}
+
+db.orderEntry.aggregate([
+{ "$match" : { "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} ,"placedDate" : { "$lte" : ISODate("2013-12-16T16:00:00.000Z")} , "orderBookIdentifier" : "a13f20c3-b35a-4542-9a56-df689d2fc1dc"}} ,
+{ "$group" : { "_id" : "$itemPrice" , "amount" : { "$sum" : "$itemRemaining.amount"}}} ,
+{ "$sort" : { "_id" : -1}} , { "$limit" : 10}])
 
 
 db.orderEntry.aggregate([
-                      { "$group": { _id: "$itemPrice", amount: { $sum: "$itemRemaining" } } },
-                      { "$sort": { _id: -1 } },
-                      { "$match": { "orderStatus" : "PENDING" , "type" : "SELL"} }
-                   ])
+{ "$match" : { "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} ,"placedDate" : { "$lte" : ISODate("2013-12-16T16:00:00.000Z")} , "orderBookIdentifier" : "a13f20c3-b35a-4542-9a56-df689d2fc1dc"}} ,
+{ "$group" : { "_id" :{ "amount" : "$itemPrice.amount", "priceCcy" : "$itemPrice.currency", "amountCcy" : "$itemRemaining.currency"}, "sum" : { "$sum" : "$itemRemaining.amount"}}} ,
+{ "$sort" : { "_id" : -1}} , { "$limit" : 10}])
 
-db.orderEntry.aggregate([
-                          { "$match": { "orderStatus" : "PENDING" , "type" : "SELL"} },
-                          { "$group": { _id: "$itemPrice", amount: { $sum: "$itemRemaining" } } },
-                          { "$sort": { _id: -1 } }
-                   ])
+
+
+{ _id : { author: '$author', pageViews: '$pageViews', posted: '$posted' } }
+
+db.orderEntry.find({ "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} , "orderBookIdentifier" : "6359bd3f-4196-442d-84bf-fba40df584d0"})
+
+
+db.products.aggregate( {
+     $group : {
+               _id : { type :"$type", stocked : "$stocked"}
+   } }
+)

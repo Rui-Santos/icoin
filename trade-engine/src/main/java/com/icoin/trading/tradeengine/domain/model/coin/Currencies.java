@@ -138,6 +138,7 @@ public class Currencies {
     public static final String PHP = "PHP"; // "Philippine Peso",
     public static final String PKR = "PKR"; // "Pakistani Rupee",
     public static final String PLN = "PLN"; // "Polish Zloty",
+    public static final String PPC = "PPC"; // "Peer Coin",
     public static final String PYG = "PYG"; // "Paraguayan Guarani",
     public static final String QAR = "QAR"; // "Qatari Rial",
     public static final String RON = "RON"; // "Romanian Leu",
@@ -184,6 +185,7 @@ public class Currencies {
     public static final String XDR = "XDR"; // "Special Drawing Rights",
     public static final String XOF = "XOF"; // "CFA Franc BCEAO",
     public static final String XPF = "XPF"; // "CFP Franc",
+    public static final String XPM = "XPM"; // "Prime Coin",
     public static final String XRP = "XRP"; // Ripple
     public static final String XVN = "XVN"; // Hub Culture's Ven,
     public static final String YER = "YER"; // "Yemeni Rial",

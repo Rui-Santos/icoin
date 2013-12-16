@@ -20,8 +20,7 @@ import com.icoin.trading.tradeengine.application.command.order.CreateSellOrderCo
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -30,13 +29,13 @@ public class CreateSellOrderCommandMatcher extends BaseCommandMatcher<CreateSell
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private BigDecimal tradeCount;
-    private BigDecimal itemPrice;
+    private BigMoney tradeAmount;
+    private BigMoney itemPrice;
 
-    public CreateSellOrderCommandMatcher(PortfolioId portfolioId, OrderBookId orderbookId, BigDecimal tradeCount, BigDecimal itemPrice) {
+    public CreateSellOrderCommandMatcher(PortfolioId portfolioId, OrderBookId orderbookId, BigMoney tradeAmount, BigMoney itemPrice) {
         this.portfolioIdentifier = portfolioId;
         this.orderbookIdentifier = orderbookId;
-        this.tradeCount = tradeCount;
+        this.tradeAmount = tradeAmount;
         this.itemPrice = itemPrice;
     }
 
@@ -44,14 +43,14 @@ public class CreateSellOrderCommandMatcher extends BaseCommandMatcher<CreateSell
     protected boolean doMatches(CreateSellOrderCommand command) {
         return command.getOrderBookId().equals(orderbookIdentifier)
                 && command.getPortfolioId().equals(portfolioIdentifier)
-                && tradeCount.compareTo(command.getTradeAmount()) == 0
+                && tradeAmount.compareTo(command.getTradeAmount()) == 0
                 && itemPrice.compareTo(command.getItemPrice()) == 0;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("CreateSellOrderCommand with tradeCount [")
-                .appendValue(tradeCount)
+        description.appendText("CreateSellOrderCommand with tradeAmount [")
+                .appendValue(tradeAmount)
                 .appendText("], itemPrice [")
                 .appendValue(itemPrice)
                 .appendText("] for OrderBook with identifier [")

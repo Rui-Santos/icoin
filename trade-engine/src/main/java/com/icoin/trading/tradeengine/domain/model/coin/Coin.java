@@ -22,8 +22,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -38,12 +37,12 @@ public class Coin extends AbstractAnnotatedAggregateRoot {
     protected Coin() {
     }
 
-    public Coin(CoinId coinId, String name, BigDecimal value, BigDecimal amountOfShares) {
+    public Coin(CoinId coinId, String name, BigMoney value, BigMoney amountOfShares) {
         apply(new CoinCreatedEvent(coinId, name, value, amountOfShares));
     }
 
-    public void addOrderBook(OrderBookId orderBookId) {
-        apply(new OrderBookAddedToCoinEvent(coinId, orderBookId));
+    public void addOrderBook(OrderBookId orderBookId, CurrencyPair currencyPair) {
+        apply(new OrderBookAddedToCoinEvent(coinId, orderBookId, currencyPair));
     }
 
     @Override

@@ -20,8 +20,7 @@ import com.icoin.trading.tradeengine.application.command.order.CreateBuyOrderCom
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -30,10 +29,10 @@ public class CreateBuyOrderCommandMatcher extends BaseCommandMatcher<CreateBuyOr
 
     private OrderBookId orderbookIdentifier;
     private PortfolioId portfolioIdentifier;
-    private BigDecimal tradeCount;
-    private BigDecimal itemPrice;
+    private BigMoney tradeCount;
+    private BigMoney itemPrice;
 
-    public CreateBuyOrderCommandMatcher(PortfolioId portfolioId, OrderBookId orderbookId, BigDecimal tradeCount, BigDecimal itemPrice) {
+    public CreateBuyOrderCommandMatcher(PortfolioId portfolioId, OrderBookId orderbookId, BigMoney tradeCount, BigMoney itemPrice) {
         this.portfolioIdentifier = portfolioId;
         this.orderbookIdentifier = orderbookId;
         this.tradeCount = tradeCount;
@@ -44,8 +43,8 @@ public class CreateBuyOrderCommandMatcher extends BaseCommandMatcher<CreateBuyOr
     protected boolean doMatches(CreateBuyOrderCommand command) {
         return command.getOrderBookId().equals(orderbookIdentifier)
                 && command.getPortfolioId().equals(portfolioIdentifier)
-                && tradeCount.subtract(command.getTradeAmount()).abs().doubleValue() < 0.00000000001
-                && itemPrice.subtract(command.getItemPrice()).abs().doubleValue() < 0.00000000001;
+                && tradeCount.minus(command.getTradeAmount()).isNegativeOrZero()
+                && itemPrice.minus(command.getItemPrice()).isNegativeOrZero();
     }
 
     @Override

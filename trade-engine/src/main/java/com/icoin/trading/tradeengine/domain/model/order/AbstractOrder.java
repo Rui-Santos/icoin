@@ -4,8 +4,8 @@ import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import org.joda.money.BigMoney;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import static com.homhon.mongo.TimeUtils.currentTime;
@@ -27,12 +27,11 @@ import static com.homhon.util.Asserts.notNull;
  * To change this template use File | Settings | File Templates.
  */
 public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySupport<T, String, Long> {
-    public static final BigDecimal SCALE = BigDecimal.valueOf(100000000);
     private TransactionId transactionId;
-    private long itemPrice;
-    private long tradeAmount;
+    private BigMoney itemPrice;
+    private BigMoney tradeAmount;
     private PortfolioId portfolioId;
-    private long itemRemaining;
+    private BigMoney itemRemaining;
     private Date placeDate;
     private CurrencyPair currencyPair;
     private final OrderType orderType;
@@ -68,20 +67,24 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         this.transactionId = transactionId;
     }
 
-    public BigDecimal getItemPrice() {
-        return BigDecimal.valueOf(itemPrice).divide(SCALE);
+    public BigMoney getItemPrice() {
+        return itemPrice;
+//        return BigDecimal.valueOf(itemPrice).divide(SCALE);
     }
 
-    public void setItemPrice(BigDecimal itemPrice) {
-        this.itemPrice = itemPrice.multiply(SCALE).longValue();
+    public void setItemPrice(BigMoney itemPrice) {
+        this.itemPrice = itemPrice;
+//        this.itemPrice = itemPrice.multiply(SCALE).longValue();
     }
 
-    public BigDecimal getTradeAmount() {
-       return BigDecimal.valueOf(tradeAmount).divide(SCALE);
+    public BigMoney getTradeAmount() {
+        return tradeAmount;
+//       return BigDecimal.valueOf(tradeAmount).divide(SCALE);
     }
 
-    public void setTradeAmount(BigDecimal tradeAmount) {
-        this.tradeAmount = tradeAmount.multiply(SCALE).longValue();
+    public void setTradeAmount(BigMoney tradeAmount) {
+        this.tradeAmount = tradeAmount;
+//        this.tradeAmount = tradeAmount.multiply(SCALE).longValue();
     }
 
     public PortfolioId getPortfolioId() {
@@ -92,12 +95,14 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         this.portfolioId = portfolioId;
     }
 
-    public BigDecimal getItemRemaining() {
-        return BigDecimal.valueOf(itemRemaining).divide(SCALE);
+    public BigMoney getItemRemaining() {
+        return itemRemaining;
+//        return BigDecimal.valueOf(itemRemaining).divide(SCALE);
     }
 
-    public void setItemRemaining(BigDecimal itemRemaining) {
-        this.itemRemaining = itemRemaining.multiply(SCALE).longValue();
+    public void setItemRemaining(BigMoney itemRemaining) {
+        this.itemRemaining = itemRemaining;
+//        this.itemRemaining = itemRemaining.multiply(SCALE).longValue();
     }
 
     public Date getPlaceDate() {
@@ -134,7 +139,6 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     }
 
 
-
     public Date getLastTradedTime() {
         return lastTradedTime;
     }
@@ -149,11 +153,13 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         this.orderStatus = OrderStatus.DONE;
     }
 
-    public void recordTraded(BigDecimal tradeAmount, Date lastTradedTime) {
-        this.itemRemaining = itemRemaining - tradeAmount.multiply(SCALE).longValue();
+    public void recordTraded(BigMoney tradeAmount, Date lastTradedTime) {
+        this.itemRemaining =
+                itemRemaining.minus(tradeAmount);
+//                itemRemaining.minus(Money.of(CurrencyUnit.getInstance(Currencies.BTC), tradeAmount)) - tradeAmount.multiply(SCALE).longValue();
         this.lastTradedTime = lastTradedTime;
 
-        if (itemRemaining <= 0) {
+        if (itemRemaining.isNegativeOrZero()) {
             completeOrder(lastTradedTime);
         }
     }

@@ -20,8 +20,7 @@ package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -30,27 +29,27 @@ public class NotEnoughItemsAvailableToReserveInPortfolio {
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
     private TransactionId transactionIdentifier;
-    private BigDecimal availableAmountOfItems;
-    private BigDecimal amountOfItemsToReserve;
+    private BigMoney availableAmountOfItem;
+    private BigMoney amountOfItemToReserve;
 
     public NotEnoughItemsAvailableToReserveInPortfolio(PortfolioId portfolioIdentifier,
                                                        OrderBookId orderBookIdentifier,
                                                        TransactionId transactionIdentifier,
-                                                       BigDecimal availableAmountOfItems,
-                                                       BigDecimal amountOfItemsToReserve) {
+                                                       BigMoney availableAmountOfItem,
+                                                       BigMoney amountOfItemToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.availableAmountOfItems = availableAmountOfItems;
-        this.amountOfItemsToReserve = amountOfItemsToReserve;
+        this.availableAmountOfItem = availableAmountOfItem;
+        this.amountOfItemToReserve = amountOfItemToReserve;
     }
 
-    public BigDecimal getAmountOfItemsToReserve() {
-        return amountOfItemsToReserve;
+    public BigMoney getAmountOfItemToReserve() {
+        return amountOfItemToReserve;
     }
 
-    public BigDecimal getAvailableAmountOfItems() {
-        return availableAmountOfItems;
+    public BigMoney getAvailableAmountOfItem() {
+        return availableAmountOfItem;
     }
 
     public OrderBookId getOrderBookIdentifier() {

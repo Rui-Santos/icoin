@@ -19,32 +19,31 @@ package com.icoin.trading.tradeengine.saga.matchers;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
  */
 public class DepositMoneyToPortfolioCommandMatcher extends BaseCommandMatcher<DepositCashCommand> {
 
-    private BigDecimal moneyToAddInCents;
+    private BigMoney moneyToAdd;
     private PortfolioId portfolioIdentifier;
 
-    public DepositMoneyToPortfolioCommandMatcher(PortfolioId portfolioIdentifier, BigDecimal moneyToAddInCents) {
+    public DepositMoneyToPortfolioCommandMatcher(PortfolioId portfolioIdentifier, BigMoney moneyToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.moneyToAddInCents = moneyToAddInCents;
+        this.moneyToAdd = moneyToAdd;
     }
 
     @Override
     protected boolean doMatches(DepositCashCommand command) {
-        return moneyToAddInCents.compareTo(command.getMoneyToAdd()) == 0
+        return moneyToAdd.compareTo(command.getMoneyToAdd()) == 0
                 && portfolioIdentifier.equals(command.getPortfolioIdentifier());
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("DepositCashCommand with moneyToAddInCents [")
-                .appendValue(moneyToAddInCents)
+        description.appendText("DepositCashCommand with moneyToAdd [")
+                .appendValue(moneyToAdd)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
                 .appendText("]");

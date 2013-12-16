@@ -17,9 +17,10 @@
 package com.icoin.trading.tradeengine.query.portfolio;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-import org.springframework.beans.factory.annotation.Value;
+import com.icoin.trading.tradeengine.Constants;
+import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,45 +31,45 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
 
     private String userIdentifier;
     private String userName;
-    private BigDecimal amountOfMoney;
-    private BigDecimal reservedAmountOfMoney;
-    private BigDecimal lowestPrice = BigDecimal.valueOf(0.00000001);
+    private BigMoney amountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
+    private BigMoney reservedAmountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
+//    private BigMoney lowestPrice = BigDecimal.valueOf(0.00000001);
 
     private Map<String, ItemEntry> itemsInPossession = new HashMap<String, ItemEntry>();
     private Map<String, ItemEntry> itemsReserved = new HashMap<String, ItemEntry>();
 
-    @Value("${trade.lowestPrice}")
-    public void setLowestPrice(BigDecimal lowestPrice) {
-        this.lowestPrice = lowestPrice;
-    }
+//    @Value("${trade.lowestPrice}")
+//    public void setLowestPrice(BigDecimal lowestPrice) {
+//        this.lowestPrice = lowestPrice;
+//    }
 
     /*-------------------------------------------------------------------------------------------*/
     /* utility functions                                                                         */
     /*-------------------------------------------------------------------------------------------*/
-    public BigDecimal obtainAmountOfAvailableItemsFor(String primaryKey) {
-        BigDecimal possession = obtainAmountOfItemsInPossessionFor(primaryKey);
-        BigDecimal reserved = obtainAmountOfReservedItemsFor(primaryKey);
-        return possession.subtract(reserved);
+    public BigMoney obtainAmountOfAvailableItemsFor(String primaryKey, CurrencyUnit currencyUnit) {
+        BigMoney possession = obtainAmountOfItemsInPossessionFor(primaryKey, currencyUnit);
+        BigMoney reserved = obtainAmountOfReservedItemsFor(primaryKey, currencyUnit);
+        return possession.minus(reserved);
     }
 
-    public BigDecimal obtainAmountOfReservedItemsFor(String primaryKey) {
+    public BigMoney obtainAmountOfReservedItemsFor(String primaryKey, CurrencyUnit currencyUnit) {
         ItemEntry item = findReservedItemByIdentifier(primaryKey);
         if (null == item) {
-            return BigDecimal.ZERO;
+            return BigMoney.zero(currencyUnit);
         }
         return item.getAmount();
     }
 
-    public BigDecimal obtainAmountOfItemsInPossessionFor(String primaryKey) {
+    public BigMoney obtainAmountOfItemsInPossessionFor(String primaryKey, CurrencyUnit currencyUnit) {
         ItemEntry item = findItemInPossession(primaryKey);
         if (null == item) {
-            return BigDecimal.ZERO;
+            return BigMoney.zero(currencyUnit);
         }
         return item.getAmount();
     }
 
-    public BigDecimal obtainMoneyToSpend() {
-        return amountOfMoney.subtract(reservedAmountOfMoney);
+    public BigMoney obtainMoneyToSpend() {
+        return amountOfMoney.minus(reservedAmountOfMoney);
     }
 
     public ItemEntry findReservedItemByIdentifier(String primaryKey) {
@@ -87,11 +88,11 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
         handleAdd(itemsInPossession, itemEntry);
     }
 
-    public void removeReservedItem(String itemIdentifier, BigDecimal amount) {
+    public void removeReservedItem(String itemIdentifier, BigMoney amount) {
         handleRemoveItem(itemsReserved, itemIdentifier, amount);
     }
 
-    public void removeItemsInPossession(String itemIdentifier, BigDecimal amount) {
+    public void removeItemsInPossession(String itemIdentifier, BigMoney amount) {
         handleRemoveItem(itemsInPossession, itemIdentifier, amount);
     }
 
@@ -106,11 +107,11 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
         this.userIdentifier = userIdentifier;
     }
 
-    public BigDecimal getAmountOfMoney() {
+    public BigMoney getAmountOfMoney() {
         return amountOfMoney;
     }
 
-    public void setAmountOfMoney(BigDecimal amountOfMoney) {
+    public void setAmountOfMoney(BigMoney amountOfMoney) {
         this.amountOfMoney = amountOfMoney;
     }
 
@@ -122,11 +123,11 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
         this.primaryKey = primaryKey;
     }
 
-    public BigDecimal getReservedAmountOfMoney() {
+    public BigMoney getReservedAmountOfMoney() {
         return reservedAmountOfMoney;
     }
 
-    public void setReservedAmountOfMoney(BigDecimal reservedAmountOfMoney) {
+    public void setReservedAmountOfMoney(BigMoney reservedAmountOfMoney) {
         this.reservedAmountOfMoney = reservedAmountOfMoney;
     }
 
@@ -158,20 +159,20 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
     /* Private helper methods                                                                    */
     /*-------------------------------------------------------------------------------------------*/
     private void handleAdd(Map<String, ItemEntry> items, ItemEntry itemEntry) {
-        if (items.containsKey(itemEntry.getPrimaryKey())) {
-            ItemEntry foundEntry = items.get(itemEntry.getPrimaryKey());
-            foundEntry.setAmount(foundEntry.getAmount().add(itemEntry.getAmount()));
+        if (items.containsKey(itemEntry.getCoinIdentifier())) {
+            ItemEntry foundEntry = items.get(itemEntry.getCoinIdentifier());
+            foundEntry.setAmount(foundEntry.getAmount().plus(itemEntry.getAmount()));
         } else {
-            items.put(itemEntry.getPrimaryKey(), itemEntry);
+            items.put(itemEntry.getCoinIdentifier(), itemEntry);
         }
     }
 
-    private void handleRemoveItem(Map<String, ItemEntry> items, String itemIdentifier, BigDecimal amount) {
+    private void handleRemoveItem(Map<String, ItemEntry> items, String itemIdentifier, BigMoney amount) {
         if (items.containsKey(itemIdentifier)) {
             ItemEntry foundEntry = items.get(itemIdentifier);
-            foundEntry.setAmount(foundEntry.getAmount().subtract(amount));
-            if (foundEntry.getAmount().compareTo(lowestPrice) < 0) {
-                items.remove(foundEntry.getPrimaryKey());
+            foundEntry.setAmount(foundEntry.getAmount().minus(amount));
+            if (foundEntry.getAmount().isNegativeOrZero()) {
+                items.remove(foundEntry.getCoinIdentifier());
             }
         }
     }

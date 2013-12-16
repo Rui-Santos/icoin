@@ -1,6 +1,5 @@
 package com.icoin.trading.tradeengine.application.executor;
 
-import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.application.command.order.ExecuteBuyOrderCommand;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
@@ -9,17 +8,19 @@ import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
+import org.joda.money.BigMoney;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static com.homhon.mongo.TimeUtils.currentTime;
 import static com.homhon.util.Collections.isEmpty;
+import static org.joda.money.MoneyUtils.min;
 
 /**
  * Created with IntelliJ IDEA.
@@ -88,8 +89,8 @@ public class BuyOrderExecutor {
 
                 final BuyOrder buyOrder = buyOrderRepository.findOne(buyCommand.getOrderId().toString());
 
-                BigDecimal matchedTradePrice = sellOrder.getItemPrice();
-                BigDecimal matchedTradeAmount = sellOrder.getItemRemaining().min(buyOrder.getItemRemaining());
+                BigMoney matchedTradePrice = sellOrder.getItemPrice();
+                BigMoney matchedTradeAmount = min(sellOrder.getItemRemaining(), buyOrder.getItemRemaining());
 
                 if (logger.isDebugEnabled()) {
                     logger.debug("Executing orders with amount {}, price {}: highest buying order {}, lowest selling order {}",
@@ -109,7 +110,7 @@ public class BuyOrderExecutor {
                         matchedTradeAmount,
                         sellOrderRepository,
                         buyOrderRepository);
-                if (Constants.IGNORED_PRICE.compareTo(buyOrder.getItemRemaining()) >= 0) {
+                if (buyOrder.getItemRemaining().toMoney(RoundingMode.HALF_EVEN).isNegativeOrZero()) {
                     done = true;
                     break;
                 }

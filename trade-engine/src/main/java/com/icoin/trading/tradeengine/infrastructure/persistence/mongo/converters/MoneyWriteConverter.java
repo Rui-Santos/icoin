@@ -1,12 +1,15 @@
 package com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters;
 
+import com.icoin.trading.tradeengine.MoneyUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
 import org.springframework.core.convert.converter.Converter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static com.homhon.util.Asserts.notNull;
 
 /**
@@ -16,29 +19,20 @@ import static com.homhon.util.Asserts.notNull;
  * Time: AM8:57
  * To change this homhon use File | Settings | File Templates.
  */
-public class MoneyWriteConverter implements Converter<Money, DBObject> {
+public class MoneyWriteConverter implements Converter<BigMoney, DBObject> {
 
     @Override
-    public DBObject convert(Money source) {
+    public DBObject convert(BigMoney source) {
         if (source == null) {
             return null;
         }
 
-        notNull(source.getAmount());
-        notNull(source.getCurrencyUnit());
-
-        final CurrencyUnit currency = source.getCurrencyUnit();
-        final int decimalPlaces = currency.getDecimalPlaces();
-
-        if(decimalPlaces<0){
-           throw new UnsupportedOperationException("not support for ccy " + currency);
-        }
-
-        final BigDecimal unit = BigDecimal.TEN.pow(decimalPlaces);
-
         BasicDBObject result = new BasicDBObject();
-        result.put("amount", source.getAmount().multiply(unit).longValue());
-        result.put("ccy", currency.getCurrencyCode());
+
+        final long moneyLong = MoneyUtils.convertToLong(source);
+
+        result.put("amount", moneyLong);
+        result.put("currency", source.getCurrencyUnit().getCurrencyCode());
         return result;
     }
 }

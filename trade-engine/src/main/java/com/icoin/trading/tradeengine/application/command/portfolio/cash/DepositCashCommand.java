@@ -18,10 +18,10 @@ package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 
 
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import org.joda.money.BigMoney;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 
 /**
  * Adding cash to your Portfolio through a deposit
@@ -33,15 +33,15 @@ public class DepositCashCommand {
     private PortfolioId portfolioIdentifier;
 
     @NotNull
-    @DecimalMin("0.00000001")
-    private BigDecimal moneyToAdd;
+//    @DecimalMin("0.00000001")
+    private BigMoney moneyToAdd;
 
-    public DepositCashCommand(PortfolioId portfolioIdentifier, BigDecimal moneyToAdd) {
+    public DepositCashCommand(PortfolioId portfolioIdentifier, BigMoney moneyToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.moneyToAdd = moneyToAdd;
     }
 
-    public BigDecimal getMoneyToAdd() {
+    public BigMoney getMoneyToAdd() {
         return moneyToAdd;
     }
 

@@ -21,7 +21,7 @@ import com.homhon.base.domain.ValueObject;
 /**
  * @author Jettro Coenradie
  */
-public enum TransactionType implements ValueObject<TransactionType>{
+public enum TransactionType implements ValueObject<TransactionType> {
     SELL, BUY;
 
     @Override

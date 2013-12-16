@@ -18,18 +18,17 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
  */
 public abstract class AbstractTransactionExecutedEvent {
     private TransactionId transactionIdentifier;
-    private BigDecimal amountOfItems;
-    private BigDecimal itemPrice;
+    private BigMoney amountOfItems;
+    private BigMoney itemPrice;
 
-    public AbstractTransactionExecutedEvent(TransactionId transactionIdentifier, BigDecimal amountOfItems, BigDecimal itemPrice) {
+    public AbstractTransactionExecutedEvent(TransactionId transactionIdentifier, BigMoney amountOfItems, BigMoney itemPrice) {
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItems = amountOfItems;
         this.itemPrice = itemPrice;
@@ -39,11 +38,11 @@ public abstract class AbstractTransactionExecutedEvent {
         return transactionIdentifier;
     }
 
-    public BigDecimal getAmountOfItems() {
+    public BigMoney getAmountOfItems() {
         return amountOfItems;
     }
 
-    public BigDecimal getItemPrice() {
+    public BigMoney getItemPrice() {
         return itemPrice;
     }
 }

@@ -17,8 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.coin;
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * <p>A new coin is created with a certain value and an amount of shares. Those two values can be used to calculate
@@ -29,21 +28,21 @@ import java.math.BigDecimal;
 public class CoinCreatedEvent {
     private CoinId coinId;
     private String coinName;
-    private BigDecimal coinInitialPrice;
-    private BigDecimal coinInitialAmount;
+    private BigMoney coinInitialPrice;
+    private BigMoney coinInitialAmount;
 
-    public CoinCreatedEvent(CoinId coinId, String coinName, BigDecimal coinInitialAmount, BigDecimal coinInitialPrice) {
-        this.coinInitialAmount = coinInitialAmount;
-        this.coinName = coinName;
-        this.coinInitialPrice = coinInitialPrice;
+    public CoinCreatedEvent(CoinId coinId, String coinName, BigMoney coinInitialPrice, BigMoney coinInitialAmount) {
         this.coinId = coinId;
+        this.coinName = coinName;
+        this.coinInitialAmount = coinInitialAmount;
+        this.coinInitialPrice = coinInitialPrice;
     }
 
     public CoinId getCoinIdentifier() {
         return this.coinId;
     }
 
-    public BigDecimal getCoinInitialAmount() {
+    public BigMoney getCoinInitialAmount() {
         return coinInitialAmount;
     }
 
@@ -51,7 +50,7 @@ public class CoinCreatedEvent {
         return coinName;
     }
 
-    public BigDecimal getCoinInitialPrice() {
+    public BigMoney getCoinInitialPrice() {
         return coinInitialPrice;
     }
 }

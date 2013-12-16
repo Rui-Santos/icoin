@@ -1,9 +1,8 @@
 package com.icoin.trading.tradeengine.domain.events.order;
 
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-
 import com.homhon.base.domain.event.EventSupport;
-import java.math.BigDecimal;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import org.joda.money.BigMoney;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,9 +13,9 @@ import java.math.BigDecimal;
  */
 public abstract class AbstractRefreshedPriceEvent<T extends AbstractRefreshedPriceEvent> extends EventSupport<T> {
     private OrderBookId orderBookId;
-    private BigDecimal price;
+    private BigMoney price;
 
-    public AbstractRefreshedPriceEvent(OrderBookId orderBookId, BigDecimal price) {
+    public AbstractRefreshedPriceEvent(OrderBookId orderBookId, BigMoney price) {
         this.orderBookId = orderBookId;
         this.price = price;
     }
@@ -25,7 +24,7 @@ public abstract class AbstractRefreshedPriceEvent<T extends AbstractRefreshedPri
         return orderBookId;
     }
 
-    public BigDecimal getPrice() {
+    public BigMoney getPrice() {
         return price;
     }
 }

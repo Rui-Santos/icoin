@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.events.portfolio.PortfolioCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashDepositedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationCancelledEvent;
@@ -25,12 +26,11 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashWithdrawnE
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.joda.money.BigMoney;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie
@@ -53,8 +53,8 @@ public class PortfolioMoneyEventListener {
         portfolioEntry.setUserIdentifier(event.getUserId().toString());
         portfolioEntry.setUserName(userQueryRepository.findOne(event.getUserId().toString())
                 .getFullName());
-        portfolioEntry.setAmountOfMoney(BigDecimal.ZERO);
-        portfolioEntry.setReservedAmountOfMoney(BigDecimal.ZERO);
+        portfolioEntry.setAmountOfMoney(BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT));
+        portfolioEntry.setReservedAmountOfMoney(BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT));
 
         portfolioRepository.save(portfolioEntry);
     }
@@ -62,21 +62,21 @@ public class PortfolioMoneyEventListener {
     @EventHandler
     public void handleEvent(CashDepositedEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().add(event.getMoneyAdded()));
+        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().plus(event.getMoneyAdded()));
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(CashWithdrawnEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().subtract(event.getAmountPaid()));
+        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().minus(event.getAmountPaid()));
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(CashReservedEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney().add(event.getAmountToReserve()));
+        portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney().plus(event.getAmountToReserve()));
         portfolioRepository.save(portfolioEntry);
     }
 
@@ -84,22 +84,22 @@ public class PortfolioMoneyEventListener {
     public void handleEvent(CashReservationCancelledEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         portfolioEntry.setReservedAmountOfMoney(
-                portfolioEntry.getReservedAmountOfMoney().subtract(event.getAmountOfMoneyToCancel()));
+                portfolioEntry.getReservedAmountOfMoney().minus(event.getAmountOfMoneyToCancel()));
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(CashReservationConfirmedEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        BigDecimal reservedAmountOfMoney = portfolioEntry.getReservedAmountOfMoney();
-        BigDecimal amountOfMoneyConfirmed = event.getAmountOfConfirmedMoney();
+        BigMoney reservedAmountOfMoney = portfolioEntry.getReservedAmountOfMoney();
+        BigMoney amountOfMoneyConfirmed = event.getAmountOfConfirmedMoney();
         if (amountOfMoneyConfirmed.compareTo(reservedAmountOfMoney) < 0) {
-            portfolioEntry.setReservedAmountOfMoney(reservedAmountOfMoney.add(amountOfMoneyConfirmed));
+            portfolioEntry.setReservedAmountOfMoney(reservedAmountOfMoney.plus(amountOfMoneyConfirmed));
         } else {
-            portfolioEntry.setReservedAmountOfMoney(BigDecimal.ZERO);
+            portfolioEntry.setReservedAmountOfMoney(BigMoney.zero(event.getAmountOfConfirmedMoney().getCurrencyUnit()));
         }
 
-        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().subtract(amountOfMoneyConfirmed));
+        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().minus(amountOfMoneyConfirmed));
         portfolioRepository.save(portfolioEntry);
     }
 

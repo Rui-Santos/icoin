@@ -18,8 +18,7 @@ package com.icoin.trading.tradeengine.query.transaction;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -29,25 +28,25 @@ public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, 
     private String portfolioIdentifier;
 
     private String coinName;
-    private BigDecimal amountOfItems;
-    private BigDecimal amountOfExecutedItems;
-    private BigDecimal pricePerItem;
+    private BigMoney amountOfItems;
+    private BigMoney amountOfExecutedItems;
+    private BigMoney pricePerItem;
     private TransactionState state;
     private TransactionType type;
 
-    public BigDecimal getAmountOfExecutedItems() {
+    public BigMoney getAmountOfExecutedItems() {
         return amountOfExecutedItems;
     }
 
-    public void setAmountOfExecutedItems(BigDecimal amountOfExecutedItems) {
+    public void setAmountOfExecutedItems(BigMoney amountOfExecutedItems) {
         this.amountOfExecutedItems = amountOfExecutedItems;
     }
 
-    public BigDecimal getAmountOfItems() {
+    public BigMoney getAmountOfItems() {
         return amountOfItems;
     }
 
-    public void setAmountOfItems(BigDecimal amountOfItems) {
+    public void setAmountOfItems(BigMoney amountOfItems) {
         this.amountOfItems = amountOfItems;
     }
 
@@ -75,11 +74,11 @@ public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, 
         this.portfolioIdentifier = portfolioIdentifier;
     }
 
-    public BigDecimal getPricePerItem() {
+    public BigMoney getPricePerItem() {
         return pricePerItem;
     }
 
-    public void setPricePerItem(BigDecimal pricePerItem) {
+    public void setPricePerItem(BigMoney pricePerItem) {
         this.pricePerItem = pricePerItem;
     }
 

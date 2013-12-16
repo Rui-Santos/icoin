@@ -37,10 +37,11 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.saga.annotation.EndSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
+import org.joda.money.BigMoney;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 /**
@@ -62,19 +63,19 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                             event.getOrderbookIdentifier()});
             logger.debug("The new buy transaction with identifier {} is for buying {} items for the price of {}",
                     new Object[]{event.getTransactionIdentifier(),
-                            event.getTotalItems(),
+                            event.getTotalItem(),
                             event.getPricePerItem()});
         }
         setTransactionIdentifier(event.getTransactionIdentifier());
         setOrderbookIdentifier(event.getOrderbookIdentifier());
         setPortfolioIdentifier(event.getPortfolioIdentifier());
         setPricePerItem(event.getPricePerItem());
-        setTotalItems(event.getTotalItems());
+        setTotalItems(event.getTotalItem());
 
         ReserveCashCommand command = new ReserveCashCommand(getPortfolioIdentifier(),
                 getTransactionIdentifier(),
                 getTotalItems()
-                        .multiply(getPricePerItem()));
+                        .convertRetainScale(event.getPricePerItem().getCurrencyUnit(), getPricePerItem().getAmount(), RoundingMode.HALF_EVEN));
         getCommandBus().dispatch(new GenericCommandMessage<ReserveCashCommand>(command));
     }
 
@@ -105,7 +106,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 "Not enough cash was available to make reservation in transaction {} for portfolio {}. Required: {}",
                 new Object[]{getTransactionIdentifier(),
                         event.getPortfolioIdentifier(),
-                        event.getAmountToPayInCents()});
+                        event.getAmountToPay()});
         //is is necessary?
         //when the whole saga complete, change the price here
         //todo after whole completion for this exec event, refresh done price
@@ -131,7 +132,9 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(BuyTransactionCancelledEvent event) {
-        BigDecimal amountToCancel = (event.getTotalAmountOfItems().subtract(event.getAmountOfExecutedItems())).multiply(getPricePerItem());
+        BigMoney amountToCancel =
+                event.getTotalAmountOfItems().minus(event.getAmountOfExecutedItem())
+                        .convertRetainScale(getPricePerItem().getCurrencyUnit(), getPricePerItem().getAmount(), RoundingMode.HALF_EVEN);
         logger.debug("Buy Transaction {} is cancelled, amount of cash reserved to cancel is {}",
                 event.getTransactionIdentifier(),
                 amountToCancel);
@@ -157,10 +160,14 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     public void handle(BuyTransactionExecutedEvent event) {
         logger.debug("Buy Transaction {} is executed, last amount of executed items is {} for a price of {}",
                 new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
+
+
         ConfirmCashReservationCommand confirmCommand =
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
-                        event.getAmountOfItems().multiply(event.getItemPrice()));
+                        event.getAmountOfItems().convertedTo(
+                                event.getItemPrice().getCurrencyUnit(),
+                                event.getItemPrice().getAmount()));
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
         AddAmountToPortfolioCommand addItemsCommand =
                 new AddAmountToPortfolioCommand(getPortfolioIdentifier(),
@@ -183,17 +190,20 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     public void handle(BuyTransactionPartiallyExecutedEvent event) {
         logger.debug("Buy Transaction {} is partially executed, amount of executed items is {} for a price of {}",
                 new Object[]{event.getTransactionIdentifier(),
-                        event.getAmountOfExecutedItems(),
+                        event.getAmountOfExecutedItem(),
                         event.getItemPrice()});
+
         ConfirmCashReservationCommand confirmCommand =
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
-                        event.getAmountOfExecutedItems().multiply(event.getItemPrice()));
+                        event.getAmountOfExecutedItem().convertedTo(
+                                event.getItemPrice().getCurrencyUnit(),
+                                event.getItemPrice().getAmount()));
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
         AddAmountToPortfolioCommand addItemsCommand =
                 new AddAmountToPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
-                        event.getAmountOfExecutedItems());
+                        event.getAmountOfExecutedItem());
         getCommandBus().dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(addItemsCommand));
     }
 }

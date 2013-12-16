@@ -17,14 +17,15 @@
 package com.icoin.trading.tradeengine.domain.events.trade;
 
 
-import com.icoin.trading.tradeengine.domain.model.TradeType;
+import com.icoin.trading.tradeengine.domain.model.order.TradeType;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.joda.money.BigMoney;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 /**
@@ -36,8 +37,8 @@ import java.util.Date;
 public class TradeExecutedEvent implements Serializable {
     private static final long serialVersionUID = 6292249351659536792L;
 
-    private final BigDecimal tradeAmount;
-    private final BigDecimal tradedPrice;
+    private final BigMoney tradeAmount;
+    private final BigMoney tradedPrice;
     private final String buyOrderId;
     private final String sellOrderId;
     private final TransactionId buyTransactionId;
@@ -47,16 +48,16 @@ public class TradeExecutedEvent implements Serializable {
     private final TradeType tradeType;
 
     public TradeExecutedEvent(OrderBookId orderBookId,
-                              BigDecimal tradeAmount,
-                              BigDecimal tradedPrice,
+                              BigMoney tradeAmount,
+                              BigMoney tradedPrice,
                               String buyOrderId,
                               String sellOrderId,
                               TransactionId buyTransactionId,
                               TransactionId sellTransactionId,
                               Date tradeTime,
                               TradeType tradeType) {
-        this.tradeAmount = tradeAmount.setScale(8);
-        this.tradedPrice = tradedPrice.setScale(8);
+        this.tradeAmount = tradeAmount;
+        this.tradedPrice = tradedPrice;
         this.buyOrderId = buyOrderId;
         this.sellOrderId = sellOrderId;
         this.sellTransactionId = sellTransactionId;
@@ -70,11 +71,11 @@ public class TradeExecutedEvent implements Serializable {
         return this.orderBookId;
     }
 
-    public BigDecimal getTradeAmount() {
+    public BigMoney getTradeAmount() {
         return tradeAmount;
     }
 
-    public BigDecimal getTradedPrice() {
+    public BigMoney getTradedPrice() {
         return tradedPrice;
     }
 
@@ -116,8 +117,8 @@ public class TradeExecutedEvent implements Serializable {
         TradeExecutedEvent other = (TradeExecutedEvent) obj;
 
         return new EqualsBuilder()
-                .append(tradeAmount.setScale(8), other.tradeAmount.setScale(8))
-                .append(tradedPrice.setScale(8), other.tradedPrice.setScale(8))
+                .append(tradeAmount.toMoney(RoundingMode.HALF_EVEN), other.tradeAmount.toMoney(RoundingMode.HALF_EVEN))
+                .append(tradedPrice.toMoney(RoundingMode.HALF_EVEN), other.tradedPrice.toMoney(RoundingMode.HALF_EVEN))
                 .append(buyOrderId, other.buyOrderId)
                 .append(sellOrderId, other.sellOrderId)
                 .append(sellTransactionId, other.sellTransactionId)
@@ -131,8 +132,8 @@ public class TradeExecutedEvent implements Serializable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(tradeAmount.setScale(8))
-                .append(tradedPrice.setScale(8))
+                .append(tradeAmount.toMoney(RoundingMode.HALF_EVEN))
+                .append(tradedPrice.toMoney(RoundingMode.HALF_EVEN))
                 .append(tradeType)
                 .append(buyOrderId)
                 .append(sellOrderId)

@@ -18,17 +18,16 @@ package com.icoin.trading.tradeengine.domain.events.portfolio.cash;
 
 
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-
-import java.math.BigDecimal;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
  */
 public class CashWithdrawnEvent {
     private PortfolioId portfolioIdentifier;
-    private BigDecimal amountPaid;
+    private BigMoney amountPaid;
 
-    public CashWithdrawnEvent(PortfolioId portfolioIdentifier, BigDecimal amountPaid) {
+    public CashWithdrawnEvent(PortfolioId portfolioIdentifier, BigMoney amountPaid) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountPaid = amountPaid;
     }
@@ -37,7 +36,7 @@ public class CashWithdrawnEvent {
         return portfolioIdentifier;
     }
 
-    public BigDecimal getAmountPaid() {
+    public BigMoney getAmountPaid() {
         return amountPaid;
     }
 }
