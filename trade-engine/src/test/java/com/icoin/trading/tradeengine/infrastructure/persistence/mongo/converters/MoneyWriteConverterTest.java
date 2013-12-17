@@ -24,7 +24,7 @@ public class MoneyWriteConverterTest {
 
         final DBObject btc = converter.convert(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 100));
         assertThat((Long) btc.get("amount"), equalTo(100 * 100000000L));
-        assertThat((String) btc.get("ccy"), equalTo(Currencies.BTC));
+        assertThat((String) btc.get("currency"), equalTo(Currencies.BTC));
 
     }
 
@@ -35,6 +35,6 @@ public class MoneyWriteConverterTest {
         final DBObject btc = converter.convert(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 100));
 
         assertThat((Long) btc.get("amount"), equalTo(1000 * 100l));
-        assertThat((String) btc.get("ccy"), equalTo(Currencies.CNY));
+        assertThat((String) btc.get("currency"), equalTo(Currencies.CNY));
     }
 }

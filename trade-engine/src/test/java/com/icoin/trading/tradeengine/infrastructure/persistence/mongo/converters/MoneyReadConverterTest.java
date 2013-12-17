@@ -27,7 +27,7 @@ public class MoneyReadConverterTest {
         final MoneyReadConverter converter = new MoneyReadConverter();
 
         final DBObject dbObject = BasicDBObjectBuilder.start("amount", 123456789L)
-                .append("ccy", Currencies.BTC)
+                .append("currency", Currencies.BTC)
                 .get();
 
         final BigMoney money = converter.convert(dbObject);
@@ -43,7 +43,7 @@ public class MoneyReadConverterTest {
         final MoneyReadConverter converter = new MoneyReadConverter();
 
         final DBObject dbObject = BasicDBObjectBuilder.start("amount", 123456789L)
-                .append("ccy", Currencies.CNY)
+                .append("currency", Currencies.CNY)
                 .get();
 
         final BigMoney money = converter.convert(dbObject);
