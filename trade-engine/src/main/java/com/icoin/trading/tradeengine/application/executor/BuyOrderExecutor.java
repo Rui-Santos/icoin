@@ -2,10 +2,8 @@ package com.icoin.trading.tradeengine.application.executor;
 
 import com.icoin.trading.tradeengine.application.command.order.ExecuteBuyOrderCommand;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.joda.money.BigMoney;
@@ -18,7 +16,6 @@ import javax.annotation.Resource;
 import java.math.RoundingMode;
 import java.util.List;
 
-import static com.homhon.mongo.TimeUtils.currentTime;
 import static com.homhon.util.Collections.isEmpty;
 import static org.joda.money.MoneyUtils.min;
 
@@ -32,8 +29,7 @@ import static org.joda.money.MoneyUtils.min;
 @Component
 public class BuyOrderExecutor {
     private static Logger logger = LoggerFactory.getLogger(BuyOrderExecutor.class);
-    private SellOrderRepository sellOrderRepository;
-    private BuyOrderRepository buyOrderRepository;
+    private OrderExecutorHelper orderExecutorHelper;
 
     private Repository<OrderBook> orderBookRepository;
 
@@ -58,18 +54,13 @@ public class BuyOrderExecutor {
         //refresh current buy price
         orderBook.resetHighestBuyPrice(buyCommand.getOrderId().toString(), buyCommand.getItemPrice());
 
-        //lowest sell > the current buying price
-//        if (orderBook.getLowestSellPrice().compareTo(buyCommand.getItemPrice()) > 0) {
-//            return;
-//        }
-
         //buying price >= than the current highest selling  price
         logger.info("Executing Buying order {}", buyCommand);
 
         boolean done = true;
         do {
             final List<SellOrder> sellOrders =
-                    sellOrderRepository.findAscPendingOrdersByPriceTime(
+                    orderExecutorHelper.findAscPendingOrdersByPriceTime(
                             buyCommand.getPlaceDate(),
                             buyCommand.getItemPrice(),
                             buyCommand.getOrderBookId(),
@@ -87,7 +78,7 @@ public class BuyOrderExecutor {
                     break;
                 }
 
-                final BuyOrder buyOrder = buyOrderRepository.findOne(buyCommand.getOrderId().toString());
+                final BuyOrder buyOrder = orderExecutorHelper.findBuyOrder(buyCommand.getOrderId());
 
                 BigMoney matchedTradePrice = sellOrder.getItemPrice();
                 BigMoney matchedTradeAmount = min(sellOrder.getItemRemaining(), buyOrder.getItemRemaining());
@@ -97,19 +88,19 @@ public class BuyOrderExecutor {
                             matchedTradeAmount, matchedTradePrice, sellOrder, buyCommand);
                     orderBook.executeBuying(matchedTradeAmount,
                             matchedTradePrice,
-                            sellOrder.getPrimaryKey(),
                             buyOrder.getPrimaryKey(),
+                            sellOrder.getPrimaryKey(),
+                            buyOrder.getTransactionId(),
                             sellOrder.getTransactionId(),
-                            buyCommand.getTransactionId(),
-                            currentTime());
+                            buyCommand.getPlaceDate());
                 }
 
-                OrderExecutorHelper.recordTraded(
+                orderExecutorHelper.recordTraded(
                         buyOrder,
                         sellOrder,
                         matchedTradeAmount,
-                        sellOrderRepository,
-                        buyOrderRepository);
+                        buyCommand.getPlaceDate());
+
                 if (buyOrder.getItemRemaining().toMoney(RoundingMode.HALF_EVEN).isNegativeOrZero()) {
                     done = true;
                     break;
@@ -117,18 +108,14 @@ public class BuyOrderExecutor {
             }
         } while (!done);
 
-        OrderExecutorHelper.refresh(orderBook, sellOrderRepository, buyOrderRepository);
+        orderExecutorHelper.refresh(orderBook);
     }
 
     @Autowired
-    public void setSellOrderRepository(SellOrderRepository sellOrderRepository) {
-        this.sellOrderRepository = sellOrderRepository;
+    public void setOrderExecutorHelper(OrderExecutorHelper orderExecutorHelper) {
+        this.orderExecutorHelper = orderExecutorHelper;
     }
 
-    @Autowired
-    public void setBuyOrderRepository(BuyOrderRepository buyOrderRepository) {
-        this.buyOrderRepository = buyOrderRepository;
-    }
 
     @Resource(name = "orderBookRepository")
     public void setOrderBookRepository(Repository<OrderBook> orderBookRepository) {

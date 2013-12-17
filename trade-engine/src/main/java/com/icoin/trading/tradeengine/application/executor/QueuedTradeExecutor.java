@@ -37,9 +37,9 @@ public class QueuedTradeExecutor implements TradeExecutor {
 
     //todo, load orderbook id from the repo
     //todo cannot reloaded runtime
-    QueuedTradeExecutor(Map<OrderBookId, BlockingQueue<AbstractOrder>> orderBookPool) {
-        this.orderBookPool = ImmutableMap.copyOf(orderBookPool);
-    }
+//    QueuedTradeExecutor(Map<OrderBookId, BlockingQueue<AbstractOrder>> orderBookPool) {
+//        this.orderBookPool = ImmutableMap.copyOf(orderBookPool);
+//    }
 
     @Autowired
     public QueuedTradeExecutor(OrderBookQueryRepository orderBookRepository, CommandGateway commandGateway) {

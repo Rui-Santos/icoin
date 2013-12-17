@@ -18,7 +18,6 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
-import static com.homhon.mongo.TimeUtils.currentTime;
 import static com.homhon.util.Collections.isEmpty;
 import static com.homhon.util.Objects.nullSafe;
 import static org.joda.money.MoneyUtils.min;
@@ -33,10 +32,9 @@ import static org.joda.money.MoneyUtils.min;
 @Component
 public class SellOrderExecutor {
     private static Logger logger = LoggerFactory.getLogger(SellOrderExecutor.class);
-    private BuyOrderRepository buyOrderRepository;
-    private SellOrderRepository sellOrderRepository;
-
     private Repository<OrderBook> orderBookRepository;
+
+    private OrderExecutorHelper orderExecutorHelper;
 
     @SuppressWarnings("unused")
     @CommandHandler
@@ -69,7 +67,7 @@ public class SellOrderExecutor {
         boolean done = true;
         do {
             final List<BuyOrder> buyOrders =
-                    buyOrderRepository.findDescPendingOrdersByPriceTime(
+                    orderExecutorHelper.findDescPendingOrdersByPriceTime(
                             sellCommand.getPlaceDate(),
                             sellCommand.getItemPrice(),
                             sellCommand.getOrderBookId(),
@@ -90,10 +88,9 @@ public class SellOrderExecutor {
                     break;
                 }
 
-                final SellOrder sellOrder = sellOrderRepository.findOne(sellCommand.getOrderId().toString());
+                final SellOrder sellOrder = orderExecutorHelper.findSellOrder(sellCommand.getOrderId());
 
                 BigMoney matchedTradePrice = buyOrder.getItemPrice();
-
 
                 BigMoney matchedTradeAmount = min(buyOrder.getItemRemaining(), sellOrder.getItemRemaining());
 
@@ -106,15 +103,10 @@ public class SellOrderExecutor {
                             sellCommand.getOrderId().toString(),
                             buyOrder.getTransactionId(),
                             sellCommand.getTransactionId(),
-                            currentTime());
+                            sellCommand.getPlaceDate());
                 }
 
-                OrderExecutorHelper.recordTraded(
-                        buyOrder,
-                        sellOrder,
-                        matchedTradeAmount,
-                        sellOrderRepository,
-                        buyOrderRepository);
+                orderExecutorHelper.recordTraded(buyOrder, sellOrder, matchedTradeAmount, sellCommand.getPlaceDate());
 
                 if (sellOrder.getItemRemaining().isNegativeOrZero()) {
                     done = true;
@@ -123,17 +115,13 @@ public class SellOrderExecutor {
             }
         } while (!done);
 
-        OrderExecutorHelper.refresh(orderBook, sellOrderRepository, buyOrderRepository);
+        orderExecutorHelper.refresh(orderBook);
     }
 
-    @Autowired
-    public void setBuyOrderRepository(BuyOrderRepository buyOrderRepository) {
-        this.buyOrderRepository = buyOrderRepository;
-    }
 
     @Autowired
-    public void setSellOrderRepository(SellOrderRepository sellOrderRepository) {
-        this.sellOrderRepository = sellOrderRepository;
+    public void setOrderExecutorHelper(OrderExecutorHelper orderExecutorHelper) {
+        this.orderExecutorHelper = orderExecutorHelper;
     }
 
     @Resource(name = "orderBookRepository")

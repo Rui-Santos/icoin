@@ -9,6 +9,7 @@ import com.icoin.trading.tradeengine.query.order.OrderType;
 import com.icoin.trading.tradeengine.query.order.PriceAggregate;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +19,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,9 +39,7 @@ import java.util.List;
 @ActiveProfiles("dev")
 @ContextConfiguration({"classpath:com/icoin/trading/tradeengine/infrastructure/persistence/mongo/tradeengine-persistence-mongo.xml"})
 public class OrderAggregateQueryRepositoryIT {
-
     private OrderBookId orderBookId = new OrderBookId();
-
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
@@ -137,16 +142,25 @@ public class OrderAggregateQueryRepositoryIT {
         return order;
     }
 
-    //todo resolve this test method
     @Test
     public void testFindOrderAggregatedPrice() throws Exception {
 
-        final List<PriceAggregate> orderAggregatedPrice =
+        final List<PriceAggregate> aggregateList =
                 repository.findOrderAggregatedPrice(
                         orderBookId.toString(),
                         OrderType.SELL,
                         date.toDate());
 
-        System.out.println(orderAggregatedPrice);
+        assertThat(aggregateList, hasSize(2));
+        final PriceAggregate priceAggregate1 = aggregateList.get(0);
+        final PriceAggregate priceAggregate2 = aggregateList.get(1);
+
+        assertThat(priceAggregate1.getPrice().isEqual(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 1034.568)), is(true));
+        assertThat(priceAggregate1.getSumUpAmountPerPrice().isEqual(BigMoney.of(Constants.CURRENCY_UNIT_BTC, 1027654.4998777)), is(true));
+        assertThat(priceAggregate1.getTotal().isEqual(Money.of(Constants.DEFAULT_CURRENCY_UNIT, 1027654.4998777D * 1034.568D, RoundingMode.HALF_EVEN)), is(true));
+
+        assertThat(priceAggregate2.getPrice().isEqual(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 1000)), is(true));
+        assertThat(priceAggregate2.getSumUpAmountPerPrice().isEqual(BigMoney.of(Constants.CURRENCY_UNIT_BTC, 2)), is(true));
+        assertThat(priceAggregate2.getTotal().isEqual(Money.of(Constants.DEFAULT_CURRENCY_UNIT, 2000, RoundingMode.HALF_EVEN)), is(true));
     }
 }

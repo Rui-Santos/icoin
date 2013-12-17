@@ -38,3 +38,13 @@ db.products.aggregate( {
                _id : { type :"$type", stocked : "$stocked"}
    } }
 )
+
+
+
+"tradeAmount" : { "amount" : (1050000000),"BTC" }, "itemPrice" :(1034567),"itemRemaining" : { "amount" : (0), "currency" : "BTC" }, "type" : "SELL", "placedDate" : ISODate("2013-12-16T16:00:00Z"), "orderStatus" : "DONE",
+"tradeAmount" : { "amount" : (1050000000),"BTC" }, "itemPrice" :(1034567),"itemRemaining" : { "amount" : (100000000), "currency" : "BTC" }, "type" : "SELL", "placedDate" : ISODate("2013-12-16T16:00:00Z"), "orderStatus" : "DONE",
+"tradeAmount" : { "amount" : ("102765449987770") "BTC" }, "itemPrice" :(1034567), "itemRemaining" : { "amount" : NumberLong("102765449987770")}, "type" : "SELL", "placedDate" : ISODate("2013-12-16T16:00:00Z"), "orderStatus" : "PENDING",
+"tradeAmount" : { "amount" : (1050000000),"BTC" }, "itemPrice" :(1000000),"itemRemaining" : { "amount" : (100000000), "currency" : "BTC" }, "type" : "SELL", "placedDate" : ISODate("2013-12-16T16:00:00Z"), "orderStatus" : "PENDING",
+"tradeAmount" : { "amount" : (1550000000),"BTC" }, "itemPrice" :(1000000),"itemRemaining" : { "amount" : (100000000), "currency" : "BTC" }, "type" : "SELL", "placedDate" : ISODate("2013-12-16T16:00:00Z"), "orderStatus" : "PENDING",
+
+
