@@ -68,7 +68,7 @@ public class QueuedTradeExecutorTest {
         return orderBookEntries;
     }
 
-    @Test
+    @Test(timeout = 10000L)
     public void testExecution() throws Exception {
         executor.start();
 
@@ -84,7 +84,9 @@ public class QueuedTradeExecutorTest {
         sell.join();
         buy.join();
 
-        TimeUnit.SECONDS.sleep(2);
+        while(count< sellOrderQuantity + buyOrderQuantity){
+            TimeUnit.MILLISECONDS.sleep(50);
+        }
         assertThat(count, equalTo(sellOrderQuantity + buyOrderQuantity));
 
         verify(commandGateway, times(count)).send(anyObject());
