@@ -21,7 +21,7 @@ package com.icoin.trading.users.domain;
  *
  * @author Jettro Coenradie
  */
-public interface UserAccount {
+public interface UserAccount<T extends UserAccount> extends com.homhon.base.domain.model.user.User<T> {
 
     String getPrimaryKey();
 

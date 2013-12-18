@@ -30,8 +30,8 @@ public class StartSellTransactionCommand extends AbstractStartTransactionCommand
     public StartSellTransactionCommand(TransactionId transactionId,
                                        OrderBookId orderbookIdentifier,
                                        PortfolioId portfolioIdentifier,
-                                       BigMoney tradeCount,
+                                       BigMoney tradeAmount,
                                        BigMoney itemPrice) {
-        super(transactionId, orderbookIdentifier, portfolioIdentifier, tradeCount, itemPrice);
+        super(transactionId, orderbookIdentifier, portfolioIdentifier, tradeAmount, itemPrice);
     }
 }

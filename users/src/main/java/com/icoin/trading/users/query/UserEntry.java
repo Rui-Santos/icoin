@@ -23,11 +23,16 @@ import com.icoin.trading.users.domain.UserAccount;
 /**
  * @author Jettro Coenradie
  */
-public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> implements UserAccount {
+public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> implements UserAccount<UserEntry> {
 
     private String name;
     private String username;
     private String password;
+
+    @Override
+    public String getId() {
+        return username;
+    }
 
     public String getName() {
         return name;
@@ -71,5 +76,21 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean sameValueAs(UserEntry userEntry) {
+        return super.sameIdentityAs(userEntry);
+    }
+
+    @Override
+    public UserEntry copy() {
+        final UserEntry userEntry = new UserEntry();
+
+        userEntry.setName(name);
+        userEntry.setPassword(password);
+        userEntry.setUsername(username);
+
+        return userEntry;
     }
 }
