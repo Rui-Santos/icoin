@@ -11,6 +11,7 @@ import org.joda.money.BigMoney;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
@@ -26,8 +27,7 @@ import static com.homhon.util.Asserts.notNull;
  * Execute helper for order execution.
  * todo, if have time, change it to singleton with repo's set
  */
-
-
+@Component
 public class OrderExecutorHelper {
     private SellOrderRepository sellOrderRepository;
     private BuyOrderRepository buyOrderRepository;

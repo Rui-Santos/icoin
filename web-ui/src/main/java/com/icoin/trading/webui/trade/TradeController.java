@@ -1,7 +1,7 @@
 package com.icoin.trading.webui.trade;
 
-import com.homhon.util.Strings;
 import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
 import java.util.List;
 
 import static com.homhon.mongo.TimeUtils.currentTime;
@@ -44,7 +45,8 @@ import static com.homhon.mongo.TimeUtils.currentTime;
 @Controller
 @RequestMapping("/")
 public class TradeController {
-    public static final String DEFUALT_COIN = "BTC";
+    static final String DEFUALT_COIN = "BTC";
+    static final CurrencyPair DEFAULT_CCY_PAIR = CurrencyPair.BTC_CNY;
     private static Logger logger = LoggerFactory.getLogger(TradeController.class);
 
     private TradeServiceFacade tradeServiceFacade;
@@ -61,59 +63,30 @@ public class TradeController {
         this.userServiceFacade = userServiceFacade;
     }
 
-    @RequestMapping(value = "index", method = RequestMethod.GET)
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String get(Model model) {
-        OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(DEFUALT_COIN);
+        OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(DEFAULT_CCY_PAIR);
         model.addAttribute("orderBook", orderBookEntry);
 
-        SellOrder sellOrder = tradeServiceFacade.prepareSellOrder(DEFUALT_COIN, orderBookEntry);
+        PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
+
+        SellOrder sellOrder = tradeServiceFacade.prepareSellOrder(DEFUALT_COIN, DEFAULT_CCY_PAIR, orderBookEntry, portfolioEntry);
         model.addAttribute("sellOrder", sellOrder);
 
-        BuyOrder buyOrder = tradeServiceFacade.prepareBuyOrder(DEFUALT_COIN, orderBookEntry);
+        BuyOrder buyOrder = tradeServiceFacade.prepareBuyOrder(DEFUALT_COIN, DEFAULT_CCY_PAIR, orderBookEntry, portfolioEntry);
         model.addAttribute("buyOrder", buyOrder);
 
-        CoinEntry coin = tradeServiceFacade.loadCoin(DEFUALT_COIN);
-        OrderBookEntry bookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(coin.getPrimaryKey());
-
-        final String userId = SecurityUtil.obtainLoggedinUserIdentifierSafely();
-        if (Strings.hasLength(userId)) {
-            final PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
-            sellOrder.setBalance(portfolioEntry
-                    .obtainAmountOfAvailableItemsFor(DEFUALT_COIN, orderBookEntry.getBaseCurrency())
-                    .getAmount());
-            buyOrder.setBalance(portfolioEntry.getAmountOfMoney().getAmount());
-
-            final List<OrderEntry> activeOrders = tradeServiceFacade.findUserActiveOrders(portfolioEntry.getPrimaryKey(), bookEntry.getPrimaryKey());
-            logger.info("queried active orders for user {} with order book {}: {}", portfolioEntry.getPrimaryKey(), bookEntry.getPrimaryKey(), activeOrders);
-            model.addAttribute("activeOrders", activeOrders);
-        }
-
-        final List<PriceAggregate> buyOrders =
-                tradeServiceFacade.findOrderAggregatedPrice(
-                        bookEntry.getPrimaryKey(),
-                        OrderType.BUY,
-                        currentTime());
-
-        final List<PriceAggregate> sellOrders =
-                tradeServiceFacade.findOrderAggregatedPrice(
-                        bookEntry.getPrimaryKey(),
-                        OrderType.SELL,
-                        currentTime());
-
-        List<TradeExecutedEntry> executedTrades = tradeServiceFacade.findByOrderBookIdentifier(bookEntry
-                .getPrimaryKey());
-        model.addAttribute("coin", coin);
-        model.addAttribute("buyOrders", buyOrders);
-        model.addAttribute("sellOrders", sellOrders);
-        model.addAttribute("executedTrades", executedTrades);
-
+        initPage(DEFUALT_COIN, orderBookEntry, portfolioEntry, model);
         return "index";
     }
 
-    @RequestMapping(value = "/{coinId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/coin/{coinId}", method = RequestMethod.GET)
     public String details(@PathVariable String coinId, Model model) {
+        CurrencyPair currencyPair = new CurrencyPair(coinId);
+
         CoinEntry coin = tradeServiceFacade.loadCoin(coinId);
-        OrderBookEntry bookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(coin.getPrimaryKey());
+        OrderBookEntry bookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(currencyPair);
 
         final List<OrderEntry> buyOrders =
                 tradeServiceFacade.findOrderForOrderBook(
@@ -127,7 +100,7 @@ public class TradeController {
                         OrderType.SELL,
                         OrderStatus.PENDING);
 
-        List<TradeExecutedEntry> executedTrades = tradeServiceFacade.findByOrderBookIdentifier(bookEntry
+        List<TradeExecutedEntry> executedTrades = tradeServiceFacade.findExecutedTradesByOrderBookIdentifier(bookEntry
                 .getPrimaryKey());
         model.addAttribute("coin", coin);
         model.addAttribute("sellOrders", sellOrders);
@@ -137,51 +110,50 @@ public class TradeController {
     }
 
     @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.POST)
-    public String sell(@ModelAttribute("sellOrder") @Valid SellOrder order, BindingResult bindingResult, Model model) {
-        if (!bindingResult.hasErrors()) {
-            OrderBookEntry bookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(order.getCoinId());
-            PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
+    public String sell(@PathVariable String coinId, @ModelAttribute("sellOrder") @Valid SellOrder order, BindingResult bindingResult, Model model) {
+        CurrencyUnit currencyUnit = CurrencyUnit.of(coinId);
+        CurrencyPair currencyPair = new CurrencyPair(coinId);
 
+        OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(currencyPair);
+        model.addAttribute("orderBook", orderBookEntry);
+
+        PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
+        if (!bindingResult.hasErrors()) {
             final BigDecimal tradeAmount = order.getTradeAmount();
             final BigDecimal itemPrice = order.getItemPrice();
 
-            final Money price = Money.of(Constants.DEFAULT_CURRENCY_UNIT, itemPrice, RoundingMode.HALF_EVEN);
-            final Money btcAmount = Money.of(Constants.CURRENCY_UNIT_BTC, tradeAmount, RoundingMode.HALF_EVEN);
+            final Money price = Money.of(currencyUnit, itemPrice, RoundingMode.HALF_EVEN);
+            final Money btcAmount = Money.of(currencyUnit, tradeAmount, RoundingMode.HALF_EVEN);
 
-            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getPrimaryKey(), Constants.CURRENCY_UNIT_BTC).isLessThan(btcAmount)) {
-                bindingResult.rejectValue("tradeAmount",
-                        "error.order.sell.tomanyitems",
-                        "Not enough items available to create sell order.");
+            if (portfolioEntry.obtainAmountOfAvailableItemsFor(orderBookEntry.getPrimaryKey(), currencyUnit).isLessThan(btcAmount)) {
+                bindingResult.rejectValue("tradeAmount", "error.order.sell.tomanyitems", "Not enough items available to create sell order.");
                 BuyOrder buyOrder = new BuyOrder();
-                tradeServiceFacade.prepareBuyOrder(coi, );
+                tradeServiceFacade.prepareBuyOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
                 model.addAttribute("buyOrder", buyOrder);
-
-                // 
-                OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(DEFUALT_COIN);
-                model.addAttribute("orderBook", orderBookEntry);
-//                addPortfolioItemInfoToModel(order.getCoinId(), model); 
+                initPage(coinId, orderBookEntry, portfolioEntry, model);
                 return "/index";
             }
 
             logger.info("placing a sell order with price {}, amount {}: {}.", price, btcAmount, order);
-
-            tradeServiceFacade.sellOrder(bookEntry.getPrimaryKey(),portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
+            tradeServiceFacade.sellOrder(orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
             logger.info("Sell order {} dispatched... ", order);
 
             return "redirect:/index";
         }
 
-//        addPortfolioItemInfoToModel(order.getCoinId(), model); 
+        initPage(coinId, orderBookEntry, portfolioEntry, model);
         return "/index";
     }
 
     @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.POST)
-    public String buy(@ModelAttribute("buyOrder") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
+    public String buy(@PathVariable String coinId, @ModelAttribute("buyOrder") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
+        CurrencyPair currencyPair = new CurrencyPair(coinId);
+
+        OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(currencyPair);
+        model.addAttribute("orderBook", orderBookEntry);
+        PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
+
         if (!bindingResult.hasErrors()) {
-
-            OrderBookEntry bookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(order.getCoinId());
-            PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
-
             final BigDecimal tradeAmount = order.getTradeAmount();
             final BigDecimal itemPrice = order.getItemPrice();
 
@@ -189,47 +161,56 @@ public class TradeController {
             final Money btcAmount = Money.of(Constants.CURRENCY_UNIT_BTC, tradeAmount, RoundingMode.HALF_EVEN);
             final Money totalMoney = btcAmount.convertedTo(price.getCurrencyUnit(), btcAmount.getAmount(), RoundingMode.HALF_EVEN);
 
-
             if (portfolioEntry.obtainMoneyToSpend().isLessThan(totalMoney)) {
-                bindingResult.rejectValue("tradeAmount",
-                        "error.order.buy.notenoughmoney",
-                        "Not enough cash to spend to buy the items for the price you want");
-                SellOrder sellOrder =  tradeServiceFacade.prepareSellOrder(DEFUALT_COIN, bookEntry);
+                bindingResult.rejectValue("tradeAmount", "error.order.buy.notenoughmoney", "Not enough cash to spend to buy the items for the price you want");
+                SellOrder sellOrder = tradeServiceFacade.prepareSellOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
                 model.addAttribute("sellOrder", sellOrder);
-                addPortfolioMoneyInfoToModel(portfolioEntry, model);
+                initPage(coinId, orderBookEntry, portfolioEntry, model);
                 return "/index";
             }
 
             logger.info("placing a buy order with price {}, amount {}, total money {}: {}.", price, btcAmount, totalMoney, order);
-
-            tradeServiceFacade.buyOrder(bookEntry.getPrimaryKey(),portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
-
+            tradeServiceFacade.buyOrder(orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
             logger.info("Buy order {} dispatched... ", order);
             return "redirect:/index";
         }
 
-        addPortfolioMoneyInfoToModel(model);
+        initPage(coinId, orderBookEntry, portfolioEntry, model);
         return "/index";
     }
 
-    private void addPortfolioItemInfoToModel(String identifier, Model model) {
-        PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
-        OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(identifier);
-        addPortfolioItemInfoToModel(portfolioEntry, orderBookEntry.getPrimaryKey(), orderBookEntry.getBaseCurrency(), model);
-    }
 
-    private void addPortfolioItemInfoToModel(PortfolioEntry entry, String orderBookIdentifier, CurrencyUnit currencyUnit, Model model) {
-        model.addAttribute("itemsInPossession", entry.obtainAmountOfItemsInPossessionFor(orderBookIdentifier, currencyUnit));
-        model.addAttribute("itemsReserved", entry.obtainAmountOfReservedItemsFor(orderBookIdentifier, currencyUnit));
-    }
+    private void initPage(String coinId, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry, Model model) {
+        CoinEntry coin = tradeServiceFacade.loadCoin(coinId);
+        model.addAttribute("coin", coin);
 
-    private void addPortfolioMoneyInfoToModel(Model model) {
-        PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
-        addPortfolioMoneyInfoToModel(portfolioEntry, model);
-    }
+        List<OrderEntry> activeOrders = Collections.emptyList();
+        List<PriceAggregate> buyOrders = Collections.emptyList();
+        List<PriceAggregate> sellOrders = Collections.emptyList();
+        List<TradeExecutedEntry> executedTrades = Collections.emptyList();
 
-    private void addPortfolioMoneyInfoToModel(PortfolioEntry portfolioEntry, Model model) {
-        model.addAttribute("moneyInPossession", portfolioEntry.getAmountOfMoney());
-        model.addAttribute("moneyReserved", portfolioEntry.getReservedAmountOfMoney());
+        if (orderBookEntry != null) {
+            buyOrders = tradeServiceFacade.findOrderAggregatedPrice(
+                    orderBookEntry.getPrimaryKey(),
+                    OrderType.BUY,
+                    currentTime());
+
+            sellOrders = tradeServiceFacade.findOrderAggregatedPrice(
+                    orderBookEntry.getPrimaryKey(),
+                    OrderType.SELL,
+                    currentTime());
+
+            executedTrades = tradeServiceFacade.findExecutedTradesByOrderBookIdentifier(orderBookEntry.getPrimaryKey());
+
+            if (portfolioEntry != null) {
+                activeOrders = tradeServiceFacade.findUserActiveOrders(portfolioEntry.getPrimaryKey(), orderBookEntry.getPrimaryKey());
+                logger.info("queried active orders for user {} with order book {}: {}", portfolioEntry.getPrimaryKey(), orderBookEntry.getPrimaryKey(), activeOrders);
+            }
+        }
+
+        model.addAttribute("activeOrders", activeOrders);
+        model.addAttribute("buyOrders", buyOrders);
+        model.addAttribute("sellOrders", sellOrders);
+        model.addAttribute("executedTrades", executedTrades);
     }
-} 
+}

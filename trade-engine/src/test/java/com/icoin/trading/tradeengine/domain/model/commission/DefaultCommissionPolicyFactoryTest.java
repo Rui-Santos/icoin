@@ -25,7 +25,7 @@ public class DefaultCommissionPolicyFactoryTest {
         final BuyOrder buyOrder = new BuyOrder();
         final CommissionPolicy buyPolicy = factory.createCommissionPolicy(buyOrder);
 
-        assertThat(sellPolicy, instanceOf(DefaultCommissionPolicy.class));
-        assertThat(buyPolicy, instanceOf(DefaultCommissionPolicy.class));
+        assertThat(sellPolicy, instanceOf(FixedRateCommissionPolicy.class));
+        assertThat(buyPolicy, instanceOf(FixedRateCommissionPolicy.class));
     }
 }

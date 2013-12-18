@@ -16,29 +16,29 @@
 package com.icoin.trading.tradeengine.domain.model.commission;
 
 import com.homhon.base.domain.model.ValueObjectSupport;
-import com.homhon.base.domain.model.probability.Probability;
+import org.joda.money.BigMoney;
+import org.joda.money.Money;
+
+import java.math.RoundingMode;
 
 /**
  * @author Slawek
  */
-public class Commission<U> extends ValueObjectSupport<Commission> {
-    private Probability commission;
-    private U unit;
+public class Commission extends ValueObjectSupport<Commission> {
+    private Money commission;
     private String description;
 
+    public Commission(BigMoney commission, String description) {
+        this(commission.toMoney(RoundingMode.HALF_EVEN), description);
+    }
 
-    public Commission(Probability commission, U unit, String description) {
+    public Commission(Money commission, String description) {
         this.commission = commission;
-        this.unit = unit;
         this.description = description;
     }
 
-    public Probability getCommission() {
+    public Money getCommission() {
         return commission;
-    }
-
-    public U getUnit() {
-        return unit;
     }
 
     public String getDescription() {

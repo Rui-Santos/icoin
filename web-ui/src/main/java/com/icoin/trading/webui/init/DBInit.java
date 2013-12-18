@@ -43,6 +43,7 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.saga.repository.mongo.MongoTemplate;
 import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -112,8 +113,8 @@ public class DBInit {
         createCoins();
 
         addMoney(buyer1, BigDecimal.valueOf(100000));
-        addItems(buyer1, "XPM", BigDecimal.valueOf(10000l));
-        addItems(buyer2, "XPM", BigDecimal.valueOf(10000l));
+        addItems(buyer1, "BTC", BigDecimal.valueOf(10000l));
+        addItems(buyer2, "BTC", BigDecimal.valueOf(10000l));
         addMoney(buyer3, BigDecimal.valueOf(100000));
         addItems(buyer4, "BTC", BigDecimal.valueOf(10000l));
         addMoney(buyer5, BigDecimal.valueOf(100000));
@@ -128,7 +129,7 @@ public class DBInit {
         AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
                 new OrderBookId(orderBookEntry.getPrimaryKey()),
-                BigMoney.of(Constants.CURRENCY_UNIT_BTC, amount));
+                BigMoney.of(CurrencyUnit.of(coinId), amount));
         commandBus.dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(command));
     }
 

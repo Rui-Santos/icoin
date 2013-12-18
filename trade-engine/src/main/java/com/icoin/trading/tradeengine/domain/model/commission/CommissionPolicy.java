@@ -15,7 +15,8 @@
  */
 package com.icoin.trading.tradeengine.domain.model.commission;
 
-import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 
 /**
  * Sample Policy
@@ -30,5 +31,11 @@ public interface CommissionPolicy {
      * @param order
      * @return
      */
-    public Commission calculateCommission(AbstractOrder order);
+    Commission calculateSellCommission(SellOrder order);
+
+    Commission calculateBuyCommission(BuyOrder order);
+
+    Commission calculateRemainingSellCommission(SellOrder order);
+
+    Commission calculateRemainingBuyCommission(BuyOrder order);
 }

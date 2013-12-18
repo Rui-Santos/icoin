@@ -1,5 +1,6 @@
 package com.icoin.trading.webui.trade.facade.internal;
 
+
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
@@ -80,7 +81,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public BuyOrder prepareBuyOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry) {
+    public BuyOrder prepareBuyOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry) {
         BuyOrder order = new BuyOrder();
         initCoinInfo(coinId, order);
 
@@ -89,7 +90,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
             orderBookEntry = loadOrderBookByCurrencyPair(currencyPair);
         }
 
-        if (orderBookEntry != null) {
+        if (orderBookEntry == null) {
             return order;
         }
         //init suggested buy amount
@@ -101,7 +102,9 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
 
 
         //init the portfolio if possible
-        final PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
+        if (portfolioEntry == null) {
+            portfolioEntry = userServiceFacade.obtainPortfolioForUser();
+        }
         if (portfolioEntry != null) {
             order.setBalance(portfolioEntry
                     .obtainAmountOfAvailableItemsFor(coinId, orderBookEntry.getBaseCurrency())
@@ -112,7 +115,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public SellOrder prepareSellOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry) {
+    public SellOrder prepareSellOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry) {
         SellOrder order = new SellOrder();
 
         initCoinInfo(coinId, order);
@@ -122,7 +125,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
             orderBookEntry = loadOrderBookByCurrencyPair(currencyPair);
         }
 
-        if (orderBookEntry != null) {
+        if (orderBookEntry == null) {
             return order;
         }
 
@@ -131,7 +134,9 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
         }
         order.setSuggestedPrice(amount);
 
-        final PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
+        if (portfolioEntry == null) {
+            portfolioEntry = userServiceFacade.obtainPortfolioForUser();
+        }
         if (portfolioEntry != null) {
             order.setBalance(portfolioEntry.getAmountOfMoney().getAmount());
         }
@@ -146,7 +151,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public List<TradeExecutedEntry> findByOrderBookIdentifier(String orderBookIdentifier) {
+    public List<TradeExecutedEntry> findExecutedTradesByOrderBookIdentifier(String orderBookIdentifier) {
         if (orderBookIdentifier == null) {
             return Collections.emptyList();
         }
@@ -238,5 +243,4 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     public void setOrderQueryRepository(OrderQueryRepository orderQueryRepository) {
         this.orderQueryRepository = orderQueryRepository;
     }
-
 }

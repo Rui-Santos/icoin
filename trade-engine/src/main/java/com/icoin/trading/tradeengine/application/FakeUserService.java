@@ -3,6 +3,7 @@ package com.icoin.trading.tradeengine.application;
 import com.homhon.base.domain.model.ValueObjectSupport;
 import com.homhon.base.domain.model.user.User;
 import com.homhon.base.domain.service.UserService;
+import com.icoin.trading.users.domain.UserAccount;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,20 +20,31 @@ public class FakeUserService implements UserService {
         };
     }
 
-    @Override
-    public User getUserById(String id) {
-        return new FakeUser();
-    }
 
-    private static class FakeUser extends ValueObjectSupport<FakeUser> implements User<FakeUser> {
+    private static class FakeUser extends ValueObjectSupport<FakeUser> implements UserAccount<FakeUser> {
         @Override
         public String getId() {
-            return "falcon";  //To change body of implemented methods use File | Settings | File Templates.
+            return "falcon";
         }
 
         @Override
         public String getName() {
-            return "falcon";  //To change body of implemented methods use File | Settings | File Templates.
+            return "falcon";
+        }
+
+        @Override
+        public String getPrimaryKey() {
+            return getId();
+        }
+
+        @Override
+        public String getUserName() {
+            return getId();
+        }
+
+        @Override
+        public String getFullName() {
+            return getName();
         }
     }
 }

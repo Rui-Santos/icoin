@@ -5,6 +5,7 @@ import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 
 import java.util.Date;
 
@@ -115,6 +116,15 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
 
     public CurrencyPair getCurrencyPair() {
         return currencyPair;
+    }
+
+    public CurrencyUnit getBaseCurrency(){
+        return currencyPair.getBaseCurrencyUnit();
+    }
+
+
+    public CurrencyUnit getCounterCurrency(){
+        return currencyPair.getCounterCurrencyUnit();
     }
 
     public void setCurrencyPair(CurrencyPair currencyPair) {

@@ -7,6 +7,7 @@ import com.icoin.trading.users.domain.UserAccount;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Time: 6:41 PM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class UserServiceFacadeImpl implements UserServiceFacade {
     private UserService userService;
     private UserQueryRepository userRepository;
@@ -52,7 +54,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return null;
         }
 
-        UserEntry username = userRepository.findByUsername(userAccount.getPrimaryKey());
-        return portfolioQueryRepository.findByUserIdentifier(username.getPrimaryKey());
+//        UserEntry username = userRepository.findByUsername(userAccount.getUserName());
+        return portfolioQueryRepository.findByUserIdentifier(userAccount.getPrimaryKey());
     }
 }

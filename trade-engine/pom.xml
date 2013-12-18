@@ -27,16 +27,20 @@
 
     <artifactId>icoin-trading-trade-engine</artifactId>
 
+    <properties>
+        <spring.security.version>3.1.0.RELEASE</spring.security.version>
+    </properties>
+
     <dependencies>
         <!--<dependency>-->
-            <!--<groupId>${project.groupId}</groupId>-->
-            <!--<artifactId>icoin-trading-core-api</artifactId>-->
-            <!--<version>${project.version}</version>-->
+        <!--<groupId>${project.groupId}</groupId>-->
+        <!--<artifactId>icoin-trading-core-api</artifactId>-->
+        <!--<version>${project.version}</version>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>${project.groupId}</groupId>-->
-            <!--<artifactId>icoin-trading-users</artifactId>-->
-            <!--<version>${project.version}</version>-->
+        <!--<groupId>${project.groupId}</groupId>-->
+        <!--<artifactId>icoin-trading-users</artifactId>-->
+        <!--<version>${project.version}</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -146,6 +150,12 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
             <version>${springdata.mongodb.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring.security.version}</version>
         </dependency>
 
         <dependency>

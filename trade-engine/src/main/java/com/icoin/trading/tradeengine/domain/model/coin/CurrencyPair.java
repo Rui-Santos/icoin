@@ -2,6 +2,7 @@ package com.icoin.trading.tradeengine.domain.model.coin;
 
 
 import com.homhon.base.domain.model.ValueObjectSupport;
+import org.joda.money.CurrencyUnit;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 /**
@@ -107,8 +108,16 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
         return baseCurrency;
     }
 
+    public CurrencyUnit getBaseCurrencyUnit(){
+        return CurrencyUnit.of(baseCurrency);
+    }
+
     public String getCounterCurrency() {
         return counterCurrency;
+    }
+
+    public CurrencyUnit getCounterCurrencyUnit(){
+        return CurrencyUnit.of(counterCurrency);
     }
 
     @Override

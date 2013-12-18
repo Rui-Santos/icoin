@@ -13,6 +13,6 @@ import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
 public class DefaultCommissionPolicyFactory implements CommissionPolicyFactory {
     @Override
     public CommissionPolicy createCommissionPolicy(AbstractOrder order) {
-        return new DefaultCommissionPolicy();
+        return new FixedRateCommissionPolicy();
     }
 }

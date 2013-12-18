@@ -7,6 +7,7 @@ import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;
 import com.icoin.trading.tradeengine.query.order.OrderType;
 import com.icoin.trading.tradeengine.query.order.PriceAggregate;
+import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
@@ -27,7 +28,7 @@ public interface TradeServiceFacade {
 
     CoinEntry loadCoin(String coinId);
 
-    List<TradeExecutedEntry> findByOrderBookIdentifier(String orderBookIdentifier);
+    List<TradeExecutedEntry> findExecutedTradesByOrderBookIdentifier(String orderBookIdentifier);
 
     List<OrderEntry> findUserActiveOrders(String userId, String orderBookId);
 
@@ -37,9 +38,9 @@ public interface TradeServiceFacade {
                                            OrderType type,
                                            OrderStatus orderStatus);
 
-    BuyOrder prepareBuyOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry);
+    BuyOrder prepareBuyOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry);
 
-    SellOrder prepareSellOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry);
+    SellOrder prepareSellOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry);
 
     void sellOrder(String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price);
 

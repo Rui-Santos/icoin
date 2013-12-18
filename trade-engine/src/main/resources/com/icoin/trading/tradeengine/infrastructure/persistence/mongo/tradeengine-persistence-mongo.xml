@@ -102,11 +102,13 @@
     <beans profile="dev">
         <context:property-placeholder
                 location="classpath:com/icoin/trading/tradeengine/infrastructure/persistence/mongo/mongo-db.dev.properties"/>
-        <bean id="trade.userService" class="com.icoin.trading.tradeengine.application.FakeUserService"/>
+        <!--<bean id="trade.userService" class="com.icoin.trading.tradeengine.application.FakeUserService"/>-->
+        <bean id="trade.userService" class="com.icoin.trading.tradeengine.infrastructure.auth.UserServiceImpl"/>
     </beans>
     <beans profile="prod">
         <context:property-placeholder
                 location="classpath:com/icoin/trading/tradeengine/infrastructure/persistence/mongo/mongo-db.prod.properties"/>
+
     </beans>
     <!-- end of homhon mongo repo config-->
 
