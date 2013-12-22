@@ -16,12 +16,16 @@
 
 package com.icoin.trading.test
 
+import com.icoin.trading.tradeengine.Constants
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry
+import org.joda.money.BigMoney
+import org.joda.money.CurrencyUnit
 
 /**
  * Class used to create an order based on the provided Profile. If the profile has cash we place buy orders, if
@@ -32,20 +36,25 @@ import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry
 class CommandCreator {
     Random randomFactory = new Random()
     def orderBookEntries
+    def coinNames
+    def coinToOrderBooks
     def command
 
-    def CommandCreator(orderBookEntries) {
+    def CommandCreator(orderBookEntries, coinNames, coinToOrderBooks) {
         this.orderBookEntries = orderBookEntries
+        this.coinNames = coinNames
+        this.coinToOrderBooks = coinToOrderBooks
     }
 
     def createCommand(PortfolioEntry portfolio) {
-        if (portfolio.amountOfMoney - portfolio.reservedAmountOfMoney > 10000) {
+        if (portfolio.amountOfMoney.isGreaterThan(portfolio.reservedAmountOfMoney.plus(100))) {
+            def orderBookId = obtainRandomOrderBook()
             command = new StartBuyTransactionCommand(
 					new TransactionId(),
-                    new OrderBookId(obtainRandomOrderBook()),
+                    new OrderBookId(orderBookId),
                     new PortfolioId(portfolio.identifier),
-                    randomFactory.nextInt(50) + 1,
-                    randomFactory.nextInt(10) + 1)
+                    BigMoney.of(CurrencyUnit.of(coinNames[orderBookId]),randomFactory.nextInt(50) + 1),
+                    BigMoney.of(portfolio.amountOfMoney.getCurrencyUnit(),randomFactory.nextInt(10) + 1))
         } else {
             def availableOrderBook = obtainAvailableOrderBook(portfolio)
             if (availableOrderBook) {
@@ -54,7 +63,7 @@ class CommandCreator {
                         new OrderBookId(availableOrderBook[0]),
                         new PortfolioId(portfolio.identifier),
                         availableOrderBook[1],
-                        randomFactory.nextInt(10) + 1)
+                        BigMoney.of(portfolio.amountOfMoney.getCurrencyUnit(),randomFactory.nextInt(10) + 1))
             }
         }
 
@@ -71,10 +80,10 @@ class CommandCreator {
         while (counterOrderBook < amountOfOrderBooks) {
             def identifier = portfolioEntry.itemsInPossession.keySet().toArray()[counterOrderBook]
             def amountAvailable = portfolioEntry.itemsInPossession[identifier].amount
-            def reserved = (portfolioEntry.itemsReserved[identifier]) ? portfolioEntry.itemsReserved[identifier].amount : 0
-            if (amountAvailable > reserved) {
-                def amountToSell = (amountAvailable - reserved > 50) ? randomFactory.nextInt(50) + 1 : amountAvailable - reserved
-                return [identifier, amountToSell]
+            def reserved = (portfolioEntry.itemsReserved[identifier]) ? portfolioEntry.itemsReserved[identifier].amount : BigMoney.zero(amountAvailable.getCurrencyUnit())
+            if (amountAvailable.isGreaterThan(reserved)) {
+                def amountToSell = amountAvailable.isGreaterThan(reserved.plus(50)) ? BigMoney.of(amountAvailable.getCurrencyUnit(),randomFactory.nextInt(50) + 1)  : amountAvailable.minus(reserved)
+                return [coinToOrderBooks[identifier], amountToSell]
             }
             counterOrderBook++
         }

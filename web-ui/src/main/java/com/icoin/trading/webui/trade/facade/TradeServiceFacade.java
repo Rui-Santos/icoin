@@ -2,6 +2,7 @@ package com.icoin.trading.webui.trade.facade;
 
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;
@@ -26,6 +27,8 @@ import java.util.List;
 public interface TradeServiceFacade {
     OrderBookEntry loadOrderBookByCurrencyPair(CurrencyPair currencyPair);
 
+    void refreshOrderBookPrice();
+
     CoinEntry loadCoin(String coinId);
 
     List<TradeExecutedEntry> findExecutedTradesByOrderBookIdentifier(String orderBookIdentifier);
@@ -42,8 +45,8 @@ public interface TradeServiceFacade {
 
     SellOrder prepareSellOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry);
 
-    void sellOrder(String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price);
+    void sellOrder(TransactionId transactionId, String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price);
 
 
-    void buyOrder(String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price);
+    void buyOrder(TransactionId transactionId, String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price);
 }

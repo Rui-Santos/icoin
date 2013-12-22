@@ -1,11 +1,9 @@
-package com.icoin.trading.tradeengine.application.executor;
+package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.icoin.trading.tradeengine.application.command.order.ExecuteSellOrderCommand;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.joda.money.BigMoney;

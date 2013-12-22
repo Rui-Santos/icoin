@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.tradeengine.application.command;
+package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.application.command.order.CreateOrderBookCommand;
 import com.icoin.trading.tradeengine.application.command.order.CreateSellOrderCommand;
-import com.icoin.trading.tradeengine.application.command.order.OrderBookCommandHandler;
-import com.icoin.trading.tradeengine.application.executor.TradeExecutor;
+import com.icoin.trading.tradeengine.application.command.order.handler.OrderBookCommandHandler;
+import com.icoin.trading.tradeengine.application.command.order.handler.TradeExecutor;
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.OrderBookCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;

@@ -34,7 +34,7 @@ public class PortfolioEntryTest {
     private static final BigMoney AMOUNT_ITEMS = BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100));
     private static final BigMoney AMOUNT_RESERVED = BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(40));
     private static final BigMoney AMOUNT_SELL = BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10));
-    private static final String COIN_IDENTIFIER = "coin1";
+    private static final String COIN_IDENTIFIER = "BTC";
     private static final BigMoney AMOUNT_OF_MONEY = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(1000));
     private static final BigMoney RESERVED_AMOUNT_OF_MONEY = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(200));
 
@@ -52,6 +52,19 @@ public class PortfolioEntryTest {
 
     @Test
     public void testObtainAvailableItems() {
+        PortfolioEntry portfolio = createDefaultPortfolio();
+
+        final BigMoney bigMoney = portfolio.obtainAmountOfAvailableItemsFor(COIN_IDENTIFIER, AMOUNT_ITEMS.getCurrencyUnit());
+
+        final ItemEntry item = createItem(bigMoney);
+        portfolio.addItemInPossession(item);
+
+        assertEquals(bigMoney.multipliedBy(2),
+                portfolio.obtainAmountOfAvailableItemsFor(COIN_IDENTIFIER, AMOUNT_ITEMS.getCurrencyUnit()));
+    }
+
+    @Test
+    public void testObtainAmountOfAvailableItemsFor(){
         PortfolioEntry portfolio = createDefaultPortfolio();
 
         assertEquals(AMOUNT_ITEMS.minus(AMOUNT_RESERVED),
@@ -78,7 +91,7 @@ public class PortfolioEntryTest {
         ItemEntry item1InPossession = new ItemEntry();
         item1InPossession.setAmount(amount);
         item1InPossession.setCoinIdentifier(COIN_IDENTIFIER);
-        item1InPossession.setCoinName("Coin One");
+        item1InPossession.setCoinName("Bitcoin");
         return item1InPossession;
     }
 }

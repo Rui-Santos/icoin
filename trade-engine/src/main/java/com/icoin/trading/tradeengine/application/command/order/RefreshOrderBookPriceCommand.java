@@ -26,30 +26,16 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
  *
  * @author Allard Buijze
  */
-public abstract class RefreshBuyOrderCommand {
+public class RefreshOrderBookPriceCommand {
 
     @TargetAggregateIdentifier
     private OrderBookId orderBookId;
-    private PortfolioId portfolioId;
-    private TransactionId transactionId;
 
-    protected RefreshBuyOrderCommand(OrderBookId orderBookId,
-                                     PortfolioId portfolioId,
-                                     TransactionId transactionId) {
+    public RefreshOrderBookPriceCommand(OrderBookId orderBookId) {
         this.orderBookId = orderBookId;
-        this.portfolioId = portfolioId;
-        this.transactionId = transactionId;
     }
 
     public OrderBookId getOrderBookId() {
         return orderBookId;
-    }
-
-    public PortfolioId getPortfolioId() {
-        return portfolioId;
-    }
-
-    public TransactionId getTransactionId() {
-        return transactionId;
     }
 }

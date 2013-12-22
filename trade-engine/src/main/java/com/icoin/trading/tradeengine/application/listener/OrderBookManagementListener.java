@@ -39,7 +39,7 @@ public class OrderBookManagementListener {
     public void createNewPortfolioWhenUserIsCreated(UserCreatedEvent event) {
         logger.debug("About to dispatch a new command to create a Portfolio for the new user {}",
                 event.getUserIdentifier());
-//        RefreshBuyOrderCommand command = new RefreshBuyOrderCommand(new PortfolioId(), event.getUserIdentifier());
+//        RefreshOrderBookPriceCommand command = new RefreshOrderBookPriceCommand(new PortfolioId(), event.getUserIdentifier());
 //        commandGateway.send(command);
     }
 

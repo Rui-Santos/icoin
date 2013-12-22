@@ -16,6 +16,7 @@
 
 package com.icoin.trading.webui.rest;
 
+import com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters.JodaMoneyConverter;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
@@ -62,6 +63,7 @@ public class RestController {
         this.portfolioQueryRepository = portfolioQueryRepository;
         this.orderBookQueryRepository = orderBookQueryRepository;
         this.xStream = new XStream();
+        this.xStream.registerConverter(new JodaMoneyConverter());
         this.commandBus = commandBus;
     }
 

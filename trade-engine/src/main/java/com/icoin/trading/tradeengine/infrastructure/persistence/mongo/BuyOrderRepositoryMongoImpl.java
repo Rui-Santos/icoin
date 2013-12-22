@@ -69,7 +69,7 @@ public class BuyOrderRepositoryMongoImpl implements BuyOrderRepositoryMongoCusto
         final Query query = new Query()
                 .addCriteria(Criteria.where("orderBookId").is(orderBookId))
                 .addCriteria(Criteria.where("itemPrice.amount").gte(stored))
-                .addCriteria(Criteria.where("itemPrice.ccy").is(price.getCurrencyUnit().getCurrencyCode()))
+                .addCriteria(Criteria.where("itemPrice.currency").is(price.getCurrencyUnit().getCurrencyCode()))
                 .addCriteria(Criteria.where("placeDate").lte(toTime))
                 .addCriteria(Criteria.where("orderStatus").is(OrderStatus.PENDING))
                 .addCriteria(Criteria.where("orderType").is(OrderType.BUY))

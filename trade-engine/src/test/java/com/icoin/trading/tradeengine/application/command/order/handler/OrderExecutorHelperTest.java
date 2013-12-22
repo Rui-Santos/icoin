@@ -1,6 +1,9 @@
-package com.icoin.trading.tradeengine.application.executor;
+package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.google.common.collect.Lists;
+import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
@@ -18,14 +21,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.homhon.mongo.TimeUtils.currentTime;
 import static com.homhon.util.Asserts.notNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -181,6 +186,7 @@ public class OrderExecutorHelperTest {
 
         OrderBook orderBook = mock(OrderBook.class);
         when(orderBook.getOrderBookId()).thenReturn(orderBookId);
+        when(orderBook.getCurrencyPair()).thenReturn(new CurrencyPair(Currencies.BTC,Currencies.AUD));
 
         BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
         BuyOrder buyOrder = createBuyOrders(highestBuyPrice.minus(BigDecimal.valueOf(0.01))).get(0);
@@ -192,14 +198,41 @@ public class OrderExecutorHelperTest {
 
         OrderExecutorHelper helper = new OrderExecutorHelper();
         helper.setSellOrderRepository(sellOrderRepository);
-
         helper.setBuyOrderRepository(buyOrderRepository);
-        helper.setSellOrderRepository(sellOrderRepository);
 
         helper.refresh(orderBook);
 
         verify(orderBook).resetHighestBuyPrice(buyOrder.getPrimaryKey(), buyOrder.getItemPrice());
         verify(orderBook).resetLowestSellPrice(sellOrder.getPrimaryKey(), sellOrder.getItemPrice());
+        verify(orderBook, atLeast(1)).getCurrencyPair();
+
+        verify(sellOrderRepository).findLowestPricePendingOrder(eq(orderBookId));
+        verify(buyOrderRepository).findHighestPricePendingOrder(eq(orderBookId));
+    }
+
+    @Test
+    public void testRefreshWithoutOrders() throws Exception {
+        OrderBookId orderBookId = new OrderBookId();
+        BigMoney lowestSellPrice = BigMoney.of(CurrencyUnit.AUD, Constants.INIT_SELL_PRICE);
+        BigMoney highestBuyPrice = BigMoney.zero(CurrencyUnit.AUD);
+
+
+        OrderBook orderBook = mock(OrderBook.class);
+        when(orderBook.getOrderBookId()).thenReturn(orderBookId);
+        when(orderBook.getCurrencyPair()).thenReturn(new CurrencyPair(Currencies.BTC,Currencies.AUD));
+
+        BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
+        SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
+
+        OrderExecutorHelper helper = new OrderExecutorHelper();
+        helper.setSellOrderRepository(sellOrderRepository);
+        helper.setBuyOrderRepository(buyOrderRepository);
+
+        helper.refresh(orderBook);
+
+        verify(orderBook).resetLowestSellPrice(isNull(String.class), eq(lowestSellPrice));
+        verify(orderBook).resetHighestBuyPrice(isNull(String.class), eq(highestBuyPrice));
+        verify(orderBook, atLeast(1)).getCurrencyPair();
 
         verify(sellOrderRepository).findLowestPricePendingOrder(eq(orderBookId));
         verify(buyOrderRepository).findHighestPricePendingOrder(eq(orderBookId));
@@ -231,8 +264,8 @@ public class OrderExecutorHelperTest {
         assertThat(buyOrder.getCompleteDate(), notNullValue());
         assertThat(sellOrder.getCompleteDate(), nullValue());
 
-        closeTo(buyOrder.getItemRemaining().getAmount(), BigDecimal.ZERO);
-        closeTo(sellOrder.getItemRemaining().getAmount(), BigDecimal.TEN);
+        assertThat(buyOrder.getItemRemaining().getAmount(), is(closeTo(BigDecimal.ZERO, BigDecimal.valueOf(0.00000000001d))));
+        assertThat(sellOrder.getItemRemaining().getAmount(), is(closeTo(BigDecimal.TEN, BigDecimal.valueOf(0.00000000001d))));
 
         verify(buyOrderRepository).save(eq(buyOrder));
         verify(sellOrderRepository).save(eq(sellOrder));

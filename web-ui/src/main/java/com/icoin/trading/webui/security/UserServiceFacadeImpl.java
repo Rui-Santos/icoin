@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserServiceFacadeImpl implements UserServiceFacade {
     private UserService userService;
-    private UserQueryRepository userRepository;
+//    private UserQueryRepository userRepository;
     private PortfolioQueryRepository portfolioQueryRepository;
 
     @Autowired
@@ -27,10 +27,10 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         this.userService = userService;
     }
 
-    @Autowired
-    public void setUserRepository(UserQueryRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+//    @Autowired
+//    public void setUserRepository(UserQueryRepository userRepository) {
+//        this.userRepository = userRepository;
+//    }
 
     @Autowired
     public void setPortfolioQueryRepository(PortfolioQueryRepository portfolioQueryRepository) {

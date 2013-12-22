@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.domain.model.order;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.OrderBookCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.RefreshedHighestBuyPriceEvent;
@@ -38,7 +39,7 @@ import java.util.Date;
  */
 public class OrderBook extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 6778782949492587631L;
-    public static final double INIT_SELL_AMOUNT = 10000000000000000D;
+
 
     @AggregateIdentifier
     private OrderBookId orderBookId;
@@ -173,7 +174,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
         this.currencyPair = event.getCurrencyPair();
 
         highestBuyPrice = BigMoney.zero(CurrencyUnit.of(currencyPair.getCounterCurrency()));
-        lowestSellPrice = BigMoney.of(CurrencyUnit.of(currencyPair.getCounterCurrency()), INIT_SELL_AMOUNT);
+        lowestSellPrice = BigMoney.of(CurrencyUnit.of(currencyPair.getCounterCurrency()), Constants.INIT_SELL_PRICE);
         tradedPrice = BigMoney.zero(CurrencyUnit.of(currencyPair.getCounterCurrency()));
     }
 

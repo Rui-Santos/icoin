@@ -1,4 +1,4 @@
-package com.icoin.trading.tradeengine.application.executor;
+package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.icoin.trading.tradeengine.application.command.order.ExecuteBuyOrderCommand;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
@@ -47,7 +47,7 @@ public class BuyOrderExecutor {
         OrderBook orderBook = orderBookRepository.load(buyCommand.getOrderBookId());
 
         //buying price >= current buying price
-        if (orderBook.getHighestBuyPrice().compareTo(buyCommand.getItemPrice()) >= 0) {
+        if (orderBook.getHighestBuyPrice().compareTo(buyCommand.getItemPrice()) > 0) {
             return;
         }
 

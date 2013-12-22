@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.tradeengine.application.command.order;
+package com.icoin.trading.tradeengine.application.command.order.handler;
 
-import com.icoin.trading.tradeengine.application.executor.TradeExecutor;
+import com.icoin.trading.tradeengine.application.command.order.AbstractOrderCommand;
+import com.icoin.trading.tradeengine.application.command.order.CreateBuyOrderCommand;
+import com.icoin.trading.tradeengine.application.command.order.CreateOrderBookCommand;
+import com.icoin.trading.tradeengine.application.command.order.CreateSellOrderCommand;
+import com.icoin.trading.tradeengine.application.command.order.RefreshOrderBookPriceCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
@@ -24,8 +28,12 @@ import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,12 +44,13 @@ import javax.annotation.Resource;
  */
 @Component
 public class OrderBookCommandHandler {
+    private static Logger logger = LoggerFactory.getLogger(OrderBookCommandHandler.class);
 
     private Repository<OrderBook> repository;
     private SellOrderRepository sellOrderRepository;
     private BuyOrderRepository buyOrderRepository;
     private TradeExecutor tradeExecutor;
-
+    private OrderExecutorHelper orderExecutorHelper;
 
     @CommandHandler
     public void handleBuyOrder(CreateBuyOrderCommand command) {
@@ -77,6 +86,19 @@ public class OrderBookCommandHandler {
                 command.getPlaceDate());
 
         tradeExecutor.execute(sellOrder);
+    }
+
+    @CommandHandler
+    public void handleRefreshOrderBook(RefreshOrderBookPriceCommand command) {
+        OrderBook orderBook = repository.load(command.getOrderBookId(), null);
+
+        if(orderBook == null){
+            logger.warn("Orderbook is null for {}", command.getOrderBookId());
+           return;
+        }
+        logger.info("Before refresh, order book status is: "+ ReflectionToStringBuilder.toString(orderBook, ToStringStyle.SHORT_PREFIX_STYLE));
+        orderExecutorHelper.refresh(orderBook);
+        logger.info("After refresh, order book status is: "+ ReflectionToStringBuilder.toString(orderBook, ToStringStyle.SHORT_PREFIX_STYLE));
     }
 
     private SellOrder createSellOrder(CreateSellOrderCommand command, CurrencyPair currencyPair) {
@@ -132,5 +154,10 @@ public class OrderBookCommandHandler {
     @Autowired
     public void setTradeExecutor(TradeExecutor tradeExecutor) {
         this.tradeExecutor = tradeExecutor;
+    }
+
+    @Autowired
+    public void setOrderExecutorHelper(OrderExecutorHelper orderExecutorHelper) {
+        this.orderExecutorHelper = orderExecutorHelper;
     }
 }

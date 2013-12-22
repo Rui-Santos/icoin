@@ -140,12 +140,12 @@
                     </div>
                     <div class="form-group">
                         <label for="totalToSell" class="col-sm-5 control-label">Total</label>
-                        <label id="totalToSell" class="col-sm-5  form-control-static text-danger">50.098</label>
+                        <label id="totalToSell" class="col-sm-5  form-control-static text-danger">0</label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
                     <div class="form-group">
                         <label for="feeToSell" class="col-sm-5 control-label">Fee</label>
-                        <label id="feeToSell" class="col-sm-5  form-control-static text-danger">1</label>
+                        <label id="feeToSell" class="col-sm-5  form-control-static text-danger">0</label>
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
                     <spring:hasBindErrors name="sellOrder">
@@ -174,14 +174,14 @@
                     <label id="lowestAsk" class="col-sm-5  form-control-static text-success">
                         <fmt:formatNumber value="${buyOrder.suggestedPrice}" type="number" pattern="#.##"/>
                     </label>
-                    <label class="col-sm-1  form-control-static text-info">BTC</label>
+                    <label class="col-sm-1  form-control-static text-info">CNY</label>
                 </div>
                 <div class="form-group">
                     <label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>
                     <label id="balanceToBuy" class="col-sm-5  form-control-static text-success">
                         <fmt:formatNumber value="${buyOrder.balance}" type="number" pattern="#.##"/>
                     </label>
-                    <label class="col-sm-1  form-control-static text-info">CNY</label>
+                    <label class="col-sm-1  form-control-static text-info">BTC</label>
                 </div>
                 <div class="form-group">
                     <label for="amountToBuy" class="col-sm-5 control-label"><spring:message code="order.tradeAmount"/></label>
@@ -199,12 +199,12 @@
                 </div>
                 <div class="form-group">
                     <label for="totalToBuy" class="col-sm-5 control-label">Total</label>
-                    <label id="totalToBuy" class="col-sm-5  form-control-static text-danger">50.098</label>
+                    <label id="totalToBuy" class="col-sm-5  form-control-static text-danger">0</label>
                     <label class="col-sm-1  form-control-static text-info">BTC</label>
                 </div>
                 <div class="form-group">
                     <label for="feeToBuy" class="col-sm-5 control-label">Fee</label>
-                    <label id="feeToBuy" class="col-sm-5  form-control-static text-danger">1</label>
+                    <label id="feeToBuy" class="col-sm-5  form-control-static text-danger">0</label>
                     <label class="col-sm-1  form-control-static text-info">CNY</label>
                 </div>
                 <spring:hasBindErrors name="buyOrder">
@@ -240,13 +240,13 @@
                     <c:forEach items="${sellOrders}" var="order">
                         <tr>
                             <td class="text-center">
-                                <fmt:formatNumber value="${order.price}" type="number" pattern="#.##"/>
+                                <fmt:formatNumber value="${order.price.amount}" type="number" pattern="#.##"/>
                             </td>
                             <td class="text-center">
-                                <fmt:formatNumber value="${order.amount}" type="number" pattern="#.####"/>
+                                <fmt:formatNumber value="${order.sumUpAmountPerPrice.amount}" type="number" pattern="#.####"/>
                             </td>
                             <td class="text-center">
-                                <fmt:formatNumber value="${order.total}" type="number" pattern="#.##" currencyCode="CNY"/>
+                                <fmt:formatNumber value="${order.total.amount}" type="number" pattern="#.##" currencyCode="CNY"/>
                             </td>
                         </tr>
                     </c:forEach>
@@ -273,13 +273,13 @@
                     <c:forEach items="${buyOrders}" var="order">
                         <tr>
                             <td class="text-center">
-                                <fmt:formatNumber value="${order.price}" type="number" pattern="#.##" currencyCode="CNY"/>
+                                <fmt:formatNumber value="${order.price.amount}" type="number" pattern="#.##" currencyCode="CNY"/>
                             </td>
                             <td class="text-center">
-                                <fmt:formatNumber value="${order.amount}" type="number" pattern="#.####"/>
+                                <fmt:formatNumber value="${order.sumUpAmountPerPrice.amount}" type="number" pattern="#.####"/>
                             </td>
                             <td class="text-center">
-                                <fmt:formatNumber value="${order.total}" type="number" pattern="#.##" currencyCode="CNY"/>
+                                <fmt:formatNumber value="${order.total.amount}" type="number" pattern="#.##" currencyCode="CNY"/>
                             </td>
                         </tr>
                     </c:forEach>
@@ -321,13 +321,13 @@
 
                     <td class="text-center"><c:out value="${trade.type}"/></td>
                     <td class="text-center">
-                        <fmt:formatNumber value="${trade.itemRemaining}" type="number" pattern="#.####"/>
+                        <fmt:formatNumber value="${trade.itemPrice.amount}" type="number" pattern="#.##" currencyCode="CNY"/>
                     </td>
                     <td class="text-center">
-                        <fmt:formatNumber value="${trade.itemPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                        <fmt:formatNumber value="${trade.itemRemaining.amount}" type="number" pattern="#.####"/>
                     </td>
                     <td class="text-center">
-                        <fmt:formatNumber value="${trade.itemRemaining * trade.itemPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                        <fmt:formatNumber value="${trade.itemRemaining.amount * trade.itemPrice.amount}" type="number" pattern="#.##" currencyCode="CNY"/>
                     </td>
                     <td class="text-center">
                         <fmt:formatDate pattern="MM-dd HH:mm:ss" value="${trade.placedDate}" />
@@ -378,13 +378,13 @@
                     </td>
                     <td class="text-center"><c:out value="${trade.tradeType}"/></td>
                     <td class="text-center">
-                        <fmt:formatNumber value="${trade.tradedAmount}" type="number" pattern="#.####"/>
+                        <fmt:formatNumber value="${trade.tradedAmount.amount}" type="number" pattern="#.####"/>
                     </td>
                     <td class="text-center">
-                        <fmt:formatNumber value="${trade.tradedPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                        <fmt:formatNumber value="${trade.tradedPrice.amount}" type="number" pattern="#.##" currencyCode="CNY"/>
                     </td>
                     <td class="text-center">
-                        <fmt:formatNumber value="${trade.tradedAmount * trade.tradedPrice}" type="number" pattern="#.##" currencyCode="CNY"/>
+                        <fmt:formatNumber value="${trade.tradedAmount.amount * trade.tradedPrice.amount}" type="number" pattern="#.##" currencyCode="CNY"/>
                     </td>
                 </tr>
             </c:forEach>

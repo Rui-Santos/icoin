@@ -16,6 +16,7 @@
 
 package com.icoin.trading.test
 
+import com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters.JodaMoneyConverter
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry
 import com.thoughtworks.xstream.XStream
@@ -34,6 +35,7 @@ class CommandSender {
 
     def sendCommand(commandToSend) {
         def xml = xStream.toXML(commandToSend)
+        xStream.registerConverter(new JodaMoneyConverter());
         def postBody = [command: xml]
 
         http.post(path: 'rest/command', body: postBody, requestContentType: requestContentType) { resp ->
@@ -42,6 +44,7 @@ class CommandSender {
     }
 
     def obtainPortfolios() {
+        xStream.registerConverter(new JodaMoneyConverter());
         http.get(path: 'rest/portfolio', requestContentType: requestContentType) { resp, reader ->
             String xmlData = reader.text
             List<PortfolioEntry> portfolios = xStream.fromXML(xmlData)
@@ -50,6 +53,7 @@ class CommandSender {
     }
 
     def obtainOrderBooks() {
+        xStream.registerConverter(new JodaMoneyConverter());
         http.get(path: 'rest/orderbook', requestContentType: requestContentType) { resp, reader ->
             String xmlData = reader.text
             List<OrderBookEntry> orderBookEntries = xStream.fromXML(xmlData)
@@ -58,6 +62,7 @@ class CommandSender {
     }
 
     def obtainPortfolio(identifier) {
+        xStream.registerConverter(new JodaMoneyConverter());
         http.get(path: 'rest/portfolio/' + identifier, requestContentType: requestContentType) { resp, reader ->
             String xmlData = reader.text
             PortfolioEntry entry = xStream.fromXML(xmlData)

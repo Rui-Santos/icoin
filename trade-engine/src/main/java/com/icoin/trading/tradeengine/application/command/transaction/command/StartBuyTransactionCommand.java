@@ -25,10 +25,13 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public class StartBuyTransactionCommand extends AbstractStartTransactionCommand {
+public class StartBuyTransactionCommand extends AbstractStartTransactionCommand<StartBuyTransactionCommand> {
 
-    public StartBuyTransactionCommand(TransactionId transactionId, OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier,
-                                      BigMoney tradeAmount, BigMoney itemPrice) {
+    public StartBuyTransactionCommand(TransactionId transactionId,
+                                      OrderBookId orderbookIdentifier,
+                                      PortfolioId portfolioIdentifier,
+                                      BigMoney tradeAmount,
+                                      BigMoney itemPrice) {
         super(transactionId, orderbookIdentifier, portfolioIdentifier, tradeAmount, itemPrice);
     }
 }

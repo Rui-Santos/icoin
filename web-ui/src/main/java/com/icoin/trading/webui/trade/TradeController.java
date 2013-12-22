@@ -3,6 +3,7 @@ package com.icoin.trading.webui.trade;
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;
@@ -64,7 +65,7 @@ public class TradeController {
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @RequestMapping(value = "index", method = RequestMethod.GET)
     public String get(Model model) {
         OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(DEFAULT_CCY_PAIR);
         model.addAttribute("orderBook", orderBookEntry);
@@ -78,6 +79,13 @@ public class TradeController {
         model.addAttribute("buyOrder", buyOrder);
 
         initPage(DEFUALT_COIN, orderBookEntry, portfolioEntry, model);
+        return "index";
+    }
+
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "refresh", method = RequestMethod.GET)
+    public String refresh() {
+        tradeServiceFacade.refreshOrderBookPrice();
         return "index";
     }
 
@@ -111,8 +119,9 @@ public class TradeController {
 
     @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.POST)
     public String sell(@PathVariable String coinId, @ModelAttribute("sellOrder") @Valid SellOrder order, BindingResult bindingResult, Model model) {
-        CurrencyUnit currencyUnit = CurrencyUnit.of(coinId);
         CurrencyPair currencyPair = new CurrencyPair(coinId);
+        CurrencyUnit priceCcy = currencyPair.getCounterCurrencyUnit();
+        CurrencyUnit coinCcy = currencyPair.getBaseCurrencyUnit();
 
         OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(currencyPair);
         model.addAttribute("orderBook", orderBookEntry);
@@ -122,22 +131,23 @@ public class TradeController {
             final BigDecimal tradeAmount = order.getTradeAmount();
             final BigDecimal itemPrice = order.getItemPrice();
 
-            final Money price = Money.of(currencyUnit, itemPrice, RoundingMode.HALF_EVEN);
-            final Money btcAmount = Money.of(currencyUnit, tradeAmount, RoundingMode.HALF_EVEN);
+            final Money price = Money.of(priceCcy, itemPrice, RoundingMode.HALF_EVEN);
+            final Money btcAmount = Money.of(coinCcy, tradeAmount, RoundingMode.HALF_EVEN);
 
-            if (portfolioEntry.obtainAmountOfAvailableItemsFor(orderBookEntry.getPrimaryKey(), currencyUnit).isLessThan(btcAmount)) {
+            if (portfolioEntry.obtainAmountOfAvailableItemsFor(coinId, coinCcy).isLessThan(btcAmount)) {
                 bindingResult.rejectValue("tradeAmount", "error.order.sell.tomanyitems", "Not enough items available to create sell order.");
-                BuyOrder buyOrder = new BuyOrder();
-                tradeServiceFacade.prepareBuyOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
+                BuyOrder buyOrder = tradeServiceFacade.prepareBuyOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
                 model.addAttribute("buyOrder", buyOrder);
                 initPage(coinId, orderBookEntry, portfolioEntry, model);
                 return "/index";
             }
 
-            logger.info("placing a sell order with price {}, amount {}: {}.", price, btcAmount, order);
-            tradeServiceFacade.sellOrder(orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
+            final TransactionId transactionId = new TransactionId();
+            logger.info("placing a sell transaction {} with price {}, amount {}: {}.", transactionId, price, btcAmount, order);
+            tradeServiceFacade.sellOrder(transactionId, orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
             logger.info("Sell order {} dispatched... ", order);
 
+            initPage(coinId, orderBookEntry, portfolioEntry, model);
             return "redirect:/index";
         }
 
@@ -154,12 +164,21 @@ public class TradeController {
         PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
 
         if (!bindingResult.hasErrors()) {
+            //todo
+//            if(amountCcy){
+//                bindingResult.rejectValue("amountCcy", "error.order.buy.amountCcy", "Amount ccy is not supported");
+//            }
+
+
             final BigDecimal tradeAmount = order.getTradeAmount();
             final BigDecimal itemPrice = order.getItemPrice();
 
-            final Money price = Money.of(Constants.DEFAULT_CURRENCY_UNIT, itemPrice, RoundingMode.HALF_EVEN);
-            final Money btcAmount = Money.of(Constants.CURRENCY_UNIT_BTC, tradeAmount, RoundingMode.HALF_EVEN);
-            final Money totalMoney = btcAmount.convertedTo(price.getCurrencyUnit(), btcAmount.getAmount(), RoundingMode.HALF_EVEN);
+            CurrencyUnit priceCcy = currencyPair.getCounterCurrencyUnit();
+            CurrencyUnit coinCcy = currencyPair.getBaseCurrencyUnit();
+
+            final Money price = Money.of(priceCcy, itemPrice, RoundingMode.HALF_EVEN);
+            final Money btcAmount = Money.of(coinCcy, tradeAmount, RoundingMode.HALF_EVEN);
+            final Money totalMoney = btcAmount.convertedTo(price.getCurrencyUnit(), price.getAmount(), RoundingMode.HALF_EVEN);
 
             if (portfolioEntry.obtainMoneyToSpend().isLessThan(totalMoney)) {
                 bindingResult.rejectValue("tradeAmount", "error.order.buy.notenoughmoney", "Not enough cash to spend to buy the items for the price you want");
@@ -169,9 +188,12 @@ public class TradeController {
                 return "/index";
             }
 
-            logger.info("placing a buy order with price {}, amount {}, total money {}: {}.", price, btcAmount, totalMoney, order);
-            tradeServiceFacade.buyOrder(orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
+            final TransactionId transactionId = new TransactionId();
+            logger.info("placing a buy transaction {} with price {}, amount {}, total money {}: {}.", transactionId, price, btcAmount, totalMoney, order);
+            tradeServiceFacade.buyOrder(transactionId, orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
             logger.info("Buy order {} dispatched... ", order);
+
+            initPage(coinId, orderBookEntry, portfolioEntry, model);
             return "redirect:/index";
         }
 

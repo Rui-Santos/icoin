@@ -25,7 +25,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public class StartSellTransactionCommand extends AbstractStartTransactionCommand {
+public class StartSellTransactionCommand extends AbstractStartTransactionCommand<StartBuyTransactionCommand> {
 
     public StartSellTransactionCommand(TransactionId transactionId,
                                        OrderBookId orderbookIdentifier,

@@ -32,26 +32,30 @@ def commandSender = new com.icoin.trading.test.CommandSender()
 
 def portfolios = []
 commandSender.obtainPortfolios().each() {
-    portfolios.add it.identifier
+    portfolios.add it.primaryKey
 }
 
 def coinNames = [:]
+def coinToOrderBooks = [:]
 def orderBooks = []
 commandSender.obtainOrderBooks().each() {
-    orderBooks.add it.identifier
-    coinNames.put(it.identifier, it.getCoinName)
+    orderBooks.add it.primaryKey
+    coinNames.put(it.primaryKey, it.coinIdentifier)
+    coinToOrderBooks.put(it.coinIdentifier, it.primaryKey)
 }
-def commandCreator = new com.icoin.trading.test.CommandCreator(orderBooks)
+def commandCreator = new com.icoin.trading.test.CommandCreator(orderBooks,coinNames,coinToOrderBooks)
 
 def numUsers = portfolios.size()
 def numUser = 1;
+
+def time = System.currentTimeMillis();
 
 for (int i = 0; i < 1000; i++) {
     def portfolioIdentifier = portfolios[numUser - 1]
     PortfolioEntry portfolio = commandSender.obtainPortfolio(portfolioIdentifier)
     def command = commandCreator.createCommand(portfolio)
 
-    println "${portfolio.userName} # ${command.getTradeAmount} \$ ${command.itemPrice} ${coinNames[command.orderbookIdentifier.toString()]}"
+    println "${portfolio.userName} # ${command.tradeAmount} \$ ${command.itemPrice} ${coinNames[command.orderbookIdentifier.toString()]}"
 
     commandSender.sendCommand(command)
 
@@ -62,6 +66,8 @@ for (int i = 0; i < 1000; i++) {
     }
 
     // Take a breath
-    Thread.sleep(100)
+//    Thread.sleep(100)
 }
 
+time = System.currentTimeMillis() - time ;
+println "time is ${time}"

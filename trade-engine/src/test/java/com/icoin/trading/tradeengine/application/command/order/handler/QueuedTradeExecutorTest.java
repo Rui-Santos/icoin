@@ -1,6 +1,7 @@
-package com.icoin.trading.tradeengine.application.executor;
+package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.google.common.collect.Lists;
+import com.icoin.trading.tradeengine.application.command.order.handler.QueuedTradeExecutor;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
@@ -68,7 +69,7 @@ public class QueuedTradeExecutorTest {
         return orderBookEntries;
     }
 
-    @Test(timeout = 10000L)
+    @Test(timeout = 30000L)
     public void testExecution() throws Exception {
         executor.start();
 

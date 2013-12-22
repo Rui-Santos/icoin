@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.application.command.transaction.command;
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -24,7 +25,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public abstract class AbstractStartTransactionCommand {
+public abstract class AbstractStartTransactionCommand<T extends AbstractStartTransactionCommand> extends CommandSupport<T>{
 
     private TransactionId transactionId;
     private OrderBookId orderbookIdentifier;

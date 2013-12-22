@@ -38,6 +38,7 @@ import com.icoin.trading.tradeengine.query.transaction.TransactionEntry;
 import com.icoin.trading.users.application.command.CreateUserCommand;
 import com.icoin.trading.users.domain.UserId;
 import com.icoin.trading.users.query.UserEntry;
+import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.eventstore.mongo.MongoEventStore;
@@ -67,6 +68,7 @@ public class DBInit {
     private MongoEventStore eventStore;
     private org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
     private MongoTemplate systemAxonSagaMongo;
+    private TradeServiceFacade tradeServiceFacade;
 
     @Autowired
     public DBInit(CommandBus commandBus,
@@ -76,7 +78,8 @@ public class DBInit {
                   org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
                   MongoTemplate systemAxonSagaMongo,
                   PortfolioQueryRepository portfolioRepository,
-                  OrderBookQueryRepository orderBookRepository) {
+                  OrderBookQueryRepository orderBookRepository,
+                  TradeServiceFacade tradeServiceFacade) {
         this.commandBus = commandBus;
         this.coinRepository = coinRepository;
         this.systemAxonMongo = systemMongo;
@@ -85,6 +88,7 @@ public class DBInit {
         this.systemAxonSagaMongo = systemAxonSagaMongo;
         this.portfolioRepository = portfolioRepository;
         this.orderBookRepository = orderBookRepository;
+        this.tradeServiceFacade = tradeServiceFacade;
     }
 
     public void createItems() {
@@ -121,6 +125,8 @@ public class DBInit {
         addItems(buyer6, "LTC", BigDecimal.valueOf(100000));
 
         eventStore.ensureIndexes();
+
+        tradeServiceFacade.refreshOrderBookPrice();
     }
 
     private void addItems(UserId user, String coinId, BigDecimal amount) {
@@ -162,17 +168,17 @@ public class DBInit {
         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10025.341));
         BigMoney.of(Constants.CURRENCY_UNIT_BTC, BigDecimal.valueOf(10000));
         CreateCoinCommand command = new CreateCoinCommand(
-                                            new CoinId(Currencies.BTC),
-                                            "Bitcoin",
-                                            BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10025.341)),
-                                            BigMoney.of(Constants.CURRENCY_UNIT_BTC, BigDecimal.valueOf(10000)));
+                new CoinId(Currencies.BTC),
+                "Bitcoin",
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10025.341)),
+                BigMoney.of(Constants.CURRENCY_UNIT_BTC, BigDecimal.valueOf(10000)));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
         command = new CreateCoinCommand(
-                        new CoinId(Currencies.LTC),
-                        "Litecoin",
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(1026.341)),
-                        BigMoney.of(Constants.CURRENCY_UNIT_LTC, BigDecimal.valueOf(10000)));
+                new CoinId(Currencies.LTC),
+                "Litecoin",
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(1026.341)),
+                BigMoney.of(Constants.CURRENCY_UNIT_LTC, BigDecimal.valueOf(10000)));
         commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
 
         command = new CreateCoinCommand(new CoinId(Currencies.PPC), "Peercoin",

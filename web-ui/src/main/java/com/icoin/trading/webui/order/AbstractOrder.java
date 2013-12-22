@@ -16,6 +16,7 @@
 
 package com.icoin.trading.webui.order;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 
 import javax.validation.constraints.DecimalMin;
@@ -31,8 +32,8 @@ public class AbstractOrder {
     private String coinName;
     private BigDecimal suggestedPrice = BigDecimal.ZERO;
     private BigDecimal balance = BigDecimal.ZERO;
-    private String ccy1 = Currencies.BTC;// base ccy
-    private String ccy2 =Currencies.CNY;// counter ccy
+    private String amountCcy = Constants.CURRENCY_UNIT_BTC.getCurrencyCode();// base ccy
+    private String priceCcy = Constants.DEFAULT_CURRENCY_UNIT.getCurrencyCode();// counter ccy
     private OrderType orderType;
 
     @DecimalMin(value = "0.0001", message = "trading.minimal.amount")
@@ -100,20 +101,20 @@ public class AbstractOrder {
         this.balance = balance;
     }
 
-    public String getCcy1() {
-        return ccy1;
+    public String getAmountCcy() {
+        return amountCcy;
     }
 
-    public void setCcy1(String ccy1) {
-        this.ccy1 = ccy1;
+    public void setAmountCcy(String amountCcy) {
+        this.amountCcy = amountCcy;
     }
 
-    public String getCcy2() {
-        return ccy2;
+    public String getPriceCcy() {
+        return priceCcy;
     }
 
-    public void setCcy2(String ccy2) {
-        this.ccy2 = ccy2;
+    public void setPriceCcy(String priceCcy) {
+        this.priceCcy = priceCcy;
     }
 
     public OrderType getOrderType() {
@@ -132,8 +133,8 @@ public class AbstractOrder {
                 ", orderType='" + orderType + '\'' +
                 ", suggestedPrice=" + suggestedPrice +
                 ", balance=" + balance +
-                ", ccy1='" + ccy1 + '\'' +
-                ", ccy2='" + ccy2 + '\'' +
+                ", amountCcy='" + amountCcy + '\'' +
+                ", priceCcy='" + priceCcy + '\'' +
                 ", tradeAmount=" + tradeAmount +
                 ", itemPrice=" + itemPrice +
                 '}';

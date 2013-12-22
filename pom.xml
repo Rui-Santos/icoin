@@ -34,11 +34,12 @@
         <spring.version>3.2.2.RELEASE</spring.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <junit.version>4.11</junit.version>
-        <mockito.version>1.8.5</mockito.version>
+        <mockito.version>1.9.5</mockito.version>
         <hamcrest.version>1.3</hamcrest.version>
         <mongodb.java.version>2.11.3</mongodb.java.version>
         <!--<springdata.mongodb.version>1.3.2.RELEASE</springdata.mongodb.version>-->
         <springdata.mongodb.version>1.3.2.RELEASE</springdata.mongodb.version>
+        <xstream.version>1.4.5</xstream.version>
     </properties>
 
     <modules>

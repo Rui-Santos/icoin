@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 /**
@@ -31,17 +32,16 @@ public class MoneyTest {
         assertThat(usdMoney, notNullValue());
         assertThat(usdMoney.getCurrencyUnit(), notNullValue());
         assertThat(usdMoney.getCurrencyUnit(), equalTo(CurrencyUnit.of(Currencies.USD)));
-        closeTo(usdMoney.getAmount(), BigDecimal.valueOf(23.87));
+        assertThat(usdMoney.getAmount(), is(closeTo(BigDecimal.valueOf(23.87), BigDecimal.valueOf(0.00000000001d))));
 
         assertThat(cnyMoney, notNullValue());
         assertThat(cnyMoney.getCurrencyUnit(), notNullValue());
         assertThat(cnyMoney.getCurrencyUnit(), equalTo(CurrencyUnit.of(Currencies.CNY)));
-        closeTo(cnyMoney.getAmount(), BigDecimal.valueOf(86.35));
+        assertThat(cnyMoney.getAmount(), is(closeTo(BigDecimal.valueOf(86.35), BigDecimal.valueOf(0.00000000001d))));
 
         assertThat(btcMoney, notNullValue());
         assertThat(btcMoney.getCurrencyUnit(), notNullValue());
         assertThat(btcMoney.getCurrencyUnit(), equalTo(CurrencyUnit.of(Currencies.BTC)));
-        closeTo(btcMoney.getAmount(), BigDecimal.valueOf(23.87234232));
-
+        assertThat(btcMoney.getAmount(), is(closeTo(BigDecimal.valueOf(23.87234232), BigDecimal.valueOf(0.00000000001d))));
     }
 }

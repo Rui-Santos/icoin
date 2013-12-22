@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 /**
@@ -34,7 +35,7 @@ public class MoneyReadConverterTest {
 
         assertThat(money, notNullValue());
         assertThat(money.getAmount(), notNullValue());
-        closeTo(money.getAmount(), BigDecimal.valueOf(1.23456789));
+        assertThat(money.getAmount(), is(closeTo(BigDecimal.valueOf(1.23456789), BigDecimal.valueOf(0.00000000001d))));
         assertThat(money.getCurrencyUnit(), equalTo(CurrencyUnit.of(Currencies.BTC)));
     }
 
@@ -50,7 +51,8 @@ public class MoneyReadConverterTest {
 
         assertThat(money, notNullValue());
         assertThat(money.getAmount(), notNullValue());
-        closeTo(money.getAmount(), BigDecimal.valueOf(1234567.89));
+
+        assertThat(money.getAmount(), is(closeTo(BigDecimal.valueOf(123456.789), BigDecimal.valueOf(0.00000000001d))));
         assertThat(money.getCurrencyUnit(), equalTo(CurrencyUnit.of(Currencies.CNY)));
     }
 }

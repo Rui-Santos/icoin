@@ -1,6 +1,7 @@
 package com.icoin.trading.webui.trade.facade.internal;
 
 
+import com.icoin.trading.tradeengine.application.command.order.RefreshOrderBookPriceCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
@@ -17,10 +18,8 @@ import com.icoin.trading.tradeengine.query.order.PriceAggregate;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
-import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
-import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import com.icoin.trading.webui.order.AbstractOrder;
 import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
@@ -38,6 +37,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.homhon.util.Asserts.hasLength;
+import static com.homhon.util.Asserts.isTrue;
+import static com.homhon.util.Asserts.notNull;
+
 /**
  * Created with IntelliJ IDEA.
  * User: jihual
@@ -51,9 +54,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
 
     private CoinQueryRepository coinRepository;
     private OrderBookQueryRepository orderBookRepository;
-    private UserQueryRepository userRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
-    private PortfolioQueryRepository portfolioQueryRepository;
     private CommandGateway commandGateway;
     private OrderQueryRepository orderQueryRepository;
 
@@ -82,8 +83,12 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
 
     @Override
     public BuyOrder prepareBuyOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry) {
+        hasLength(coinId);
+        notNull(currencyPair);
+        isTrue(coinId.equalsIgnoreCase(currencyPair.getBaseCurrency()));
+
         BuyOrder order = new BuyOrder();
-        initCoinInfo(coinId, order);
+        initCoinInfo(coinId, currencyPair, order);
 
 
         if (orderBookEntry == null) {
@@ -106,9 +111,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
             portfolioEntry = userServiceFacade.obtainPortfolioForUser();
         }
         if (portfolioEntry != null) {
-            order.setBalance(portfolioEntry
-                    .obtainAmountOfAvailableItemsFor(coinId, orderBookEntry.getBaseCurrency())
-                    .getAmount());
+            order.setBalance(portfolioEntry.obtainMoneyToSpend().getAmount());
         }
 
         return order;
@@ -118,7 +121,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     public SellOrder prepareSellOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry) {
         SellOrder order = new SellOrder();
 
-        initCoinInfo(coinId, order);
+        initCoinInfo(coinId, currencyPair, order);
         BigDecimal amount = BigDecimal.ZERO;
 
         if (orderBookEntry == null) {
@@ -138,16 +141,20 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
             portfolioEntry = userServiceFacade.obtainPortfolioForUser();
         }
         if (portfolioEntry != null) {
-            order.setBalance(portfolioEntry.getAmountOfMoney().getAmount());
+            order.setBalance(portfolioEntry
+                    .obtainAmountOfAvailableItemsFor(coinId, orderBookEntry.getBaseCurrency())
+                    .getAmount());
         }
 
         return order;
     }
 
-    private void initCoinInfo(String coinId, AbstractOrder order) {
+    private void initCoinInfo(String coinId, CurrencyPair currencyPair, AbstractOrder order) {
         CoinEntry coin = loadCoin(coinId);
         order.setCoinId(coinId);
         order.setCoinName(coin.getName());
+        order.setPriceCcy(currencyPair.getCounterCurrency());
+        order.setAmountCcy(currencyPair.getBaseCurrency());
     }
 
     @Override
@@ -183,8 +190,8 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public void sellOrder(String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price) {
-        StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
+    public void sellOrder(final TransactionId transactionId, String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price) {
+        StartSellTransactionCommand command = new StartSellTransactionCommand(transactionId,
                 new OrderBookId(orderBookId),
                 new PortfolioId(portfolioId),
                 tradeAmount,
@@ -194,14 +201,25 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public void buyOrder(String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price) {
-        StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
+    public void buyOrder(final TransactionId transactionId, String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price) {
+        StartBuyTransactionCommand command = new StartBuyTransactionCommand(transactionId,
                 new OrderBookId(orderBookId),
                 new PortfolioId(portfolioId),
                 tradeAmount,
                 price);
 
         commandGateway.send(command);
+    }
+
+    @Override
+    public void refreshOrderBookPrice(){
+        final Iterable<OrderBookEntry> bookEntries = orderBookRepository.findAll();
+
+        for (OrderBookEntry bookEntry : bookEntries) {
+            RefreshOrderBookPriceCommand command =
+                    new RefreshOrderBookPriceCommand(new OrderBookId(bookEntry.getPrimaryKey()));
+            commandGateway.send(command);
+        }
     }
 
     @Autowired
@@ -220,18 +238,8 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Autowired
-    public void setUserRepository(UserQueryRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Autowired
     public void setTradeExecutedRepository(TradeExecutedQueryRepository tradeExecutedRepository) {
         this.tradeExecutedRepository = tradeExecutedRepository;
-    }
-
-    @Autowired
-    public void setPortfolioQueryRepository(PortfolioQueryRepository portfolioQueryRepository) {
-        this.portfolioQueryRepository = portfolioQueryRepository;
     }
 
     @Autowired

@@ -1,5 +1,7 @@
-package com.icoin.trading.tradeengine.application.executor;
+package com.icoin.trading.tradeengine.application.command.order.handler;
 
+import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
@@ -8,6 +10,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
 import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,35 +36,6 @@ public class OrderExecutorHelper {
     private BuyOrderRepository buyOrderRepository;
 
     private static Logger logger = LoggerFactory.getLogger(OrderExecutorHelper.class);
-
-//    public static void refresh(OrderBook orderBook,
-//                               SellOrderRepository sellOrderRepository,
-//                               BuyOrderRepository buyOrderRepository) {
-//        final SellOrder lowestSell = sellOrderRepository.findLowestPricePendingOrder(orderBook.getOrderBookId());
-//        final BuyOrder highestBuy = buyOrderRepository.findHighestPricePendingOrder(orderBook.getOrderBookId());
-//
-//        if (lowestSell != null) {
-//            logger.info("Refreshing lowest sell order {} with price {}", lowestSell.getPrimaryKey(), lowestSell.getItemPrice());
-//            orderBook.resetLowestSellPrice(lowestSell.getPrimaryKey(), lowestSell.getItemPrice());
-//        }
-//
-//        if (highestBuy != null) {
-//            logger.info("Refreshing highest buy order {} with price {}", highestBuy.getPrimaryKey(), highestBuy.getItemPrice());
-//            orderBook.resetHighestBuyPrice(highestBuy.getPrimaryKey(), highestBuy.getItemPrice());
-//        }
-//    }
-//
-//    public static void recordTraded(BuyOrder buyOrder,
-//                                    SellOrder sellOrder,
-//                                    BigDecimal matchedTradeAmount,
-//                                    SellOrderRepository sellOrderRepository,
-//                                    BuyOrderRepository buyOrderRepository){
-//        buyOrder.recordTraded(matchedTradeAmount, currentTime());
-//        sellOrder.recordTraded(matchedTradeAmount, currentTime());
-//
-//        buyOrderRepository.save(buyOrder);
-//        sellOrderRepository.save(sellOrder);
-//    }
 
     public List<SellOrder> findAscPendingOrdersByPriceTime(Date toTime,
                                                            BigMoney price,
@@ -136,22 +110,34 @@ public class OrderExecutorHelper {
 
     public void refresh(OrderBook orderBook) {
         notNull(orderBook);
+        notNull(orderBook.getCurrencyPair());
+        notNull(orderBook.getOrderBookId());
+
+        String lowestSellOrderId = null;
+        String highestBuyOrderId = null;
 
         OrderBookId orderBookId = orderBook.getOrderBookId();
-        notNull(orderBook.getOrderBookId());
+        CurrencyPair currencyPair = orderBook.getCurrencyPair();
+        BigMoney lowestSellPrice = BigMoney.of(CurrencyUnit.of(currencyPair.getCounterCurrency()), Constants.INIT_SELL_PRICE);
+        BigMoney highestBuyPrice = BigMoney.zero(CurrencyUnit.of(currencyPair.getCounterCurrency()));
+
 
         final SellOrder lowestSell = sellOrderRepository.findLowestPricePendingOrder(orderBookId);
         final BuyOrder highestBuy = buyOrderRepository.findHighestPricePendingOrder(orderBookId);
 
         if (lowestSell != null) {
-            logger.info("Refreshing lowest sell order {} with price {}", lowestSell.getPrimaryKey(), lowestSell.getItemPrice());
-            orderBook.resetLowestSellPrice(lowestSell.getPrimaryKey(), lowestSell.getItemPrice());
+            lowestSellOrderId = lowestSell.getPrimaryKey();
+            lowestSellPrice = lowestSell.getItemPrice();
+        }
+        if (highestBuy != null) {
+            highestBuyOrderId = highestBuy.getPrimaryKey();
+            highestBuyPrice = highestBuy.getItemPrice();
         }
 
-        if (highestBuy != null) {
-            logger.info("Refreshing highest buy order {} with price {}", highestBuy.getPrimaryKey(), highestBuy.getItemPrice());
-            orderBook.resetHighestBuyPrice(highestBuy.getPrimaryKey(), highestBuy.getItemPrice());
-        }
+        logger.info("Refreshing with lowest sell order {} and price {}, Refreshing with highest buy order {} and price {}",
+                lowestSellOrderId, lowestSellPrice,highestBuyOrderId, highestBuyPrice);
+        orderBook.resetLowestSellPrice(lowestSellOrderId, lowestSellPrice);
+        orderBook.resetHighestBuyPrice(highestBuyOrderId, highestBuyPrice);
     }
 
     public void recordTraded(BuyOrder buyOrder,

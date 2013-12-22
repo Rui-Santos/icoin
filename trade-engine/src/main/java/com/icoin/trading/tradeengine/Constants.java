@@ -17,4 +17,5 @@ public abstract class Constants {
     public static CurrencyUnit CURRENCY_UNIT_LTC = CurrencyUnit.of(Currencies.LTC);
     public static CurrencyUnit CURRENCY_UNIT_PPC = CurrencyUnit.of(Currencies.PPC);
     public static CurrencyUnit CURRENCY_UNIT_XPM = CurrencyUnit.of(Currencies.XPM);
+    public static final double INIT_SELL_PRICE = 100000000000D;
 }

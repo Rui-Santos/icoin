@@ -1,4 +1,4 @@
-package com.icoin.trading.tradeengine.application.executor;
+package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -43,16 +43,22 @@ public class QueuedTradeExecutor implements TradeExecutor {
 
     @Autowired
     public QueuedTradeExecutor(OrderBookQueryRepository orderBookRepository, CommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
+
+        initOrderBookPool(orderBookRepository);
+        start();
+    }
+
+    private void initOrderBookPool(OrderBookQueryRepository orderBookRepository) {
         final Iterable<OrderBookEntry> orderBookEntries = orderBookRepository.findAll();
         final HashMap<OrderBookId, BlockingQueue<AbstractOrder>> map = Maps.newHashMap();
 
         for (OrderBookEntry orderBook : orderBookEntries) {
             map.put(new OrderBookId(orderBook.getPrimaryKey()),
                     new LinkedBlockingDeque<AbstractOrder>());
+            logger.warn("initialized order book trading pool with {}", orderBook);
         }
         this.orderBookPool = ImmutableMap.copyOf(map);
-        this.commandGateway = commandGateway;
-        start();
     }
 
     @Override
@@ -60,6 +66,7 @@ public class QueuedTradeExecutor implements TradeExecutor {
         final OrderBookId orderBookId = element.getOrderBookId();
 
         if (!orderBookPool.containsKey(orderBookId)) {
+            logger.warn("order book id is {}, not in the pool {}", orderBookId, orderBookPool.keySet());
             return;
         }
 
@@ -75,6 +82,7 @@ public class QueuedTradeExecutor implements TradeExecutor {
     class TradeExecutor implements Runnable {
         private final BlockingQueue<AbstractOrder> queue;
         private final OrderBookId orderBookId;
+        private boolean stop;
 
         TradeExecutor(OrderBookId orderBookId, BlockingQueue<AbstractOrder> q) {
             this.queue = q;
@@ -83,12 +91,17 @@ public class QueuedTradeExecutor implements TradeExecutor {
 
         public void run() {
             try {
-                while (true) {
+                while (!stop) {
                     consume(queue.take());
                 }
             } catch (InterruptedException ex) {
                 logger.warn("Interruppted Queue for orderbookId {} when De-queuing", orderBookId);
             }
+        }
+
+        public void stop(){
+            stop = true;
+            queue.clear();
         }
 
         void consume(AbstractOrder order) {
@@ -123,10 +136,15 @@ public class QueuedTradeExecutor implements TradeExecutor {
     }
 
     class Setup implements Runnable {
+        final ExecutorService executor;
+
+        private Setup(){
+            executor =  Executors.newFixedThreadPool(orderBookPool.size());
+        }
+
         @Override
         public void run() {
-            final ExecutorService executor = Executors.newFixedThreadPool(orderBookPool.size());
-
+//             ExecutorService executor = Executors.newFixedThreadPool(orderBookPool.size());
             for (OrderBookId orderBookId : orderBookPool.keySet()) {
                 final BlockingQueue<AbstractOrder> queue = orderBookPool.get(orderBookId);
 
