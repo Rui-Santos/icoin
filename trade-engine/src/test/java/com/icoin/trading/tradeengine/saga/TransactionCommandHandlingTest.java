@@ -117,7 +117,7 @@ public class TransactionCommandHandlingTest {
 
     @Test
     public void testCancelTransaction() {
-        CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
+        CancelTransactionCommand command = new CancelTransactionCommand(transactionId, BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)));
         fixture.given(new BuyTransactionStartedEvent(
                 transactionId,
                 orderBook,
@@ -128,12 +128,13 @@ public class TransactionCommandHandlingTest {
                 .expectEvents(new BuyTransactionCancelledEvent(
                         transactionId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
-                        BigMoney.zero(CurrencyUnit.of(Currencies.BTC))));
+                        BigMoney.zero(CurrencyUnit.of(Currencies.BTC)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))));
     }
 
     @Test
     public void testCancelTransaction_partiallyExecuted() {
-        CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
+        CancelTransactionCommand command = new CancelTransactionCommand(transactionId,BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)));
         fixture.given(new BuyTransactionStartedEvent(
                 transactionId,
                 orderBook,
@@ -147,7 +148,8 @@ public class TransactionCommandHandlingTest {
                 .when(command)
                 .expectEvents(new BuyTransactionCancelledEvent(transactionId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))));
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20))));
     }
 
     @Test

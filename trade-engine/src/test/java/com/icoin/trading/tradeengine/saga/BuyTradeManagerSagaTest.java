@@ -17,10 +17,13 @@ import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionCon
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionPartiallyExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
-import com.icoin.trading.tradeengine.domain.model.order.TradeType;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
+import com.icoin.trading.tradeengine.domain.model.commission.FixedRateCommissionPolicy;
+import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
+import com.icoin.trading.tradeengine.domain.model.order.TradeType;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.saga.matchers.AddItemsToPortfolioCommandMatcher;
@@ -42,6 +45,9 @@ import java.util.Date;
 import static com.homhon.mongo.TimeUtils.currentTime;
 import static org.axonframework.test.matchers.Matchers.andNoMore;
 import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Jettro Coenradie
@@ -57,10 +63,15 @@ public class BuyTradeManagerSagaTest {
     private PortfolioId portfolioIdentifier = new PortfolioId();
 
     private AnnotatedSagaTestFixture fixture;
+    private CommissionPolicyFactory commissionPolicyFactory = mock(CommissionPolicyFactory.class);
 
     @Before
     public void setUp() throws Exception {
         fixture = new AnnotatedSagaTestFixture(BuyTradeManagerSaga.class);
+        when(commissionPolicyFactory.createCommissionPolicy(any(AbstractOrder.class)))
+                .thenReturn(new FixedRateCommissionPolicy());
+
+        fixture.registerResource(commissionPolicyFactory);
     }
 
     @Test
@@ -141,7 +152,10 @@ public class BuyTradeManagerSagaTest {
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
                 .whenAggregate(transactionIdentifier).publishes(
-                new BuyTransactionCancelledEvent(transactionIdentifier, TOTAL_ITEMS, BigMoney.zero(CurrencyUnit.of(Currencies.BTC))))
+                new BuyTransactionCancelledEvent(transactionIdentifier,
+                        TOTAL_ITEMS,
+                        BigMoney.zero(CurrencyUnit.of(Currencies.BTC)),
+                        PRICE_PER_ITEM))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(new CancelMoneyReservationFromPortfolioCommandMatcher(
@@ -195,11 +209,13 @@ public class BuyTradeManagerSagaTest {
         final Date tradeTime = currentTime();
 
         final BigDecimal price = BigDecimal.valueOf(99);
-        fixture.givenAggregate(transactionIdentifier).published(new BuyTransactionStartedEvent(transactionIdentifier,
-                orderbookIdentifier,
-                portfolioIdentifier,
-                TOTAL_ITEMS,
-                PRICE_PER_ITEM))
+        fixture.givenAggregate(transactionIdentifier).published(
+                new BuyTransactionStartedEvent(
+                        transactionIdentifier,
+                        orderbookIdentifier,
+                        portfolioIdentifier,
+                        TOTAL_ITEMS,
+                        PRICE_PER_ITEM))
                 .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
                 portfolioIdentifier, transactionIdentifier,
                 TOTAL_MONEY))

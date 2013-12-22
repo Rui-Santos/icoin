@@ -47,6 +47,8 @@ import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -118,7 +120,7 @@ public class CoinController {
                         OrderStatus.PENDING);
 
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
-                .getPrimaryKey());
+                .getPrimaryKey(), new PageRequest(0,20, Sort.Direction.DESC, "tradeTime"));
         model.addAttribute("coin", coin);
         model.addAttribute("sellOrders", sellOrders);
         model.addAttribute("buyOrders", buyOrders);

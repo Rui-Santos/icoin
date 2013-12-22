@@ -2,6 +2,7 @@ package com.icoin.trading.webui.trade;
 
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
@@ -15,6 +16,7 @@ import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
 import com.icoin.trading.webui.security.UserServiceFacade;
 import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
+import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.slf4j.Logger;
@@ -134,10 +136,13 @@ public class TradeController {
             final Money price = Money.of(priceCcy, itemPrice, RoundingMode.HALF_EVEN);
             final Money btcAmount = Money.of(coinCcy, tradeAmount, RoundingMode.HALF_EVEN);
 
-            if (portfolioEntry.obtainAmountOfAvailableItemsFor(coinId, coinCcy).isLessThan(btcAmount)) {
+            final BigMoney totalMoney = tradeServiceFacade.calculateSellOrderEffectiveAmount(order);
+
+            if (portfolioEntry.obtainAmountOfAvailableItemsFor(coinId, coinCcy).isLessThan(totalMoney)) {
                 bindingResult.rejectValue("tradeAmount", "error.order.sell.tomanyitems", "Not enough items available to create sell order.");
                 BuyOrder buyOrder = tradeServiceFacade.prepareBuyOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
                 model.addAttribute("buyOrder", buyOrder);
+                logger.info("rejected a sell order with price {}, amount {}, total money {}: {}.", price, btcAmount, totalMoney, order);
                 initPage(coinId, orderBookEntry, portfolioEntry, model);
                 return "/index";
             }
@@ -151,8 +156,8 @@ public class TradeController {
             return "redirect:/index";
         }
 
-        initPage(coinId, orderBookEntry, portfolioEntry, model);
-        return "/index";
+//        initPage(coinId, orderBookEntry, portfolioEntry, model);
+        return "redirect:/index";
     }
 
     @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.POST)
@@ -178,12 +183,15 @@ public class TradeController {
 
             final Money price = Money.of(priceCcy, itemPrice, RoundingMode.HALF_EVEN);
             final Money btcAmount = Money.of(coinCcy, tradeAmount, RoundingMode.HALF_EVEN);
-            final Money totalMoney = btcAmount.convertedTo(price.getCurrencyUnit(), price.getAmount(), RoundingMode.HALF_EVEN);
+//            final Money totalMoney = btcAmount.convertedTo(price.getCurrencyUnit(), price.getAmount(), RoundingMode.HALF_EVEN);
+
+            final BigMoney totalMoney = tradeServiceFacade.calculateBuyOrderEffectiveAmount(order);
 
             if (portfolioEntry.obtainMoneyToSpend().isLessThan(totalMoney)) {
                 bindingResult.rejectValue("tradeAmount", "error.order.buy.notenoughmoney", "Not enough cash to spend to buy the items for the price you want");
                 SellOrder sellOrder = tradeServiceFacade.prepareSellOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
                 model.addAttribute("sellOrder", sellOrder);
+                logger.info("rejected a buy order with price {}, amount {}, total money {}: {}.", price, btcAmount, totalMoney, order);
                 initPage(coinId, orderBookEntry, portfolioEntry, model);
                 return "/index";
             }
@@ -198,7 +206,7 @@ public class TradeController {
         }
 
         initPage(coinId, orderBookEntry, portfolioEntry, model);
-        return "/index";
+        return "redirect:/index";
     }
 
 

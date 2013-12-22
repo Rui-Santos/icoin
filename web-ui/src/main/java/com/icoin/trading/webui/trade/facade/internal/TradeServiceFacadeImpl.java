@@ -5,6 +5,9 @@ import com.icoin.trading.tradeengine.application.command.order.RefreshOrderBookP
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.commission.Commission;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -25,14 +28,21 @@ import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
 import com.icoin.trading.webui.security.UserServiceFacade;
 import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
+import com.icoin.trading.webui.trade.facade.internal.assembler.BuyOrderAssembler;
+import com.icoin.trading.webui.trade.facade.internal.assembler.SellOrderAssembler;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.money.BigMoney;
+import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -57,9 +67,8 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     private TradeExecutedQueryRepository tradeExecutedRepository;
     private CommandGateway commandGateway;
     private OrderQueryRepository orderQueryRepository;
-
-
     private UserServiceFacade userServiceFacade;
+    private CommissionPolicyFactory commissionPolicyFactory;
 
     /**
      * At the moment we handle the first orderBook found for a coin.
@@ -67,6 +76,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
      * @param currencyPair Currency Pair to obtain the orderBook for
      * @return Found OrderBook for the coin belonging to the provided identifier
      */
+    @Override
     public OrderBookEntry loadOrderBookByCurrencyPair(CurrencyPair currencyPair) {
         OrderBookEntry byCoinIdentifier = orderBookRepository.findByCurrencyPair(currencyPair);
         if (logger.isDebugEnabled()) {
@@ -79,6 +89,37 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
 
     public CoinEntry loadCoin(String coinId) {
         return coinRepository.findOne(coinId);
+    }
+
+    @Override
+    public BigMoney calculateSellOrderEffectiveAmount(SellOrder order) {
+        notNull(order);
+        notNull(order.getTradeAmount());
+        SellOrderAssembler assembler = new SellOrderAssembler();
+
+        com.icoin.trading.tradeengine.domain.model.order.SellOrder sellOrder = assembler.toDomain(order);
+        CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(sellOrder);
+        Commission commission = commissionPolicy.calculateSellCommission(sellOrder);
+
+        final Money money = commission.getCommission();
+
+        return money.plus(order.getTradeAmount(), RoundingMode.HALF_EVEN).toBigMoney();
+    }
+
+    @Override
+    public BigMoney calculateBuyOrderEffectiveAmount(BuyOrder order) {
+        notNull(order);
+        notNull(order.getItemPrice());
+        notNull(order.getTradeAmount());
+
+        BuyOrderAssembler assembler = new BuyOrderAssembler();
+
+        com.icoin.trading.tradeengine.domain.model.order.BuyOrder buyOrder = assembler.toDomain(order);
+        CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(buyOrder);
+        Commission commission = commissionPolicy.calculateBuyCommission(buyOrder);
+
+        final Money money = commission.getCommission();
+        return money.plus(order.getItemPrice().multiply(order.getTradeAmount()), RoundingMode.HALF_EVEN).toBigMoney();
     }
 
     @Override
@@ -162,7 +203,9 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
         if (orderBookIdentifier == null) {
             return Collections.emptyList();
         }
-        return tradeExecutedRepository.findByOrderBookIdentifier(orderBookIdentifier);
+
+        PageRequest pageRequest = new PageRequest(0,20, Sort.Direction.DESC, "tradeTime");
+        return tradeExecutedRepository.findByOrderBookIdentifier(orderBookIdentifier, pageRequest);
     }
 
     @Override
@@ -178,7 +221,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
         if (orderBookIdentifier == null || type == null || toDate == null) {
             return Collections.emptyList();
         }
-        return orderQueryRepository.findOrderAggregatedPrice(orderBookIdentifier, type, toDate);
+        return orderQueryRepository.findOrderAggregatedPrice(orderBookIdentifier, type, toDate, 10);
     }
 
     @Override
@@ -212,7 +255,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public void refreshOrderBookPrice(){
+    public void refreshOrderBookPrice() {
         final Iterable<OrderBookEntry> bookEntries = orderBookRepository.findAll();
 
         for (OrderBookEntry bookEntry : bookEntries) {
@@ -250,5 +293,10 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     @Autowired
     public void setOrderQueryRepository(OrderQueryRepository orderQueryRepository) {
         this.orderQueryRepository = orderQueryRepository;
+    }
+
+    @Autowired
+    public void setCommissionPolicyFactory(CommissionPolicyFactory commissionPolicyFactory) {
+        this.commissionPolicyFactory = commissionPolicyFactory;
     }
 }

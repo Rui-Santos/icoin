@@ -53,17 +53,17 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
             return false;
         }
         TransactionEntry transactionEntry = (TransactionEntry) argument;
-        if (amountOfItem.minus(transactionEntry.getAmountOfItems()).isPositive()) {
+        if (amountOfItem.minus(transactionEntry.getAmountOfItem()).isPositive()) {
             problem = String.format("Amount of items is not %s but %s",
                     amountOfItem,
-                    transactionEntry.getAmountOfItems());
+                    transactionEntry.getAmountOfItem());
             return false;
         }
 
-        if (amountOfItemsExecuted.minus(transactionEntry.getAmountOfExecutedItems()).isPositive()) {
+        if (amountOfItemsExecuted.minus(transactionEntry.getAmountOfExecutedItem()).isPositive()) {
             problem = String.format("Amount of executed items is not %s but %s",
                     amountOfItemsExecuted,
-                    transactionEntry.getAmountOfExecutedItems());
+                    transactionEntry.getAmountOfExecutedItem());
             return false;
         }
         if (!coinName.equals(transactionEntry.getCoinName())) {

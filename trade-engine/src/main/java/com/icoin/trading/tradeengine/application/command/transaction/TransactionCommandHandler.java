@@ -72,7 +72,7 @@ public class TransactionCommandHandler {
     @CommandHandler
     public void handleCancelTransactionCommand(CancelTransactionCommand command) {
         Transaction transaction = repository.load(command.getTransactionIdentifier());
-        transaction.cancel();
+        transaction.cancel(command.getCancelledPrice());
     }
 
     @CommandHandler

@@ -31,6 +31,10 @@ public interface TradeServiceFacade {
 
     CoinEntry loadCoin(String coinId);
 
+    BigMoney calculateSellOrderEffectiveAmount(SellOrder order);
+
+    BigMoney calculateBuyOrderEffectiveAmount(BuyOrder order);
+
     List<TradeExecutedEntry> findExecutedTradesByOrderBookIdentifier(String orderBookIdentifier);
 
     List<OrderEntry> findUserActiveOrders(String userId, String orderBookId);

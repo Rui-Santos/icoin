@@ -165,7 +165,8 @@ public class SellTradeManagerSagaTest {
                         new SellTransactionCancelledEvent(
                                 transactionIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
-                                BigMoney.zero(CurrencyUnit.of(Currencies.BTC))))
+                                BigMoney.zero(CurrencyUnit.of(Currencies.BTC)),
+                                BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10))))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(exactSequenceOf(
                         new CancelItemReservationForPortfolioCommandMatcher(

@@ -44,4 +44,12 @@ public class Commission extends ValueObjectSupport<Commission> {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public String toString() {
+        return "Commission{" +
+                "commission=" + commission +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

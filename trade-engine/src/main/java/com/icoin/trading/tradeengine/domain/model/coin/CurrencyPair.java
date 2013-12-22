@@ -5,6 +5,8 @@ import com.homhon.base.domain.model.ValueObjectSupport;
 import org.joda.money.CurrencyUnit;
 import org.springframework.data.annotation.PersistenceConstructor;
 
+import static com.homhon.util.Asserts.notNull;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -78,7 +80,6 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
      * @param baseCurrency The base symbol (single unit)
      */
     public CurrencyPair(String baseCurrency) {
-
         this(baseCurrency, CCY_DEFAULT);
     }
 
@@ -93,9 +94,17 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
 
     @PersistenceConstructor
     public CurrencyPair(String baseCurrency, String counterCurrency) {
-
+        notNull(baseCurrency);
+        notNull(counterCurrency);
         this.baseCurrency = baseCurrency;
         this.counterCurrency = counterCurrency;
+    }
+
+    public CurrencyPair(CurrencyUnit baseCurrency, CurrencyUnit counterCurrency){
+        notNull(baseCurrency);
+        notNull(counterCurrency);
+        this.baseCurrency = baseCurrency.getCurrencyCode();
+        this.counterCurrency = counterCurrency.getCurrencyCode();
     }
 
     @Override

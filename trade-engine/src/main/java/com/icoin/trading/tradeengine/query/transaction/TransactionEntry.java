@@ -24,30 +24,30 @@ import org.joda.money.BigMoney;
  * @author Jettro Coenradie
  */
 public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, String, Long> {
-    private String orderbookIdentifier;
+    private String orderBookIdentifier;
     private String portfolioIdentifier;
 
     private String coinName;
-    private BigMoney amountOfItems;
-    private BigMoney amountOfExecutedItems;
+    private BigMoney amountOfItem;
+    private BigMoney amountOfExecutedItem;
     private BigMoney pricePerItem;
     private TransactionState state;
     private TransactionType type;
 
-    public BigMoney getAmountOfExecutedItems() {
-        return amountOfExecutedItems;
+    public BigMoney getAmountOfExecutedItem() {
+        return amountOfExecutedItem;
     }
 
-    public void setAmountOfExecutedItems(BigMoney amountOfExecutedItems) {
-        this.amountOfExecutedItems = amountOfExecutedItems;
+    public void setAmountOfExecutedItem(BigMoney amountOfExecutedItem) {
+        this.amountOfExecutedItem = amountOfExecutedItem;
     }
 
-    public BigMoney getAmountOfItems() {
-        return amountOfItems;
+    public BigMoney getAmountOfItem() {
+        return amountOfItem;
     }
 
-    public void setAmountOfItems(BigMoney amountOfItems) {
-        this.amountOfItems = amountOfItems;
+    public void setAmountOfItem(BigMoney amountOfItem) {
+        this.amountOfItem = amountOfItem;
     }
 
     public String getCoinName() {
@@ -58,12 +58,12 @@ public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, 
         this.coinName = coinName;
     }
 
-    public String getOrderbookIdentifier() {
-        return orderbookIdentifier;
+    public String getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
-    public void setOrderbookIdentifier(String orderbookIdentifier) {
-        this.orderbookIdentifier = orderbookIdentifier;
+    public void setOrderBookIdentifier(String orderBookIdentifier) {
+        this.orderBookIdentifier = orderBookIdentifier;
     }
 
     public String getPortfolioIdentifier() {

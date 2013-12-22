@@ -149,7 +149,8 @@ public class OrderAggregateQueryRepositoryIT {
                 repository.findOrderAggregatedPrice(
                         orderBookId.toString(),
                         OrderType.SELL,
-                        date.toDate());
+                        date.toDate(),
+                        10);
 
         assertThat(aggregateList, hasSize(2));
         final PriceAggregate priceAggregate1 = aggregateList.get(0);

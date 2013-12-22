@@ -25,12 +25,12 @@ import org.joda.money.BigMoney;
  */
 public abstract class AbstractTransactionExecutedEvent {
     private TransactionId transactionIdentifier;
-    private BigMoney amountOfItems;
+    private BigMoney amountOfItem;
     private BigMoney itemPrice;
 
-    public AbstractTransactionExecutedEvent(TransactionId transactionIdentifier, BigMoney amountOfItems, BigMoney itemPrice) {
+    public AbstractTransactionExecutedEvent(TransactionId transactionIdentifier, BigMoney amountOfItem, BigMoney itemPrice) {
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfItems = amountOfItems;
+        this.amountOfItem = amountOfItem;
         this.itemPrice = itemPrice;
     }
 
@@ -38,8 +38,8 @@ public abstract class AbstractTransactionExecutedEvent {
         return transactionIdentifier;
     }
 
-    public BigMoney getAmountOfItems() {
-        return amountOfItems;
+    public BigMoney getAmountOfItem() {
+        return amountOfItem;
     }
 
     public BigMoney getItemPrice() {

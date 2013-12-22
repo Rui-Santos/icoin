@@ -35,4 +35,5 @@
         <axon:snapshotter-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
     </axon:event-sourcing-repository>
 
+   <bean id="commissionPolicyFactory" class="com.icoin.trading.tradeengine.domain.model.commission.DefaultCommissionPolicyFactory"/>
 </beans>

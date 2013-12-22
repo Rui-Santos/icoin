@@ -103,12 +103,12 @@ public class TransactionEventListener {
         TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier()
                 .toString());
 
-        BigMoney value = transactionEntry.getAmountOfExecutedItems().multipliedBy(transactionEntry.getPricePerItem().getAmount());
+        BigMoney value = transactionEntry.getAmountOfExecutedItem().multipliedBy(transactionEntry.getPricePerItem().getAmount());
         BigMoney additionalValue = event.getAmountOfExecutedItem().multipliedBy(event.getItemPrice().getAmount());
         BigMoney newPrice = (value.plus(additionalValue)).dividedBy(event.getTotalOfExecutedItem().getAmount(), RoundingMode.HALF_EVEN);
 
         transactionEntry.setState(TransactionState.PARTIALLYEXECUTED);
-        transactionEntry.setAmountOfExecutedItems(event.getTotalOfExecutedItem());
+        transactionEntry.setAmountOfExecutedItem(event.getTotalOfExecutedItem());
         transactionEntry.setPricePerItem(newPrice);
         transactionQueryRepository.save(transactionEntry);
     }
@@ -117,13 +117,13 @@ public class TransactionEventListener {
         TransactionEntry transactionEntry = transactionQueryRepository.findOne(event.getTransactionIdentifier()
                 .toString());
 
-        BigMoney value = transactionEntry.getAmountOfExecutedItems().multipliedBy(transactionEntry.getPricePerItem().getAmount());
-        BigMoney additionalValue = event.getAmountOfItems().multipliedBy(event.getItemPrice().getAmount());
-        BigMoney newPrice = (value.plus(additionalValue)).dividedBy(transactionEntry.getAmountOfItems().getAmount(),
+        BigMoney value = transactionEntry.getAmountOfExecutedItem().multipliedBy(transactionEntry.getPricePerItem().getAmount());
+        BigMoney additionalValue = event.getAmountOfItem().multipliedBy(event.getItemPrice().getAmount());
+        BigMoney newPrice = (value.plus(additionalValue)).dividedBy(transactionEntry.getAmountOfItem().getAmount(),
                 RoundingMode.HALF_EVEN);
 
         transactionEntry.setState(TransactionState.EXECUTED);
-        transactionEntry.setAmountOfExecutedItems(transactionEntry.getAmountOfItems());
+        transactionEntry.setAmountOfExecutedItem(transactionEntry.getAmountOfItem());
         transactionEntry.setPricePerItem(newPrice);
         transactionQueryRepository.save(transactionEntry);
     }
@@ -138,11 +138,11 @@ public class TransactionEventListener {
         OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(event.getOrderbookIdentifier().toString());
 
         TransactionEntry entry = new TransactionEntry();
-        entry.setAmountOfExecutedItems(BigMoney.zero(event.getTotalItem().getCurrencyUnit()));//ZERO
-        entry.setAmountOfItems(event.getTotalItem());
+        entry.setAmountOfExecutedItem(BigMoney.zero(event.getTotalItem().getCurrencyUnit()));//ZERO
+        entry.setAmountOfItem(event.getTotalItem());
         entry.setPricePerItem(event.getPricePerItem());
         entry.setPrimaryKey(event.getTransactionIdentifier().toString());
-        entry.setOrderbookIdentifier(event.getOrderbookIdentifier().toString());
+        entry.setOrderBookIdentifier(event.getOrderbookIdentifier().toString());
         entry.setPortfolioIdentifier(event.getPortfolioIdentifier().toString());
         entry.setState(TransactionState.STARTED);
         entry.setType(type);

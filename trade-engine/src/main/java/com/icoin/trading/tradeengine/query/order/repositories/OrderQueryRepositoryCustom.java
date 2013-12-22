@@ -27,5 +27,5 @@ import java.util.List;
  */
 public interface OrderQueryRepositoryCustom {
 
-    List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate);
+    List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate, int limit);
 }

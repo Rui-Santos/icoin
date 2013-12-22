@@ -68,6 +68,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
         notNull(order);
         notNull(order.getItemRemaining());
         notNull(order.getItemPrice());
+        notNull(order.getCurrencyPair());
 
         BigMoney tradeAmount =
                 order.getItemRemaining()
@@ -82,6 +83,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
         notNull(order);
         notNull(order.getTradeAmount());
         notNull(order.getItemPrice());
+        notNull(order.getCurrencyPair());
 
         BigMoney tradeAmount =
                 order.getTradeAmount()

@@ -1,11 +1,14 @@
 package com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
+import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
@@ -43,5 +46,14 @@ public class MoneyTest {
         assertThat(btcMoney.getCurrencyUnit(), notNullValue());
         assertThat(btcMoney.getCurrencyUnit(), equalTo(CurrencyUnit.of(Currencies.BTC)));
         assertThat(btcMoney.getAmount(), is(closeTo(BigDecimal.valueOf(23.87234232), BigDecimal.valueOf(0.00000000001d))));
+
+        final BigMoney btcAmount = BigMoney.of(CurrencyUnit.AUD, 100.12345678);
+        final BigMoney price = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 100.123456789);
+
+        final BigMoney total = btcAmount.convertRetainScale(price.getCurrencyUnit(), price.getAmount(), RoundingMode.HALF_EVEN);
+
+        System.out.println(total);
+        System.out.println(total.toMoney(RoundingMode.HALF_EVEN));
+
     }
 }

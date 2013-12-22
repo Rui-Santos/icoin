@@ -112,18 +112,18 @@ public class TransactionEventListenerTest {
     public void handleSellTransactionCancelledEvent() {
         TransactionEntry transactionEntry = new TransactionEntry();
         transactionEntry.setPrimaryKey(transactionIdentifier.toString());
-        transactionEntry.setAmountOfExecutedItems(BigMoney.zero(CurrencyUnit.of(Currencies.BTC)));
+        transactionEntry.setAmountOfExecutedItem(BigMoney.zero(CurrencyUnit.of(Currencies.BTC)));
         transactionEntry.setPricePerItem(DEFAULT_ITEM_PRICE);
         transactionEntry.setState(TransactionState.STARTED);
-        transactionEntry.setAmountOfItems(DEFAULT_TOTAL_ITEMS);
+        transactionEntry.setAmountOfItem(DEFAULT_TOTAL_ITEMS);
         transactionEntry.setCoinName(DEFAULT_COIN_NAME);
-        transactionEntry.setOrderbookIdentifier(orderBookIdentifier.toString());
+        transactionEntry.setOrderBookIdentifier(orderBookIdentifier.toString());
         transactionEntry.setPortfolioIdentifier(portfolioIdentifier.toString());
         transactionEntry.setType(TransactionType.SELL);
 
         Mockito.when(transactionQueryRepository.findOne(transactionIdentifier.toString())).thenReturn(transactionEntry);
         SellTransactionCancelledEvent event = new SellTransactionCancelledEvent(
-                transactionIdentifier, DEFAULT_TOTAL_ITEMS, DEFAULT_TOTAL_ITEMS);
+                transactionIdentifier, DEFAULT_TOTAL_ITEMS, DEFAULT_TOTAL_ITEMS, DEFAULT_ITEM_PRICE);
         listener.handleEvent(event);
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,

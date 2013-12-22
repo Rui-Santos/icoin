@@ -18,6 +18,7 @@ package com.icoin.trading.tradeengine.application.command.transaction.command;
 
 
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
@@ -25,12 +26,18 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 public class CancelTransactionCommand {
 
     private TransactionId transactionIdentifier;
+    private BigMoney cancelledPrice;
 
-    public CancelTransactionCommand(TransactionId transactionIdentifier) {
+    public CancelTransactionCommand(TransactionId transactionIdentifier, BigMoney cancelledPrice) {
         this.transactionIdentifier = transactionIdentifier;
+        this.cancelledPrice = cancelledPrice;
     }
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public BigMoney getCancelledPrice() {
+        return cancelledPrice;
     }
 }

@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.saga;
 
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
 
     private transient CommandBus commandBus;
+    private transient CommissionPolicyFactory commissionPolicyFactory;
     private BigMoney totalItems;
     private BigMoney pricePerItem;
     private TransactionId transactionIdentifier;
@@ -44,8 +46,17 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
         this.commandBus = commandBus;
     }
 
+    @Autowired
+    public void setCommissionPolicyFactory(CommissionPolicyFactory commissionPolicyFactory) {
+        this.commissionPolicyFactory = commissionPolicyFactory;
+    }
+
     protected CommandBus getCommandBus() {
         return commandBus;
+    }
+
+    protected CommissionPolicyFactory getCommissionPolicyFactory() {
+        return commissionPolicyFactory;
     }
 
     protected OrderBookId getOrderbookIdentifier() {

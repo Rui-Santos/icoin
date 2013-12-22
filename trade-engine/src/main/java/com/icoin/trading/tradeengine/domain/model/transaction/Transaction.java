@@ -43,7 +43,7 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
 
     @AggregateIdentifier
     private TransactionId transactionId;
-    private BigMoney amountOfItems;
+    private BigMoney amountOfItem;
     private BigMoney executedAmount;
     private TransactionType type;
 
@@ -87,13 +87,13 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    public void cancel() {
+    public void cancel(BigMoney cancelledPrice) {
         switch (this.type) {
             case BUY:
-                apply(new BuyTransactionCancelledEvent(transactionId, amountOfItems, executedAmount));
+                apply(new BuyTransactionCancelledEvent(transactionId, amountOfItem, executedAmount, cancelledPrice));
                 break;
             case SELL:
-                apply(new SellTransactionCancelledEvent(transactionId, amountOfItems, executedAmount));
+                apply(new SellTransactionCancelledEvent(transactionId, amountOfItem, executedAmount, cancelledPrice));
                 break;
         }
     }
@@ -124,13 +124,13 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     }
 
     private boolean isPartiallyExecuted(BigMoney amountOfItems) {
-        return this.executedAmount.plus(amountOfItems).compareTo(this.amountOfItems) < 0;
+        return this.executedAmount.plus(amountOfItems).compareTo(this.amountOfItem) < 0;
     }
 
     @EventHandler
     public void onBuyTransactionStarted(BuyTransactionStartedEvent event) {
         this.transactionId = event.getTransactionIdentifier();
-        this.amountOfItems = event.getTotalItem();
+        this.amountOfItem = event.getTotalItem();
         this.executedAmount = BigMoney.zero(event.getTotalItem().getCurrencyUnit());
         this.type = TransactionType.BUY;
     }
@@ -138,19 +138,19 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void onSellTransactionStarted(SellTransactionStartedEvent event) {
         this.transactionId = event.getTransactionIdentifier();
-        this.amountOfItems = event.getTotalItem();
+        this.amountOfItem = event.getTotalItem();
         this.executedAmount = BigMoney.zero(event.getTotalItem().getCurrencyUnit());
         this.type = TransactionType.SELL;
     }
 
     @EventHandler
     public void onTransactionExecuted(BuyTransactionExecutedEvent event) {
-        this.executedAmount = this.amountOfItems;
+        this.executedAmount = this.amountOfItem;
     }
 
     @EventHandler
     public void onTransactionExecuted(SellTransactionExecutedEvent event) {
-        this.executedAmount = this.amountOfItems;
+        this.executedAmount = this.amountOfItem;
     }
 
     @EventHandler

@@ -39,6 +39,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.previousOperation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static com.homhon.util.Asserts.isTrue;
 
 /**
  * @author Jettro Coenradie
@@ -54,7 +55,8 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepositoryCustom {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate) {
+    public List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate, int limit) {
+        isTrue(limit>=1);
         //order is: match, order, sort, limit
         TypedAggregation<OrderEntry> aggregation = newAggregation(OrderEntry.class,
                 match(where("orderStatus").is(OrderStatus.PENDING.toString())
@@ -67,7 +69,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepositoryCustom {
                         .and(Fields.field("amountCurrency", "itemRemaining.currency")))
                         .sum("itemRemaining.amount").as("sumUpAmountPerPrice"),
                 sort(DESC, previousOperation()),
-                limit(10)
+                limit(limit)
         );
 
         AggregationResults<PriceAggregate> result = mongoTemplate.aggregate(aggregation, PriceAggregate.class);

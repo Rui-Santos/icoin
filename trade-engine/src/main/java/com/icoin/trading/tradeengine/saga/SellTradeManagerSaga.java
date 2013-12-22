@@ -111,7 +111,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
     public void handle(SellTransactionCancelledEvent event) {
-        BigMoney amountOfCancelledItems = event.getTotalAmountOfItems().minus(event.getAmountOfExecutedItem());
+        BigMoney amountOfCancelledItems = event.getTotalAmountOfItem().minus(event.getAmountOfExecutedItem());
         logger.debug("Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}",
                 event.getTransactionIdentifier(),
                 amountOfCancelledItems);
@@ -148,18 +148,18 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @EndSaga
     public void handle(SellTransactionExecutedEvent event) {
         logger.debug("Sell Transaction {} is executed, last amount of executed items is {} for a price of {}",
-                new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
+                new Object[]{event.getTransactionIdentifier(), event.getAmountOfItem(), event.getItemPrice()});
 
         ConfirmAmountReservationForPortfolioCommand confirmCommand =
                 new ConfirmAmountReservationForPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         getTransactionIdentifier(),
-                        event.getAmountOfItems());
+                        event.getAmountOfItem());
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmAmountReservationForPortfolioCommand>(confirmCommand));
 
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
-                        event.getAmountOfItems().convertedTo(
+                        event.getAmountOfItem().convertedTo(
                                 event.getItemPrice().getCurrencyUnit(),
                                 event.getItemPrice().getAmount()));
         getCommandBus().dispatch(new GenericCommandMessage<DepositCashCommand>(depositCommand));

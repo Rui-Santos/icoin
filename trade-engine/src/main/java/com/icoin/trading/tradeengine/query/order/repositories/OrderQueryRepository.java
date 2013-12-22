@@ -53,5 +53,5 @@ public interface OrderQueryRepository extends
             "Sort: { 'placeDate' : -1 }")
     List<OrderEntry> findUserActiveOrders(String userId, String orderBookId);
 
-    List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate);
+    List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate, int limit);
 }

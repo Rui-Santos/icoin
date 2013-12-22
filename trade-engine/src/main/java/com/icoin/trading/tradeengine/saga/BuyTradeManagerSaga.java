@@ -31,6 +31,10 @@ import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionCon
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionPartiallyExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.commission.Commission;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.GenericCommandMessage;
@@ -72,11 +76,33 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         setPricePerItem(event.getPricePerItem());
         setTotalItems(event.getTotalItem());
 
+        final BigMoney amountOfMoney = getTotalItems()
+                .convertRetainScale(event.getPricePerItem().getCurrencyUnit(), getPricePerItem().getAmount(), RoundingMode.HALF_EVEN);
+
+        BuyOrder order = toBuyOrder(event);
+        final CommissionPolicy commissionPolicy = getCommissionPolicyFactory().createCommissionPolicy(order);
+        final Commission commission = commissionPolicy.calculateBuyCommission(order);
+        final BigMoney total = amountOfMoney.plus(commission.getCommission()).toMoney(RoundingMode.HALF_EVEN).toBigMoney();
+
+        logger.info("amount to reserve details: Calculated commission {}, amountOfMoney {}, total {}, for buy order: {}", commission, amountOfMoney, total, order);
+
         ReserveCashCommand command = new ReserveCashCommand(getPortfolioIdentifier(),
                 getTransactionIdentifier(),
-                getTotalItems()
-                        .convertRetainScale(event.getPricePerItem().getCurrencyUnit(), getPricePerItem().getAmount(), RoundingMode.HALF_EVEN));
+                total);
         getCommandBus().dispatch(new GenericCommandMessage<ReserveCashCommand>(command));
+    }
+
+    private BuyOrder toBuyOrder(BuyTransactionStartedEvent event) {
+        final BuyOrder order = new BuyOrder();
+        order.setOrderBookId(event.getOrderbookIdentifier());
+        order.setPortfolioId(event.getPortfolioIdentifier());
+        order.setItemPrice(event.getPricePerItem());
+        order.setTradeAmount(event.getTotalItem());
+        order.setTransactionId(event.getTransactionIdentifier());
+        order.setCurrencyPair(new CurrencyPair(event.getTotalItem().getCurrencyUnit(), event.getPricePerItem().getCurrencyUnit()));
+
+        return order;
+
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -133,16 +159,35 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(BuyTransactionCancelledEvent event) {
         BigMoney amountToCancel =
-                event.getTotalAmountOfItems().minus(event.getAmountOfExecutedItem())
+                event.getTotalAmountOfItem().minus(event.getAmountOfExecutedItem())
                         .convertRetainScale(getPricePerItem().getCurrencyUnit(), getPricePerItem().getAmount(), RoundingMode.HALF_EVEN);
+
+        BuyOrder order = toBuyOrder(event);
+        final CommissionPolicy commissionPolicy = getCommissionPolicyFactory().createCommissionPolicy(order);
+        final Commission commission = commissionPolicy.calculateBuyCommission(order);
+        final BigMoney total = amountToCancel.plus(commission.getCommission()).toMoney(RoundingMode.HALF_EVEN).toBigMoney();
+
+        logger.info("amount to cancel details: Calculated commission {}, amountOfMoney {}, total {}, for buy order: {}", commission, amountToCancel, total, order);
+
+
         logger.debug("Buy Transaction {} is cancelled, amount of cash reserved to cancel is {}",
                 event.getTransactionIdentifier(),
-                amountToCancel);
+                total);
         CancelCashReservationCommand command = new CancelCashReservationCommand(
                 getPortfolioIdentifier(),
                 getTransactionIdentifier(),
                 amountToCancel);
         getCommandBus().dispatch(new GenericCommandMessage<CancelCashReservationCommand>(command));
+    }
+
+    private BuyOrder toBuyOrder(BuyTransactionCancelledEvent event) {
+        final BuyOrder order = new BuyOrder();
+        order.setItemPrice(event.getCancelledPrice());
+        order.setTradeAmount(event.getAmountOfExecutedItem());
+        order.setTransactionId(event.getTransactionIdentifier());
+        order.setCurrencyPair(new CurrencyPair(event.getAmountOfExecutedItem().getCurrencyUnit(), event.getCancelledPrice().getCurrencyUnit()));
+
+        return order;
     }
 
     @SagaEventHandler(associationProperty = "buyTransactionId", keyName = "transactionIdentifier")
@@ -159,20 +204,29 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
     @EndSaga
     public void handle(BuyTransactionExecutedEvent event) {
         logger.debug("Buy Transaction {} is executed, last amount of executed items is {} for a price of {}",
-                new Object[]{event.getTransactionIdentifier(), event.getAmountOfItems(), event.getItemPrice()});
+                new Object[]{event.getTransactionIdentifier(), event.getAmountOfItem(), event.getItemPrice()});
 
+
+        final BigMoney amountOfMoneyToConfirm = event.getAmountOfItem().convertRetainScale(
+                event.getItemPrice().getCurrencyUnit(),
+                event.getItemPrice().getAmount(), RoundingMode.HALF_EVEN);
+
+        BuyOrder order = toBuyOrder(event);
+        final CommissionPolicy commissionPolicy = getCommissionPolicyFactory().createCommissionPolicy(order);
+        final Commission commission = commissionPolicy.calculateBuyCommission(order);
+        final BigMoney total = amountOfMoneyToConfirm.plus(commission.getCommission()).toMoney(RoundingMode.HALF_EVEN).toBigMoney();
+
+        logger.info("amount to executed details: Calculated commission {}, amountOfMoney {}, total {}, for buy order: {}", commission, amountOfMoneyToConfirm, total, order);
 
         ConfirmCashReservationCommand confirmCommand =
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
-                        event.getAmountOfItems().convertedTo(
-                                event.getItemPrice().getCurrencyUnit(),
-                                event.getItemPrice().getAmount()));
+                        total);
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
         AddAmountToPortfolioCommand addItemsCommand =
                 new AddAmountToPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
-                        event.getAmountOfItems());
+                        event.getAmountOfItem());
         getCommandBus().dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(addItemsCommand));
 
         //when the whole saga complete, change the price here
@@ -186,6 +240,16 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
 //        commandGateway.sendAndWait(new AddBackLeftReservedCommand());
     }
 
+    private BuyOrder toBuyOrder(BuyTransactionExecutedEvent event) {
+        final BuyOrder order = new BuyOrder();
+        order.setItemPrice(event.getItemPrice());
+        order.setTradeAmount(event.getAmountOfItem());
+        order.setTransactionId(event.getTransactionIdentifier());
+        order.setCurrencyPair(new CurrencyPair(event.getAmountOfItem().getCurrencyUnit(), event.getItemPrice().getCurrencyUnit()));
+
+        return order;
+    }
+
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(BuyTransactionPartiallyExecutedEvent event) {
         logger.debug("Buy Transaction {} is partially executed, amount of executed items is {} for a price of {}",
@@ -193,17 +257,36 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                         event.getAmountOfExecutedItem(),
                         event.getItemPrice()});
 
+        final BigMoney amountOfMoneyToConfirm = event.getAmountOfExecutedItem().convertRetainScale(
+                event.getItemPrice().getCurrencyUnit(),
+                event.getItemPrice().getAmount(), RoundingMode.HALF_EVEN);
+
+        BuyOrder order = toBuyOrder(event);
+        final CommissionPolicy commissionPolicy = getCommissionPolicyFactory().createCommissionPolicy(order);
+        final Commission commission = commissionPolicy.calculateBuyCommission(order);
+        final BigMoney total = amountOfMoneyToConfirm.plus(commission.getCommission()).toMoney(RoundingMode.HALF_EVEN).toBigMoney();
+
+        logger.info("amount to executed details: Calculated commission {}, amountOfMoney {}, total {}, for buy order: {}", commission, amountOfMoneyToConfirm, total, order);
+
         ConfirmCashReservationCommand confirmCommand =
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
-                        event.getAmountOfExecutedItem().convertedTo(
-                                event.getItemPrice().getCurrencyUnit(),
-                                event.getItemPrice().getAmount()));
+                        total);
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
         AddAmountToPortfolioCommand addItemsCommand =
                 new AddAmountToPortfolioCommand(getPortfolioIdentifier(),
                         getOrderbookIdentifier(),
                         event.getAmountOfExecutedItem());
         getCommandBus().dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(addItemsCommand));
+    }
+
+    private BuyOrder toBuyOrder(BuyTransactionPartiallyExecutedEvent event) {
+        final BuyOrder order = new BuyOrder();
+        order.setItemPrice(event.getItemPrice());
+        order.setTradeAmount(event.getAmountOfExecutedItem());
+        order.setTransactionId(event.getTransactionIdentifier());
+        order.setCurrencyPair(new CurrencyPair(event.getAmountOfExecutedItem().getCurrencyUnit(), event.getItemPrice().getCurrencyUnit()));
+
+        return order;
     }
 }

@@ -25,13 +25,18 @@ import org.joda.money.BigMoney;
  */
 public abstract class AbstractTransactionCancelledEvent {
     private TransactionId transactionIdentifier;
-    private BigMoney totalAmountOfItems;
+    private BigMoney totalAmountOfItem;
     private BigMoney amountOfExecutedItem;
+    private BigMoney cancelledPrice;
 
-    public AbstractTransactionCancelledEvent(TransactionId transactionIdentifier, BigMoney totalAmountOfItem, BigMoney amountOfExecutedItem) {
+    public AbstractTransactionCancelledEvent(TransactionId transactionIdentifier,
+                                             BigMoney totalAmountOfItem,
+                                             BigMoney amountOfExecutedItem,
+                                             BigMoney cancelledPrice) {
         this.transactionIdentifier = transactionIdentifier;
-        this.totalAmountOfItems = totalAmountOfItem;
+        this.totalAmountOfItem = totalAmountOfItem;
         this.amountOfExecutedItem = amountOfExecutedItem;
+        this.cancelledPrice = cancelledPrice;
     }
 
     public TransactionId getTransactionIdentifier() {
@@ -42,7 +47,11 @@ public abstract class AbstractTransactionCancelledEvent {
         return amountOfExecutedItem;
     }
 
-    public BigMoney getTotalAmountOfItems() {
-        return totalAmountOfItems;
+    public BigMoney getTotalAmountOfItem() {
+        return totalAmountOfItem;
+    }
+
+    public BigMoney getCancelledPrice() {
+        return cancelledPrice;
     }
 }
