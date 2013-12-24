@@ -16,6 +16,8 @@
 
 package com.icoin.trading.tradeengine.application.command.portfolio;
 
+import com.icoin.trading.tradeengine.application.Callback;
+import com.icoin.trading.tradeengine.application.SynchronizedOnIdentifierHandler;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.CancelCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
@@ -37,7 +39,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PortfolioCommandHandler {
-
+    private final SynchronizedOnIdentifierHandler synchronizedOnIdentifierHandler = new SynchronizedOnIdentifierHandler();
     private Repository<Portfolio> portfolioRepository;
 
     @CommandHandler
@@ -47,75 +49,207 @@ public class PortfolioCommandHandler {
     }
 
     @CommandHandler
-    public void handleReserveItemsCommand(ReserveAmountCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.reserveItems(command.getOrderBookIdentifier(),
-                command.getTransactionIdentifier(),
-                command.getAmountOfItemToReserve());
+    public void handleReserveItemsCommand(final ReserveAmountCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getPortfolioIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+                        portfolio.reserveItems(command.getOrderBookIdentifier(),
+                                command.getTransactionIdentifier(),
+                                command.getAmountOfItemToReserve());
+                        return null;
+                    }
+                }
+        );
     }
 
     @CommandHandler
-    public void handleAddItemsToPortfolioCommand(AddAmountToPortfolioCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.addItems(command.getOrderBookIdentifier(), command.getAmountOfItemToAdd());
+    public void handleAddItemsToPortfolioCommand(final AddAmountToPortfolioCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getPortfolioIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+                        portfolio.addItems(command.getOrderBookIdentifier(), command.getAmountOfItemToAdd());
+                        return null;
+                    }
+                }
+        );
+
     }
 
     @CommandHandler
-    public void handleConfirmReservationCommand(ConfirmAmountReservationForPortfolioCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.confirmReservation(command.getOrderBookIdentifier(),
-                command.getTransactionIdentifier(),
-                command.getAmountOfItemToConfirm());
+    public void handleConfirmReservationCommand(final ConfirmAmountReservationForPortfolioCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getPortfolioIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+                        portfolio.confirmReservation(command.getOrderBookIdentifier(),
+                                command.getTransactionIdentifier(),
+                                command.getAmountOfItemToConfirm());
+                        return null;
+                    }
+                }
+        );
     }
 
     @CommandHandler
-    public void handleCancelReservationCommand(CancelAmountReservationForPortfolioCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.cancelReservation(command.getOrderBookIdentifier(),
-                command.getTransactionIdentifier(),
-                command.getAmountOfItemsToCancel());
+    public void handleCancelReservationCommand(final CancelAmountReservationForPortfolioCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getPortfolioIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+                        portfolio.cancelReservation(command.getOrderBookIdentifier(),
+                                command.getTransactionIdentifier(),
+                                command.getAmountOfItemsToCancel());
+                        return null;
+                    }
+                }
+        );
     }
 
     @CommandHandler
-    public void handleAddMoneyToPortfolioCommand(DepositCashCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.addMoney(command.getMoneyToAdd());
+    public void handleAddMoneyToPortfolioCommand(final DepositCashCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getPortfolioIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+                        portfolio.addMoney(command.getMoneyToAdd());
+                        return null;
+                    }
+                }
+        );
     }
 
     @CommandHandler
-    public void handleMakePaymentFromPortfolioCommand(WithdrawCashCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.makePayment(command.getAmountToPay());
+    public void handleMakePaymentFromPortfolioCommand(final WithdrawCashCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getPortfolioIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+                        portfolio.makePayment(command.getAmountToPay());
+                        return null;
+                    }
+                }
+        );
+
     }
 
     @CommandHandler
-    public void handleReserveMoneyFromPortfolioCommand(ReserveCashCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.reserveMoney(command.getTransactionIdentifier(), command.getAmountOfMoneyToReserve());
+    public void handleReserveMoneyFromPortfolioCommand(final ReserveCashCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getPortfolioIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+                        portfolio.reserveMoney(command.getTransactionIdentifier(), command.getAmountOfMoneyToReserve());
+                        return null;
+                    }
+                }
+        );
+
     }
 
     @CommandHandler
-    public void handleCancelMoneyReservationFromPortfolioCommand(CancelCashReservationCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.cancelMoneyReservation(command.getTransactionIdentifier(), command.getAmountOfMoneyToCancel());
+    public void handleCancelMoneyReservationFromPortfolioCommand(final CancelCashReservationCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getPortfolioIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+                        portfolio.cancelMoneyReservation(command.getTransactionIdentifier(), command.getAmountOfMoneyToCancel());
+                        return null;
+                    }
+                }
+        );
     }
 
     @CommandHandler
-    public void handleConfirmMoneyReservationFromPortfolioCommand(
-            ConfirmCashReservationCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-        portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
-                command.getAmountOfMoneyToConfirm());
+    public void handleConfirmMoneyReservationFromPortfolioCommand(final ConfirmCashReservationCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getPortfolioIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+                        portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
+                                command.getAmountOfMoneyToConfirm());
+                        return null;
+                    }
+                }
+        );
     }
 
     @CommandHandler
-    public void handleAddBackLeftReservedCommand(
-            AddBackLeftReservedCommand command) {
-        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+    public void handleAddBackLeftReservedCommand(final AddBackLeftReservedCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getPortfolioIdentifier().toString();
+                    }
 
-        //todo add money back
+                    @Override
+                    public Void execute() throws Exception {
+                        Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
+
+                        //todo add money back
 //        portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
 //                command.getAmountOfMoneyToConfirm());
+                        return null;
+                    }
+                }
+        );
+
     }
 
     @Autowired

@@ -16,6 +16,8 @@
 
 package com.icoin.trading.tradeengine.application.command.transaction;
 
+import com.icoin.trading.tradeengine.application.Callback;
+import com.icoin.trading.tradeengine.application.SynchronizedOnIdentifierHandler;
 import com.icoin.trading.tradeengine.application.command.transaction.command.CancelTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ConfirmTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
@@ -34,7 +36,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TransactionCommandHandler {
-
+    private final SynchronizedOnIdentifierHandler synchronizedOnIdentifierHandler = new SynchronizedOnIdentifierHandler();
     private Repository<Transaction> repository;
 
     @CommandHandler
@@ -64,21 +66,60 @@ public class TransactionCommandHandler {
     }
 
     @CommandHandler
-    public void handleConfirmTransactionCommand(ConfirmTransactionCommand command) {
-        Transaction transaction = repository.load(command.getTransactionIdentifier());
-        transaction.confirm(command.getConfirmDate());
+    public void handleConfirmTransactionCommand(final ConfirmTransactionCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getTransactionIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Transaction transaction = repository.load(command.getTransactionIdentifier());
+                        transaction.confirm(command.getConfirmDate());
+                        return null;
+                    }
+                }
+        );
     }
 
     @CommandHandler
-    public void handleCancelTransactionCommand(CancelTransactionCommand command) {
-        Transaction transaction = repository.load(command.getTransactionIdentifier());
-        transaction.cancel(command.getCancelledPrice());
+    public void handleCancelTransactionCommand(final CancelTransactionCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getTransactionIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Transaction transaction = repository.load(command.getTransactionIdentifier());
+                        transaction.cancel(command.getCancelledPrice());
+                        return null;
+                    }
+                }
+        );
     }
 
     @CommandHandler
-    public void handleExecutedTransactionCommand(ExecutedTransactionCommand command) {
-        Transaction transaction = repository.load(command.getTransactionIdentifier());
-        transaction.execute(command.getAmountOfItems(), command.getItemPrice());
+    public void handleExecutedTransactionCommand(final ExecutedTransactionCommand command) {
+        synchronizedOnIdentifierHandler.perform(
+                new Callback<Void>() {
+                    @Override
+                    public String getIdentifier() {
+                        return command.getTransactionIdentifier().toString();
+                    }
+
+                    @Override
+                    public Void execute() throws Exception {
+                        Transaction transaction = repository.load(command.getTransactionIdentifier());
+                        transaction.execute(command.getAmountOfItems(), command.getItemPrice());
+                        return null;
+                    }
+                }
+        );
     }
 
     @Autowired
