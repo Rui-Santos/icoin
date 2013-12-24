@@ -31,5 +31,14 @@
                                     event-store="eventStore">
         <axon:snapshotter-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
     </axon:event-sourcing-repository>
+    
+    <beans profile="dev">
+		    <bean name="passwordEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
+    </beans>
+    <beans profile="prod">
+        <bean name="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+		       <constructor-arg name="strength" value="16" />
+		    </bean>
+    </beans>
 
 </beans>
