@@ -33,7 +33,7 @@
     <http pattern="/image/**" security="none"/>
     <http pattern="/login.jsp*" security="none"/>
     <http pattern="/rest/**" security="none"/>
-
+    
     <http auto-config='true' use-expressions="true">
         <intercept-url pattern="/index.html" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/" access="isAnonymous() or isAuthenticated()"/>
@@ -41,7 +41,7 @@
         <intercept-url pattern="/coin/*" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
         <form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1"/>
-        <logout logout-success-url="/"/>
+        <logout logout-success-url="/" delete-cookies="JSESSIONID"/>
     </http>
 
     <authentication-manager>
