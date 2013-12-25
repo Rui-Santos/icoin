@@ -135,14 +135,14 @@ public class TransactionEventListener {
     }
 
     private void startTransaction(AbstractTransactionStartedEvent event, TransactionType type) {
-        OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(event.getOrderbookIdentifier().toString());
+        OrderBookEntry orderBookEntry = orderBookQueryRepository.findOne(event.getOrderBookIdentifier().toString());
 
         TransactionEntry entry = new TransactionEntry();
         entry.setAmountOfExecutedItem(BigMoney.zero(event.getTotalItem().getCurrencyUnit()));//ZERO
         entry.setAmountOfItem(event.getTotalItem());
         entry.setPricePerItem(event.getPricePerItem());
         entry.setPrimaryKey(event.getTransactionIdentifier().toString());
-        entry.setOrderBookIdentifier(event.getOrderbookIdentifier().toString());
+        entry.setOrderBookIdentifier(event.getOrderBookIdentifier().toString());
         entry.setPortfolioIdentifier(event.getPortfolioIdentifier().toString());
         entry.setState(TransactionState.STARTED);
         entry.setType(type);

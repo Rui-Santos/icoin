@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.application.command.transaction.command;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
@@ -26,13 +27,25 @@ import org.joda.money.BigMoney;
 public class ExecutedTransactionCommand {
 
     private TransactionId transactionIdentifier;
+    private CoinId coinId;
     private BigMoney amountOfItems;
     private BigMoney itemPrice;
+    private BigMoney commission;
 
-    public ExecutedTransactionCommand(TransactionId transactionIdentifier, BigMoney amountOfItems, BigMoney itemPrice) {
+    public ExecutedTransactionCommand(TransactionId transactionIdentifier,
+                                      CoinId coinId,
+                                      BigMoney amountOfItems,
+                                      BigMoney itemPrice,
+                                      BigMoney commission) {
         this.transactionIdentifier = transactionIdentifier;
+        this.coinId = coinId;
         this.amountOfItems = amountOfItems;
         this.itemPrice = itemPrice;
+        this.commission = commission;
+    }
+
+    public CoinId getCoinId() {
+        return coinId;
     }
 
     public BigMoney getAmountOfItems() {
@@ -45,5 +58,9 @@ public class ExecutedTransactionCommand {
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public BigMoney getCommission() {
+        return commission;
     }
 }

@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -31,26 +32,29 @@ import org.joda.money.BigMoney;
 public class ConfirmAmountReservationForPortfolioCommand {
 
     private PortfolioId portfolioIdentifier;
-    private OrderBookId orderBookIdentifier;
+    private CoinId coinId;
     private TransactionId transactionIdentifier;
     private BigMoney amountOfItemToConfirm;
+    private BigMoney commission;
 
     public ConfirmAmountReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
-                                                       OrderBookId orderBookIdentifier,
+                                                       CoinId coinId,
                                                        TransactionId transactionIdentifier,
-                                                       BigMoney amountOfItemToConfirm) {
+                                                       BigMoney amountOfItemToConfirm,
+                                                       BigMoney commission) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.orderBookIdentifier = orderBookIdentifier;
+        this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItemToConfirm = amountOfItemToConfirm;
+        this.commission = commission;
     }
 
     public BigMoney getAmountOfItemToConfirm() {
         return amountOfItemToConfirm;
     }
 
-    public OrderBookId getOrderBookIdentifier() {
-        return orderBookIdentifier;
+    public CoinId getCoinId() {
+        return coinId;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -59,5 +63,9 @@ public class ConfirmAmountReservationForPortfolioCommand {
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public BigMoney getCommission() {
+        return commission;
     }
 }

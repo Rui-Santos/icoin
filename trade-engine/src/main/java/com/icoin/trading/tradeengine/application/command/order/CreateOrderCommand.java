@@ -16,7 +16,6 @@
 
 package com.icoin.trading.tradeengine.application.command.order;
 
-
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -26,19 +25,25 @@ import org.joda.money.BigMoney;
 import java.util.Date;
 
 /**
- * <p>Create a new Sell Order using the amount of items to sell for the provided price.</p>
+ * <p>Create a new Buy Order.</p>
  *
  * @author Allard Buijze
  */
-public class ExecuteSellOrderCommand extends ExecuteOrderCommand<ExecuteSellOrderCommand> {
-
-    public ExecuteSellOrderCommand(OrderId orderId,
-                                   PortfolioId portfolioId,
-                                   OrderBookId orderBookId,
-                                   TransactionId transactionId,
-                                   BigMoney tradeCount,
-                                   BigMoney itemPrice,
-                                   Date placeDate) {
+public abstract class CreateOrderCommand extends AbstractOrderCommand {
+    private final BigMoney totalCommission;
+    public CreateOrderCommand(OrderId orderId,
+                              PortfolioId portfolioId,
+                              OrderBookId orderBookId,
+                              TransactionId transactionId,
+                              BigMoney tradeCount,
+                              BigMoney itemPrice,
+                              BigMoney totalCommission,
+                              Date placeDate) {
         super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice, placeDate);
+        this.totalCommission = totalCommission;
+    }
+
+    public BigMoney getTotalCommission() {
+        return totalCommission;
     }
 }

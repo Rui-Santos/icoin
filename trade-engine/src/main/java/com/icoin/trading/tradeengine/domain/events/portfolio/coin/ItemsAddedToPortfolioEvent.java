@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
@@ -28,14 +29,14 @@ import org.joda.money.BigMoney;
  */
 public class ItemsAddedToPortfolioEvent {
     private PortfolioId portfolioIdentifier;
-    private OrderBookId orderBookIdentifier;
+    private CoinId coinId;
     private BigMoney amountOfItemAdded;
 
     public ItemsAddedToPortfolioEvent(PortfolioId portfolioIdentifier,
-                                      OrderBookId orderBookIdentifier,
+                                      CoinId coinId,
                                       BigMoney amountOfItemAdded) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.orderBookIdentifier = orderBookIdentifier;
+        this.coinId = coinId;
         this.amountOfItemAdded = amountOfItemAdded;
     }
 
@@ -43,8 +44,8 @@ public class ItemsAddedToPortfolioEvent {
         return amountOfItemAdded;
     }
 
-    public OrderBookId getOrderBookIdentifier() {
-        return orderBookIdentifier;
+    public CoinId getCoinId() {
+        return coinId;
     }
 
     public PortfolioId getPortfolioIdentifier() {

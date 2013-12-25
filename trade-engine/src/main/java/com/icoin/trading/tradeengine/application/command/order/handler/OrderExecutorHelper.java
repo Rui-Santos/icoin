@@ -2,6 +2,9 @@ package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.commission.Commission;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
@@ -34,6 +37,7 @@ import static com.homhon.util.Asserts.notNull;
 public class OrderExecutorHelper {
     private SellOrderRepository sellOrderRepository;
     private BuyOrderRepository buyOrderRepository;
+    private CommissionPolicyFactory commissionPolicyFactory;
 
     private static Logger logger = LoggerFactory.getLogger(OrderExecutorHelper.class);
 
@@ -135,23 +139,41 @@ public class OrderExecutorHelper {
         }
 
         logger.info("Refreshing with lowest sell order {} and price {}, Refreshing with highest buy order {} and price {}",
-                lowestSellOrderId, lowestSellPrice,highestBuyOrderId, highestBuyPrice);
+                lowestSellOrderId, lowestSellPrice, highestBuyOrderId, highestBuyPrice);
         orderBook.resetLowestSellPrice(lowestSellOrderId, lowestSellPrice);
         orderBook.resetHighestBuyPrice(highestBuyOrderId, highestBuyPrice);
     }
 
     public void recordTraded(BuyOrder buyOrder,
                              SellOrder sellOrder,
+                             BigMoney buyCommission,
+                             BigMoney sellCommission,
                              BigMoney matchedTradeAmount,
+                             BigMoney matchedTradePrice,
                              Date tradedDate) {
         notNull(buyOrder);
         notNull(sellOrder);
 
-        buyOrder.recordTraded(matchedTradeAmount, tradedDate);
-        sellOrder.recordTraded(matchedTradeAmount, tradedDate);
+
+        buyOrder.recordTraded(matchedTradeAmount, buyCommission, tradedDate);
+        sellOrder.recordTraded(matchedTradeAmount, sellCommission, tradedDate);
+        logger.info("for this trade, buy order {} and sell order {} have commission {} and {}.",
+                buyOrder, sellOrder, buyCommission, sellCommission);
 
         buyOrderRepository.save(buyOrder);
         sellOrderRepository.save(sellOrder);
+    }
+
+    public BigMoney calcExecutedSellCommission(SellOrder sellOrder, BigMoney matchedTradePrice, BigMoney matchedTradeAmount) {
+        CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(sellOrder);
+        Commission commission = commissionPolicy.calculateSellCommission(sellOrder, matchedTradeAmount, matchedTradePrice);
+        return commission.getBigMoneyCommission();
+    }
+
+    public BigMoney calcExecutedBuyCommission(BuyOrder buyOrder, BigMoney matchedTradePrice, BigMoney matchedTradeAmount) {
+        CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(buyOrder);
+        Commission commission = commissionPolicy.calculateBuyCommission(buyOrder, matchedTradeAmount, matchedTradePrice);
+        return commission.getBigMoneyCommission();
     }
 
 
@@ -163,5 +185,10 @@ public class OrderExecutorHelper {
     @Autowired
     public void setSellOrderRepository(SellOrderRepository sellOrderRepository) {
         this.sellOrderRepository = sellOrderRepository;
+    }
+
+    @Autowired
+    public void setCommissionPolicyFactory(CommissionPolicyFactory commissionPolicyFactory) {
+        this.commissionPolicyFactory = commissionPolicyFactory;
     }
 }

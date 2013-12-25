@@ -73,7 +73,7 @@ public class SellTradeManagerSagaTest {
                 .whenAggregate(transactionIdentifier).publishes(
                 new SellTransactionStartedEvent(
                         transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10))))
@@ -89,7 +89,7 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(
                 new SellTransactionStartedEvent(
                         transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10))))
@@ -109,7 +109,7 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(
                 new SellTransactionStartedEvent(
                         transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10))))
@@ -136,7 +136,7 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(
                 new SellTransactionStartedEvent(
                         transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10))))
@@ -156,7 +156,7 @@ public class SellTradeManagerSagaTest {
                 .published(
                         new SellTransactionStartedEvent(
                                 transactionIdentifier,
-                                orderbookIdentifier,
+                                coinId, orderbookIdentifier,
                                 portfolioIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10))))
@@ -185,7 +185,7 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(
                 new SellTransactionStartedEvent(
                         transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(99))))
@@ -227,7 +227,7 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(
                 new SellTransactionStartedEvent(
                         transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(99))))
@@ -255,7 +255,7 @@ public class SellTradeManagerSagaTest {
                 .publishes(
                         new SellTransactionExecutedEvent(
                                 transactionIdentifier,
-                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
+                                coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(102))))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(
@@ -277,7 +277,7 @@ public class SellTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(
                 new SellTransactionStartedEvent(
                         transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99))))

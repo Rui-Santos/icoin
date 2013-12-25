@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
@@ -29,7 +30,7 @@ import org.joda.money.BigMoney;
 public class AddAmountToPortfolioCommand {
 
     private PortfolioId portfolioIdentifier;
-    private OrderBookId orderBookIdentifier;
+    private CoinId coinId;
     //    @DecimalMin("0.00000001")
     private BigMoney amountOfItemToAdd;
 
@@ -37,13 +38,14 @@ public class AddAmountToPortfolioCommand {
      * Create a new command.
      *
      * @param portfolioIdentifier Identifier of the Portfolio to add items to
-     * @param orderBookIdentifier Identifier of the OrderBook to add items for
+     * @param coinId Identifier of the CoinId to add items for
      * @param amountOfItemToAdd   AMount of items to add
      */
-    public AddAmountToPortfolioCommand(PortfolioId portfolioIdentifier, OrderBookId orderBookIdentifier,
+    public AddAmountToPortfolioCommand(PortfolioId portfolioIdentifier,
+                                       CoinId coinId,
                                        BigMoney amountOfItemToAdd) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.orderBookIdentifier = orderBookIdentifier;
+        this.coinId = coinId;
         this.amountOfItemToAdd = amountOfItemToAdd;
     }
 
@@ -51,8 +53,8 @@ public class AddAmountToPortfolioCommand {
         return amountOfItemToAdd;
     }
 
-    public OrderBookId getOrderBookIdentifier() {
-        return orderBookIdentifier;
+    public CoinId getCoinId() {
+        return coinId;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -64,7 +66,7 @@ public class AddAmountToPortfolioCommand {
         return "AddAmountToPortfolioCommand{" +
                 "amountOfItemToAdd=" + amountOfItemToAdd +
                 ", portfolioIdentifier=" + portfolioIdentifier +
-                ", orderBookIdentifier=" + orderBookIdentifier +
+                ", coinId=" + coinId +
                 '}';
     }
 }

@@ -79,7 +79,7 @@ public class BuyTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published()
                 .whenAggregate(transactionIdentifier).publishes(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
@@ -94,7 +94,7 @@ public class BuyTradeManagerSagaTest {
     public void testHandle_MoneyIsReserved() {
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
@@ -111,7 +111,7 @@ public class BuyTradeManagerSagaTest {
     public void testHandle_NotEnoughMoneyToReserved() {
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
@@ -126,7 +126,7 @@ public class BuyTradeManagerSagaTest {
     public void testHandle_TransactionConfirmed() {
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
@@ -147,7 +147,7 @@ public class BuyTradeManagerSagaTest {
     @Test
     public void testHandle_TransactionCancelled() {
         fixture.givenAggregate(transactionIdentifier).published(new BuyTransactionStartedEvent(transactionIdentifier,
-                orderbookIdentifier,
+                coinId, orderbookIdentifier,
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
@@ -173,7 +173,7 @@ public class BuyTradeManagerSagaTest {
         final Date tradeTime = currentTime();
 
         fixture.givenAggregate(transactionIdentifier).published(new BuyTransactionStartedEvent(transactionIdentifier,
-                orderbookIdentifier,
+                coinId, orderbookIdentifier,
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
@@ -212,7 +212,7 @@ public class BuyTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(
                         transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
@@ -234,7 +234,7 @@ public class BuyTradeManagerSagaTest {
                 .whenAggregate(transactionIdentifier).publishes(
                 new BuyTransactionExecutedEvent(
                         transactionIdentifier,
-                        TOTAL_ITEMS,
+                        coinId, TOTAL_ITEMS,
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, price)))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(
@@ -256,7 +256,7 @@ public class BuyTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(
                         transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
@@ -281,7 +281,7 @@ public class BuyTradeManagerSagaTest {
                 .whenAggregate(transactionIdentifier).publishes(
                 new BuyTransactionPartiallyExecutedEvent(
                         transactionIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                        coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99))))
                 .expectActiveSagas(1)
@@ -305,7 +305,7 @@ public class BuyTradeManagerSagaTest {
 
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        orderbookIdentifier,
+                        coinId, orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
@@ -329,7 +329,7 @@ public class BuyTradeManagerSagaTest {
                 .whenAggregate(transactionIdentifier).publishes(
                 new BuyTransactionPartiallyExecutedEvent(
                         transactionIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                        coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99))))
                 .expectActiveSagas(1)

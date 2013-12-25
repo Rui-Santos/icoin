@@ -71,7 +71,7 @@ public class TransactionEventListenerTest {
     @Test
     public void handleBuyTransactionStartedEvent() {
         BuyTransactionStartedEvent event = new BuyTransactionStartedEvent(transactionIdentifier,
-                orderBookIdentifier,
+                coinId, orderBookIdentifier,
                 portfolioIdentifier,
                 DEFAULT_TOTAL_ITEMS,
                 DEFAULT_ITEM_PRICE);
@@ -91,7 +91,7 @@ public class TransactionEventListenerTest {
     @Test
     public void handleSellTransactionStartedEvent() {
         SellTransactionStartedEvent event = new SellTransactionStartedEvent(transactionIdentifier,
-                orderBookIdentifier,
+                coinId, orderBookIdentifier,
                 portfolioIdentifier,
                 DEFAULT_TOTAL_ITEMS,
                 DEFAULT_ITEM_PRICE);

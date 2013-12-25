@@ -132,7 +132,7 @@ public class OrderBookCommandHandler {
 //    @CommandHandler
 //    public void handleRefreshOrderBook(CreateOrderBookCommand command) {
 //        OrderBook orderBook =
-//                new OrderBook(command.getOrderBookIdentifier(), command.getCurrencyPair());
+//                new OrderBook(command.getCoinId(), command.getCurrencyPair());
 //        repository.add(orderBook);
 //    }
 

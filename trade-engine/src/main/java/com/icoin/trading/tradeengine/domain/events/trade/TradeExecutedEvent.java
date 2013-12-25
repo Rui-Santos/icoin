@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.trade;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.TradeType;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -40,31 +41,56 @@ public class TradeExecutedEvent implements Serializable {
     private final BigMoney tradeAmount;
     private final BigMoney tradedPrice;
     private final String buyOrderId;
+    private final CoinId coinId;
     private final String sellOrderId;
     private final TransactionId buyTransactionId;
     private final TransactionId sellTransactionId;
     private final OrderBookId orderBookId;
     private final Date tradeTime;
     private final TradeType tradeType;
+    private final BigMoney buyCommission ;
+    private final BigMoney sellCommission ;
 
     public TradeExecutedEvent(OrderBookId orderBookId,
+                              CoinId coinId,
                               BigMoney tradeAmount,
                               BigMoney tradedPrice,
                               String buyOrderId,
                               String sellOrderId,
+                              BigMoney buyCommission,
+                              BigMoney sellCommission,
                               TransactionId buyTransactionId,
                               TransactionId sellTransactionId,
                               Date tradeTime,
                               TradeType tradeType) {
+        this.orderBookId = orderBookId;
+        this.coinId = coinId;
         this.tradeAmount = tradeAmount;
         this.tradedPrice = tradedPrice;
         this.buyOrderId = buyOrderId;
         this.sellOrderId = sellOrderId;
+        this.buyCommission = buyCommission;
+        this.sellCommission = sellCommission;
         this.sellTransactionId = sellTransactionId;
         this.buyTransactionId = buyTransactionId;
-        this.orderBookId = orderBookId;
         this.tradeTime = tradeTime;
         this.tradeType = tradeType;
+    }
+
+    public BigMoney getBuyCommission() {
+        return buyCommission;
+    }
+
+    public BigMoney getSellCommission() {
+        return sellCommission;
+    }
+
+    public CoinId getCoinId() {
+        return coinId;
+    }
+
+    public OrderBookId getOrderBookId() {
+        return orderBookId;
     }
 
     public OrderBookId getOrderBookIdentifier() {
@@ -124,6 +150,7 @@ public class TradeExecutedEvent implements Serializable {
                 .append(sellTransactionId, other.sellTransactionId)
                 .append(buyTransactionId, other.buyTransactionId)
                 .append(orderBookId, other.orderBookId)
+                .append(coinId, other.coinId)
                 .append(tradeType, other.tradeType)
                 .build();
 
@@ -140,6 +167,7 @@ public class TradeExecutedEvent implements Serializable {
                 .append(sellTransactionId)
                 .append(buyTransactionId)
                 .append(orderBookId)
+                .append(coinId)
                 .build();
     }
 }

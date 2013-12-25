@@ -149,7 +149,7 @@ public class TradeController {
 
             final TransactionId transactionId = new TransactionId();
             logger.info("placing a sell transaction {} with price {}, amount {}: {}.", transactionId, price, btcAmount, order);
-            tradeServiceFacade.sellOrder(transactionId, orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
+            tradeServiceFacade.sellOrder(transactionId, coinId, currencyPair, orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
             logger.info("Sell order {} dispatched... ", order);
 
             initPage(coinId, orderBookEntry, portfolioEntry, model);
@@ -198,7 +198,7 @@ public class TradeController {
 
             final TransactionId transactionId = new TransactionId();
             logger.info("placing a buy transaction {} with price {}, amount {}, total money {}: {}.", transactionId, price, btcAmount, totalMoney, order);
-            tradeServiceFacade.buyOrder(transactionId, orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
+            tradeServiceFacade.buyOrder(transactionId, coinId, currencyPair, orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
             logger.info("Buy order {} dispatched... ", order);
 
             initPage(coinId, orderBookEntry, portfolioEntry, model);

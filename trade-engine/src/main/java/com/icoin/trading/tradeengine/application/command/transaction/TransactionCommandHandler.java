@@ -18,15 +18,24 @@ package com.icoin.trading.tradeengine.application.command.transaction;
 
 import com.icoin.trading.tradeengine.application.Callback;
 import com.icoin.trading.tradeengine.application.SynchronizedOnIdentifierHandler;
+import com.icoin.trading.tradeengine.application.command.transaction.command.AbstractStartTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.CancelTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ConfirmTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
+import com.icoin.trading.tradeengine.domain.model.commission.Commission;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
+import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.transaction.Transaction;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
+import org.joda.money.BigMoney;
+import org.joda.money.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -38,31 +47,71 @@ import org.springframework.stereotype.Component;
 public class TransactionCommandHandler {
     private final SynchronizedOnIdentifierHandler synchronizedOnIdentifierHandler = new SynchronizedOnIdentifierHandler();
     private Repository<Transaction> repository;
+    private CommissionPolicyFactory commissionPolicyFactory;
 
     @CommandHandler
     public void handleStartBuyTransactionCommand(StartBuyTransactionCommand command) {
+        final BuyOrder order = toOrder(command);
+
+        CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(order);
+        Commission commission = commissionPolicy.calculateBuyCommission(order);
+
+        final BigMoney totalCommission = commission.getBigMoneyCommission();
+
         Transaction transaction =
                 new Transaction(
                         command.getTransactionIdentifier(),
+                        command.getCoinId(),
                         TransactionType.BUY,
-                        command.getOrderbookIdentifier(),
+                        command.getOrderBookIdentifier(),
                         command.getPortfolioIdentifier(),
                         command.getTradeAmount(),
-                        command.getItemPrice());
+                        command.getItemPrice(),
+                        totalCommission);
         repository.add(transaction);
     }
 
     @CommandHandler
     public void handleStartSellTransactionCommand(StartSellTransactionCommand command) {
+        final SellOrder order = toOrder(command);
+
+        CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(order);
+        Commission commission = commissionPolicy.calculateSellCommission(order);
+
+        final BigMoney totalCommission = commission.getBigMoneyCommission();
+
         Transaction transaction =
                 new Transaction(
                         command.getTransactionIdentifier(),
+                        command.getCoinId(),
                         TransactionType.SELL,
-                        command.getOrderbookIdentifier(),
+                        command.getOrderBookIdentifier(),
                         command.getPortfolioIdentifier(),
                         command.getTradeAmount(),
-                        command.getItemPrice());
+                        command.getItemPrice(),
+                        totalCommission);
         repository.add(transaction);
+    }
+
+    private BuyOrder toOrder(StartBuyTransactionCommand command) {
+        final BuyOrder order = new BuyOrder();
+        fillOrder(command, order);
+        return order;
+    }
+
+    private SellOrder toOrder(StartSellTransactionCommand command) {
+        final SellOrder order = new SellOrder();
+        fillOrder(command, order);
+        return order;
+    }
+
+    private void fillOrder(AbstractStartTransactionCommand command, AbstractOrder order) {
+        order.setItemRemaining(command.getTradeAmount());
+        order.setItemPrice(command.getItemPrice());
+        order.setPortfolioId(command.getPortfolioIdentifier());
+        order.setOrderBookId(command.getOrderBookIdentifier());
+        order.setCurrencyPair(command.getCurrencyPair());
+        order.setCoinId(command.getCoinId());
     }
 
     @CommandHandler
@@ -115,7 +164,7 @@ public class TransactionCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Transaction transaction = repository.load(command.getTransactionIdentifier());
-                        transaction.execute(command.getAmountOfItems(), command.getItemPrice());
+                        transaction.execute(command.getAmountOfItems(), command.getItemPrice(), command.getCommission());
                         return null;
                     }
                 }
@@ -126,5 +175,10 @@ public class TransactionCommandHandler {
     @Qualifier("transactionRepository")
     public void setRepository(Repository<Transaction> repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    public void setCommissionPolicyFactory(CommissionPolicyFactory commissionPolicyFactory) {
+        this.commissionPolicyFactory = commissionPolicyFactory;
     }
 }

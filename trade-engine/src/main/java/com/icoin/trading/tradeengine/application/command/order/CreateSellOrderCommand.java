@@ -30,11 +30,16 @@ import java.util.Date;
  *
  * @author Allard Buijze
  */
-public class CreateSellOrderCommand extends AbstractOrderCommand {
+public class CreateSellOrderCommand extends CreateOrderCommand {
 
-    public CreateSellOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
-                                  TransactionId transactionId, BigMoney tradeAmount, BigMoney itemPrice,
+    public CreateSellOrderCommand(OrderId orderId,
+                                  PortfolioId portfolioId,
+                                  OrderBookId orderBookId,
+                                  TransactionId transactionId,
+                                  BigMoney tradeCount,
+                                  BigMoney itemPrice,
+                                  BigMoney totalCommission,
                                   Date placeDate) {
-        super(orderId, portfolioId, orderBookId, transactionId, tradeAmount, itemPrice, placeDate);
+        super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice, totalCommission, placeDate);
     }
 }

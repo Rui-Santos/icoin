@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -27,16 +28,16 @@ import org.joda.money.BigMoney;
  */
 public class ItemReservationCancelledForPortfolioEvent {
     private PortfolioId portfolioIdentifier;
-    private OrderBookId orderBookIdentifier;
+    private CoinId coinId;
     private TransactionId transactionIdentifier;
     private BigMoney amountOfCancelledAmount;
 
     public ItemReservationCancelledForPortfolioEvent(PortfolioId portfolioIdentifier,
-                                                     OrderBookId orderBookIdentifier,
+                                                     CoinId coinId,
                                                      TransactionId transactionIdentifier,
                                                      BigMoney amountOfCancelledAmount) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.orderBookIdentifier = orderBookIdentifier;
+        this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfCancelledAmount = amountOfCancelledAmount;
     }
@@ -45,8 +46,8 @@ public class ItemReservationCancelledForPortfolioEvent {
         return amountOfCancelledAmount;
     }
 
-    public OrderBookId getOrderBookIdentifier() {
-        return orderBookIdentifier;
+    public CoinId getCoinId() {
+        return coinId;
     }
 
     public PortfolioId getPortfolioIdentifier() {

@@ -60,7 +60,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.reserveItems(command.getOrderBookIdentifier(),
+                        portfolio.reserveItems(command.getCoinId(),
                                 command.getTransactionIdentifier(),
                                 command.getAmountOfItemToReserve());
                         return null;
@@ -81,7 +81,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.addItems(command.getOrderBookIdentifier(), command.getAmountOfItemToAdd());
+                        portfolio.addItems(command.getCoinId(), command.getAmountOfItemToAdd());
                         return null;
                     }
                 }
@@ -101,7 +101,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.confirmReservation(command.getOrderBookIdentifier(),
+                        portfolio.confirmReservation(command.getCoinId(),
                                 command.getTransactionIdentifier(),
                                 command.getAmountOfItemToConfirm());
                         return null;
@@ -122,7 +122,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.cancelReservation(command.getOrderBookIdentifier(),
+                        portfolio.cancelReservation(command.getCoinId(),
                                 command.getTransactionIdentifier(),
                                 command.getAmountOfItemsToCancel());
                         return null;

@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.domain.events.transaction;
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -26,25 +27,39 @@ import org.joda.money.BigMoney;
  */
 public abstract class AbstractTransactionStartedEvent {
     private TransactionId transactionIdentifier;
-    private OrderBookId orderbookIdentifier;
+    private CoinId coinId;
+    private OrderBookId orderBookIdentifier;
     private PortfolioId portfolioIdentifier;
     private BigMoney totalItem;
     private BigMoney pricePerItem;
+    private BigMoney totalCommission;
 
     public AbstractTransactionStartedEvent(TransactionId transactionIdentifier,
-                                           OrderBookId orderbookIdentifier,
+                                           CoinId coinId,
+                                           OrderBookId orderBookIdentifier,
                                            PortfolioId portfolioIdentifier,
                                            BigMoney totalItem,
-                                           BigMoney pricePerItem) {
+                                           BigMoney pricePerItem,
+                                           BigMoney totalCommission) {
         this.transactionIdentifier = transactionIdentifier;
-        this.orderbookIdentifier = orderbookIdentifier;
+        this.coinId = coinId;
+        this.orderBookIdentifier = orderBookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
         this.totalItem = totalItem;
         this.pricePerItem = pricePerItem;
+        this.totalCommission = totalCommission;
     }
 
-    public OrderBookId getOrderbookIdentifier() {
-        return orderbookIdentifier;
+    public CoinId getCoinId() {
+        return coinId;
+    }
+
+    public OrderBookId getOrderBookIdentifier() {
+        return orderBookIdentifier;
+    }
+
+    public BigMoney getTotalCommission() {
+        return totalCommission;
     }
 
     public PortfolioId getPortfolioIdentifier() {

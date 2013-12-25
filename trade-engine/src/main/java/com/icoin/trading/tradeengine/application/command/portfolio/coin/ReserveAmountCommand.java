@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -29,17 +30,20 @@ public class ReserveAmountCommand {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    private OrderBookId orderBookIdentifier;
+    private CoinId coinId;
     private BigMoney amountOfItemToReserve;
+    private BigMoney commission;
 
     public ReserveAmountCommand(PortfolioId portfolioIdentifier,
-                                OrderBookId orderBookIdentifier,
+                                CoinId coinId,
                                 TransactionId transactionIdentifier,
-                                BigMoney amountOfItemToReserve) {
+                                BigMoney amountOfItemToReserve,
+                                BigMoney commission) {
         this.portfolioIdentifier = portfolioIdentifier;
+        this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItemToReserve = amountOfItemToReserve;
-        this.orderBookIdentifier = orderBookIdentifier;
+        this.commission = commission;
     }
 
     public BigMoney getAmountOfItemToReserve() {
@@ -50,11 +54,15 @@ public class ReserveAmountCommand {
         return portfolioIdentifier;
     }
 
-    public OrderBookId getOrderBookIdentifier() {
-        return orderBookIdentifier;
+    public CoinId getCoinId() {
+        return coinId;
     }
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public BigMoney getCommission() {
+        return commission;
     }
 }

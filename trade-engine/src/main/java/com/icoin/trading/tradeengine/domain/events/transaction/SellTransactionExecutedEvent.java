@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.transaction;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
@@ -25,7 +26,11 @@ import org.joda.money.BigMoney;
  */
 public class SellTransactionExecutedEvent extends AbstractTransactionExecutedEvent {
 
-    public SellTransactionExecutedEvent(TransactionId transactionIdentifier, BigMoney amountOfItems, BigMoney itemPrice) {
-        super(transactionIdentifier, amountOfItems, itemPrice);
+    public SellTransactionExecutedEvent(TransactionId transactionIdentifier,
+                                        CoinId coinId,
+                                        BigMoney amountOfItem,
+                                        BigMoney itemPrice,
+                                        BigMoney commission) {
+        super(transactionIdentifier,coinId, amountOfItem, itemPrice, commission);
     }
 }

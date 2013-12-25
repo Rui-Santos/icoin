@@ -1,6 +1,9 @@
 package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.icoin.trading.tradeengine.application.command.order.ExecuteBuyOrderCommand;
+import com.icoin.trading.tradeengine.domain.model.commission.Commission;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
@@ -30,7 +33,6 @@ import static org.joda.money.MoneyUtils.min;
 public class BuyOrderExecutor {
     private static Logger logger = LoggerFactory.getLogger(BuyOrderExecutor.class);
     private OrderExecutorHelper orderExecutorHelper;
-
     private Repository<OrderBook> orderBookRepository;
 
     @SuppressWarnings("unused")
@@ -83,13 +85,19 @@ public class BuyOrderExecutor {
                 BigMoney matchedTradePrice = sellOrder.getItemPrice();
                 BigMoney matchedTradeAmount = min(sellOrder.getItemRemaining(), buyOrder.getItemRemaining());
 
+                BigMoney buyCommission = orderExecutorHelper.calcExecutedBuyCommission(buyOrder, matchedTradePrice, matchedTradeAmount);
+                BigMoney sellCommission = orderExecutorHelper.calcExecutedSellCommission(sellOrder, matchedTradePrice, matchedTradeAmount);
+
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Executing orders with amount {}, price {}: highest buying order {}, lowest selling order {}",
-                            matchedTradeAmount, matchedTradePrice, sellOrder, buyCommand);
-                    orderBook.executeBuying(matchedTradeAmount,
+                    logger.debug("Executing orders with amount {}, price {}, buy commission {}, sell commission {}: highest buying order {}, lowest selling order {}",
+                            matchedTradeAmount, matchedTradePrice, buyCommission, sellCommission, sellOrder, buyOrder);
+                    orderBook.executeBuying(
+                            matchedTradeAmount,
                             matchedTradePrice,
                             buyOrder.getPrimaryKey(),
                             sellOrder.getPrimaryKey(),
+                            buyCommission,
+                            sellCommission,
                             buyOrder.getTransactionId(),
                             sellOrder.getTransactionId(),
                             buyCommand.getPlaceDate());
@@ -98,7 +106,9 @@ public class BuyOrderExecutor {
                 orderExecutorHelper.recordTraded(
                         buyOrder,
                         sellOrder,
-                        matchedTradeAmount,
+                        buyCommission,
+                        sellCommission,
+                        matchedTradeAmount, matchedTradeAmount,
                         buyCommand.getPlaceDate());
 
                 if (buyOrder.getItemRemaining().toMoney(RoundingMode.HALF_EVEN).isNegativeOrZero()) {
@@ -110,6 +120,8 @@ public class BuyOrderExecutor {
 
         orderExecutorHelper.refresh(orderBook);
     }
+
+
 
     @Autowired
     public void setOrderExecutorHelper(OrderExecutorHelper orderExecutorHelper) {

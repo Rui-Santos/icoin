@@ -41,6 +41,10 @@ public class Commission extends ValueObjectSupport<Commission> {
         return commission;
     }
 
+    public BigMoney getBigMoneyCommission() {
+        return commission.toBigMoney();
+    }
+
     public String getDescription() {
         return description;
     }

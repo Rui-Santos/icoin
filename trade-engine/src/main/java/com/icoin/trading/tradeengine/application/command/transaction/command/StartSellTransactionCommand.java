@@ -17,6 +17,8 @@
 package com.icoin.trading.tradeengine.application.command.transaction.command;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -28,10 +30,12 @@ import org.joda.money.BigMoney;
 public class StartSellTransactionCommand extends AbstractStartTransactionCommand<StartBuyTransactionCommand> {
 
     public StartSellTransactionCommand(TransactionId transactionId,
-                                       OrderBookId orderbookIdentifier,
+                                       CoinId coinId,
+                                       CurrencyPair currencyPair,
+                                       OrderBookId orderBookIdentifier,
                                        PortfolioId portfolioIdentifier,
                                        BigMoney tradeAmount,
                                        BigMoney itemPrice) {
-        super(transactionId, orderbookIdentifier, portfolioIdentifier, tradeAmount, itemPrice);
+        super(transactionId, coinId, currencyPair, orderBookIdentifier, portfolioIdentifier, tradeAmount, itemPrice);
     }
 }

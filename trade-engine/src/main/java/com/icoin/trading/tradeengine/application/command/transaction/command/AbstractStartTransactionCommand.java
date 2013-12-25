@@ -17,6 +17,8 @@
 package com.icoin.trading.tradeengine.application.command.transaction.command;
 
 import com.homhon.base.command.CommandSupport;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -28,26 +30,39 @@ import org.joda.money.BigMoney;
 public abstract class AbstractStartTransactionCommand<T extends AbstractStartTransactionCommand> extends CommandSupport<T>{
 
     private TransactionId transactionId;
-    private OrderBookId orderbookIdentifier;
+    private CoinId coinId;
+    private CurrencyPair currencyPair;
+    private OrderBookId orderBookIdentifier;
     private PortfolioId portfolioIdentifier;
     private BigMoney tradeAmount;
     private BigMoney itemPrice;
 
-    public AbstractStartTransactionCommand(TransactionId transactionId, OrderBookId orderbookIdentifier,
-                                           PortfolioId portfolioIdentifier, BigMoney tradeAmount, BigMoney itemPrice) {
+    public AbstractStartTransactionCommand(TransactionId transactionId,
+                                           CoinId coinId,
+                                           CurrencyPair currencyPair,
+                                           OrderBookId orderBookIdentifier,
+                                           PortfolioId portfolioIdentifier,
+                                           BigMoney tradeAmount,
+                                           BigMoney itemPrice) {
         this.transactionId = transactionId;
-        this.itemPrice = itemPrice;
-        this.orderbookIdentifier = orderbookIdentifier;
+        this.coinId = coinId;
+        this.currencyPair = currencyPair;
+        this.orderBookIdentifier = orderBookIdentifier;
         this.portfolioIdentifier = portfolioIdentifier;
         this.tradeAmount = tradeAmount;
+        this.itemPrice = itemPrice;
+    }
+
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
     }
 
     public BigMoney getItemPrice() {
         return itemPrice;
     }
 
-    public OrderBookId getOrderbookIdentifier() {
-        return orderbookIdentifier;
+    public OrderBookId getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -60,5 +75,13 @@ public abstract class AbstractStartTransactionCommand<T extends AbstractStartTra
 
     public BigMoney getTradeAmount() {
         return tradeAmount;
+    }
+
+    public CoinId getCoinId() {
+        return coinId;
+    }
+
+    public TransactionId getTransactionId() {
+        return transactionId;
     }
 }

@@ -23,6 +23,7 @@ import com.icoin.trading.tradeengine.domain.events.order.RefreshedHighestBuyPric
 import com.icoin.trading.tradeengine.domain.events.order.RefreshedLowestSellPriceEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -135,14 +136,19 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                                BigMoney matchedTradePrice,
                                String buyOrderId,
                                String sellOrderId,
+                               BigMoney buyCommission,
+                               BigMoney sellCommission,
                                TransactionId buyTransactionId,
                                TransactionId sellTransactionId,
                                Date tradedDate) {
         apply(new TradeExecutedEvent(orderBookId,
+                new CoinId(currencyPair.getBaseCurrency()),
                 matchedTradeAmount,
                 matchedTradePrice,
                 buyOrderId,
                 sellOrderId,
+                buyCommission,
+                sellCommission,
                 buyTransactionId,
                 sellTransactionId,
                 tradedDate,
@@ -153,14 +159,20 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                               BigMoney matchedTradePrice,
                               String buyOrderId,
                               String sellOrderId,
+                              BigMoney buyCommission,
+                              BigMoney sellCommission,
                               TransactionId buyTransactionId,
                               TransactionId sellTransactionId,
                               Date tradedDate) {
-        apply(new TradeExecutedEvent(orderBookId,
+        apply(new TradeExecutedEvent(
+                orderBookId,
+                new CoinId(currencyPair.getBaseCurrency()),
                 matchedTradeAmount,
                 matchedTradePrice,
                 buyOrderId,
                 sellOrderId,
+                buyCommission,
+                sellCommission,
                 buyTransactionId,
                 sellTransactionId,
                 tradedDate,

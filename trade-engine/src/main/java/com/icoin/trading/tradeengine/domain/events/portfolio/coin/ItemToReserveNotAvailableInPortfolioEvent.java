@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -25,19 +26,19 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
  */
 public class ItemToReserveNotAvailableInPortfolioEvent {
     private PortfolioId portfolioIdentifier;
-    private OrderBookId orderBookIdentifier;
+    private CoinId coinId;
     private TransactionId transactionIdentifier;
 
     public ItemToReserveNotAvailableInPortfolioEvent(PortfolioId portfolioIdentifier,
-                                                     OrderBookId orderBookIdentifier,
+                                                     CoinId coinId,
                                                      TransactionId transactionIdentifier) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.orderBookIdentifier = orderBookIdentifier;
+        this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
     }
 
-    public OrderBookId getOrderBookIdentifier() {
-        return orderBookIdentifier;
+    public CoinId getCoinId() {
+        return coinId;
     }
 
     public PortfolioId getPortfolioIdentifier() {

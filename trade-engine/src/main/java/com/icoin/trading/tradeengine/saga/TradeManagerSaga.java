@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.saga;
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -31,12 +32,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
 
     private transient CommandBus commandBus;
-    private transient CommissionPolicyFactory commissionPolicyFactory;
+    private TransactionId transactionIdentifier;
+    private OrderBookId orderBookIdentifier;
+    private PortfolioId portfolioIdentifier;
+    private CoinId coinId;
     private BigMoney totalItems;
     private BigMoney pricePerItem;
-    private TransactionId transactionIdentifier;
-    private OrderBookId orderbookIdentifier;
-    private PortfolioId portfolioIdentifier;
+    private BigMoney totalCommission;
 
     /*-------------------------------------------------------------------------------------------*/
     /* Getters and setters                                                                       */
@@ -46,25 +48,24 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
         this.commandBus = commandBus;
     }
 
-    @Autowired
-    public void setCommissionPolicyFactory(CommissionPolicyFactory commissionPolicyFactory) {
-        this.commissionPolicyFactory = commissionPolicyFactory;
-    }
-
     protected CommandBus getCommandBus() {
         return commandBus;
     }
 
-    protected CommissionPolicyFactory getCommissionPolicyFactory() {
-        return commissionPolicyFactory;
+    protected OrderBookId getOrderBookIdentifier() {
+        return orderBookIdentifier;
     }
 
-    protected OrderBookId getOrderbookIdentifier() {
-        return orderbookIdentifier;
+    protected void setOrderBookIdentifier(OrderBookId orderBookIdentifier) {
+        this.orderBookIdentifier = orderBookIdentifier;
     }
 
-    protected void setOrderbookIdentifier(OrderBookId orderbookIdentifier) {
-        this.orderbookIdentifier = orderbookIdentifier;
+    protected CoinId getCoinId() {
+        return coinId;
+    }
+
+    protected void setCoinId(CoinId coinId) {
+        this.coinId = coinId;
     }
 
     protected PortfolioId getPortfolioIdentifier() {
@@ -85,6 +86,14 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
 
     protected BigMoney getTotalItems() {
         return totalItems;
+    }
+
+    protected BigMoney getTotalCommission() {
+        return totalCommission;
+    }
+
+    protected void setTotalCommission(BigMoney totalCommission) {
+        this.totalCommission = totalCommission;
     }
 
     protected void setTotalItems(BigMoney totalItems) {

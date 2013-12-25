@@ -37,20 +37,41 @@ public interface TradeServiceFacade {
 
     List<TradeExecutedEntry> findExecutedTradesByOrderBookIdentifier(String orderBookIdentifier);
 
-    List<OrderEntry> findUserActiveOrders(String userId, String orderBookId);
+    List<OrderEntry> findUserActiveOrders(String userId,
+                                          String orderBookId);
 
-    List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate);
+    List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier,
+                                                  OrderType type,
+                                                  Date toDate);
 
     List<OrderEntry> findOrderForOrderBook(String orderBookIdentifier,
                                            OrderType type,
                                            OrderStatus orderStatus);
 
-    BuyOrder prepareBuyOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry);
+    BuyOrder prepareBuyOrder(String coinId,
+                             CurrencyPair currencyPair,
+                             OrderBookEntry orderBookEntry,
+                             PortfolioEntry portfolioEntry);
 
-    SellOrder prepareSellOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry);
+    SellOrder prepareSellOrder(String coinId,
+                               CurrencyPair currencyPair,
+                               OrderBookEntry orderBookEntry,
+                               PortfolioEntry portfolioEntry);
 
-    void sellOrder(TransactionId transactionId, String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price);
+    void sellOrder(TransactionId transactionId,
+                   String coinId,
+                   CurrencyPair currencyPair,
+                   String orderBookId,
+                   String portfolioId,
+                   BigMoney tradeAmount,
+                   BigMoney price);
 
 
-    void buyOrder(TransactionId transactionId, String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price);
+    void buyOrder(TransactionId transactionId,
+                  String coinId,
+                  CurrencyPair currencyPair,
+                  String orderBookId,
+                  String portfolioId,
+                  BigMoney tradeAmount,
+                  BigMoney price);
 }

@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.transaction;
 
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
@@ -25,22 +26,32 @@ import org.joda.money.BigMoney;
  */
 public abstract class AbstractTransactionPartiallyExecutedEvent {
     private TransactionId transactionIdentifier;
+    private CoinId coinId;
     private BigMoney amountOfExecutedItem;
     private BigMoney totalOfExecutedItem;
     private BigMoney itemPrice;
+    private BigMoney commission;
 
     public AbstractTransactionPartiallyExecutedEvent(TransactionId transactionIdentifier,
+                                                     CoinId coinId,
                                                      BigMoney amountOfExecutedItem,
                                                      BigMoney totalOfExecutedItem,
-                                                     BigMoney itemPrice) {
+                                                     BigMoney itemPrice,
+                                                     BigMoney commission) {
         this.transactionIdentifier = transactionIdentifier;
+        this.coinId = coinId;
         this.amountOfExecutedItem = amountOfExecutedItem;
         this.totalOfExecutedItem = totalOfExecutedItem;
         this.itemPrice = itemPrice;
+        this.commission = commission;
     }
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public CoinId getCoinId() {
+        return coinId;
     }
 
     public BigMoney getAmountOfExecutedItem() {
@@ -53,5 +64,9 @@ public abstract class AbstractTransactionPartiallyExecutedEvent {
 
     public BigMoney getTotalOfExecutedItem() {
         return totalOfExecutedItem;
+    }
+
+    public BigMoney getCommission() {
+        return commission;
     }
 }

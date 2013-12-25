@@ -1,6 +1,7 @@
 package com.icoin.trading.tradeengine.domain.model.order;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -33,8 +34,10 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     private BigMoney tradeAmount;
     private PortfolioId portfolioId;
     private BigMoney itemRemaining;
+    private BigMoney totalCommission;
     private Date placeDate;
     private CurrencyPair currencyPair;
+    private CoinId coinId;
     private final OrderType orderType;
     private OrderBookId orderBookId;
     private Date completeDate;
@@ -66,6 +69,14 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
 
     public void setTransactionId(TransactionId transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public CoinId getCoinId() {
+        return coinId;
+    }
+
+    public void setCoinId(CoinId coinId) {
+        this.coinId = coinId;
     }
 
     public BigMoney getItemPrice() {
@@ -118,12 +129,12 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         return currencyPair;
     }
 
-    public CurrencyUnit getBaseCurrency(){
+    public CurrencyUnit getBaseCurrency() {
         return currencyPair.getBaseCurrencyUnit();
     }
 
 
-    public CurrencyUnit getCounterCurrency(){
+    public CurrencyUnit getCounterCurrency() {
         return currencyPair.getCounterCurrencyUnit();
     }
 
@@ -148,6 +159,13 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         this.lastTradedTime = lastTradedTime;
     }
 
+    public BigMoney getTotalCommission() {
+        return totalCommission;
+    }
+
+    public void setTotalCommission(BigMoney totalCommission) {
+        this.totalCommission = totalCommission;
+    }
 
     public Date getLastTradedTime() {
         return lastTradedTime;
@@ -163,9 +181,15 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         this.orderStatus = OrderStatus.DONE;
     }
 
-    public void recordTraded(BigMoney tradeAmount, Date lastTradedTime) {
+    public void recordTraded(BigMoney tradeAmount, BigMoney commission, Date lastTradedTime) {
         this.itemRemaining =
                 itemRemaining.minus(tradeAmount);
+        if (commission == null) {
+            totalCommission = BigMoney.zero(commission.getCurrencyUnit());
+        }
+
+        totalCommission = totalCommission.plus(commission);
+
 //                itemRemaining.minus(Money.of(CurrencyUnit.getInstance(Currencies.BTC), tradeAmount)) - tradeAmount.multiply(SCALE).longValue();
         this.lastTradedTime = lastTradedTime;
 

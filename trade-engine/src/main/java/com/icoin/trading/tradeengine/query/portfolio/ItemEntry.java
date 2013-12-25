@@ -52,7 +52,7 @@ public class ItemEntry extends ValueObjectSupport<ItemEntry> {
         this.coinName = coinName;
     }
 
-//    public String getOrderBookIdentifier() {
+//    public String getCoinId() {
 //        return orderBookIdentifier;
 //    }
 //

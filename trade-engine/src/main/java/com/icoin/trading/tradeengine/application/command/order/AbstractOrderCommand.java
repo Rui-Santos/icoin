@@ -41,11 +41,16 @@ public abstract class AbstractOrderCommand<T extends AbstractOrderCommand> exten
     private BigMoney tradeAmount;
     //    @DecimalMin("0.00000001")
     private BigMoney itemPrice;
+
     private OrderId orderId;
     private Date placeDate;
 
-    protected AbstractOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
-                                   TransactionId transactionId, BigMoney tradeAmount, BigMoney itemPrice,
+    protected AbstractOrderCommand(OrderId orderId,
+                                   PortfolioId portfolioId,
+                                   OrderBookId orderBookId,
+                                   TransactionId transactionId,
+                                   BigMoney tradeAmount,
+                                   BigMoney itemPrice,
                                    Date placeDate) {
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;

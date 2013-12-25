@@ -149,82 +149,82 @@ public class CoinController {
         return "coin/sell";
     }
 
-    @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.POST)
-    public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult, Model model) {
-        if (!bindingResult.hasErrors()) {
-            OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
-            PortfolioEntry portfolioEntry = obtainPortfolioForUser();
+//    @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.POST)
+//    public String sell(@ModelAttribute("order") @Valid SellOrder order, BindingResult bindingResult, Model model) {
+//        if (!bindingResult.hasErrors()) {
+//            OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
+//            PortfolioEntry portfolioEntry = obtainPortfolioForUser();
+//
+//            final BigDecimal tradeAmount = order.getTradeAmount();
+//            final BigDecimal itemPrice = order.getItemPrice();
+//
+//            final Money price = Money.of(Constants.DEFAULT_CURRENCY_UNIT, itemPrice, RoundingMode.HALF_EVEN);
+//            final Money btcAmount = Money.of(Constants.CURRENCY_UNIT_BTC, tradeAmount, RoundingMode.HALF_EVEN);
+////            final Money totalMoney = price.convertedTo(price.getCurrencyUnit(), btcAmount.getAmount(), RoundingMode.HALF_EVEN);
+//
+//            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getPrimaryKey(), Constants.CURRENCY_UNIT_BTC).isLessThan(btcAmount)) {
+//                bindingResult.rejectValue("tradeAmount",
+//                        "error.order.sell.tomanyitems",
+//                        "Not enough items available to create sell order.");
+//                addPortfolioItemInfoToModel(order.getCoinId(), model);
+//                return "coin/sell";
+//            }
+//
+//            logger.info("placing a sell order with price {}, amount {}: {}.", price, btcAmount, order);
+//
+//            StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
+//                    new OrderBookId(bookEntry.getPrimaryKey()),
+//                    new PortfolioId(portfolioEntry.getIdentifier()),
+//                    btcAmount.toBigMoney(),
+//                    price.toBigMoney());
+//
+//            commandBus.dispatch(new GenericCommandMessage<StartSellTransactionCommand>(command));
+//            logger.info("Sell order {} dispatched... ", order);
+//
+//            return "redirect:/coin/{coinId}";
+//        }
+//
+//        addPortfolioItemInfoToModel(order.getCoinId(), model);
+//        return "coin/sell";
+//    }
 
-            final BigDecimal tradeAmount = order.getTradeAmount();
-            final BigDecimal itemPrice = order.getItemPrice();
-
-            final Money price = Money.of(Constants.DEFAULT_CURRENCY_UNIT, itemPrice, RoundingMode.HALF_EVEN);
-            final Money btcAmount = Money.of(Constants.CURRENCY_UNIT_BTC, tradeAmount, RoundingMode.HALF_EVEN);
-//            final Money totalMoney = price.convertedTo(price.getCurrencyUnit(), btcAmount.getAmount(), RoundingMode.HALF_EVEN);
-
-            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getPrimaryKey(), Constants.CURRENCY_UNIT_BTC).isLessThan(btcAmount)) {
-                bindingResult.rejectValue("tradeAmount",
-                        "error.order.sell.tomanyitems",
-                        "Not enough items available to create sell order.");
-                addPortfolioItemInfoToModel(order.getCoinId(), model);
-                return "coin/sell";
-            }
-
-            logger.info("placing a sell order with price {}, amount {}: {}.", price, btcAmount, order);
-
-            StartSellTransactionCommand command = new StartSellTransactionCommand(new TransactionId(),
-                    new OrderBookId(bookEntry.getPrimaryKey()),
-                    new PortfolioId(portfolioEntry.getIdentifier()),
-                    btcAmount.toBigMoney(),
-                    price.toBigMoney());
-
-            commandBus.dispatch(new GenericCommandMessage<StartSellTransactionCommand>(command));
-            logger.info("Sell order {} dispatched... ", order);
-
-            return "redirect:/coin/{coinId}";
-        }
-
-        addPortfolioItemInfoToModel(order.getCoinId(), model);
-        return "coin/sell";
-    }
-
-    @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.POST)
-    public String buy(@ModelAttribute("order") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
-        if (!bindingResult.hasErrors()) {
-
-            OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
-            PortfolioEntry portfolioEntry = obtainPortfolioForUser();
-
-            final BigDecimal tradeAmount = order.getTradeAmount();
-            final BigDecimal itemPrice = order.getItemPrice();
-
-            final Money price = Money.of(Constants.DEFAULT_CURRENCY_UNIT, itemPrice, RoundingMode.HALF_EVEN);
-            final Money btcAmount = Money.of(Constants.CURRENCY_UNIT_BTC, tradeAmount, RoundingMode.HALF_EVEN);
-            final Money totalMoney = btcAmount.convertedTo(price.getCurrencyUnit(), btcAmount.getAmount(), RoundingMode.HALF_EVEN);
-
-
-            if (portfolioEntry.obtainMoneyToSpend().isLessThan(totalMoney)) {
-                bindingResult.rejectValue("tradeAmount",
-                        "error.order.buy.notenoughmoney",
-                        "Not enough cash to spend to buy the items for the price you want");
-                addPortfolioMoneyInfoToModel(portfolioEntry, model);
-                return "coin/buy";
-            }
-
-            logger.info("placing a buy order with price {}, amount {}, total money {}: {}.", price, btcAmount, totalMoney, order);
-            StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
-                    new OrderBookId(bookEntry.getPrimaryKey()),
-                    new PortfolioId(portfolioEntry.getIdentifier()),
-                    btcAmount.toBigMoney(),
-                    price.toBigMoney());
-            commandBus.dispatch(new GenericCommandMessage<StartBuyTransactionCommand>(command));
-            logger.info("Buy order {} dispatched... ", order);
-            return "redirect:/coin/{coinId}";
-        }
-
-        addPortfolioMoneyInfoToModel(model);
-        return "coin/buy";
-    }
+//    @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.POST)
+//    public String buy(@ModelAttribute("order") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
+//        if (!bindingResult.hasErrors()) {
+//
+//            OrderBookEntry bookEntry = obtainOrderBookForCoin(order.getCoinId());
+//            PortfolioEntry portfolioEntry = obtainPortfolioForUser();
+//
+//            final BigDecimal tradeAmount = order.getTradeAmount();
+//            final BigDecimal itemPrice = order.getItemPrice();
+//
+//            final Money price = Money.of(Constants.DEFAULT_CURRENCY_UNIT, itemPrice, RoundingMode.HALF_EVEN);
+//            final Money btcAmount = Money.of(Constants.CURRENCY_UNIT_BTC, tradeAmount, RoundingMode.HALF_EVEN);
+//            final Money totalMoney = btcAmount.convertedTo(price.getCurrencyUnit(), btcAmount.getAmount(), RoundingMode.HALF_EVEN);
+//
+//
+//            if (portfolioEntry.obtainMoneyToSpend().isLessThan(totalMoney)) {
+//                bindingResult.rejectValue("tradeAmount",
+//                        "error.order.buy.notenoughmoney",
+//                        "Not enough cash to spend to buy the items for the price you want");
+//                addPortfolioMoneyInfoToModel(portfolioEntry, model);
+//                return "coin/buy";
+//            }
+//
+//            logger.info("placing a buy order with price {}, amount {}, total money {}: {}.", price, btcAmount, totalMoney, order);
+//            StartBuyTransactionCommand command = new StartBuyTransactionCommand(new TransactionId(),
+//                    new OrderBookId(bookEntry.getPrimaryKey()),
+//                    new PortfolioId(portfolioEntry.getIdentifier()),
+//                    btcAmount.toBigMoney(),
+//                    price.toBigMoney());
+//            commandBus.dispatch(new GenericCommandMessage<StartBuyTransactionCommand>(command));
+//            logger.info("Buy order {} dispatched... ", order);
+//            return "redirect:/coin/{coinId}";
+//        }
+//
+//        addPortfolioMoneyInfoToModel(model);
+//        return "coin/buy";
+//    }
 
     private void addPortfolioItemInfoToModel(String identifier, Model model) {
         PortfolioEntry portfolioEntry = obtainPortfolioForUser();

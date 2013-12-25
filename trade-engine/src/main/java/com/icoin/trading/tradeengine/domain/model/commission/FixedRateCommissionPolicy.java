@@ -15,6 +15,7 @@
  */
 package com.icoin.trading.tradeengine.domain.model.commission;
 
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import org.joda.money.BigMoney;
@@ -79,16 +80,34 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
     }
 
     @Override
+    public Commission calculateBuyCommission(BuyOrder order, BigMoney tradedAmount, BigMoney tradedPrice) {
+        notNull(order);
+        notNull(order.getCurrencyPair());
+        notNull(tradedAmount);
+        notNull(tradedPrice);
+        final BigMoney money = calcMoneyAmount(tradedAmount, tradedPrice, order.getCurrencyPair());
+        return calcCommission(money);
+    }
+
+    @Override
+    public Commission calculateSellCommission(SellOrder order, BigMoney tradedAmount, BigMoney tradedPrice) {
+        notNull(tradedAmount);
+
+        return calcCommission(tradedAmount);
+    }
+
+    @Override
     public Commission calculateBuyCommission(BuyOrder order) {
         notNull(order);
         notNull(order.getTradeAmount());
         notNull(order.getItemPrice());
         notNull(order.getCurrencyPair());
 
-        BigMoney tradeAmount =
-                order.getTradeAmount()
-                .convertedTo(order.getCounterCurrency(),
-                        order.getItemPrice().getAmount());
+        BigMoney tradeAmount = calcMoneyAmount(order.getTradeAmount(), order.getItemPrice(), order.getCurrencyPair());
         return calcCommission(tradeAmount);
+    }
+
+    private BigMoney calcMoneyAmount(BigMoney tradeAmount, BigMoney price, CurrencyPair currencyPair) {
+        return tradeAmount.convertedTo(currencyPair.getCounterCurrencyUnit(), price.getAmount());
     }
 }

@@ -257,7 +257,7 @@ public class OrderExecutorHelperTest {
         helper.setSellOrderRepository(sellOrderRepository);
 
         //executing
-        helper.recordTraded(buyOrder, sellOrder, tradeAmount, new Date());
+        helper.recordTraded(buyOrder, sellOrder, buyCommission, sellCommission, matchedTradeAmount, tradeAmount, new Date());
 
 
         //verifying

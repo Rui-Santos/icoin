@@ -1,18 +1,18 @@
-/*
- * Copyright (c) 2010-2012. Axon Framework
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/* 
+* Copyright (c) 2010-2012. Axon Framework 
+* 
+* Licensed under the Apache License, Version 2.0 (the "License"); 
+* you may not use this file except in compliance with the License. 
+* You may obtain a copy of the License at 
+* 
+*     http://www.apache.org/licenses/LICENSE-2.0 
+* 
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the License is distributed on an "AS IS" BASIS, 
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+* See the License for the specific language governing permissions and 
+* limitations under the License. 
+*/
 
 package com.icoin.trading.tradeengine.domain.model.portfolio;
 
@@ -30,7 +30,7 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemToReserveN
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsAddedToPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemsAvailableToReserveInPortfolio;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.users.domain.UserId;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -39,6 +39,7 @@ import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,11 +58,12 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     @AggregateIdentifier
     private PortfolioId portfolioId;
     private UserId userIdentifier;
-    private Map<OrderBookId, BigMoney> availableCoins = new HashMap<OrderBookId, BigMoney>();
-    private Map<OrderBookId, BigMoney> reservedItems = new HashMap<OrderBookId, BigMoney>();
+    private Map<CoinId, Item> availableCoins = new HashMap<CoinId, Item>();
+    private Map<CoinId, Item> reservedItems = new HashMap<CoinId, Item>();
 
     private BigMoney amountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
     private BigMoney reservedAmountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
+    private BigMoney reservedCommissionOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
 
     protected Portfolio() {
     }
@@ -70,37 +72,37 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new PortfolioCreatedEvent(portfolioId, userIdentifier));
     }
 
-    public void addItems(OrderBookId orderBookIdentifier, BigMoney amountOfItemToAdd) {
-        apply(new ItemsAddedToPortfolioEvent(portfolioId, orderBookIdentifier, amountOfItemToAdd));
+    public void addItems(CoinId coinId, BigMoney amountOfItemToAdd) {
+        apply(new ItemsAddedToPortfolioEvent(portfolioId, coinId, amountOfItemToAdd));
     }
 
-    public void reserveItems(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, BigMoney amountOfItemsToReserve) {
-        if (!availableCoins.containsKey(orderBookIdentifier)) {
-            apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, orderBookIdentifier, transactionIdentifier));
+    public void reserveItems(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemsToReserve) {
+        if (!availableCoins.containsKey(coinId)) {
+            apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, coinId, transactionIdentifier));
         } else {
-            BigMoney availableAmountOfItems = availableCoins.get(orderBookIdentifier);
-            if (availableAmountOfItems.compareTo(amountOfItemsToReserve) < 0) {
+            BigMoney availableAmountOfItems = availableCoins.get(coinId).getAvailableAmount();
+            if (availableAmountOfItems.compareTo(amountOfItemsToReserve.toMoney(RoundingMode.HALF_EVEN)) < 0) {
                 apply(new NotEnoughItemsAvailableToReserveInPortfolio(
-                        portfolioId, orderBookIdentifier, transactionIdentifier, availableAmountOfItems, amountOfItemsToReserve));
+                        portfolioId, coinId, transactionIdentifier, availableAmountOfItems, amountOfItemsToReserve));
             } else {
-                apply(new ItemsReservedEvent(portfolioId, orderBookIdentifier, transactionIdentifier, amountOfItemsToReserve));
+                apply(new ItemsReservedEvent(portfolioId, coinId, transactionIdentifier, amountOfItemsToReserve));
             }
         }
     }
 
-    public void confirmReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier,
+    public void confirmReservation(CoinId coinId, TransactionId transactionIdentifier,
                                    BigMoney amountOfItemsToConfirm) {
         apply(new ItemReservationConfirmedForPortfolioEvent(
                 portfolioId,
-                orderBookIdentifier,
+                coinId,
                 transactionIdentifier,
                 amountOfItemsToConfirm));
     }
 
-    public void cancelReservation(OrderBookId orderBookIdentifier, TransactionId transactionIdentifier, BigMoney amountOfItemsToCancel) {
+    public void cancelReservation(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemsToCancel) {
         apply(new ItemReservationCancelledForPortfolioEvent(
                 portfolioId,
-                orderBookIdentifier,
+                coinId,
                 transactionIdentifier,
                 amountOfItemsToCancel));
     }
@@ -143,38 +145,52 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void onItemsAddedToPortfolio(ItemsAddedToPortfolioEvent event) {
         CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfItemAdded());
-        BigMoney available = obtainCurrentAvailableItems(event.getOrderBookIdentifier(), currencyUnit);
-        availableCoins.put(event.getOrderBookIdentifier(), available.plus(event.getAmountOfItemAdded()));
+        Item available = obtainCurrentAvailableItem(event.getCoinId());
+
+        if(available == null){
+           createItem(event.getCoinId(), currencyUnit);
+        }
+
+        availableCoins.put(event.getCoinId(), available.plus(event.getAmountOfItemAdded()));
+    }
+
+    private Item createItem(CoinId coinId, CurrencyUnit currencyUnit) {
+        final Item item = new Item();
+        item.setCoinId(coinId);
+        item.setTotalAmount(BigMoney.zero(currencyUnit));
+        item.setReservedAmount(BigMoney.zero(currencyUnit));
+
+        return item;
     }
 
     @EventHandler
     public void onItemsReserved(ItemsReservedEvent event) {
         CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfItemReserved());
-        BigMoney available = obtainCurrentAvailableItems(event.getOrderBookIdentifier(), currencyUnit);
-        availableCoins.put(event.getOrderBookIdentifier(), available.minus(event.getAmountOfItemReserved()));
+        BigMoney available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
+        availableCoins.put(event.getCoinId(), available.minus(event.getAmountOfItemReserved()));
 
-        BigMoney reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier(), currencyUnit);
-        reservedItems.put(event.getOrderBookIdentifier(), reserved.plus(event.getAmountOfItemReserved()));
+        BigMoney reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
+        reservedItems.put(event.getCoinId(), reserved.plus(event.getAmountOfItemReserved()));
     }
 
     @EventHandler
     public void onReservationConfirmed(ItemReservationConfirmedForPortfolioEvent event) {
         final CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfConfirmedItem());
-        BigMoney reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier(), currencyUnit);
-        reservedItems.put(event.getOrderBookIdentifier(), reserved.minus(event.getAmountOfConfirmedItem()));
+        BigMoney reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
+        reservedItems.put(event.getCoinId(), reserved.minus(event.getAmountOfConfirmedItem()));
 
-        BigMoney available = obtainCurrentAvailableItems(event.getOrderBookIdentifier(), currencyUnit);
-        availableCoins.put(event.getOrderBookIdentifier(), available.minus(event.getAmountOfConfirmedItem()));
+        BigMoney available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
+        availableCoins.put(event.getCoinId(), available.minus(event.getAmountOfConfirmedItem()));
     }
 
     @EventHandler
     public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
         final CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfCancelledAmount());
-        BigMoney reserved = obtainCurrentReservedItems(event.getOrderBookIdentifier(), currencyUnit);
-        reservedItems.put(event.getOrderBookIdentifier(), reserved.plus(event.getAmountOfCancelledAmount()));
+        BigMoney reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
+        reservedItems.put(event.getCoinId(), reserved.plus(event.getAmountOfCancelledAmount()));
 
-        BigMoney available = obtainCurrentAvailableItems(event.getOrderBookIdentifier(), currencyUnit);
-        availableCoins.put(event.getOrderBookIdentifier(), available.plus(event.getAmountOfCancelledAmount()));
+        BigMoney available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
+        availableCoins.put(event.getCoinId(), available.plus(event.getAmountOfCancelledAmount()));
     }
 
     @EventHandler
@@ -189,7 +205,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onMoneyReservedFromPortfolio(CashReservedEvent event) {
-        //double check if amount of money is not enough
+        //double check if amount of money is not enough 
         if (amountOfMoney.compareTo(event.getAmountToReserve()) < 0) {
             apply(new CashReservationRejectedEvent(portfolioId, event.getTransactionIdentifier(), event.getAmountToReserve()));
         }
@@ -209,18 +225,18 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     /* UTILITY METHODS */
-    private BigMoney obtainCurrentAvailableItems(OrderBookId orderBookIdentifier, CurrencyUnit currencyUnit) {
-        BigMoney available = BigMoney.zero(currencyUnit);
-        if (availableCoins.containsKey(orderBookIdentifier)) {
-            available = availableCoins.get(orderBookIdentifier);
+    private Item obtainCurrentAvailableItem(CoinId coinId) {
+        Item available = null;
+        if (availableCoins.containsKey(coinId)) {
+            available = availableCoins.get(coinId);
         }
         return available;
     }
 
-    private BigMoney obtainCurrentReservedItems(OrderBookId orderBookIdentifier, CurrencyUnit currencyUnit) {
+    private BigMoney obtainCurrentReservedItem(CoinId coinId, CurrencyUnit currencyUnit) {
         BigMoney reserved = BigMoney.zero(currencyUnit);
-        if (reservedItems.containsKey(orderBookIdentifier)) {
-            reserved = reservedItems.get(orderBookIdentifier);
+        if (reservedItems.containsKey(coinId)) {
+            reserved = reservedItems.get(coinId);
         }
         return reserved;
     }

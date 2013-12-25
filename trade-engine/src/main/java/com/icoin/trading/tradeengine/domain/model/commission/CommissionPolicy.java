@@ -17,6 +17,7 @@ package com.icoin.trading.tradeengine.domain.model.commission;
 
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
+import org.joda.money.BigMoney;
 
 /**
  * Sample Policy
@@ -38,4 +39,8 @@ public interface CommissionPolicy {
     Commission calculateRemainingSellCommission(SellOrder order);
 
     Commission calculateRemainingBuyCommission(BuyOrder order);
+
+    Commission calculateBuyCommission(BuyOrder order, BigMoney tradedAmount, BigMoney tradedPrice);
+
+    Commission calculateSellCommission(SellOrder order, BigMoney tradedAmount, BigMoney tradedPrice);
 }

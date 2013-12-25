@@ -32,8 +32,12 @@ import java.util.Date;
  */
 public class ExecuteBuyOrderCommand extends ExecuteOrderCommand<ExecuteBuyOrderCommand> {
 
-    public ExecuteBuyOrderCommand(OrderId orderId, PortfolioId portfolioId, OrderBookId orderBookId,
-                                  TransactionId transactionId, BigMoney tradeCount, BigMoney itemPrice,
+    public ExecuteBuyOrderCommand(OrderId orderId,
+                                  PortfolioId portfolioId,
+                                  OrderBookId orderBookId,
+                                  TransactionId transactionId,
+                                  BigMoney tradeCount,
+                                  BigMoney itemPrice,
                                   Date placeDate) {
         super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice, placeDate);
     }

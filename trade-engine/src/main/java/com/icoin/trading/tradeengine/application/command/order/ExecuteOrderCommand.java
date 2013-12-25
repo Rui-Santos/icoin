@@ -20,8 +20,9 @@ public abstract class ExecuteOrderCommand<T extends ExecuteOrderCommand> extends
                                   PortfolioId portfolioId,
                                   OrderBookId orderBookId,
                                   TransactionId transactionId,
-                                  BigMoney tradeAmount,
-                                  BigMoney itemPrice, Date placeDate) {
-        super(orderId, portfolioId, orderBookId, transactionId, tradeAmount, itemPrice, placeDate);
+                                  BigMoney tradeCount,
+                                  BigMoney itemPrice,
+                                  Date placeDate) {
+        super(orderId, portfolioId, orderBookId, transactionId, tradeCount, itemPrice, placeDate);
     }
 }

@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -30,27 +31,26 @@ import org.joda.money.BigMoney;
 public class CancelAmountReservationForPortfolioCommand {
 
     private PortfolioId portfolioIdentifier;
-    private OrderBookId orderBookIdentifier;
+    private CoinId coinId;
     private TransactionId transactionIdentifier;
-    private BigMoney amountOfCancelledItems;
+    private BigMoney amountOfCancelledItem;
 
     public CancelAmountReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
-                                                      OrderBookId orderBookIdentifier,
+                                                      CoinId coinId,
                                                       TransactionId transactionIdentifier,
-                                                      BigMoney amountOfCancelledItems) {
+                                                      BigMoney amountOfCancelledItem) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.orderBookIdentifier = orderBookIdentifier;
+        this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
-
-        this.amountOfCancelledItems = amountOfCancelledItems;
+        this.amountOfCancelledItem = amountOfCancelledItem;
     }
 
     public BigMoney getAmountOfItemsToCancel() {
-        return amountOfCancelledItems;
+        return amountOfCancelledItem;
     }
 
-    public OrderBookId getOrderBookIdentifier() {
-        return orderBookIdentifier;
+    public CoinId getCoinId() {
+        return coinId;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -59,5 +59,9 @@ public class CancelAmountReservationForPortfolioCommand {
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public BigMoney getAmountOfCancelledItem() {
+        return amountOfCancelledItem;
     }
 }

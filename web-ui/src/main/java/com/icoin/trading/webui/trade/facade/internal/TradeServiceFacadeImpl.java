@@ -4,6 +4,7 @@ package com.icoin.trading.webui.trade.facade.internal;
 import com.icoin.trading.tradeengine.application.command.order.RefreshOrderBookPriceCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.commission.Commission;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
@@ -37,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
@@ -123,7 +123,10 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public BuyOrder prepareBuyOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry) {
+    public BuyOrder prepareBuyOrder(String coinId,
+                                    CurrencyPair currencyPair,
+                                    OrderBookEntry orderBookEntry,
+                                    PortfolioEntry portfolioEntry) {
         hasLength(coinId);
         notNull(currencyPair);
         isTrue(coinId.equalsIgnoreCase(currencyPair.getBaseCurrency()));
@@ -159,7 +162,10 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public SellOrder prepareSellOrder(String coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry) {
+    public SellOrder prepareSellOrder(String coinId,
+                                      CurrencyPair currencyPair,
+                                      OrderBookEntry orderBookEntry,
+                                      PortfolioEntry portfolioEntry) {
         SellOrder order = new SellOrder();
 
         initCoinInfo(coinId, currencyPair, order);
@@ -204,7 +210,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
             return Collections.emptyList();
         }
 
-        PageRequest pageRequest = new PageRequest(0,20, Sort.Direction.DESC, "tradeTime");
+        PageRequest pageRequest = new PageRequest(0, 20, Sort.Direction.DESC, "tradeTime");
         return tradeExecutedRepository.findByOrderBookIdentifier(orderBookIdentifier, pageRequest);
     }
 
@@ -217,7 +223,9 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate) {
+    public List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier,
+                                                         OrderType type,
+                                                         Date toDate) {
         if (orderBookIdentifier == null || type == null || toDate == null) {
             return Collections.emptyList();
         }
@@ -225,7 +233,9 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public List<OrderEntry> findOrderForOrderBook(String orderBookIdentifier, OrderType type, OrderStatus orderStatus) {
+    public List<OrderEntry> findOrderForOrderBook(String orderBookIdentifier,
+                                                  OrderType type,
+                                                  OrderStatus orderStatus) {
         if (orderBookIdentifier == null || type == null || orderStatus == null) {
             return Collections.emptyList();
         }
@@ -233,23 +243,43 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public void sellOrder(final TransactionId transactionId, String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price) {
-        StartSellTransactionCommand command = new StartSellTransactionCommand(transactionId,
-                new OrderBookId(orderBookId),
-                new PortfolioId(portfolioId),
-                tradeAmount,
-                price);
+    public void sellOrder(final TransactionId transactionId,
+                          String coinId,
+                          CurrencyPair currencyPair,
+                          String orderBookId,
+                          String portfolioId,
+                          BigMoney tradeAmount,
+                          BigMoney price) {
+        StartSellTransactionCommand command =
+                new StartSellTransactionCommand(
+                        transactionId,
+                        new CoinId(coinId),
+                        currencyPair,
+                        new OrderBookId(orderBookId),
+                        new PortfolioId(portfolioId),
+                        tradeAmount,
+                        price);
 
         commandGateway.send(command);
     }
 
     @Override
-    public void buyOrder(final TransactionId transactionId, String orderBookId, String portfolioId, BigMoney tradeAmount, BigMoney price) {
-        StartBuyTransactionCommand command = new StartBuyTransactionCommand(transactionId,
-                new OrderBookId(orderBookId),
-                new PortfolioId(portfolioId),
-                tradeAmount,
-                price);
+    public void buyOrder(final TransactionId transactionId,
+                         String coinId,
+                         CurrencyPair currencyPair,
+                         String orderBookId,
+                         String portfolioId,
+                         BigMoney tradeAmount,
+                         BigMoney price) {
+        StartBuyTransactionCommand command =
+                new StartBuyTransactionCommand(
+                        transactionId,
+                        new CoinId(coinId),
+                        currencyPair,
+                        new OrderBookId(orderBookId),
+                        new PortfolioId(portfolioId),
+                        tradeAmount,
+                        price);
 
         commandGateway.send(command);
     }

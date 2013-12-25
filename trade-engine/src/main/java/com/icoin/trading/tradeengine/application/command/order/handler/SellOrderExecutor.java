@@ -89,22 +89,33 @@ public class SellOrderExecutor {
                 final SellOrder sellOrder = orderExecutorHelper.findSellOrder(sellCommand.getOrderId());
 
                 BigMoney matchedTradePrice = buyOrder.getItemPrice();
-
                 BigMoney matchedTradeAmount = min(buyOrder.getItemRemaining(), sellOrder.getItemRemaining());
 
+                BigMoney buyCommission = orderExecutorHelper.calcExecutedBuyCommission(buyOrder, matchedTradePrice, matchedTradeAmount);
+                BigMoney sellCommission = orderExecutorHelper.calcExecutedSellCommission(sellOrder, matchedTradePrice, matchedTradeAmount);
+
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Executing orders with amount {}, price {}: highest buying order {}, lowest selling order {}",
-                            matchedTradeAmount, matchedTradePrice, buyOrder, sellCommand);
+                    logger.debug("Executing orders with amount {}, price {}, buy commission {}, sell commission {}: highest buying order {}, lowest selling order {}",
+                            matchedTradeAmount, matchedTradePrice, buyCommission, sellCommission, buyOrder, sellCommand);
                     orderBook.executeSelling(matchedTradeAmount,
                             matchedTradePrice,
                             buyOrder.getPrimaryKey(),
                             sellCommand.getOrderId().toString(),
+                            buyCommission,
+                            sellCommission,
                             buyOrder.getTransactionId(),
                             sellCommand.getTransactionId(),
                             sellCommand.getPlaceDate());
                 }
 
-                orderExecutorHelper.recordTraded(buyOrder, sellOrder, matchedTradeAmount, sellCommand.getPlaceDate());
+                orderExecutorHelper.recordTraded(
+                        buyOrder,
+                        sellOrder,
+                        buyCommission,
+                        sellCommission,
+                        matchedTradeAmount,
+                        matchedTradePrice,
+                        sellCommand.getPlaceDate());
 
                 if (sellOrder.getItemRemaining().isNegativeOrZero()) {
                     done = true;

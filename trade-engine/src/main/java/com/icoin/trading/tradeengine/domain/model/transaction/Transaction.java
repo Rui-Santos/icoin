@@ -26,6 +26,7 @@ import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCo
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionPartiallyExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -45,7 +46,10 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     private TransactionId transactionId;
     private BigMoney amountOfItem;
     private BigMoney executedAmount;
+    private BigMoney totalCommission;
+    private BigMoney actualCommission;
     private TransactionType type;
+    private CoinId coinId;
 
 
     @SuppressWarnings("UnusedDeclaration")
@@ -53,25 +57,33 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     }
 
     public Transaction(TransactionId transactionId,
+                       CoinId coinId,
                        TransactionType type,
-                       OrderBookId orderbookIdentifier,
+                       OrderBookId orderBookIdentifier,
                        PortfolioId portfolioIdentifier,
                        BigMoney amountOfItems,
-                       BigMoney pricePerItem) {
+                       BigMoney pricePerItem,
+                       BigMoney totalCommission) {
         switch (type) {
             case BUY:
-                apply(new BuyTransactionStartedEvent(transactionId,
-                        orderbookIdentifier,
+                apply(new BuyTransactionStartedEvent(
+                        transactionId,
+                        coinId,
+                        orderBookIdentifier,
                         portfolioIdentifier,
                         amountOfItems,
-                        pricePerItem));
+                        pricePerItem,
+                        totalCommission));
                 break;
             case SELL:
-                apply(new SellTransactionStartedEvent(transactionId,
-                        orderbookIdentifier,
+                apply(new SellTransactionStartedEvent(
+                        transactionId,
+                        coinId,
+                        orderBookIdentifier,
                         portfolioIdentifier,
                         amountOfItems,
-                        pricePerItem));
+                        pricePerItem,
+                        totalCommission));
                 break;
         }
     }
@@ -90,34 +102,38 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     public void cancel(BigMoney cancelledPrice) {
         switch (this.type) {
             case BUY:
-                apply(new BuyTransactionCancelledEvent(transactionId, amountOfItem, executedAmount, cancelledPrice));
+                apply(new BuyTransactionCancelledEvent(transactionId, coinId, amountOfItem, executedAmount, cancelledPrice));
                 break;
             case SELL:
-                apply(new SellTransactionCancelledEvent(transactionId, amountOfItem, executedAmount, cancelledPrice));
+                apply(new SellTransactionCancelledEvent(transactionId, coinId, amountOfItem, executedAmount, cancelledPrice));
                 break;
         }
     }
 
-    public void execute(BigMoney amountOfItems, BigMoney itemPrice) {
+    public void execute(BigMoney amountOfItems, BigMoney itemPrice, BigMoney commission) {
         switch (this.type) {
             case BUY:
                 if (isPartiallyExecuted(amountOfItems)) {
                     apply(new BuyTransactionPartiallyExecutedEvent(transactionId,
+                            coinId,
                             amountOfItems,
                             amountOfItems.plus(executedAmount),
-                            itemPrice));
+                            itemPrice,
+                            commission));
                 } else {
-                    apply(new BuyTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
+                    apply(new BuyTransactionExecutedEvent(transactionId, coinId, amountOfItems, itemPrice, commission));
                 }
                 break;
             case SELL:
                 if (isPartiallyExecuted(amountOfItems)) {
                     apply(new SellTransactionPartiallyExecutedEvent(transactionId,
+                            coinId,
                             amountOfItems,
                             amountOfItems.plus(executedAmount),
-                            itemPrice));
+                            itemPrice,
+                            commission));
                 } else {
-                    apply(new SellTransactionExecutedEvent(transactionId, amountOfItems, itemPrice));
+                    apply(new SellTransactionExecutedEvent(transactionId, coinId, amountOfItems, itemPrice, commission));
                 }
                 break;
         }
@@ -130,41 +146,64 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void onBuyTransactionStarted(BuyTransactionStartedEvent event) {
         this.transactionId = event.getTransactionIdentifier();
+        this.coinId = event.getCoinId();
         this.amountOfItem = event.getTotalItem();
         this.executedAmount = BigMoney.zero(event.getTotalItem().getCurrencyUnit());
         this.type = TransactionType.BUY;
+        this.totalCommission = event.getTotalCommission();
+        this.actualCommission = BigMoney.zero(event.getTotalItem().getCurrencyUnit());
     }
 
     @EventHandler
     public void onSellTransactionStarted(SellTransactionStartedEvent event) {
         this.transactionId = event.getTransactionIdentifier();
+        this.coinId = event.getCoinId();
         this.amountOfItem = event.getTotalItem();
         this.executedAmount = BigMoney.zero(event.getTotalItem().getCurrencyUnit());
         this.type = TransactionType.SELL;
+        this.totalCommission = event.getTotalCommission();
+        this.actualCommission = BigMoney.zero(event.getTotalItem().getCurrencyUnit());
     }
 
     @EventHandler
     public void onTransactionExecuted(BuyTransactionExecutedEvent event) {
         this.executedAmount = this.amountOfItem;
+        this.actualCommission = actualCommission.plus(event.getCommission());
     }
 
     @EventHandler
     public void onTransactionExecuted(SellTransactionExecutedEvent event) {
         this.executedAmount = this.amountOfItem;
+        this.actualCommission = actualCommission.plus(event.getCommission());
     }
 
     @EventHandler
     public void onTransactionPartiallyExecuted(SellTransactionPartiallyExecutedEvent event) {
         this.executedAmount = executedAmount.plus(event.getAmountOfExecutedItem());
+        this.actualCommission = actualCommission.minus(event.getCommission());
     }
 
     @EventHandler
     public void onTransactionPartiallyExecuted(BuyTransactionPartiallyExecutedEvent event) {
         this.executedAmount = executedAmount.plus(event.getAmountOfExecutedItem());
+        this.actualCommission = actualCommission.minus(event.getCommission());
     }
 
     @Override
     public TransactionId getIdentifier() {
         return transactionId;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "transactionId=" + transactionId +
+                ", amountOfItem=" + amountOfItem +
+                ", executedAmount=" + executedAmount +
+                ", totalCommission=" + totalCommission +
+                ", actualCommission=" + actualCommission +
+                ", type=" + type +
+                ", coinId=" + coinId +
+                '}';
     }
 }
