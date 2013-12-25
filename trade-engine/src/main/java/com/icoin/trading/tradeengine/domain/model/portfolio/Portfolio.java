@@ -205,10 +205,6 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onMoneyReservedFromPortfolio(CashReservedEvent event) {
-        //double check if amount of money is not enough 
-        if (amountOfMoney.compareTo(event.getAmountToReserve()) < 0) {
-            apply(new CashReservationRejectedEvent(portfolioId, event.getTransactionIdentifier(), event.getAmountToReserve()));
-        }
         amountOfMoney = amountOfMoney.minus(event.getAmountToReserve());
         reservedAmountOfMoney = amountOfMoney.plus(event.getAmountToReserve());
     }
