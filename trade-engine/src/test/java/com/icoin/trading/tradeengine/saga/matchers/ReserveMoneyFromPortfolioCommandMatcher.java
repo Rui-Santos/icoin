@@ -37,7 +37,7 @@ public class ReserveMoneyFromPortfolioCommandMatcher extends BaseCommandMatcher<
     @Override
     protected boolean doMatches(ReserveCashCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && command.getAmountOfMoneyToReserve().isEqual(amountOfMoneyToReserve);
+                && command.getTotalCommission().isEqual(amountOfMoneyToReserve);
     }
 
     @Override

@@ -30,6 +30,7 @@ public abstract class AbstractTransactionPartiallyExecutedEvent {
     private BigMoney amountOfExecutedItem;
     private BigMoney totalOfExecutedItem;
     private BigMoney itemPrice;
+    private BigMoney executedMoney;
     private BigMoney commission;
 
     public AbstractTransactionPartiallyExecutedEvent(TransactionId transactionIdentifier,
@@ -37,12 +38,14 @@ public abstract class AbstractTransactionPartiallyExecutedEvent {
                                                      BigMoney amountOfExecutedItem,
                                                      BigMoney totalOfExecutedItem,
                                                      BigMoney itemPrice,
+                                                     BigMoney executedMoney,
                                                      BigMoney commission) {
         this.transactionIdentifier = transactionIdentifier;
         this.coinId = coinId;
         this.amountOfExecutedItem = amountOfExecutedItem;
         this.totalOfExecutedItem = totalOfExecutedItem;
         this.itemPrice = itemPrice;
+        this.executedMoney = executedMoney;
         this.commission = commission;
     }
 
@@ -60,6 +63,10 @@ public abstract class AbstractTransactionPartiallyExecutedEvent {
 
     public BigMoney getItemPrice() {
         return itemPrice;
+    }
+
+    public BigMoney getExecutedMoney() {
+        return executedMoney;
     }
 
     public BigMoney getTotalOfExecutedItem() {

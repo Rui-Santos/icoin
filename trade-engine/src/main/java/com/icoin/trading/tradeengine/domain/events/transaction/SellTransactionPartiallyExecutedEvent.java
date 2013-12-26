@@ -30,7 +30,8 @@ public class SellTransactionPartiallyExecutedEvent extends AbstractTransactionPa
                                                  BigMoney amountOfExecutedItem,
                                                  BigMoney totalOfExecutedItem,
                                                  BigMoney itemPrice,
+                                                 BigMoney executedMoney,
                                                  BigMoney commission) {
-        super(transactionIdentifier, coinId, amountOfExecutedItem, totalOfExecutedItem, itemPrice, commission);
+        super(transactionIdentifier, coinId, amountOfExecutedItem, totalOfExecutedItem, itemPrice, executedMoney, commission);
     }
 }

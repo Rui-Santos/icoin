@@ -32,6 +32,7 @@ public abstract class AbstractTransactionStartedEvent {
     private PortfolioId portfolioIdentifier;
     private BigMoney totalItem;
     private BigMoney pricePerItem;
+    private BigMoney totalMoney;
     private BigMoney totalCommission;
 
     public AbstractTransactionStartedEvent(TransactionId transactionIdentifier,
@@ -40,6 +41,7 @@ public abstract class AbstractTransactionStartedEvent {
                                            PortfolioId portfolioIdentifier,
                                            BigMoney totalItem,
                                            BigMoney pricePerItem,
+                                           BigMoney totalMoney,
                                            BigMoney totalCommission) {
         this.transactionIdentifier = transactionIdentifier;
         this.coinId = coinId;
@@ -47,6 +49,7 @@ public abstract class AbstractTransactionStartedEvent {
         this.portfolioIdentifier = portfolioIdentifier;
         this.totalItem = totalItem;
         this.pricePerItem = pricePerItem;
+        this.totalMoney = totalMoney;
         this.totalCommission = totalCommission;
     }
 
@@ -56,6 +59,10 @@ public abstract class AbstractTransactionStartedEvent {
 
     public OrderBookId getOrderBookIdentifier() {
         return orderBookIdentifier;
+    }
+
+    public BigMoney getTotalMoney() {
+        return totalMoney;
     }
 
     public BigMoney getTotalCommission() {

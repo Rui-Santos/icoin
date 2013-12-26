@@ -16,42 +16,42 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveAmountCommand;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
 import org.joda.money.BigMoney;
 
-
 /**
  * @author Jettro Coenradie
  */
-public class AddItemsToPortfolioCommandMatcher extends BaseCommandMatcher<AddAmountToPortfolioCommand> {
+public class ReservedItemCommandMatcher extends BaseCommandMatcher<ReserveAmountCommand> {
 
-    private OrderBookId orderBookIdentifier;
+    private CoinId coinId;
     private PortfolioId portfolioIdentifier;
-    private BigMoney amountOfItemToAdd;
+    private BigMoney amountOfReservedItem;
 
-    public AddItemsToPortfolioCommandMatcher(PortfolioId portfolioIdentifier,
-                                             OrderBookId orderBookIdentifier, BigMoney amountOfItemToAdd) {
-        this.amountOfItemToAdd = amountOfItemToAdd;
+    public ReservedItemCommandMatcher(CoinId coinId,
+                                      PortfolioId portfolioIdentifier,
+                                      BigMoney amountOfReservedItem) {
+        this.coinId = coinId;
         this.portfolioIdentifier = portfolioIdentifier;
-        this.orderBookIdentifier = orderBookIdentifier;
+        this.amountOfReservedItem = amountOfReservedItem;
     }
 
     @Override
-    protected boolean doMatches(AddAmountToPortfolioCommand command) {
-        return command.getOrderBookIdentifier().equals(orderBookIdentifier)
+    protected boolean doMatches(ReserveAmountCommand command) {
+        return command.getCoinId().equals(coinId)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && command.getAmountOfItemToAdd().isEqual(amountOfItemToAdd);
+                && amountOfReservedItem.compareTo(command.getAmountOfItemToReserve()) == 0;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("AddAmountToPortfolioCommand with amountOfItemToAdd [")
-                .appendValue(amountOfItemToAdd)
-                .appendText("] for OrderBook with identifier [")
-                .appendValue(orderBookIdentifier)
+        description.appendText("ReserveAmountCommand with amountOfReservedItem [")
+                .appendValue(amountOfReservedItem)
+                .appendText("] for Coin with identifier [")
+                .appendValue(coinId)
                 .appendText("] and for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
                 .appendText("]");

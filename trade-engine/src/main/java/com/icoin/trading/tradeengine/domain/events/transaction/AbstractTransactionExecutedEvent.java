@@ -29,17 +29,20 @@ public abstract class AbstractTransactionExecutedEvent {
     private CoinId coinId;
     private BigMoney amountOfItem;
     private BigMoney itemPrice;
+    private BigMoney executedMoney;
     private BigMoney commission;
 
     public AbstractTransactionExecutedEvent(TransactionId transactionIdentifier,
                                             CoinId coinId,
                                             BigMoney amountOfItem,
                                             BigMoney itemPrice,
+                                            BigMoney executedMoney,
                                             BigMoney commission) {
         this.transactionIdentifier = transactionIdentifier;
         this.coinId = coinId;
         this.amountOfItem = amountOfItem;
         this.itemPrice = itemPrice;
+        this.executedMoney = executedMoney;
         this.commission = commission;
     }
 
@@ -57,6 +60,10 @@ public abstract class AbstractTransactionExecutedEvent {
 
     public BigMoney getItemPrice() {
         return itemPrice;
+    }
+
+    public BigMoney getExecutedMoney() {
+        return executedMoney;
     }
 
     public BigMoney getCommission() {

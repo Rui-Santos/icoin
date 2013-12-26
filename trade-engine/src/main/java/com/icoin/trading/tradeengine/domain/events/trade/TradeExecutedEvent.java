@@ -18,8 +18,8 @@ package com.icoin.trading.tradeengine.domain.events.trade;
 
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.order.TradeType;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.order.TradeType;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -48,13 +48,15 @@ public class TradeExecutedEvent implements Serializable {
     private final OrderBookId orderBookId;
     private final Date tradeTime;
     private final TradeType tradeType;
-    private final BigMoney buyCommission ;
-    private final BigMoney sellCommission ;
+    private final BigMoney buyCommission;
+    private final BigMoney sellCommission;
+    private final BigMoney executedMoney;
 
     public TradeExecutedEvent(OrderBookId orderBookId,
                               CoinId coinId,
                               BigMoney tradeAmount,
                               BigMoney tradedPrice,
+                              BigMoney executedMoney,
                               String buyOrderId,
                               String sellOrderId,
                               BigMoney buyCommission,
@@ -67,6 +69,7 @@ public class TradeExecutedEvent implements Serializable {
         this.coinId = coinId;
         this.tradeAmount = tradeAmount;
         this.tradedPrice = tradedPrice;
+        this.executedMoney = executedMoney;
         this.buyOrderId = buyOrderId;
         this.sellOrderId = sellOrderId;
         this.buyCommission = buyCommission;
@@ -103,6 +106,10 @@ public class TradeExecutedEvent implements Serializable {
 
     public BigMoney getTradedPrice() {
         return tradedPrice;
+    }
+
+    public BigMoney getExecutedMoney() {
+        return executedMoney;
     }
 
     public String getBuyOrderId() {

@@ -28,19 +28,22 @@ public class ConfirmCashReservationCommand {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    private BigMoney amountOfMoneyToConfirm;
+    private BigMoney amountOfMoney;
+    private BigMoney commission;
 
 
     public ConfirmCashReservationCommand(PortfolioId portfolioIdentifier,
                                          TransactionId transactionIdentifier,
-                                         BigMoney amountOfMoneyToConfirm) {
+                                         BigMoney amountOfMoney,
+                                         BigMoney commission) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfMoneyToConfirm = amountOfMoneyToConfirm;
+        this.amountOfMoney = amountOfMoney;
+        this.commission = commission;
     }
 
-    public BigMoney getAmountOfMoneyToConfirm() {
-        return amountOfMoneyToConfirm;
+    public BigMoney getAmountOfMoney() {
+        return amountOfMoney;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -51,10 +54,15 @@ public class ConfirmCashReservationCommand {
         return transactionIdentifier;
     }
 
+    public BigMoney getCommission() {
+        return commission;
+    }
+
     @Override
     public String toString() {
         return "ConfirmCashReservationCommand{" +
-                "amountOfMoneyToConfirm=" + amountOfMoneyToConfirm +
+                "amountOfMoney=" + amountOfMoney +
+                ", commission=" + commission +
                 ", portfolioIdentifier=" + portfolioIdentifier +
                 ", transactionIdentifier=" + transactionIdentifier +
                 '}';

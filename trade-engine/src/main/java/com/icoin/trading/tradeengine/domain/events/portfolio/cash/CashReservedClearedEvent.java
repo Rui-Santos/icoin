@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
+package com.icoin.trading.tradeengine.domain.events.portfolio.cash;
 
 
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
@@ -26,32 +24,23 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public class ItemsReservedEvent {
+public class CashReservedClearedEvent {
     private PortfolioId portfolioIdentifier;
-    private CoinId coinId;
     private TransactionId transactionIdentifier;
-    private BigMoney amountOfItemReserved;
+    private BigMoney amountToClear;
 
-    public ItemsReservedEvent(PortfolioId portfolioIdentifier,
-                              CoinId coinId,
-                              TransactionId transactionIdentifier,
-                              BigMoney amountOfItemReserved) {
+    public CashReservedClearedEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier, BigMoney amountToClear) {
         this.portfolioIdentifier = portfolioIdentifier;
-        this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfItemReserved = amountOfItemReserved;
-    }
-
-    public BigMoney getAmountOfItemReserved() {
-        return amountOfItemReserved;
-    }
-
-    public CoinId getCoinId() {
-        return coinId;
+        this.amountToClear = amountToClear;
     }
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public BigMoney getAmountToClear() {
+        return amountToClear;
     }
 
     public TransactionId getTransactionIdentifier() {

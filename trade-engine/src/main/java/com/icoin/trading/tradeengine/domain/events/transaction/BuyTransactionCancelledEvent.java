@@ -27,10 +27,7 @@ import org.joda.money.BigMoney;
 public class BuyTransactionCancelledEvent extends AbstractTransactionCancelledEvent {
 
     public BuyTransactionCancelledEvent(TransactionId transactionIdentifier,
-                                        CoinId coinId,
-                                        BigMoney totalAmountOfItem,
-                                        BigMoney amountOfExecutedItem,
-                                        BigMoney cancelledPrice) {
-        super(transactionIdentifier, coinId, totalAmountOfItem, amountOfExecutedItem, cancelledPrice);
+                                        CoinId coinId) {
+        super(transactionIdentifier, coinId);
     }
 }

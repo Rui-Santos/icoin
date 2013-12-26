@@ -10,6 +10,7 @@ import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.joda.money.BigMoney;
+import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import static com.homhon.util.Collections.isEmpty;
+import static com.icoin.trading.tradeengine.MoneyUtils.convertTo;
 import static org.joda.money.MoneyUtils.min;
 
 /**
@@ -85,15 +87,18 @@ public class BuyOrderExecutor {
                 BigMoney matchedTradePrice = sellOrder.getItemPrice();
                 BigMoney matchedTradeAmount = min(sellOrder.getItemRemaining(), buyOrder.getItemRemaining());
 
+                final BigMoney executedMoney = convertTo(matchedTradeAmount, matchedTradePrice).toBigMoney();
+
                 BigMoney buyCommission = orderExecutorHelper.calcExecutedBuyCommission(buyOrder, matchedTradePrice, matchedTradeAmount);
                 BigMoney sellCommission = orderExecutorHelper.calcExecutedSellCommission(sellOrder, matchedTradePrice, matchedTradeAmount);
 
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Executing orders with amount {}, price {}, buy commission {}, sell commission {}: highest buying order {}, lowest selling order {}",
-                            matchedTradeAmount, matchedTradePrice, buyCommission, sellCommission, sellOrder, buyOrder);
+                    logger.debug("Executing orders with amount {}, price {}, buy commission {}, sell commission {}, total money {}: highest buying order {}, lowest selling order {}",
+                            matchedTradeAmount, matchedTradePrice, buyCommission, sellCommission, executedMoney, sellOrder, buyOrder);
                     orderBook.executeBuying(
                             matchedTradeAmount,
                             matchedTradePrice,
+                            executedMoney,
                             buyOrder.getPrimaryKey(),
                             sellOrder.getPrimaryKey(),
                             buyCommission,

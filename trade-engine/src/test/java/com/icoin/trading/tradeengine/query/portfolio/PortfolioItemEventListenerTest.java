@@ -17,10 +17,10 @@
 package com.icoin.trading.tradeengine.query.portfolio;
 
 import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemAddedToPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationCancelledForPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsAddedToPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservedEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
@@ -76,8 +76,8 @@ public class PortfolioItemEventListenerTest {
 
     @Test
     public void testHandleEventAddItems() throws Exception {
-        ItemsAddedToPortfolioEvent event =
-                new ItemsAddedToPortfolioEvent(
+        ItemAddedToPortfolioEvent event =
+                new ItemAddedToPortfolioEvent(
                         portfolioIdentifier,
                         itemIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
@@ -133,7 +133,7 @@ public class PortfolioItemEventListenerTest {
 
     @Test
     public void testHandleItemReservedEvent() {
-        ItemsReservedEvent event = new ItemsReservedEvent(portfolioIdentifier, itemIdentifier, transactionIdentifier, DEFAULT_AMOUNT_ITEMS);
+        ItemReservedEvent event = new ItemReservedEvent(portfolioIdentifier, itemIdentifier, transactionIdentifier, DEFAULT_AMOUNT_ITEMS);
         listener.handleEvent(event);
 
         Mockito.verify(portfolioQueryRepository).save(Matchers.argThat(new PortfolioEntryMatcher(

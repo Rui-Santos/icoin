@@ -27,21 +27,29 @@ import org.joda.money.BigMoney;
 public class CashReservationRejectedEvent {
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    private BigMoney amountToPay;
+    private BigMoney totalMoney;
+    private BigMoney totalCommission;
 
-    public CashReservationRejectedEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier,
-                                        BigMoney amountToPay) {
+    public CashReservationRejectedEvent(PortfolioId portfolioIdentifier,
+                                        TransactionId transactionIdentifier,
+                                        BigMoney totalMoney,
+                                        BigMoney totalCommission) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountToPay = amountToPay;
+        this.totalMoney = totalMoney;
+        this.totalCommission = totalCommission;
     }
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
     }
 
-    public BigMoney getAmountToPay() {
-        return amountToPay;
+    public BigMoney getTotalMoney() {
+        return totalMoney;
+    }
+
+    public BigMoney getTotalCommission() {
+        return totalCommission;
     }
 
     public TransactionId getTransactionIdentifier() {

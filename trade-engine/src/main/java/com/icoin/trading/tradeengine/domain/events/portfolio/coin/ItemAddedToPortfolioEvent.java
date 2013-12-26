@@ -14,27 +14,41 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.tradeengine.domain.events.transaction;
+package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
+
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
 /**
+ * New items have been added to the portfolio for the OrderBook of the provided identifier.
+ *
  * @author Jettro Coenradie
  */
-public class BuyTransactionStartedEvent extends AbstractTransactionStartedEvent {
+public class ItemAddedToPortfolioEvent {
+    private PortfolioId portfolioIdentifier;
+    private CoinId coinId;
+    private BigMoney amountOfItemAdded;
 
-    public BuyTransactionStartedEvent(TransactionId transactionIdentifier,
-                                      CoinId coinId,
-                                      OrderBookId orderBookIdentifier,
-                                      PortfolioId portfolioIdentifier,
-                                      BigMoney totalItems,
-                                      BigMoney pricePerItem,
-                                      BigMoney totalMoney,
-                                      BigMoney totalCommission) {
-        super(transactionIdentifier, coinId, orderBookIdentifier, portfolioIdentifier, totalItems, pricePerItem, totalMoney, totalCommission);
+    public ItemAddedToPortfolioEvent(PortfolioId portfolioIdentifier,
+                                     CoinId coinId,
+                                     BigMoney amountOfItemAdded) {
+        this.portfolioIdentifier = portfolioIdentifier;
+        this.coinId = coinId;
+        this.amountOfItemAdded = amountOfItemAdded;
+    }
+
+    public BigMoney getAmountOfItemAdded() {
+        return amountOfItemAdded;
+    }
+
+    public CoinId getCoinId() {
+        return coinId;
+    }
+
+    public PortfolioId getPortfolioIdentifier() {
+        return portfolioIdentifier;
     }
 }

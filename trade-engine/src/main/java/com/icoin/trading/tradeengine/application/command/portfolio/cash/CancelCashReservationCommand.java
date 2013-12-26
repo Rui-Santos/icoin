@@ -28,18 +28,25 @@ public class CancelCashReservationCommand {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    private BigMoney amountOfMoneyToCancel;
+    private BigMoney leftTotalMoney;
+    private BigMoney leftCommission;
 
     public CancelCashReservationCommand(PortfolioId portfolioIdentifier,
                                         TransactionId transactionIdentifier,
-                                        BigMoney amountOfMoneyToCancel) {
+                                        BigMoney leftTotalMoney,
+                                        BigMoney leftCommission) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfMoneyToCancel = amountOfMoneyToCancel;
+        this.leftTotalMoney = leftTotalMoney;
+        this.leftCommission = leftCommission;
     }
 
-    public BigMoney getAmountOfMoneyToCancel() {
-        return amountOfMoneyToCancel;
+    public BigMoney getLeftTotalMoney() {
+        return leftTotalMoney;
+    }
+
+    public BigMoney getLeftCommission() {
+        return leftCommission;
     }
 
     public PortfolioId getPortfolioIdentifier() {

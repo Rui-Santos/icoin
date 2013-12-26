@@ -26,18 +26,18 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public class NotEnoughItemsAvailableToReserveInPortfolio {
+public class NotEnoughItemAvailableToReserveInPortfolio {
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
     private TransactionId transactionIdentifier;
     private BigMoney availableAmountOfItem;
     private BigMoney amountOfItemToReserve;
 
-    public NotEnoughItemsAvailableToReserveInPortfolio(PortfolioId portfolioIdentifier,
-                                                       CoinId coinId,
-                                                       TransactionId transactionIdentifier,
-                                                       BigMoney availableAmountOfItem,
-                                                       BigMoney amountOfItemToReserve) {
+    public NotEnoughItemAvailableToReserveInPortfolio(PortfolioId portfolioIdentifier,
+                                                      CoinId coinId,
+                                                      TransactionId transactionIdentifier,
+                                                      BigMoney availableAmountOfItem,
+                                                      BigMoney amountOfItemToReserve) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;

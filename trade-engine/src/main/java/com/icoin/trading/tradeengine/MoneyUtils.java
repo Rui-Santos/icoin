@@ -2,11 +2,13 @@ package com.icoin.trading.tradeengine;
 
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import static com.homhon.util.Asserts.hasLength;
+import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
 
 /**
@@ -66,5 +68,20 @@ public abstract class MoneyUtils {
         final BigDecimal amount = money.multiplyRetainScale(multiplier, roundingMode).getAmount();
         return amount.setScale(0, RoundingMode.HALF_EVEN).longValue();
 
+    }
+
+    public static Money convertTo(BigMoney amount, BigMoney ratePrice) {
+        notNull(amount);
+        notNull(ratePrice);
+        isTrue(amount.getAmount().compareTo(BigDecimal.ZERO) > 0, "Amount should be greater than zero");
+        isTrue(ratePrice.getAmount().compareTo(BigDecimal.ZERO) > 0, "Rate should be greater than zero");
+
+        BigMoney money =
+                amount.convertRetainScale(
+                        ratePrice.getCurrencyUnit(),
+                        ratePrice.getAmount(),
+                        RoundingMode.HALF_EVEN);
+
+        return money.toMoney(RoundingMode.HALF_EVEN);
     }
 }

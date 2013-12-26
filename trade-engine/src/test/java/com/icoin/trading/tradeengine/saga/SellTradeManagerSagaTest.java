@@ -17,8 +17,8 @@
 package com.icoin.trading.tradeengine.saga;
 
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemsAvailableToReserveInPortfolio;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemAvailableToReserveInPortfolio;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCancelledEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionConfirmedEvent;
@@ -37,7 +37,7 @@ import com.icoin.trading.tradeengine.saga.matchers.ConfirmTransactionCommandMatc
 import com.icoin.trading.tradeengine.saga.matchers.CreateSellOrderCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.DepositMoneyToPortfolioCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.ExecutedTransactionCommandMatcher;
-import com.icoin.trading.tradeengine.saga.matchers.ReservedItemsCommandMatcher;
+import com.icoin.trading.tradeengine.saga.matchers.ReservedItemCommandMatcher;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
@@ -79,7 +79,7 @@ public class SellTradeManagerSagaTest {
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10))))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(
-                        new ReservedItemsCommandMatcher(orderbookIdentifier,
+                        new ReservedItemCommandMatcher(orderbookIdentifier,
                                 portfolioIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)))));
     }
@@ -94,7 +94,7 @@ public class SellTradeManagerSagaTest {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10))))
                 .whenAggregate(portfolioIdentifier).publishes(
-                new ItemsReservedEvent(
+                new ItemReservedEvent(
                         portfolioIdentifier,
                         orderbookIdentifier,
                         transactionIdentifier,
@@ -114,7 +114,7 @@ public class SellTradeManagerSagaTest {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10))))
                 .andThenAggregate(portfolioIdentifier).published(
-                new ItemsReservedEvent(
+                new ItemReservedEvent(
                         portfolioIdentifier,
                         orderbookIdentifier,
                         transactionIdentifier,
@@ -141,7 +141,7 @@ public class SellTradeManagerSagaTest {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10))))
                 .whenAggregate(portfolioIdentifier).publishes(
-                new NotEnoughItemsAvailableToReserveInPortfolio(
+                new NotEnoughItemAvailableToReserveInPortfolio(
                         portfolioIdentifier,
                         orderbookIdentifier,
                         transactionIdentifier,
@@ -190,7 +190,7 @@ public class SellTradeManagerSagaTest {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(99))))
                 .andThenAggregate(portfolioIdentifier).published(
-                new ItemsReservedEvent(
+                new ItemReservedEvent(
                         portfolioIdentifier,
                         orderbookIdentifier,
                         transactionIdentifier,
@@ -232,7 +232,7 @@ public class SellTradeManagerSagaTest {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(99))))
                 .andThenAggregate(portfolioIdentifier).published(
-                new ItemsReservedEvent(
+                new ItemReservedEvent(
                         portfolioIdentifier,
                         orderbookIdentifier,
                         transactionIdentifier,
@@ -282,7 +282,7 @@ public class SellTradeManagerSagaTest {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99))))
                 .andThenAggregate(portfolioIdentifier).published(
-                new ItemsReservedEvent(
+                new ItemReservedEvent(
                         portfolioIdentifier,
                         orderbookIdentifier,
                         transactionIdentifier,

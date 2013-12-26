@@ -18,6 +18,7 @@ package com.icoin.trading.tradeengine.application.command.portfolio;
 
 import com.icoin.trading.tradeengine.application.Callback;
 import com.icoin.trading.tradeengine.application.SynchronizedOnIdentifierHandler;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.ClearReservedCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.CancelCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
@@ -30,6 +31,9 @@ import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveA
 import com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
+import org.joda.money.BigMoney;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -39,6 +43,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PortfolioCommandHandler {
+    private static Logger logger = LoggerFactory.getLogger(PortfolioCommandHandler.class);
     private final SynchronizedOnIdentifierHandler synchronizedOnIdentifierHandler = new SynchronizedOnIdentifierHandler();
     private Repository<Portfolio> portfolioRepository;
 
@@ -60,7 +65,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.reserveItems(command.getCoinId(),
+                        portfolio.reserveItem(command.getCoinId(),
                                 command.getTransactionIdentifier(),
                                 command.getAmountOfItemToReserve());
                         return null;
@@ -81,7 +86,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.addItems(command.getCoinId(), command.getAmountOfItemToAdd());
+                        portfolio.addItem(command.getCoinId(), command.getAmountOfItemToAdd());
                         return null;
                     }
                 }
@@ -182,7 +187,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.reserveMoney(command.getTransactionIdentifier(), command.getAmountOfMoneyToReserve());
+                        portfolio.reserveMoney(command.getTransactionIdentifier(), command.getTotalMoney() ,command.getTotalCommission());
                         return null;
                     }
                 }
@@ -202,7 +207,10 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.cancelMoneyReservation(command.getTransactionIdentifier(), command.getAmountOfMoneyToCancel());
+                        portfolio.cancelMoneyReservation(
+                                command.getTransactionIdentifier(),
+                                command.getLeftTotalMoney(),
+                                command.getLeftCommission());
                         return null;
                     }
                 }
@@ -221,8 +229,10 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
-                                command.getAmountOfMoneyToConfirm());
+                        portfolio.confirmMoneyReservation(
+                                command.getTransactionIdentifier(),
+                                command.getAmountOfMoney(),
+                                command.getCommission());
                         return null;
                     }
                 }
@@ -230,7 +240,7 @@ public class PortfolioCommandHandler {
     }
 
     @CommandHandler
-    public void handleAddBackLeftReservedCommand(final AddBackLeftReservedCommand command) {
+    public void handleAddBackLeftReservedCommand(final ClearReservedCashCommand command) {
         synchronizedOnIdentifierHandler.perform(
                 new Callback<Void>() {
                     @Override
@@ -242,9 +252,13 @@ public class PortfolioCommandHandler {
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
 
-                        //todo add money back
-//        portfolio.confirmMoneyReservation(command.getTransactionIdentifier(),
-//                command.getAmountOfMoneyToConfirm());
+                        //add left back
+                        final BigMoney moneyToClear = command.getLeftReservedMoney().plus(command.getLeftCommission());
+
+                        logger.info("Clear reserved total {}, amount {}, commission {} for transaction {}, portfolio {}",
+                                moneyToClear, command.getLeftReservedMoney(), command.getLeftCommission(),
+                                command.getTransactionIdentifier(), command.getPortfolioIdentifier());
+                        portfolio.clearReservedMoney(command.getTransactionIdentifier(), moneyToClear);
                         return null;
                     }
                 }

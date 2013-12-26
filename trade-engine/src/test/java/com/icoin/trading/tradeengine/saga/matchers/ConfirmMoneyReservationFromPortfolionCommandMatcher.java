@@ -39,7 +39,7 @@ public class ConfirmMoneyReservationFromPortfolionCommandMatcher
     @Override
     protected boolean doMatches(ConfirmCashReservationCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && command.getAmountOfMoneyToConfirm().isEqual(amountOfMoneyToConfirm);
+                && command.getAmountOfMoney().isEqual(amountOfMoneyToConfirm);
     }
 
     @Override

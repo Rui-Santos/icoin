@@ -80,8 +80,4 @@ public abstract class AbstractStartTransactionCommand<T extends AbstractStartTra
     public CoinId getCoinId() {
         return coinId;
     }
-
-    public TransactionId getTransactionId() {
-        return transactionId;
-    }
 }

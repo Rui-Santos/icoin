@@ -20,28 +20,30 @@ package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
 /**
- * New items have been added to the portfolio for the OrderBook of the provided identifier.
- *
  * @author Jettro Coenradie
  */
-public class ItemsAddedToPortfolioEvent {
+public class ItemReservedEvent {
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
-    private BigMoney amountOfItemAdded;
+    private TransactionId transactionIdentifier;
+    private BigMoney amountOfItemReserved;
 
-    public ItemsAddedToPortfolioEvent(PortfolioId portfolioIdentifier,
-                                      CoinId coinId,
-                                      BigMoney amountOfItemAdded) {
+    public ItemReservedEvent(PortfolioId portfolioIdentifier,
+                             CoinId coinId,
+                             TransactionId transactionIdentifier,
+                             BigMoney amountOfItemReserved) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
-        this.amountOfItemAdded = amountOfItemAdded;
+        this.transactionIdentifier = transactionIdentifier;
+        this.amountOfItemReserved = amountOfItemReserved;
     }
 
-    public BigMoney getAmountOfItemAdded() {
-        return amountOfItemAdded;
+    public BigMoney getAmountOfItemReserved() {
+        return amountOfItemReserved;
     }
 
     public CoinId getCoinId() {
@@ -50,5 +52,9 @@ public class ItemsAddedToPortfolioEvent {
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public TransactionId getTransactionIdentifier() {
+        return transactionIdentifier;
     }
 }

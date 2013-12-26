@@ -27,14 +27,17 @@ import org.joda.money.BigMoney;
 public class CashReservationConfirmedEvent {
     private TransactionId transactionIdentifier;
     private PortfolioId portfolioIdentifier;
-    private BigMoney amountOfMoneyConfirmedInCents;
+    private BigMoney amountOfMoney;
+    private BigMoney commission;
 
     public CashReservationConfirmedEvent(PortfolioId portfolioIdentifier,
                                          TransactionId transactionId,
-                                         BigMoney amountOfMoneyConfirmedInCents) {
+                                         BigMoney amountOfMoney,
+                                         BigMoney commission) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionId;
-        this.amountOfMoneyConfirmedInCents = amountOfMoneyConfirmedInCents;
+        this.amountOfMoney = amountOfMoney;
+        this.commission = commission;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -45,7 +48,11 @@ public class CashReservationConfirmedEvent {
         return transactionIdentifier;
     }
 
-    public BigMoney getAmountOfConfirmedMoney() {
-        return amountOfMoneyConfirmedInCents;
+    public BigMoney getAmountOfMoney() {
+        return amountOfMoney;
+    }
+
+    public BigMoney getCommission() {
+        return commission;
     }
 }

@@ -33,7 +33,8 @@ public class SellTransactionStartedEvent extends AbstractTransactionStartedEvent
                                        PortfolioId portfolioIdentifier,
                                        BigMoney totalItem,
                                        BigMoney pricePerItem,
+                                       BigMoney totalMoney,
                                        BigMoney totalCommission) {
-        super(transactionIdentifier, coinId, orderBookIdentifier, portfolioIdentifier, totalItem, pricePerItem, totalCommission);
+        super(transactionIdentifier, coinId, orderBookIdentifier, portfolioIdentifier, totalItem, pricePerItem, totalMoney, totalCommission);
     }
 }

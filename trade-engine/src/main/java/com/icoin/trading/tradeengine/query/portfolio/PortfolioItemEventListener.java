@@ -18,12 +18,10 @@ package com.icoin.trading.tradeengine.query.portfolio;
 
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationCancelledForPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsAddedToPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemAddedToPortfolioEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservedEvent;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
-import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.money.BigMoney;
@@ -43,8 +41,8 @@ public class PortfolioItemEventListener {
     private CoinQueryRepository coinQueryRepository;
 
     @EventHandler
-    public void handleEvent(ItemsAddedToPortfolioEvent event) {
-        logger.debug("Handle ItemsAddedToPortfolioEvent for orderbook with primaryKey {}",
+    public void handleEvent(ItemAddedToPortfolioEvent event) {
+        logger.debug("Handle ItemAddedToPortfolioEvent for orderbook with primaryKey {}",
                 event.getCoinId());
         ItemEntry itemEntry = createItemEntry(event.getCoinId().toString(), event.getAmountOfItemAdded());
 
@@ -81,8 +79,8 @@ public class PortfolioItemEventListener {
     }
 
     @EventHandler
-    public void handleEvent(ItemsReservedEvent event) {
-        logger.debug("Handle ItemsReservedEvent for orderbook with primaryKey {}", event.getCoinId());
+    public void handleEvent(ItemReservedEvent event) {
+        logger.debug("Handle ItemReservedEvent for orderbook with primaryKey {}", event.getCoinId());
         ItemEntry itemEntry = createItemEntry(event.getCoinId().toString(),
                 event.getAmountOfItemReserved());
 

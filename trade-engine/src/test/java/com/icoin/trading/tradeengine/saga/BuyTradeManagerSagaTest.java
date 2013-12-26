@@ -26,7 +26,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.order.TradeType;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import com.icoin.trading.tradeengine.saga.matchers.AddItemsToPortfolioCommandMatcher;
+import com.icoin.trading.tradeengine.saga.matchers.AddItemToPortfolioCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.CancelMoneyReservationFromPortfolioCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.ConfirmMoneyReservationFromPortfolionCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.ConfirmTransactionCommandMatcher;
@@ -241,7 +241,7 @@ public class BuyTradeManagerSagaTest {
                         exactSequenceOf(
                                 new ConfirmMoneyReservationFromPortfolionCommandMatcher(portfolioIdentifier,
                                         TOTAL_ITEMS.convertedTo(PRICE_PER_ITEM.getCurrencyUnit(), BigDecimal.valueOf(99))),
-                                new AddItemsToPortfolioCommandMatcher(portfolioIdentifier,
+                                new AddItemToPortfolioCommandMatcher(portfolioIdentifier,
                                         orderbookIdentifier,
                                         TOTAL_ITEMS)));
     }
@@ -290,7 +290,7 @@ public class BuyTradeManagerSagaTest {
                                 new ConfirmMoneyReservationFromPortfolionCommandMatcher(
                                         portfolioIdentifier,
                                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99))),
-                                new AddItemsToPortfolioCommandMatcher(
+                                new AddItemToPortfolioCommandMatcher(
                                         portfolioIdentifier,
                                         orderbookIdentifier,
                                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)))));
@@ -338,7 +338,7 @@ public class BuyTradeManagerSagaTest {
                                 new ConfirmMoneyReservationFromPortfolionCommandMatcher(
                                         portfolioIdentifier,
                                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99))),
-                                new AddItemsToPortfolioCommandMatcher(
+                                new AddItemToPortfolioCommandMatcher(
                                         portfolioIdentifier,
                                         orderbookIdentifier,
                                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)))));

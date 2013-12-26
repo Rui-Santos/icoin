@@ -27,14 +27,17 @@ import org.joda.money.BigMoney;
 public class CashReservationCancelledEvent {
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
-    private BigMoney amountOfMoneyToCancel;
+    private BigMoney leftTotalMoney;
+    private BigMoney leftCommission;
 
     public CashReservationCancelledEvent(PortfolioId portfolioIdentifier,
                                          TransactionId transactionIdentifier,
-                                         BigMoney amountOfMoneyToCancel) {
+                                         BigMoney leftTotalMoney,
+                                         BigMoney leftCommission) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfMoneyToCancel = amountOfMoneyToCancel;
+        this.leftTotalMoney = leftTotalMoney;
+        this.leftCommission = leftCommission;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -45,7 +48,11 @@ public class CashReservationCancelledEvent {
         return transactionIdentifier;
     }
 
-    public BigMoney getAmountOfMoneyToCancel() {
-        return amountOfMoneyToCancel;
+    public BigMoney getLeftTotalMoney() {
+        return leftTotalMoney;
+    }
+
+    public BigMoney getLeftCommission() {
+        return leftCommission;
     }
 }

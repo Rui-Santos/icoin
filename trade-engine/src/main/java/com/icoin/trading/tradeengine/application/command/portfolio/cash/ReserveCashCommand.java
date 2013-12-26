@@ -28,18 +28,25 @@ public class ReserveCashCommand {
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
     //    @DecimalMin("0.0000001")
-    private BigMoney amountOfMoneyToReserve;
+    private BigMoney totalMoney;
+    private BigMoney totalCommission;
 
     public ReserveCashCommand(PortfolioId portfolioIdentifier,
                               TransactionId transactionIdentifier,
-                              BigMoney amountOfMoneyToReserve) {
+                              BigMoney totalMoney,
+                              BigMoney totalCommission) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfMoneyToReserve = amountOfMoneyToReserve;
+        this.totalMoney = totalMoney;
+        this.totalCommission = totalCommission;
     }
 
-    public BigMoney getAmountOfMoneyToReserve() {
-        return amountOfMoneyToReserve;
+    public BigMoney getTotalCommission() {
+        return totalCommission;
+    }
+
+    public BigMoney getTotalMoney() {
+        return totalMoney;
     }
 
     public PortfolioId getPortfolioIdentifier() {

@@ -32,6 +32,7 @@ import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 
 import java.util.Date;
 
@@ -134,6 +135,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
     //transaction: to add sell orders / buyer orders
     public void executeSelling(BigMoney matchedTradeAmount,
                                BigMoney matchedTradePrice,
+                               BigMoney executedMoney,
                                String buyOrderId,
                                String sellOrderId,
                                BigMoney buyCommission,
@@ -145,6 +147,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 new CoinId(currencyPair.getBaseCurrency()),
                 matchedTradeAmount,
                 matchedTradePrice,
+                executedMoney,
                 buyOrderId,
                 sellOrderId,
                 buyCommission,
@@ -157,6 +160,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
 
     public void executeBuying(BigMoney matchedTradeAmount,
                               BigMoney matchedTradePrice,
+                              BigMoney executedMoney,
                               String buyOrderId,
                               String sellOrderId,
                               BigMoney buyCommission,
@@ -169,6 +173,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 new CoinId(currencyPair.getBaseCurrency()),
                 matchedTradeAmount,
                 matchedTradePrice,
+                executedMoney,
                 buyOrderId,
                 sellOrderId,
                 buyCommission,

@@ -40,6 +40,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.math.RoundingMode;
+import static com.homhon.util.Asserts.notNull;
+
 /**
  * @author Jettro Coenradie
  */
@@ -49,14 +52,25 @@ public class TransactionCommandHandler {
     private Repository<Transaction> repository;
     private CommissionPolicyFactory commissionPolicyFactory;
 
+    @SuppressWarnings("unused")
     @CommandHandler
     public void handleStartBuyTransactionCommand(StartBuyTransactionCommand command) {
+        notNull(command.getCurrencyPair());
+        notNull(command.getItemPrice());
+        notNull(command.getTradeAmount());
+        notNull(command.getCoinId());
+        notNull(command.getOrderBookIdentifier());
+        notNull(command.getPortfolioIdentifier());
+        notNull(command.getTransactionIdentifier());
+
         final BuyOrder order = toOrder(command);
 
         CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(order);
         Commission commission = commissionPolicy.calculateBuyCommission(order);
-
         final BigMoney totalCommission = commission.getBigMoneyCommission();
+
+        final Money totalMoney = command.getTradeAmount().convertedTo(command.getItemPrice().getCurrencyUnit(),
+                command.getItemPrice().getAmount()).toMoney(RoundingMode.HALF_EVEN);
 
         Transaction transaction =
                 new Transaction(
@@ -67,18 +81,30 @@ public class TransactionCommandHandler {
                         command.getPortfolioIdentifier(),
                         command.getTradeAmount(),
                         command.getItemPrice(),
+                        totalMoney.toBigMoney(),
                         totalCommission);
         repository.add(transaction);
     }
 
+    @SuppressWarnings("unused")
     @CommandHandler
     public void handleStartSellTransactionCommand(StartSellTransactionCommand command) {
+        notNull(command.getCurrencyPair());
+        notNull(command.getItemPrice());
+        notNull(command.getTradeAmount());
+        notNull(command.getCoinId());
+        notNull(command.getOrderBookIdentifier());
+        notNull(command.getPortfolioIdentifier());
+        notNull(command.getTransactionIdentifier());
+
         final SellOrder order = toOrder(command);
 
         CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(order);
         Commission commission = commissionPolicy.calculateSellCommission(order);
-
         final BigMoney totalCommission = commission.getBigMoneyCommission();
+
+        final Money totalMoney = command.getTradeAmount().convertedTo(command.getItemPrice().getCurrencyUnit(),
+                command.getItemPrice().getAmount()).toMoney(RoundingMode.HALF_EVEN);
 
         Transaction transaction =
                 new Transaction(
@@ -89,6 +115,7 @@ public class TransactionCommandHandler {
                         command.getPortfolioIdentifier(),
                         command.getTradeAmount(),
                         command.getItemPrice(),
+                        totalMoney.toBigMoney(),
                         totalCommission);
         repository.add(transaction);
     }
@@ -114,6 +141,7 @@ public class TransactionCommandHandler {
         order.setCoinId(command.getCoinId());
     }
 
+    @SuppressWarnings("unused")
     @CommandHandler
     public void handleConfirmTransactionCommand(final ConfirmTransactionCommand command) {
         synchronizedOnIdentifierHandler.perform(
@@ -133,6 +161,7 @@ public class TransactionCommandHandler {
         );
     }
 
+    @SuppressWarnings("unused")
     @CommandHandler
     public void handleCancelTransactionCommand(final CancelTransactionCommand command) {
         synchronizedOnIdentifierHandler.perform(
@@ -152,6 +181,7 @@ public class TransactionCommandHandler {
         );
     }
 
+    @SuppressWarnings("unused")
     @CommandHandler
     public void handleExecutedTransactionCommand(final ExecutedTransactionCommand command) {
         synchronizedOnIdentifierHandler.perform(
@@ -164,7 +194,11 @@ public class TransactionCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Transaction transaction = repository.load(command.getTransactionIdentifier());
-                        transaction.execute(command.getAmountOfItems(), command.getItemPrice(), command.getCommission());
+                        transaction.execute(
+                                command.getTradeAmount(),
+                                command.getItemPrice(),
+                                command.getExecutedMoney(),
+                                command.getCommission());
                         return null;
                     }
                 }

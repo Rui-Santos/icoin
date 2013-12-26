@@ -17,7 +17,6 @@
 package com.icoin.trading.tradeengine.saga;
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -36,9 +35,10 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
     private OrderBookId orderBookIdentifier;
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
-    private BigMoney totalItems;
+    private BigMoney totalItem;
     private BigMoney pricePerItem;
     private BigMoney totalCommission;
+    private BigMoney leftCommission;
 
     /*-------------------------------------------------------------------------------------------*/
     /* Getters and setters                                                                       */
@@ -84,8 +84,8 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
         this.pricePerItem = pricePerItem;
     }
 
-    protected BigMoney getTotalItems() {
-        return totalItems;
+    protected BigMoney getTotalItem() {
+        return totalItem;
     }
 
     protected BigMoney getTotalCommission() {
@@ -96,8 +96,16 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
         this.totalCommission = totalCommission;
     }
 
-    protected void setTotalItems(BigMoney totalItems) {
-        this.totalItems = totalItems;
+    protected void setTotalItem(BigMoney totalItems) {
+        this.totalItem = totalItems;
+    }
+
+    protected BigMoney getLeftCommission() {
+        return leftCommission;
+    }
+
+    protected void setLeftCommission(BigMoney leftCommission) {
+        this.leftCommission = leftCommission;
     }
 
     protected TransactionId getTransactionIdentifier() {
@@ -106,5 +114,24 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
 
     protected void setTransactionIdentifier(TransactionId transactionIdentifier) {
         this.transactionIdentifier = transactionIdentifier;
+    }
+
+    //adjust commission, total commission should be equal to the sum up of the commission.
+    protected BigMoney adjustCommission(BigMoney executedCommission) {
+        BigMoney zero = BigMoney.zero(leftCommission.getCurrencyUnit());
+
+        if (leftCommission.isNegative()) {
+            leftCommission = zero;
+            return zero;
+        }
+
+        final BigMoney left = leftCommission.minus(executedCommission);
+        if (left.isNegative()) {
+            leftCommission = zero;
+            return executedCommission;
+        }
+
+        leftCommission = left;
+        return executedCommission;
     }
 }

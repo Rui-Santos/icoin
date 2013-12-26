@@ -1,4 +1,4 @@
-package com.icoin.trading.tradeengine.application.command.portfolio;
+package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -12,20 +12,23 @@ import org.joda.money.BigMoney;
  * Time: AM11:39
  * To change this template use File | Settings | File Templates.
  */
-public class AddBackLeftReservedCommand {
+public class ClearReservedCashCommand {
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
     private OrderBookId orderBookIdentifier;
     private BigMoney leftReservedMoney;
+    private BigMoney leftCommission;
 
-    public AddBackLeftReservedCommand(PortfolioId portfolioIdentifier,
-                                      TransactionId transactionIdentifier,
-                                      OrderBookId orderBookIdentifier,
-                                      BigMoney leftReservedMoney) {
+    public ClearReservedCashCommand(PortfolioId portfolioIdentifier,
+                                    TransactionId transactionIdentifier,
+                                    OrderBookId orderBookIdentifier,
+                                    BigMoney leftReservedMoney,
+                                    BigMoney leftCommission) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.leftReservedMoney = leftReservedMoney;
+        this.leftCommission = leftCommission;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -42,5 +45,9 @@ public class AddBackLeftReservedCommand {
 
     public BigMoney getLeftReservedMoney() {
         return leftReservedMoney;
+    }
+
+    public BigMoney getLeftCommission() {
+        return leftCommission;
     }
 }

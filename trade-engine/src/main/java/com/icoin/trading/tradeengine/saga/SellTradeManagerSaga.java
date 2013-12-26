@@ -23,8 +23,9 @@ import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmA
 import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveAmountCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ConfirmTransactionCommand;
 import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemsAvailableToReserveInPortfolio;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemToReserveNotAvailableInPortfolioEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemAvailableToReserveInPortfolio;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCancelledEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionConfirmedEvent;
@@ -41,6 +42,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+
+import static com.homhon.util.TimeUtils.currentTime;
 
 /**
  * @author Jettro Coenradie
@@ -70,8 +73,9 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         setCoinId(event.getCoinId());
         setPortfolioIdentifier(event.getPortfolioIdentifier());
         setPricePerItem(event.getPricePerItem());
-        setTotalItems(event.getTotalItem());
+        setTotalItem(event.getTotalItem());
         setTotalCommission(event.getTotalCommission());
+        setLeftCommission(event.getTotalCommission());
 
         ReserveAmountCommand reserveAmountCommand =
                 new ReserveAmountCommand(getPortfolioIdentifier(),
@@ -83,29 +87,44 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
-    public void handle(ItemsReservedEvent event) {
-        final Date confirmDate = new Date();
-        logger.debug("Items for transaction {} are reserved, set confirm date {}", getTransactionIdentifier(), confirmDate);
+    public void handle(ItemReservedEvent event) {
+        final Date confirmDate = currentTime();
+        if(logger.isDebugEnabled()){
+            logger.debug("Items for transaction {} are reserved, set confirm date {}", getTransactionIdentifier(), confirmDate);
+        }
         ConfirmTransactionCommand confirmTransactionCommand = new ConfirmTransactionCommand(getTransactionIdentifier(), confirmDate);
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmTransactionCommand>(confirmTransactionCommand));
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
-    public void handle(NotEnoughItemsAvailableToReserveInPortfolio event) {
-        logger.debug("Cannot continue with transaction with id {} since the items needed cannot be reserved",
-                getTotalItems());
+    public void handle(NotEnoughItemAvailableToReserveInPortfolio event) {
+        if(logger.isDebugEnabled()){
+            logger.debug("Cannot continue with transaction {} with item {} since the items needed cannot be reserved from portfolio {}",
+                    getTransactionIdentifier(), getTotalItem(), getPortfolioIdentifier());
+        }
+    }
+
+    @SagaEventHandler(associationProperty = "transactionIdentifier")
+    @EndSaga
+    public void handle(ItemToReserveNotAvailableInPortfolioEvent event) {
+        if(logger.isDebugEnabled()){
+            logger.debug("Cannot continue with transaction {} with item {} since the items needed cannot be found from portfolio {}",
+                    getTransactionIdentifier(), getTotalItem(), getPortfolioIdentifier());
+        }
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(SellTransactionConfirmedEvent event) {
-        logger.debug("Sell Transaction {} is approved to make the sell order", event.getTransactionIdentifier());
+        if(logger.isDebugEnabled()){
+            logger.debug("Sell Transaction {} is approved to make the sell order", event.getTransactionIdentifier());
+        }
 
         CreateSellOrderCommand command = new CreateSellOrderCommand(new OrderId(),
                 getPortfolioIdentifier(),
                 getOrderBookIdentifier(),
                 getTransactionIdentifier(),
-                getTotalItems(),
+                getTotalItem(),
                 getPricePerItem(),
                 getTotalCommission(),
                 event.getConfirmedDate());
@@ -116,9 +135,11 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @EndSaga
     public void handle(SellTransactionCancelledEvent event) {
         BigMoney amountOfCancelledItem = event.getTotalAmountOfItem().minus(event.getAmountOfExecutedItem());
-        logger.debug("Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}",
-                event.getTransactionIdentifier(),
-                amountOfCancelledItem);
+        if(logger.isDebugEnabled()){
+            logger.debug("Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}",
+                    event.getTransactionIdentifier(),
+                    amountOfCancelledItem);
+        }
         CancelAmountReservationForPortfolioCommand command =
                 new CancelAmountReservationForPortfolioCommand(getPortfolioIdentifier(),
                         getCoinId(),
@@ -139,12 +160,15 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
 
     @SagaEventHandler(associationProperty = "sellTransactionId", keyName = "transactionIdentifier")
     public void handle(TradeExecutedEvent event) {
-        logger.debug("Sell Transaction {} is executed, items for transaction are {} for a price of {}",
-                new Object[]{getTransactionIdentifier(), event.getTradeAmount(), event.getTradedPrice()});
+        if(logger.isDebugEnabled()){
+            logger.debug("Sell Transaction {} is executed, items for transaction are {} for a price of {}",
+                    getTransactionIdentifier(), event.getTradeAmount(), event.getTradedPrice());
+        }
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(getTransactionIdentifier(),
                 getCoinId(),
                 event.getTradeAmount(),
                 event.getTradedPrice(),
+                event.getExecutedMoney(),
                 event.getSellCommission());
         getCommandBus().dispatch(new GenericCommandMessage<ExecutedTransactionCommand>(command));
     }
@@ -153,49 +177,53 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
     public void handle(SellTransactionExecutedEvent event) {
-        logger.debug("Sell Transaction {} is executed, last amount of executed items is {} for a price of {}",
-                new Object[]{event.getTransactionIdentifier(), event.getAmountOfItem(), event.getItemPrice()});
+        if(logger.isDebugEnabled()){
+            logger.debug("Sell Transaction {} is executed, last amount of executed items is {} for a price of {}",
+                    event.getTransactionIdentifier(), event.getAmountOfItem(), event.getItemPrice());
+        }
+
+        //todo adjust commission
+
+        BigMoney commission = adjustCommission(event.getCommission());
 
         ConfirmAmountReservationForPortfolioCommand confirmCommand =
                 new ConfirmAmountReservationForPortfolioCommand(getPortfolioIdentifier(),
                         getCoinId(),
                         getTransactionIdentifier(),
                         event.getAmountOfItem(),
-                        event.getCommission());
+                        commission);
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmAmountReservationForPortfolioCommand>(confirmCommand));
 
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
-                        event.getAmountOfItem().convertedTo(
-                                event.getItemPrice().getCurrencyUnit(),
-                                event.getItemPrice().getAmount()));
+                        event.getExecutedMoney());
         getCommandBus().dispatch(new GenericCommandMessage<DepositCashCommand>(depositCommand));
 
-        //todo after whole completion add back left reserved
 
-//        commandGateway.sendAndWait(new AddBackLeftReservedCommand());
+//        commandGateway.sendAndWait(new ClearReservedCashCommand());
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     public void handle(SellTransactionPartiallyExecutedEvent event) {
-        logger.debug("Sell Transaction {} is partially executed, amount of executed items is {} for a price of {}",
-                new Object[]{event.getTransactionIdentifier(),
-                        event.getAmountOfExecutedItem(),
-                        event.getItemPrice()});
+        if(logger.isDebugEnabled()){
+            logger.debug("Sell Transaction {} is partially executed, amount of executed items is {} for a price of {}",
+                    event.getTransactionIdentifier(),
+                    event.getAmountOfExecutedItem(),
+                    event.getItemPrice());
+        }
 
+        BigMoney commission = adjustCommission(event.getCommission());
 
         ConfirmAmountReservationForPortfolioCommand confirmCommand =
                 new ConfirmAmountReservationForPortfolioCommand(getPortfolioIdentifier(),
                         getCoinId(),
                         getTransactionIdentifier(),
                         event.getAmountOfExecutedItem(),
-                        event.getCommission());
+                        commission);
         getCommandBus().dispatch(new GenericCommandMessage<ConfirmAmountReservationForPortfolioCommand>(confirmCommand));
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
-                        event.getAmountOfExecutedItem().convertedTo(
-                                event.getItemPrice().getCurrencyUnit(),
-                                event.getItemPrice().getAmount()));
+                        event.getExecutedMoney());
         getCommandBus().dispatch(new GenericCommandMessage<DepositCashCommand>(depositCommand));
     }
 }

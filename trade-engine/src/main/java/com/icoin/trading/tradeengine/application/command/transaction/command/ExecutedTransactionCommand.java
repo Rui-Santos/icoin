@@ -28,19 +28,22 @@ public class ExecutedTransactionCommand {
 
     private TransactionId transactionIdentifier;
     private CoinId coinId;
-    private BigMoney amountOfItems;
+    private BigMoney tradeAmount;
     private BigMoney itemPrice;
+    private BigMoney executedMoney;
     private BigMoney commission;
 
     public ExecutedTransactionCommand(TransactionId transactionIdentifier,
                                       CoinId coinId,
-                                      BigMoney amountOfItems,
+                                      BigMoney tradeAmount,
                                       BigMoney itemPrice,
+                                      BigMoney executedMoney,
                                       BigMoney commission) {
         this.transactionIdentifier = transactionIdentifier;
         this.coinId = coinId;
-        this.amountOfItems = amountOfItems;
+        this.tradeAmount = tradeAmount;
         this.itemPrice = itemPrice;
+        this.executedMoney = executedMoney;
         this.commission = commission;
     }
 
@@ -48,8 +51,8 @@ public class ExecutedTransactionCommand {
         return coinId;
     }
 
-    public BigMoney getAmountOfItems() {
-        return amountOfItems;
+    public BigMoney getTradeAmount() {
+        return tradeAmount;
     }
 
     public BigMoney getItemPrice() {
@@ -58,6 +61,11 @@ public class ExecutedTransactionCommand {
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+
+    public BigMoney getExecutedMoney() {
+        return executedMoney;
     }
 
     public BigMoney getCommission() {

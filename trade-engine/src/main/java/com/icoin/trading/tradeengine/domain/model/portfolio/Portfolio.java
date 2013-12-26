@@ -22,14 +22,15 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashDepositedE
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationCancelledEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationConfirmedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationRejectedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedClearedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashWithdrawnEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemAddedToPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationCancelledForPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemToReserveNotAvailableInPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsAddedToPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemsReservedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemsAvailableToReserveInPortfolio;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemAvailableToReserveInPortfolio;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.users.domain.UserId;
@@ -63,7 +64,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
     private BigMoney amountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
     private BigMoney reservedAmountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
-    private BigMoney reservedCommissionOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
+//    private BigMoney reservedCommissionOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
 
     protected Portfolio() {
     }
@@ -72,39 +73,39 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new PortfolioCreatedEvent(portfolioId, userIdentifier));
     }
 
-    public void addItems(CoinId coinId, BigMoney amountOfItemToAdd) {
-        apply(new ItemsAddedToPortfolioEvent(portfolioId, coinId, amountOfItemToAdd));
+    public void addItem(CoinId coinId, BigMoney amountOfItemToAdd) {
+        apply(new ItemAddedToPortfolioEvent(portfolioId, coinId, amountOfItemToAdd));
     }
 
-    public void reserveItems(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemsToReserve) {
+    public void reserveItem(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemToReserve) {
         if (!availableCoins.containsKey(coinId)) {
             apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, coinId, transactionIdentifier));
         } else {
-            BigMoney availableAmountOfItems = availableCoins.get(coinId).getAvailableAmount();
-            if (availableAmountOfItems.compareTo(amountOfItemsToReserve.toMoney(RoundingMode.HALF_EVEN)) < 0) {
-                apply(new NotEnoughItemsAvailableToReserveInPortfolio(
-                        portfolioId, coinId, transactionIdentifier, availableAmountOfItems, amountOfItemsToReserve));
+            BigMoney availableAmountOfItem = availableCoins.get(coinId).getAvailableAmount();
+            if (availableAmountOfItem.compareTo(amountOfItemToReserve.toMoney(RoundingMode.HALF_EVEN)) < 0) {
+                apply(new NotEnoughItemAvailableToReserveInPortfolio(
+                        portfolioId, coinId, transactionIdentifier, availableAmountOfItem, amountOfItemToReserve));
             } else {
-                apply(new ItemsReservedEvent(portfolioId, coinId, transactionIdentifier, amountOfItemsToReserve));
+                apply(new ItemReservedEvent(portfolioId, coinId, transactionIdentifier, amountOfItemToReserve));
             }
         }
     }
 
     public void confirmReservation(CoinId coinId, TransactionId transactionIdentifier,
-                                   BigMoney amountOfItemsToConfirm) {
+                                   BigMoney amountOfItemToConfirm) {
         apply(new ItemReservationConfirmedForPortfolioEvent(
                 portfolioId,
                 coinId,
                 transactionIdentifier,
-                amountOfItemsToConfirm));
+                amountOfItemToConfirm));
     }
 
-    public void cancelReservation(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemsToCancel) {
+    public void cancelReservation(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemToCancel) {
         apply(new ItemReservationCancelledForPortfolioEvent(
                 portfolioId,
                 coinId,
                 transactionIdentifier,
-                amountOfItemsToCancel));
+                amountOfItemToCancel));
     }
 
     public void addMoney(BigMoney money) {
@@ -115,20 +116,26 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new CashWithdrawnEvent(portfolioId, amountToPayInCents));
     }
 
-    public void reserveMoney(TransactionId transactionIdentifier, BigMoney amountToReserve) {
+    public void reserveMoney(TransactionId transactionIdentifier, BigMoney totalMoney, BigMoney totalCommission) {
+        BigMoney amountToReserve = totalMoney.plus(totalCommission);
+
         if (amountOfMoney.compareTo(amountToReserve) >= 0) {
-            apply(new CashReservedEvent(portfolioId, transactionIdentifier, amountToReserve));
+            apply(new CashReservedEvent(portfolioId, transactionIdentifier, totalMoney, totalCommission));
         } else {
-            apply(new CashReservationRejectedEvent(portfolioId, transactionIdentifier, amountToReserve));
+            apply(new CashReservationRejectedEvent(portfolioId, transactionIdentifier, totalMoney, totalCommission));
         }
     }
 
-    public void cancelMoneyReservation(TransactionId transactionIdentifier, BigMoney amountOfMoneyToCancel) {
-        apply(new CashReservationCancelledEvent(portfolioId, transactionIdentifier, amountOfMoneyToCancel));
+    public void clearReservedMoney(TransactionId transactionIdentifier, BigMoney moneyToClear) {
+        apply(new CashReservedClearedEvent(portfolioId, transactionIdentifier, moneyToClear));
     }
 
-    public void confirmMoneyReservation(TransactionId transactionIdentifier, BigMoney amountOfMoneyToConfirm) {
-        apply(new CashReservationConfirmedEvent(portfolioId, transactionIdentifier, amountOfMoneyToConfirm));
+    public void cancelMoneyReservation(TransactionId transactionIdentifier, BigMoney leftTotalMoney, BigMoney leftCommission) {
+        apply(new CashReservationCancelledEvent(portfolioId, transactionIdentifier, leftTotalMoney, leftCommission));
+    }
+
+    public void confirmMoneyReservation(TransactionId transactionIdentifier, BigMoney amountOfMoney, BigMoney commission) {
+        apply(new CashReservationConfirmedEvent(portfolioId, transactionIdentifier, amountOfMoney, commission));
     }
 
     private static CurrencyUnit currencyUnit(BigMoney money) {
@@ -143,12 +150,12 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     @EventHandler
-    public void onItemsAddedToPortfolio(ItemsAddedToPortfolioEvent event) {
+    public void onItemAddedToPortfolio(ItemAddedToPortfolioEvent event) {
         CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfItemAdded());
         Item available = obtainCurrentAvailableItem(event.getCoinId());
 
-        if(available == null){
-           createItem(event.getCoinId(), currencyUnit);
+        if (available == null) {
+            createItem(event.getCoinId(), currencyUnit);
         }
 
         availableCoins.put(event.getCoinId(), available.plus(event.getAmountOfItemAdded()));
@@ -164,7 +171,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     @EventHandler
-    public void onItemsReserved(ItemsReservedEvent event) {
+    public void onItemReserved(ItemReservedEvent event) {
         CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfItemReserved());
         BigMoney available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
         availableCoins.put(event.getCoinId(), available.minus(event.getAmountOfItemReserved()));
@@ -194,6 +201,12 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     @EventHandler
+    public void onCashReservedClearedEvent(CashReservedClearedEvent event) {
+        reservedAmountOfMoney = reservedAmountOfMoney.minus(event.getAmountToClear());
+        amountOfMoney = amountOfMoney.plus(event.getAmountToClear());
+    }
+
+    @EventHandler
     public void onMoneyAddedToPortfolio(CashDepositedEvent event) {
         amountOfMoney = amountOfMoney.plus(event.getMoneyAdded());
     }
@@ -205,19 +218,22 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onMoneyReservedFromPortfolio(CashReservedEvent event) {
-        amountOfMoney = amountOfMoney.minus(event.getAmountToReserve());
-        reservedAmountOfMoney = amountOfMoney.plus(event.getAmountToReserve());
+        final BigMoney reservedAmount = event.getTotalMoney().plus(event.getTotalCommission());
+        amountOfMoney = amountOfMoney.minus(reservedAmount);
+        reservedAmountOfMoney = reservedAmountOfMoney.plus(reservedAmount);
     }
 
     @EventHandler
     public void onMoneyReservationCancelled(CashReservationCancelledEvent event) {
-        amountOfMoney = amountOfMoney.plus(event.getAmountOfMoneyToCancel());
-        reservedAmountOfMoney = reservedAmountOfMoney.minus(event.getAmountOfMoneyToCancel());
+        final BigMoney total = event.getLeftTotalMoney().plus(event.getLeftCommission());
+        reservedAmountOfMoney = reservedAmountOfMoney.minus(total);
+        amountOfMoney = amountOfMoney.plus(total);
     }
 
     @EventHandler
     public void onMoneyReservationConfirmed(CashReservationConfirmedEvent event) {
-        reservedAmountOfMoney = reservedAmountOfMoney.minus(event.getAmountOfConfirmedMoney());
+        final BigMoney totalReserved = event.getAmountOfMoney().plus(event.getCommission());
+        reservedAmountOfMoney = reservedAmountOfMoney.minus(totalReserved);
     }
 
     /* UTILITY METHODS */
