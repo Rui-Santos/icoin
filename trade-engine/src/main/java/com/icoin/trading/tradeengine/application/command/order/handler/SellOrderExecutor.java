@@ -77,7 +77,7 @@ public class SellOrderExecutor {
                     buyOrders);
             //no selling order matched
             if (isEmpty(buyOrders)) {
-                break;
+                return;
             }
 
             for (BuyOrder buyOrder : buyOrders) {

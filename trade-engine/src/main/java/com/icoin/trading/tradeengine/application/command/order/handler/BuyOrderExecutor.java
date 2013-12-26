@@ -51,7 +51,7 @@ public class BuyOrderExecutor {
         OrderBook orderBook = orderBookRepository.load(buyCommand.getOrderBookId());
 
         //buying price >= current buying price
-        if (orderBook.getHighestBuyPrice().compareTo(buyCommand.getItemPrice()) > 0) {
+        if (orderBook.getHighestBuyPrice().compareTo(buyCommand.getItemPrice()) >= 0) {
             return;
         }
 
@@ -72,7 +72,7 @@ public class BuyOrderExecutor {
 
             //no selling order matched
             if (isEmpty(sellOrders)) {
-                break;
+                return;
             }
 
             for (SellOrder sellOrder : sellOrders) {

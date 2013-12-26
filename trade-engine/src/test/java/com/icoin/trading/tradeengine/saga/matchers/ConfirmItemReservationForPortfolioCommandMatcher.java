@@ -43,7 +43,7 @@ public class ConfirmItemReservationForPortfolioCommandMatcher
     protected boolean doMatches(ConfirmAmountReservationForPortfolioCommand command) {
         return command.getOrderBookIdentifier().equals(orderbookIdentifier)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && amountOfConfirmedItem.compareTo(command.getAmountOfItemToConfirm()) == 0;
+                && amountOfConfirmedItem.compareTo(command.getAmountOfItem()) == 0;
     }
 
     @Override

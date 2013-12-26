@@ -76,15 +76,19 @@ public class PortfolioMoneyEventListener {
     @EventHandler
     public void handleEvent(CashReservedEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney().plus(event.getAmountToReserve()));
+        final BigMoney total = event.getTotalMoney().plus(event.getTotalCommission());
+        portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney().plus(total));
         portfolioRepository.save(portfolioEntry);
     }
 
     @EventHandler
     public void handleEvent(CashReservationCancelledEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
+        final BigMoney totalLeft = event.getLeftTotalMoney().plus(event.getLeftCommission());
         portfolioEntry.setReservedAmountOfMoney(
-                portfolioEntry.getReservedAmountOfMoney().minus(event.getAmountOfMoneyToCancel()));
+                portfolioEntry.getReservedAmountOfMoney().minus(totalLeft));
+
+//        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().plus(totalLeft));
         portfolioRepository.save(portfolioEntry);
     }
 
@@ -92,11 +96,11 @@ public class PortfolioMoneyEventListener {
     public void handleEvent(CashReservationConfirmedEvent event) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         BigMoney reservedAmountOfMoney = portfolioEntry.getReservedAmountOfMoney();
-        BigMoney amountOfMoneyConfirmed = event.getAmountOfConfirmedMoney();
+        BigMoney amountOfMoneyConfirmed = event.getAmountOfMoney().plus(event.getCommission());
         if (amountOfMoneyConfirmed.compareTo(reservedAmountOfMoney) < 0) {
-            portfolioEntry.setReservedAmountOfMoney(reservedAmountOfMoney.plus(amountOfMoneyConfirmed));
+            portfolioEntry.setReservedAmountOfMoney(reservedAmountOfMoney.minus(amountOfMoneyConfirmed));
         } else {
-            portfolioEntry.setReservedAmountOfMoney(BigMoney.zero(event.getAmountOfConfirmedMoney().getCurrencyUnit()));
+            portfolioEntry.setReservedAmountOfMoney(BigMoney.zero(event.getAmountOfMoney().getCurrencyUnit()));
         }
 
         portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().minus(amountOfMoneyConfirmed));

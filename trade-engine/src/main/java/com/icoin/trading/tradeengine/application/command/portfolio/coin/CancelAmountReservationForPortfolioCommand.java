@@ -33,20 +33,27 @@ public class CancelAmountReservationForPortfolioCommand {
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
     private TransactionId transactionIdentifier;
-    private BigMoney amountOfCancelledItem;
+    private BigMoney leftTotalItem;
+    private BigMoney leftCommission;
 
     public CancelAmountReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
                                                       CoinId coinId,
                                                       TransactionId transactionIdentifier,
-                                                      BigMoney amountOfCancelledItem) {
+                                                      BigMoney leftTotalItem,
+                                                      BigMoney leftCommission) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfCancelledItem = amountOfCancelledItem;
+        this.leftTotalItem = leftTotalItem;
+        this.leftCommission = leftCommission;
     }
 
-    public BigMoney getAmountOfItemsToCancel() {
-        return amountOfCancelledItem;
+    public BigMoney getLeftTotalItem() {
+        return leftTotalItem;
+    }
+
+    public BigMoney getLeftCommission() {
+        return leftCommission;
     }
 
     public CoinId getCoinId() {
@@ -59,9 +66,5 @@ public class CancelAmountReservationForPortfolioCommand {
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
-    }
-
-    public BigMoney getAmountOfCancelledItem() {
-        return amountOfCancelledItem;
     }
 }

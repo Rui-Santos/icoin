@@ -17,7 +17,6 @@
 package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
 
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
@@ -29,20 +28,27 @@ public class ItemReservationConfirmedForPortfolioEvent {
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
     private TransactionId transactionIdentifier;
-    private BigMoney amountOfConfirmedItem;
+    private BigMoney amount;
+    private BigMoney commission;
 
     public ItemReservationConfirmedForPortfolioEvent(PortfolioId portfolioIdentifier,
                                                      CoinId coinId,
                                                      TransactionId transactionIdentifier,
-                                                     BigMoney amountOfConfirmedItem) {
+                                                     BigMoney amount,
+                                                     BigMoney commission) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
-        this.amountOfConfirmedItem = amountOfConfirmedItem;
+        this.amount = amount;
+        this.commission = commission;
     }
 
-    public BigMoney getAmountOfConfirmedItem() {
-        return amountOfConfirmedItem;
+    public BigMoney getCommission() {
+        return commission;
+    }
+
+    public BigMoney getAmount() {
+        return amount;
     }
 
     public CoinId getCoinId() {

@@ -77,10 +77,9 @@ public abstract class MoneyUtils {
         isTrue(ratePrice.getAmount().compareTo(BigDecimal.ZERO) > 0, "Rate should be greater than zero");
 
         BigMoney money =
-                amount.convertRetainScale(
+                amount.convertedTo(
                         ratePrice.getCurrencyUnit(),
-                        ratePrice.getAmount(),
-                        RoundingMode.HALF_EVEN);
+                        ratePrice.getAmount());
 
         return money.toMoney(RoundingMode.HALF_EVEN);
     }

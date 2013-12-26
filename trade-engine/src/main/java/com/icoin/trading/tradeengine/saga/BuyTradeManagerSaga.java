@@ -168,7 +168,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         logger.debug("Buy Transaction {} is executed, last amount of executed items is {} for a price of {}",
                 event.getTransactionIdentifier(), event.getAmountOfItem(), event.getItemPrice());
 
-        adjustAmount(event.getAmountOfItem());
+        adjustAmount(event.getExecutedMoney());
         BigMoney commission = adjustCommission(event.getCommission());
 
         ConfirmCashReservationCommand confirmCommand =
@@ -221,7 +221,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         getCommandBus().dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(addItemsCommand));
     }
 
-    private void adjustAmount(BigMoney amountOfExecutedItem) {
-        leftTotalMoney = leftTotalMoney.minus(amountOfExecutedItem);
+    private void adjustAmount(BigMoney executedMoney) {
+        leftTotalMoney = leftTotalMoney.minus(executedMoney);
     }
 }

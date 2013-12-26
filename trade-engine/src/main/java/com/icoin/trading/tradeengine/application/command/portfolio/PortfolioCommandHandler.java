@@ -108,7 +108,8 @@ public class PortfolioCommandHandler {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
                         portfolio.confirmReservation(command.getCoinId(),
                                 command.getTransactionIdentifier(),
-                                command.getAmountOfItemToConfirm());
+                                command.getAmountOfItem(),
+                                command.getCommission());
                         return null;
                     }
                 }
@@ -129,7 +130,8 @@ public class PortfolioCommandHandler {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
                         portfolio.cancelReservation(command.getCoinId(),
                                 command.getTransactionIdentifier(),
-                                command.getAmountOfItemsToCancel());
+                                command.getLeftTotalItem(),
+                                command.getLeftCommission());
                         return null;
                     }
                 }

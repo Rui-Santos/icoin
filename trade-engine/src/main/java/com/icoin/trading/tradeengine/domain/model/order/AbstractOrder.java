@@ -182,9 +182,8 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     }
 
     public void recordTraded(BigMoney tradeAmount, BigMoney commission, Date lastTradedTime) {
-        this.itemRemaining =
-                itemRemaining.minus(tradeAmount);
-        if (commission == null) {
+        this.itemRemaining = itemRemaining.minus(tradeAmount);
+        if (totalCommission == null) {
             totalCommission = BigMoney.zero(commission.getCurrencyUnit());
         }
 

@@ -180,8 +180,8 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
     @Override
     public String toString() {
         return "PortfolioEntry{" +
-                "amountOfMoney=" + amountOfMoney +
-                ", primaryKey='" + primaryKey + '\'' +
+                "primaryKey='" + primaryKey + '\'' +
+                ", amountOfMoney=" + amountOfMoney +
                 ", userIdentifier='" + userIdentifier + '\'' +
                 ", userName='" + userName + '\'' +
                 ", reservedAmountOfMoney=" + reservedAmountOfMoney +

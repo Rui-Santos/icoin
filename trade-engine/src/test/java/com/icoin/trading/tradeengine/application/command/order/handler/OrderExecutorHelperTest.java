@@ -241,6 +241,9 @@ public class OrderExecutorHelperTest {
     @Test
     public void testRecordTraded() throws Exception {
         BigMoney tradeAmount = BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.valueOf(100.009));
+        BigMoney price = BigMoney.of(CurrencyUnit.of("CNY"), BigDecimal.valueOf(100.009));
+        BigMoney sellCommission = BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.valueOf(10.009));
+        BigMoney buyCommission = BigMoney.of(CurrencyUnit.of("CNY"), BigDecimal.valueOf(1.009));
 
         BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
         BuyOrder buyOrder = new BuyOrder();
@@ -257,7 +260,7 @@ public class OrderExecutorHelperTest {
         helper.setSellOrderRepository(sellOrderRepository);
 
         //executing
-        helper.recordTraded(buyOrder, sellOrder, buyCommission, sellCommission, matchedTradeAmount, tradeAmount, new Date());
+        helper.recordTraded(buyOrder, sellOrder, buyCommission, sellCommission, tradeAmount, price, new Date());
 
 
         //verifying
@@ -266,6 +269,8 @@ public class OrderExecutorHelperTest {
 
         assertThat(buyOrder.getItemRemaining().getAmount(), is(closeTo(BigDecimal.ZERO, BigDecimal.valueOf(0.00000000001d))));
         assertThat(sellOrder.getItemRemaining().getAmount(), is(closeTo(BigDecimal.TEN, BigDecimal.valueOf(0.00000000001d))));
+        assertThat(sellOrder.getTotalCommission().getAmount(), is(closeTo(BigDecimal.valueOf(10.009), BigDecimal.valueOf(0.00000000001d))));
+        assertThat(buyOrder.getTotalCommission().getAmount(), is(closeTo(BigDecimal.valueOf(1.009), BigDecimal.valueOf(0.00000000001d))));
 
         verify(buyOrderRepository).save(eq(buyOrder));
         verify(sellOrderRepository).save(eq(sellOrder));

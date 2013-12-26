@@ -92,20 +92,22 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     public void confirmReservation(CoinId coinId, TransactionId transactionIdentifier,
-                                   BigMoney amountOfItemToConfirm) {
+                                   BigMoney amount, BigMoney commission) {
         apply(new ItemReservationConfirmedForPortfolioEvent(
                 portfolioId,
                 coinId,
                 transactionIdentifier,
-                amountOfItemToConfirm));
+                amount,
+                commission));
     }
 
-    public void cancelReservation(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemToCancel) {
+    public void cancelReservation(CoinId coinId, TransactionId transactionIdentifier, BigMoney leftTotalItem, BigMoney leftCommission) {
         apply(new ItemReservationCancelledForPortfolioEvent(
                 portfolioId,
                 coinId,
                 transactionIdentifier,
-                amountOfItemToCancel));
+                leftTotalItem,
+                leftCommission));
     }
 
     public void addMoney(BigMoney money) {
@@ -152,14 +154,9 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void onItemAddedToPortfolio(ItemAddedToPortfolioEvent event) {
         CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfItemAdded());
-        Item available = obtainCurrentAvailableItem(event.getCoinId());
-
-        if (available == null) {
-            createItem(event.getCoinId(), currencyUnit);
+        Item available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
+        availableCoins.put(event.getCoinId(), available.add(event.getAmountOfItemAdded()));
         }
-
-        availableCoins.put(event.getCoinId(), available.plus(event.getAmountOfItemAdded()));
-    }
 
     private Item createItem(CoinId coinId, CurrencyUnit currencyUnit) {
         final Item item = new Item();
@@ -173,31 +170,33 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void onItemReserved(ItemReservedEvent event) {
         CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfItemReserved());
-        BigMoney available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
-        availableCoins.put(event.getCoinId(), available.minus(event.getAmountOfItemReserved()));
-
-        BigMoney reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
-        reservedItems.put(event.getCoinId(), reserved.plus(event.getAmountOfItemReserved()));
+        Item available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
+        availableCoins.put(event.getCoinId(), available.subtract(event.getAmountOfItemReserved()));
+        Item reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
+        reservedItems.put(event.getCoinId(), reserved.add(event.getAmountOfItemReserved()));
     }
 
     @EventHandler
     public void onReservationConfirmed(ItemReservationConfirmedForPortfolioEvent event) {
-        final CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfConfirmedItem());
-        BigMoney reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
-        reservedItems.put(event.getCoinId(), reserved.minus(event.getAmountOfConfirmedItem()));
+        final CurrencyUnit currencyUnit = currencyUnit(event.getAmount());
+        Item reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
+        final BigMoney amount = event.getAmount().plus(event.getCommission());
+        reservedItems.put(event.getCoinId(), reserved.subtract(amount));
 
-        BigMoney available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
-        availableCoins.put(event.getCoinId(), available.minus(event.getAmountOfConfirmedItem()));
+
+        //available this should be wrong, comment it out
+//        Item available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
+//        availableCoins.put(event.getCoinId(), available.subtract(event.getAmount()));
     }
 
     @EventHandler
     public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
-        final CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfCancelledAmount());
-        BigMoney reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
-        reservedItems.put(event.getCoinId(), reserved.plus(event.getAmountOfCancelledAmount()));
+        final CurrencyUnit currencyUnit = currencyUnit(event.getLeftTotalItem());
+        Item reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
+        reservedItems.put(event.getCoinId(), reserved.subtract(event.getLeftTotalItem()));
 
-        BigMoney available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
-        availableCoins.put(event.getCoinId(), available.plus(event.getAmountOfCancelledAmount()));
+        Item available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
+        availableCoins.put(event.getCoinId(), available.add(event.getLeftTotalItem()));
     }
 
     @EventHandler
@@ -237,20 +236,19 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     }
 
     /* UTILITY METHODS */
-    private Item obtainCurrentAvailableItem(CoinId coinId) {
-        Item available = null;
+    private Item obtainCurrentAvailableItem(CoinId coinId, CurrencyUnit currencyUnit) {
         if (availableCoins.containsKey(coinId)) {
-            available = availableCoins.get(coinId);
+            return availableCoins.get(coinId);
         }
-        return available;
+        return createItem(coinId, currencyUnit);
     }
 
-    private BigMoney obtainCurrentReservedItem(CoinId coinId, CurrencyUnit currencyUnit) {
-        BigMoney reserved = BigMoney.zero(currencyUnit);
+    private Item obtainCurrentReservedItem(CoinId coinId, CurrencyUnit currencyUnit) {
         if (reservedItems.containsKey(coinId)) {
-            reserved = reservedItems.get(coinId);
+            return reservedItems.get(coinId);
         }
-        return reserved;
+
+        return createItem(coinId, currencyUnit);
     }
 
     @Override

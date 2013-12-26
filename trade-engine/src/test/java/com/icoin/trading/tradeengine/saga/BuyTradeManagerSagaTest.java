@@ -79,7 +79,8 @@ public class BuyTradeManagerSagaTest {
         fixture.givenAggregate(transactionIdentifier).published()
                 .whenAggregate(transactionIdentifier).publishes(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        coinId, orderbookIdentifier,
+                        coinId,
+                        orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
@@ -94,12 +95,14 @@ public class BuyTradeManagerSagaTest {
     public void testHandle_MoneyIsReserved() {
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        coinId, orderbookIdentifier,
+                        coinId,
+                        orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
                 .whenAggregate(portfolioIdentifier).publishes(
-                new CashReservedEvent(portfolioIdentifier, transactionIdentifier,
+                new CashReservedEvent(portfolioIdentifier,
+                        transactionIdentifier,
                         TOTAL_MONEY))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
@@ -111,13 +114,15 @@ public class BuyTradeManagerSagaTest {
     public void testHandle_NotEnoughMoneyToReserved() {
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        coinId, orderbookIdentifier,
+                        coinId,
+                        orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
                 .whenAggregate(portfolioIdentifier).publishes(
                 new CashReservationRejectedEvent(
-                        portfolioIdentifier, transactionIdentifier,
+                        portfolioIdentifier,
+                        transactionIdentifier,
                         TOTAL_MONEY))
                 .expectActiveSagas(0);
     }
@@ -126,7 +131,8 @@ public class BuyTradeManagerSagaTest {
     public void testHandle_TransactionConfirmed() {
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        coinId, orderbookIdentifier,
+                        coinId,
+                        orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
@@ -147,7 +153,8 @@ public class BuyTradeManagerSagaTest {
     @Test
     public void testHandle_TransactionCancelled() {
         fixture.givenAggregate(transactionIdentifier).published(new BuyTransactionStartedEvent(transactionIdentifier,
-                coinId, orderbookIdentifier,
+                coinId,
+                orderbookIdentifier,
                 portfolioIdentifier,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM))
@@ -172,15 +179,23 @@ public class BuyTradeManagerSagaTest {
         TransactionId sellTransactionIdentifier = new TransactionId();
         final Date tradeTime = currentTime();
 
-        fixture.givenAggregate(transactionIdentifier).published(new BuyTransactionStartedEvent(transactionIdentifier,
-                coinId, orderbookIdentifier,
-                portfolioIdentifier,
-                TOTAL_ITEMS,
-                PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
-                portfolioIdentifier, transactionIdentifier,
-                TOTAL_MONEY))
-                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
+        fixture.givenAggregate(transactionIdentifier)
+                .published(
+                        new BuyTransactionStartedEvent(
+                                transactionIdentifier,
+                                coinId,
+                                orderbookIdentifier,
+                                portfolioIdentifier,
+                                TOTAL_ITEMS,
+                                PRICE_PER_ITEM))
+                .andThenAggregate(portfolioIdentifier)
+                .published(
+                        new CashReservedEvent(
+                                portfolioIdentifier,
+                                transactionIdentifier,
+                                TOTAL_MONEY))
+                .andThenAggregate(transactionIdentifier)
+                .published(new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
                 .whenAggregate(orderbookIdentifier)
                 .publishes(
                         new TradeExecutedEvent(
@@ -209,33 +224,39 @@ public class BuyTradeManagerSagaTest {
         final Date tradeTime = currentTime();
 
         final BigDecimal price = BigDecimal.valueOf(99);
-        fixture.givenAggregate(transactionIdentifier).published(
-                new BuyTransactionStartedEvent(
-                        transactionIdentifier,
-                        coinId, orderbookIdentifier,
-                        portfolioIdentifier,
-                        TOTAL_ITEMS,
-                        PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier).published(new CashReservedEvent(
-                portfolioIdentifier, transactionIdentifier,
-                TOTAL_MONEY))
-                .andThenAggregate(transactionIdentifier).published(new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
-                .andThenAggregate(orderbookIdentifier).published(
-                new TradeExecutedEvent(
-                        orderbookIdentifier,
-                        TOTAL_ITEMS,
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
-                        buyOrderIdentifier.toString(),//todo change
-                        sellOrderIdentifier.toString(),//todo change
-                        transactionIdentifier,
-                        sellTransactionIdentifier,
-                        tradeTime,
-                        TradeType.SELL))
-                .whenAggregate(transactionIdentifier).publishes(
-                new BuyTransactionExecutedEvent(
-                        transactionIdentifier,
-                        coinId, TOTAL_ITEMS,
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, price)))
+        fixture.givenAggregate(transactionIdentifier)
+                .published(
+                        new BuyTransactionStartedEvent(
+                                transactionIdentifier,
+                                coinId, orderbookIdentifier,
+                                portfolioIdentifier,
+                                TOTAL_ITEMS,
+                                PRICE_PER_ITEM))
+                .andThenAggregate(portfolioIdentifier)
+                .published(
+                        new CashReservedEvent(
+                                portfolioIdentifier, transactionIdentifier,
+                                TOTAL_MONEY))
+                .andThenAggregate(transactionIdentifier)
+                .published(new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
+                .andThenAggregate(orderbookIdentifier)
+                .published(
+                        new TradeExecutedEvent(
+                                orderbookIdentifier,
+                                TOTAL_ITEMS,
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
+                                buyOrderIdentifier.toString(),//todo change
+                                sellOrderIdentifier.toString(),//todo change
+                                transactionIdentifier,
+                                sellTransactionIdentifier,
+                                tradeTime,
+                                TradeType.SELL))
+                .whenAggregate(transactionIdentifier)
+                .publishes(
+                        new BuyTransactionExecutedEvent(
+                                transactionIdentifier,
+                                coinId, TOTAL_ITEMS,
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, price)))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
@@ -260,30 +281,34 @@ public class BuyTradeManagerSagaTest {
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
-                .andThenAggregate(portfolioIdentifier).published(
-                new CashReservedEvent(
-                        portfolioIdentifier,
-                        transactionIdentifier,
-                        TOTAL_MONEY))
-                .andThenAggregate(transactionIdentifier).published(
-                new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
-                .andThenAggregate(orderbookIdentifier).published(
-                new TradeExecutedEvent(
-                        orderbookIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
-                        buyOrderIdentifier.toString(),//todo change
-                        sellOrderIdentifier.toString(),//todo change
-                        transactionIdentifier,
-                        sellTransactionIdentifier,
-                        tradeTime,
-                        TradeType.SELL))
-                .whenAggregate(transactionIdentifier).publishes(
-                new BuyTransactionPartiallyExecutedEvent(
-                        transactionIdentifier,
-                        coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99))))
+                .andThenAggregate(portfolioIdentifier)
+                .published(
+                        new CashReservedEvent(
+                                portfolioIdentifier,
+                                transactionIdentifier,
+                                TOTAL_MONEY))
+                .andThenAggregate(transactionIdentifier)
+                .published(
+                        new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
+                .andThenAggregate(orderbookIdentifier)
+                .published(
+                        new TradeExecutedEvent(
+                                orderbookIdentifier,
+                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
+                                buyOrderIdentifier.toString(),//todo change
+                                sellOrderIdentifier.toString(),//todo change
+                                transactionIdentifier,
+                                sellTransactionIdentifier,
+                                tradeTime,
+                                TradeType.SELL))
+                .whenAggregate(transactionIdentifier)
+                .publishes(
+                        new BuyTransactionPartiallyExecutedEvent(
+                                transactionIdentifier,
+                                coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99))))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
@@ -305,16 +330,18 @@ public class BuyTradeManagerSagaTest {
 
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
-                        coinId, orderbookIdentifier,
+                        coinId,
+                        orderbookIdentifier,
                         portfolioIdentifier,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM))
                 .andThenAggregate(portfolioIdentifier).published(
                 new CashReservedEvent(
-                        portfolioIdentifier, transactionIdentifier,
+                        portfolioIdentifier,
+                        transactionIdentifier,
                         TOTAL_MONEY))
-                .andThenAggregate(transactionIdentifier).published(
-                new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
+                .andThenAggregate(transactionIdentifier)
+                .published(new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
                 .andThenAggregate(orderbookIdentifier).published(
                 new TradeExecutedEvent(
                         orderbookIdentifier,
@@ -326,12 +353,13 @@ public class BuyTradeManagerSagaTest {
                         sellTransactionIdentifier,
                         tradeTime,
                         TradeType.SELL))
-                .whenAggregate(transactionIdentifier).publishes(
-                new BuyTransactionPartiallyExecutedEvent(
-                        transactionIdentifier,
-                        coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99))))
+                .whenAggregate(transactionIdentifier)
+                .publishes(
+                        new BuyTransactionPartiallyExecutedEvent(
+                                transactionIdentifier,
+                                coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99))))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(

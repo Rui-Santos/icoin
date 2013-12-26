@@ -54,4 +54,21 @@ public class Coin extends AbstractAnnotatedAggregateRoot {
     public void handle(CoinCreatedEvent event) {
         this.coinId = event.getCoinIdentifier();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Coin coin = (Coin) o;
+
+        if (coinId != null ? !coinId.equals(coin.coinId) : coin.coinId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return coinId != null ? coinId.hashCode() : 0;
+    }
 }

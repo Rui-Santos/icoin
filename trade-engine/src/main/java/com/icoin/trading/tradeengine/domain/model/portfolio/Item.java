@@ -5,6 +5,9 @@ import org.joda.money.BigMoney;
 
 import java.math.RoundingMode;
 
+import static com.homhon.util.Asserts.isTrue;
+import static com.homhon.util.Asserts.notNull;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -39,7 +42,7 @@ public class Item {
         return reservedAmount;
     }
 
-    public BigMoney getAvailableAmount(){
+    public BigMoney getAvailableAmount() {
         return totalAmount.minus(reservedAmount).toMoney(RoundingMode.HALF_EVEN).toBigMoney();
     }
 
@@ -61,5 +64,21 @@ public class Item {
 
     public void setReservedCommission(BigMoney reservedCommission) {
         this.reservedCommission = reservedCommission;
+    }
+
+    public Item add(BigMoney amountOfItemAdded) {
+        notNull(amountOfItemAdded);
+        isTrue(amountOfItemAdded.isNegative());
+        totalAmount = totalAmount.plus(amountOfItemAdded);
+        return this;
+    }
+
+    public Item subtract(BigMoney amountOfItemAdded) {
+        notNull(amountOfItemAdded);
+        isTrue(totalAmount.compareTo(amountOfItemAdded) >= 0);
+        BigMoney subtracted = totalAmount.minus(amountOfItemAdded);
+
+        totalAmount = subtracted;
+        return this;
     }
 }

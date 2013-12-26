@@ -52,6 +52,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
 
     private static final long serialVersionUID = 5337051021661868242L;
     private final static Logger logger = LoggerFactory.getLogger(SellTradeManagerSaga.class);
+    private BigMoney leftTotalItem;
 
     @StartSaga
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -76,6 +77,8 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         setTotalItem(event.getTotalItem());
         setTotalCommission(event.getTotalCommission());
         setLeftCommission(event.getTotalCommission());
+
+        leftTotalItem = event.getTotalItem();
 
         ReserveAmountCommand reserveAmountCommand =
                 new ReserveAmountCommand(getPortfolioIdentifier(),
@@ -134,28 +137,19 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
     @SagaEventHandler(associationProperty = "transactionIdentifier")
     @EndSaga
     public void handle(SellTransactionCancelledEvent event) {
-        BigMoney amountOfCancelledItem = event.getTotalAmountOfItem().minus(event.getAmountOfExecutedItem());
         if(logger.isDebugEnabled()){
-            logger.debug("Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}",
+            logger.debug("Sell Transaction {} is cancelled, amount of cash reserved to cancel is {}, left commission is {}",
                     event.getTransactionIdentifier(),
-                    amountOfCancelledItem);
+                    leftTotalItem, getLeftCommission());
         }
         CancelAmountReservationForPortfolioCommand command =
-                new CancelAmountReservationForPortfolioCommand(getPortfolioIdentifier(),
+                new CancelAmountReservationForPortfolioCommand(
+                        getPortfolioIdentifier(),
                         getCoinId(),
                         getTransactionIdentifier(),
-                        amountOfCancelledItem);
+                        leftTotalItem,
+                        getLeftCommission());
         getCommandBus().dispatch(new GenericCommandMessage<CancelAmountReservationForPortfolioCommand>(command));
-
-        //is it necessary
-        //when the whole saga complete, change the price here
-        //todo after whole completion for this exec event, refresh done price
-        //todo after whole completion for this exec event, refresh data
-
-        //orderbookhandler to handle refresh data
-//        commandGateway.sendAndWait(new RefreshHighestSellPriceCoommand());
-//        commandGateway.sendAndWait(new RefreshLowestSellPriceCoommand());
-//        commandGateway.sendAndWait(new RefreshCurrentDonePriceCoommand());
     }
 
     @SagaEventHandler(associationProperty = "sellTransactionId", keyName = "transactionIdentifier")
@@ -164,6 +158,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
             logger.debug("Sell Transaction {} is executed, items for transaction are {} for a price of {}",
                     getTransactionIdentifier(), event.getTradeAmount(), event.getTradedPrice());
         }
+
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(getTransactionIdentifier(),
                 getCoinId(),
                 event.getTradeAmount(),
@@ -181,8 +176,6 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
             logger.debug("Sell Transaction {} is executed, last amount of executed items is {} for a price of {}",
                     event.getTransactionIdentifier(), event.getAmountOfItem(), event.getItemPrice());
         }
-
-        //todo adjust commission
 
         BigMoney commission = adjustCommission(event.getCommission());
 
@@ -225,5 +218,9 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                 new DepositCashCommand(getPortfolioIdentifier(),
                         event.getExecutedMoney());
         getCommandBus().dispatch(new GenericCommandMessage<DepositCashCommand>(depositCommand));
+    }
+
+    private void adjustAmount(BigMoney executedItem) {
+        leftTotalItem = leftTotalItem.minus(executedItem);
     }
 }

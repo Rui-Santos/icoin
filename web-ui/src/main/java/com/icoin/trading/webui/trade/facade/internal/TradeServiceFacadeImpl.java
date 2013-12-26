@@ -33,6 +33,7 @@ import com.icoin.trading.webui.trade.facade.internal.assembler.BuyOrderAssembler
 import com.icoin.trading.webui.trade.facade.internal.assembler.SellOrderAssembler;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +112,8 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
         notNull(order);
         notNull(order.getItemPrice());
         notNull(order.getTradeAmount());
+        notNull(order.getAmountCcy());
+        notNull(order.getPriceCcy());
 
         BuyOrderAssembler assembler = new BuyOrderAssembler();
 
@@ -118,8 +121,10 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
         CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(buyOrder);
         Commission commission = commissionPolicy.calculateBuyCommission(buyOrder);
 
+        //todo test precision
         final Money money = commission.getCommission();
-        return money.plus(order.getItemPrice().multiply(order.getTradeAmount()), RoundingMode.HALF_EVEN).toBigMoney();
+        final Money reservedMoney = Money.of(CurrencyUnit.of(order.getPriceCcy()), order.getItemPrice().multiply(order.getTradeAmount()), RoundingMode.HALF_EVEN);
+        return money.plus(reservedMoney).toBigMoney();
     }
 
     @Override

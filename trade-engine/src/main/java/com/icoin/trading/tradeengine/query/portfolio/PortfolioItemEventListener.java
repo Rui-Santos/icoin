@@ -57,10 +57,10 @@ public class PortfolioItemEventListener {
         logger.debug("Handle ItemReservationCancelledForPortfolioEvent for orderbook with primaryKey {}",
                 event.getCoinId());
         ItemEntry itemEntry = createItemEntry(event.getCoinId().toString(),
-                event.getAmountOfCancelledAmount());
+                event.getLeftTotalItem());
 
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.removeReservedItem(itemEntry.getCoinIdentifier(), event.getAmountOfCancelledAmount());
+        portfolioEntry.removeReservedItem(itemEntry.getCoinIdentifier(), event.getLeftTotalItem());
         portfolioEntry.addItemInPossession(itemEntry);
 
         portfolioRepository.save(portfolioEntry);
@@ -71,9 +71,9 @@ public class PortfolioItemEventListener {
         logger.debug("Handle ItemReservationConfirmedForPortfolioEvent for orderbook with primaryKey {}",
                 event.getCoinId());
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.removeReservedItem(event.getCoinId().toString(), event.getAmountOfConfirmedItem());
+        portfolioEntry.removeReservedItem(event.getCoinId().toString(), event.getAmount());
         portfolioEntry.removeItemsInPossession(event.getCoinId().toString(),
-                event.getAmountOfConfirmedItem());
+                event.getAmount());
 
         portfolioRepository.save(portfolioEntry);
     }
