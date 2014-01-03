@@ -63,6 +63,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                             TransactionId transactionId,
                             BigMoney tradeCount,
                             BigMoney itemPrice,
+                            BigMoney totalCommission,
                             PortfolioId portfolioId,
                             Date placeDate) {
 
@@ -72,13 +73,19 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 transactionId,
                 tradeCount,
                 itemPrice,
+                totalCommission,
                 portfolioId,
                 currencyPair,
                 placeDate));
     }
 
-    public void addSellOrder(OrderId orderId, TransactionId transactionId, BigMoney tradeCount,
-                             BigMoney itemPrice, PortfolioId portfolioId, Date placeDate) {
+    public void addSellOrder(OrderId orderId,
+                             TransactionId transactionId,
+                             BigMoney tradeCount,
+                             BigMoney itemPrice,
+                             BigMoney totalCommission,
+                             PortfolioId portfolioId,
+                             Date placeDate) {
 
         apply(new SellOrderPlacedEvent(
                 orderBookId,
@@ -86,6 +93,7 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 transactionId,
                 tradeCount,
                 itemPrice,
+                totalCommission,
                 portfolioId,
                 currencyPair,
                 placeDate));

@@ -22,6 +22,7 @@ import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.joda.money.BigMoney;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,11 +51,11 @@ public class OrderListener {
         String sellOrderId = event.getSellOrderId();
 
         final OrderEntry buyOrder = orderRepository.findOne(buyOrderId);
-        buyOrder.recordTraded(event.getTradeAmount(), event.getTradeTime());
+        buyOrder.recordTraded(event.getTradeAmount(), event.getBuyCommission(), event.getTradeTime());
         orderRepository.save(buyOrder);
 
         final OrderEntry sellOrder = orderRepository.findOne(sellOrderId);
-        sellOrder.recordTraded(event.getTradeAmount(), event.getTradeTime());
+        sellOrder.recordTraded(event.getTradeAmount(), event.getSellCommission(),event.getTradeTime());
         orderRepository.save(sellOrder);
     }
 
@@ -69,6 +70,8 @@ public class OrderListener {
         entry.setPlacedDate(event.getPlaceDate());
         entry.setItemPrice(event.getItemPrice());
         entry.setCurrencyPair(event.getCurrencyPair());
+        entry.setTotalCommission(event.getTotalCommission());
+        entry.setExecutedCommission(BigMoney.zero(event.getTotalCommission().getCurrencyUnit()));
 
         return entry;
     }

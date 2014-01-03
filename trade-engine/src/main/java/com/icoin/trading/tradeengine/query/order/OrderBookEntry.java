@@ -22,6 +22,8 @@ import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -40,6 +42,8 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
 
     private String buyTransactionId;
     private String sellTransactionId;
+
+    private Date lastTradedTime;
 
     public String getCoinIdentifier() {
         return coinIdentifier;
@@ -135,5 +139,13 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
 
     public void setSellTransactionId(String sellTransactionId) {
         this.sellTransactionId = sellTransactionId;
+    }
+
+    public Date getLastTradedTime() {
+        return lastTradedTime;
+    }
+
+    public void setLastTradedTime(Date lastTradedTime) {
+        this.lastTradedTime = lastTradedTime;
     }
 }

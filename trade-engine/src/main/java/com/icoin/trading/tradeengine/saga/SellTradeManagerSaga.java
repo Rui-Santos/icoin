@@ -220,7 +220,7 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
         getCommandBus().dispatch(new GenericCommandMessage<DepositCashCommand>(depositCommand));
     }
 
-    private void adjustAmount(BigMoney executedItem) {
-        leftTotalItem = leftTotalItem.minus(executedItem);
-    }
+//    private void adjustAmount(BigMoney executedItem) {
+//        leftTotalItem = leftTotalItem.minus(executedItem);
+//    }
 }

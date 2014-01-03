@@ -241,6 +241,7 @@ public class BuyOrderExecutorIT {
         BigMoney itemRemaining = BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.valueOf(100));
         buyOrder.setItemPrice(buyPrice);
         buyOrder.setItemRemaining(itemRemaining);
+        buyOrder.setLeftCommission(BigMoney.of(lowestSellPrice.getCurrencyUnit(), 16));
         when(buyOrderRepository.findOne(eq(orderId.toString()))).thenReturn(buyOrder);
 
 
@@ -250,8 +251,8 @@ public class BuyOrderExecutorIT {
         highestBuy.setPrimaryKey(new OrderId().toString());
         when(buyOrderRepository.findHighestPricePendingOrder(eq(orderBookId))).thenReturn(highestBuy);
 
-        SellOrder sellOrder1 = createSellOrder(highestBuyPrice, itemRemaining.minus(BigDecimal.TEN));
-        SellOrder sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)));
+        SellOrder sellOrder1 = createSellOrder(highestBuyPrice, itemRemaining.minus(BigDecimal.TEN), BigMoney.of(tradeAmount.getCurrencyUnit(), 1.85));
+        SellOrder sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)), BigMoney.of(tradeAmount.getCurrencyUnit(), 12.5));
         when(sellOrderRepository.findAscPendingOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(buyPrice),
@@ -346,17 +347,20 @@ public class BuyOrderExecutorIT {
         //assertion
         assertThat(buyOrder.getCompleteDate(), notNullValue());
         assertThat(buyOrder.getOrderStatus(), equalTo(OrderStatus.DONE));
+        assertThat(buyOrder.getLeftCommission(), equalTo(BigMoney.of(buyPrice.getCurrencyUnit(), 0.46)));
 
         assertThat(sellOrder1.getCompleteDate(), notNullValue());
         assertThat(sellOrder1.getCompleteDate(), equalTo(sellOrder1.getLastTradedTime()));
         assertThat(sellOrder1.getCompleteDate(), equalTo(placeDate.toDate()));
         assertThat(sellOrder1.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(sellOrder1.getItemRemaining(), equalTo(BigMoney.zero(CurrencyUnit.of("BTC"))));
+        assertThat(sellOrder1.getLeftCommission().isEqual(BigMoney.zero(CurrencyUnit.of("BTC"))), is(true));
 
         assertThat(sellOrder2.getCompleteDate(), nullValue());
         assertThat(sellOrder2.getLastTradedTime(), equalTo(placeDate.toDate()));
         assertThat(sellOrder2.getOrderStatus(), equalTo(OrderStatus.PENDING));
         assertThat(sellOrder2.getItemRemaining().isEqual(itemRemaining.plus(BigDecimal.valueOf(100)).minus(10)), is(true));
+        assertThat(sellOrder2.getLeftCommission().isEqual(BigMoney.of(itemRemaining.getCurrencyUnit(), 11)), is(true));
 
         //verify
         verify(sellOrderRepository).findAscPendingOrdersByPriceTime(eq(placeDate.toDate()),
@@ -383,6 +387,7 @@ public class BuyOrderExecutorIT {
         BigMoney itemRemaining = tradeAmount;
         buyOrder.setItemPrice(buyPrice);
         buyOrder.setItemRemaining(itemRemaining);
+        buyOrder.setLeftCommission(BigMoney.of(lowestSellPrice.getCurrencyUnit(), 10.25));
         when(buyOrderRepository.findOne(eq(orderId.toString()))).thenReturn(buyOrder);
 
         BigMoney highestBuyPrice = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.23)).minus(1);
@@ -391,8 +396,8 @@ public class BuyOrderExecutorIT {
         highestBuy.setPrimaryKey(new OrderId().toString());
         when(buyOrderRepository.findHighestPricePendingOrder(eq(orderBookId))).thenReturn(highestBuy);
 
-        SellOrder sellOrder1 = createSellOrder(highestBuyPrice, itemRemaining);
-        SellOrder sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)));
+        SellOrder sellOrder1 = createSellOrder(highestBuyPrice, itemRemaining, BigMoney.of(tradeAmount.getCurrencyUnit(), 1.98));
+        SellOrder sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)), BigMoney.of(tradeAmount.getCurrencyUnit(), 12.5));
         when(sellOrderRepository.findAscPendingOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(buyPrice),
@@ -468,12 +473,14 @@ public class BuyOrderExecutorIT {
         //assertion
         assertThat(buyOrder.getCompleteDate(), notNullValue());
         assertThat(buyOrder.getOrderStatus(), equalTo(OrderStatus.DONE));
+        assertThat(buyOrder.getLeftCommission(), equalTo(BigMoney.of(buyPrice.getCurrencyUnit(), 9.25)));
 
         assertThat(sellOrder1.getCompleteDate(), notNullValue());
         assertThat(sellOrder1.getCompleteDate(), equalTo(sellOrder1.getLastTradedTime()));
         assertThat(sellOrder1.getCompleteDate(), equalTo(placeDate.toDate()));
         assertThat(sellOrder1.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(sellOrder1.getItemRemaining().isEqual(BigMoney.zero(CurrencyUnit.of("BTC"))), is(true));
+        assertThat(sellOrder1.getLeftCommission().isEqual(BigMoney.zero(CurrencyUnit.of("BTC"))), is(true));
 
         //verify
         verify(sellOrderRepository).findAscPendingOrdersByPriceTime(eq(placeDate.toDate()),
@@ -498,16 +505,17 @@ public class BuyOrderExecutorIT {
         BigMoney itemRemaining = tradeAmount.plus(1);
         buyOrder.setItemPrice(buyPrice);
         buyOrder.setItemRemaining(itemRemaining);
+        buyOrder.setLeftCommission(BigMoney.of(lowestSellPrice.getCurrencyUnit(), 1.23));
         when(buyOrderRepository.findOne(eq(orderId.toString()))).thenReturn(buyOrder);
 
-        SellOrder sellOrder1 = createSellOrder(buyPrice, itemRemaining.plus(1));
-        SellOrder sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)));
+        SellOrder sellOrder1 = createSellOrder(buyPrice, itemRemaining.plus(1), BigMoney.of(tradeAmount.getCurrencyUnit(), 1.25));
+        SellOrder sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)), BigMoney.of(tradeAmount.getCurrencyUnit(), 1.25));
         when(sellOrderRepository.findAscPendingOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(buyPrice),
                 eq(orderBookId),
-                eq(100)
-        )).thenReturn(Arrays.asList(sellOrder1, sellOrder2));
+                eq(100)))
+                .thenReturn(Arrays.asList(sellOrder1, sellOrder2));
 
         Commission buyCommission = new Commission(BigMoney.of(buyPrice.getCurrencyUnit(), 1.23), "buyCommission");
         Commission sellCommission = new Commission(BigMoney.of(itemRemaining.getCurrencyUnit(), 0.9898), "sellCommission");
@@ -571,11 +579,13 @@ public class BuyOrderExecutorIT {
         //assertion
         assertThat(buyOrder.getCompleteDate(), notNullValue());
         assertThat(buyOrder.getOrderStatus(), equalTo(OrderStatus.DONE));
+        assertThat(buyOrder.getLeftCommission().isEqual(BigMoney.zero(buyPrice.getCurrencyUnit())), is(true));
 
         assertThat(sellOrder1.getCompleteDate(), nullValue());
         assertThat(sellOrder1.getLastTradedTime(), equalTo(sellOrder1.getLastTradedTime()));
         assertThat(sellOrder1.getOrderStatus(), equalTo(OrderStatus.PENDING));
         assertThat(sellOrder1.getItemRemaining().isEqual(BigMoney.of(CurrencyUnit.of("BTC"), 1)), is(true));
+        assertThat(sellOrder1.getLeftCommission().isEqual(BigMoney.of(CurrencyUnit.of("BTC"), 0.2602)), is(true));
 
         //verify
         verify(sellOrderRepository).findAscPendingOrdersByPriceTime(eq(placeDate.toDate()),
@@ -605,6 +615,17 @@ public class BuyOrderExecutorIT {
         SellOrder sellOrder = new SellOrder();
         sellOrder.setItemPrice(price);
         sellOrder.setItemRemaining(itemRemaining);
+        sellOrder.setTransactionId(new TransactionId());
+        sellOrder.setPrimaryKey(new OrderId().toString());
+
+        return sellOrder;
+    }
+
+    private SellOrder createSellOrder(BigMoney price, BigMoney itemRemaining, BigMoney commission) {
+        SellOrder sellOrder = new SellOrder();
+        sellOrder.setItemPrice(price);
+        sellOrder.setItemRemaining(itemRemaining);
+        sellOrder.setLeftCommission(commission);
         sellOrder.setTransactionId(new TransactionId());
         sellOrder.setPrimaryKey(new OrderId().toString());
 

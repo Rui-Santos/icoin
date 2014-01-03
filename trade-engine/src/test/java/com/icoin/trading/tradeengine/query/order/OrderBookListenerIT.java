@@ -126,10 +126,14 @@ public class OrderBookListenerIT {
         final Date tradeTime = currentTime();
 
         TradeExecutedEvent event = new TradeExecutedEvent(orderBookId,
+                coinId,
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(300)),
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(125)),
-                buyOrderId.toString(),//todo change,
-                sellOrderId.toString(),//todo change,
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(37500)),
+                buyOrderId.toString(),
+                sellOrderId.toString(),
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1.5)),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(0.725)),
                 buyTransactionId,
                 sellTransactionId,
                 tradeTime,
@@ -155,7 +159,6 @@ public class OrderBookListenerIT {
         coinEntry.setPrimaryKey(coinId.toString());
         coinEntry.setName("Test Coin");
         coinEntry.setCoinAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100000)));
-        coinEntry.setTradeStarted(true);
         coinEntry.setCoinPrice(BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)));
         coinRepository.save(coinEntry);
         return coinEntry;

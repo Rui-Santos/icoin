@@ -67,7 +67,8 @@ public class PortfolioCommandHandler {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
                         portfolio.reserveItem(command.getCoinId(),
                                 command.getTransactionIdentifier(),
-                                command.getAmountOfItemToReserve());
+                                command.getAmountOfItemToReserve(),
+                                command.getCommission());
                         return null;
                     }
                 }

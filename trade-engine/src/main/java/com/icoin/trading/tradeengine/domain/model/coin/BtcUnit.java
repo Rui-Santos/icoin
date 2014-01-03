@@ -12,6 +12,7 @@ import java.math.BigDecimal;
  * Time: 4:20 PM
  * To change this template use File | Settings | File Templates.
  */
+@SuppressWarnings("unused")
 public enum BtcUnit implements ValueObject<BtcUnit> {
     BTC {
         @Override

@@ -37,6 +37,7 @@ public abstract class AbstractOrderPlacedEvent {
     private TransactionId transactionId;
     private final BigMoney tradeAmount;
     private final BigMoney itemPrice;
+    private final BigMoney totalCommission;
     private final PortfolioId portfolioId;
     private final CurrencyPair currencyPair;
     private final Date placeDate;
@@ -46,6 +47,7 @@ public abstract class AbstractOrderPlacedEvent {
                                        TransactionId transactionId,
                                        BigMoney tradeAmount,
                                        BigMoney itemPrice,
+                                       BigMoney totalCommission,
                                        PortfolioId portfolioId,
                                        CurrencyPair currencyPair,
                                        Date placeDate) {
@@ -53,6 +55,7 @@ public abstract class AbstractOrderPlacedEvent {
         this.transactionId = transactionId;
         this.tradeAmount = tradeAmount;
         this.itemPrice = itemPrice;
+        this.totalCommission = totalCommission;
         this.portfolioId = portfolioId;
         this.orderBookId = orderBookId;
         this.currencyPair = currencyPair;
@@ -89,5 +92,9 @@ public abstract class AbstractOrderPlacedEvent {
 
     public Date getPlaceDate() {
         return placeDate;
+    }
+
+    public BigMoney getTotalCommission() {
+        return totalCommission;
     }
 }

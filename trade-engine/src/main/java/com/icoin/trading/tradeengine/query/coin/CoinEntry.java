@@ -19,7 +19,7 @@ public class CoinEntry extends AuditAwareEntitySupport<CoinEntry, String, Long> 
     private String name;
     private BigMoney coinPrice;
     private BigMoney coinAmount;
-    private boolean tradeStarted;
+//    private boolean tradeStarted;
 
     public BigMoney getCoinAmount() {
         return coinAmount;
@@ -37,13 +37,13 @@ public class CoinEntry extends AuditAwareEntitySupport<CoinEntry, String, Long> 
         this.name = name;
     }
 
-    public boolean isTradeStarted() {
-        return tradeStarted;
-    }
+//    public boolean isTradeStarted() {
+//        return tradeStarted;
+//    }
 
-    public void setTradeStarted(boolean tradeStarted) {
-        this.tradeStarted = tradeStarted;
-    }
+//    public void setTradeStarted(boolean tradeStarted) {
+//        this.tradeStarted = tradeStarted;
+//    }
 
     public BigMoney getCoinPrice() {
         return coinPrice;

@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.commission.Commission;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
+import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
@@ -21,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.homhon.util.Asserts.notNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;
@@ -186,7 +188,7 @@ public class OrderExecutorHelperTest {
 
         OrderBook orderBook = mock(OrderBook.class);
         when(orderBook.getOrderBookId()).thenReturn(orderBookId);
-        when(orderBook.getCurrencyPair()).thenReturn(new CurrencyPair(Currencies.BTC,Currencies.AUD));
+        when(orderBook.getCurrencyPair()).thenReturn(new CurrencyPair(Currencies.BTC, Currencies.AUD));
 
         BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
         BuyOrder buyOrder = createBuyOrders(highestBuyPrice.minus(BigDecimal.valueOf(0.01))).get(0);
@@ -219,7 +221,7 @@ public class OrderExecutorHelperTest {
 
         OrderBook orderBook = mock(OrderBook.class);
         when(orderBook.getOrderBookId()).thenReturn(orderBookId);
-        when(orderBook.getCurrencyPair()).thenReturn(new CurrencyPair(Currencies.BTC,Currencies.AUD));
+        when(orderBook.getCurrencyPair()).thenReturn(new CurrencyPair(Currencies.BTC, Currencies.AUD));
 
         BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
         SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
@@ -248,11 +250,13 @@ public class OrderExecutorHelperTest {
         BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
         BuyOrder buyOrder = new BuyOrder();
         buyOrder.setItemRemaining(tradeAmount);
+        buyOrder.setLeftCommission(buyCommission);
         when(buyOrderRepository.save(eq(buyOrder))).thenReturn(buyOrder);
 
         SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
         SellOrder sellOrder = new SellOrder();
         sellOrder.setItemRemaining(tradeAmount.plus(10));
+        sellOrder.setLeftCommission(sellCommission);
         when(sellOrderRepository.save(eq(sellOrder))).thenReturn(sellOrder);
 
         OrderExecutorHelper helper = new OrderExecutorHelper();
@@ -269,10 +273,70 @@ public class OrderExecutorHelperTest {
 
         assertThat(buyOrder.getItemRemaining().getAmount(), is(closeTo(BigDecimal.ZERO, BigDecimal.valueOf(0.00000000001d))));
         assertThat(sellOrder.getItemRemaining().getAmount(), is(closeTo(BigDecimal.TEN, BigDecimal.valueOf(0.00000000001d))));
-        assertThat(sellOrder.getTotalCommission().getAmount(), is(closeTo(BigDecimal.valueOf(10.009), BigDecimal.valueOf(0.00000000001d))));
-        assertThat(buyOrder.getTotalCommission().getAmount(), is(closeTo(BigDecimal.valueOf(1.009), BigDecimal.valueOf(0.00000000001d))));
+        assertThat(sellOrder.getLeftCommission().getAmount(), is(closeTo(BigDecimal.valueOf(0), BigDecimal.valueOf(0.00000000001d))));
+        assertThat(buyOrder.getLeftCommission().getAmount(), is(closeTo(BigDecimal.valueOf(0), BigDecimal.valueOf(0.00000000001d))));
 
         verify(buyOrderRepository).save(eq(buyOrder));
         verify(sellOrderRepository).save(eq(sellOrder));
+    }
+
+    @Test
+    public void testCalcExecutedBuyCommission() throws Exception {
+        final BigMoney price = BigMoney.of(CurrencyUnit.of(Currencies.CNY), 100);
+        final BigMoney amount = BigMoney.of(CurrencyUnit.of(Currencies.CNY), 10);
+        final BuyOrder buyOrder = new BuyOrder();
+
+        final CommissionPolicyFactory factory = mock(CommissionPolicyFactory.class);
+        final CommissionPolicy policy = mock(CommissionPolicy.class);
+        final Commission commission = new Commission(BigMoney.of(CurrencyUnit.EUR, 10), "");
+        when(policy.calculateBuyCommission(eq(buyOrder), eq(amount), eq(price))).thenReturn(commission);
+
+        when(factory.createCommissionPolicy(eq(buyOrder))).thenReturn(policy);
+
+
+        final OrderExecutorHelper helper = new OrderExecutorHelper();
+        helper.setCommissionPolicyFactory(factory);
+
+
+        final BigMoney commissionMoney =
+                helper.calcExecutedBuyCommission(
+                        buyOrder,
+                        price,
+                        amount);
+
+        assertThat(commissionMoney.isEqual(commission.getBigMoneyCommission()), is(true));
+
+        verify(factory).createCommissionPolicy(eq(buyOrder));
+        verify(policy).calculateBuyCommission(eq(buyOrder), eq(amount), eq(price));
+    }
+
+    @Test
+    public void testCalcExecutedSellCommission() throws Exception {
+        final BigMoney price = BigMoney.of(CurrencyUnit.of(Currencies.CNY), 100);
+        final BigMoney amount = BigMoney.of(CurrencyUnit.of(Currencies.CNY), 10);
+        final SellOrder sellOrder = new SellOrder();
+
+        final CommissionPolicyFactory factory = mock(CommissionPolicyFactory.class);
+        final CommissionPolicy policy = mock(CommissionPolicy.class);
+        final Commission commission = new Commission(BigMoney.of(CurrencyUnit.EUR, 10), "");
+        when(policy.calculateSellCommission(eq(sellOrder), eq(amount), eq(price))).thenReturn(commission);
+
+        when(factory.createCommissionPolicy(eq(sellOrder))).thenReturn(policy);
+
+
+        final OrderExecutorHelper helper = new OrderExecutorHelper();
+        helper.setCommissionPolicyFactory(factory);
+
+
+        final BigMoney commissionMoney =
+                helper.calcExecutedSellCommission(
+                        sellOrder,
+                        price,
+                        amount);
+
+        assertThat(commissionMoney.isEqual(commission.getBigMoneyCommission()), is(true));
+
+        verify(factory).createCommissionPolicy(eq(sellOrder));
+        verify(policy).calculateSellCommission(eq(sellOrder), eq(amount), eq(price));
     }
 }

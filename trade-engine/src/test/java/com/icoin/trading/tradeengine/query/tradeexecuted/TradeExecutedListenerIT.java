@@ -110,10 +110,14 @@ public class TradeExecutedListenerIT {
         TradeExecutedEvent event =
                 new TradeExecutedEvent(
                         orderBookId,
+                        coinId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(300)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(125)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(37500)),
                         buyOrderId.toString(),
                         sellOrderId.toString(),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(125)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(300)),
                         buyTransactionId,
                         sellTransactionId,
                         tradeTime,

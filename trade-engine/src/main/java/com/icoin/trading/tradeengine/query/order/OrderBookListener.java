@@ -73,6 +73,7 @@ public class OrderBookListener {
         orderBookEntry.setTradedPrice(event.getTradedPrice());
         orderBookEntry.setBuyTransactionId(event.getBuyTransactionId().toString());
         orderBookEntry.setSellTransactionId(event.getSellTransactionId().toString());
+        orderBookEntry.setLastTradedTime(event.getTradeTime());
         orderBookRepository.save(orderBookEntry);
     }
 

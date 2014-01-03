@@ -34,6 +34,8 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
     private String userId;
     private BigMoney itemPrice;
     private BigMoney itemRemaining;
+    private BigMoney totalCommission;
+    private BigMoney executedCommission;
     private OrderType type;
     private Date completeDate;
     private Date lastTradedTime;
@@ -80,6 +82,22 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
 
     public void setTradeAmount(BigMoney tradeAmount) {
         this.tradeAmount = tradeAmount;
+    }
+
+    public BigMoney getTotalCommission() {
+        return totalCommission;
+    }
+
+    public BigMoney getExecutedCommission() {
+        return executedCommission;
+    }
+
+    protected void setExecutedCommission(BigMoney executedCommission) {
+        this.executedCommission = executedCommission;
+    }
+
+    public void setTotalCommission(BigMoney totalCommission) {
+        this.totalCommission = totalCommission;
     }
 
     public String getUserId() {
@@ -137,9 +155,15 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
         this.orderStatus = OrderStatus.DONE;
     }
 
-    public void recordTraded(BigMoney tradeAmount, Date lastTradedTime) {
+    public void recordTraded(BigMoney tradeAmount,BigMoney commission, Date lastTradedTime) {
         this.itemRemaining = itemRemaining.minus(tradeAmount);
         this.lastTradedTime = lastTradedTime;
+
+        if (executedCommission == null) {
+            executedCommission = BigMoney.zero(commission.getCurrencyUnit());
+        }
+
+        executedCommission = executedCommission.plus(commission);
 
         if (itemRemaining.isNegativeOrZero()) {
             completeOrder(lastTradedTime);

@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.saga.matchers;
 
 import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.hamcrest.Description;
@@ -28,20 +29,20 @@ import org.joda.money.BigMoney;
 public class ConfirmItemReservationForPortfolioCommandMatcher
         extends BaseCommandMatcher<ConfirmAmountReservationForPortfolioCommand> {
 
-    private OrderBookId orderbookIdentifier;
+    private CoinId coinId;
     private PortfolioId portfolioIdentifier;
     private BigMoney amountOfConfirmedItem;
 
     public ConfirmItemReservationForPortfolioCommandMatcher(
-            OrderBookId orderbookIdentifier, PortfolioId portfolioIdentifier, BigMoney amountOfConfirmedItem) {
-        this.orderbookIdentifier = orderbookIdentifier;
+            CoinId coinId, PortfolioId portfolioIdentifier, BigMoney amountOfConfirmedItem) {
+        this.coinId = coinId;
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfConfirmedItem = amountOfConfirmedItem;
     }
 
     @Override
     protected boolean doMatches(ConfirmAmountReservationForPortfolioCommand command) {
-        return command.getOrderBookIdentifier().equals(orderbookIdentifier)
+        return command.getCoinId().equals(coinId)
                 && command.getPortfolioIdentifier().equals(portfolioIdentifier)
                 && amountOfConfirmedItem.compareTo(command.getAmountOfItem()) == 0;
     }
@@ -50,8 +51,8 @@ public class ConfirmItemReservationForPortfolioCommandMatcher
     public void describeTo(Description description) {
         description.appendText("ConfirmAmountReservationForPortfolioCommand with amountOfConfirmedItem [")
                 .appendValue(amountOfConfirmedItem)
-                .appendText("] for OrderBook with identifier [")
-                .appendValue(orderbookIdentifier)
+                .appendText("] for CoinId with identifier [")
+                .appendValue(coinId)
                 .appendText("] and for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
                 .appendText("]");

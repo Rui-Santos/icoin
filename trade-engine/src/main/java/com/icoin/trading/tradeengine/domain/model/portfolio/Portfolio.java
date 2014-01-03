@@ -60,7 +60,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     private PortfolioId portfolioId;
     private UserId userIdentifier;
     private Map<CoinId, Item> availableCoins = new HashMap<CoinId, Item>();
-    private Map<CoinId, Item> reservedItems = new HashMap<CoinId, Item>();
+//    private Map<CoinId, Item> reservedItems = new HashMap<CoinId, Item>();
 
     private BigMoney amountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
     private BigMoney reservedAmountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
@@ -77,16 +77,17 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new ItemAddedToPortfolioEvent(portfolioId, coinId, amountOfItemToAdd));
     }
 
-    public void reserveItem(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemToReserve) {
+    public void reserveItem(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemToReserve, BigMoney commission) {
         if (!availableCoins.containsKey(coinId)) {
             apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, coinId, transactionIdentifier));
         } else {
             BigMoney availableAmountOfItem = availableCoins.get(coinId).getAvailableAmount();
-            if (availableAmountOfItem.compareTo(amountOfItemToReserve.toMoney(RoundingMode.HALF_EVEN)) < 0) {
+            final BigMoney totalReserved = amountOfItemToReserve.plus(commission);
+            if (availableAmountOfItem.compareTo(totalReserved.toMoney(RoundingMode.HALF_EVEN)) < 0) {
                 apply(new NotEnoughItemAvailableToReserveInPortfolio(
-                        portfolioId, coinId, transactionIdentifier, availableAmountOfItem, amountOfItemToReserve));
+                        portfolioId, coinId, transactionIdentifier, availableAmountOfItem, totalReserved));
             } else {
-                apply(new ItemReservedEvent(portfolioId, coinId, transactionIdentifier, amountOfItemToReserve));
+                apply(new ItemReservedEvent(portfolioId, coinId, transactionIdentifier, totalReserved));
             }
         }
     }
@@ -156,7 +157,7 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfItemAdded());
         Item available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
         availableCoins.put(event.getCoinId(), available.add(event.getAmountOfItemAdded()));
-        }
+    }
 
     private Item createItem(CoinId coinId, CurrencyUnit currencyUnit) {
         final Item item = new Item();
@@ -171,17 +172,17 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     public void onItemReserved(ItemReservedEvent event) {
         CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfItemReserved());
         Item available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
-        availableCoins.put(event.getCoinId(), available.subtract(event.getAmountOfItemReserved()));
-        Item reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
-        reservedItems.put(event.getCoinId(), reserved.add(event.getAmountOfItemReserved()));
+        availableCoins.put(event.getCoinId(), available.reserve(event.getAmountOfItemReserved()));
+//        Item reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
+//        reservedItems.put(event.getCoinId(), reserved.add(event.getAmountOfItemReserved()));
     }
 
     @EventHandler
     public void onReservationConfirmed(ItemReservationConfirmedForPortfolioEvent event) {
         final CurrencyUnit currencyUnit = currencyUnit(event.getAmount());
-        Item reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
+        Item reserved = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
         final BigMoney amount = event.getAmount().plus(event.getCommission());
-        reservedItems.put(event.getCoinId(), reserved.subtract(amount));
+        availableCoins.put(event.getCoinId(), reserved.confirmReserved(amount));
 
 
         //available this should be wrong, comment it out
@@ -192,11 +193,11 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void onReservationCancelled(ItemReservationCancelledForPortfolioEvent event) {
         final CurrencyUnit currencyUnit = currencyUnit(event.getLeftTotalItem());
-        Item reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
-        reservedItems.put(event.getCoinId(), reserved.subtract(event.getLeftTotalItem()));
+//        Item reserved = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
+//        reservedItems.put(event.getCoinId(), reserved.subtract(event.getLeftTotalItem()));
 
         Item available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
-        availableCoins.put(event.getCoinId(), available.add(event.getLeftTotalItem()));
+        availableCoins.put(event.getCoinId(), available.cancelReserved(event.getLeftTotalItem()));
     }
 
     @EventHandler
@@ -243,13 +244,13 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         return createItem(coinId, currencyUnit);
     }
 
-    private Item obtainCurrentReservedItem(CoinId coinId, CurrencyUnit currencyUnit) {
-        if (reservedItems.containsKey(coinId)) {
-            return reservedItems.get(coinId);
-        }
-
-        return createItem(coinId, currencyUnit);
-    }
+//    private Item obtainCurrentReservedItem(CoinId coinId, CurrencyUnit currencyUnit) {
+//        if (reservedItems.containsKey(coinId)) {
+//            return reservedItems.get(coinId);
+//        }
+//
+//        return createItem(coinId, currencyUnit);
+//    }
 
     @Override
     public PortfolioId getIdentifier() {

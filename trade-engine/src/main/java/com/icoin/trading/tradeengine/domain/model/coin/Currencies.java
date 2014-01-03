@@ -7,14 +7,7 @@ package com.icoin.trading.tradeengine.domain.model.coin;
  * Time: PM9:03
  * To change this template use File | Settings | File Templates.
  */
-public class Currencies {
-
-    /**
-     * Private constructor so it cannot be instantiated
-     */
-    private Currencies() {
-
-    }
+public abstract class Currencies {
 
     /**
      * Currencies
@@ -192,5 +185,4 @@ public class Currencies {
     public static final String ZAR = "ZAR"; // "South African Rand",
     public static final String ZMK = "ZMK"; // "Zambian Kwacha",
     public static final String ZWL = "ZWL"; // "Zimbabwean Dollar"
-
 }

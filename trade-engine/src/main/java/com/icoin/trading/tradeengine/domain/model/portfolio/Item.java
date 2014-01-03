@@ -1,5 +1,6 @@
 package com.icoin.trading.tradeengine.domain.model.portfolio;
 
+import com.homhon.base.domain.model.ValueObjectSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import org.joda.money.BigMoney;
 
@@ -15,12 +16,12 @@ import static com.homhon.util.Asserts.notNull;
  * Time: AM11:38
  * To change this template use File | Settings | File Templates.
  */
-public class Item {
+public class Item extends ValueObjectSupport<Item>{
     private CoinId coinId;
     private BigMoney totalAmount;
     private BigMoney reservedAmount;
-    private BigMoney reservedMoney;
-    private BigMoney reservedCommission;
+//    private BigMoney reservedMoney;
+//    private BigMoney reservedCommission;
 
     public CoinId getCoinId() {
         return coinId;
@@ -50,35 +51,60 @@ public class Item {
         this.reservedAmount = reservedAmount;
     }
 
-    public BigMoney getReservedMoney() {
-        return reservedMoney;
-    }
-
-    public void setReservedMoney(BigMoney reservedMoney) {
-        this.reservedMoney = reservedMoney;
-    }
-
-    public BigMoney getReservedCommission() {
-        return reservedCommission;
-    }
-
-    public void setReservedCommission(BigMoney reservedCommission) {
-        this.reservedCommission = reservedCommission;
-    }
+//    public BigMoney getReservedMoney() {
+//        return reservedMoney;
+//    }
+//
+//    public void setReservedMoney(BigMoney reservedMoney) {
+//        this.reservedMoney = reservedMoney;
+//    }
+//
+//    public BigMoney getReservedCommission() {
+//        return reservedCommission;
+//    }
+//
+//    public void setReservedCommission(BigMoney reservedCommission) {
+//        this.reservedCommission = reservedCommission;
+//    }
 
     public Item add(BigMoney amountOfItemAdded) {
         notNull(amountOfItemAdded);
-        isTrue(amountOfItemAdded.isNegative());
+        isTrue(amountOfItemAdded.isPositiveOrZero());
         totalAmount = totalAmount.plus(amountOfItemAdded);
         return this;
     }
 
-    public Item subtract(BigMoney amountOfItemAdded) {
-        notNull(amountOfItemAdded);
-        isTrue(totalAmount.compareTo(amountOfItemAdded) >= 0);
-        BigMoney subtracted = totalAmount.minus(amountOfItemAdded);
+    public Item subtract(BigMoney amountOfItemSubtracted) {
+        notNull(amountOfItemSubtracted);
+        isTrue(totalAmount.compareTo(amountOfItemSubtracted) >= 0);
 
-        totalAmount = subtracted;
+        totalAmount = totalAmount.minus(amountOfItemSubtracted);
+        return this;
+    }
+
+    public Item reserve(BigMoney amountOfItemReserved) {
+        notNull(amountOfItemReserved);
+        isTrue(totalAmount.compareTo(amountOfItemReserved) >= 0);
+
+        totalAmount = totalAmount.minus(amountOfItemReserved);
+        reservedAmount = reservedAmount.plus(amountOfItemReserved);
+        return this;
+    }
+
+    public Item confirmReserved(BigMoney amountOfItemReserved) {
+        notNull(amountOfItemReserved);
+        isTrue(reservedAmount.compareTo(amountOfItemReserved) >= 0);
+
+        reservedAmount = reservedAmount.minus(amountOfItemReserved);
+        return this;
+    }
+
+    public Item cancelReserved(BigMoney amountOfItemReserved) {
+        notNull(amountOfItemReserved);
+        isTrue(reservedAmount.compareTo(amountOfItemReserved) >= 0);
+
+        reservedAmount = reservedAmount.minus(amountOfItemReserved);
+        totalAmount = totalAmount.plus(amountOfItemReserved);
         return this;
     }
 }

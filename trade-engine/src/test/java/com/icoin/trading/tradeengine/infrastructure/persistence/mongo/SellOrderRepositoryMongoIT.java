@@ -58,6 +58,7 @@ public class SellOrderRepositoryMongoIT {
         sellOrder1.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
         sellOrder1.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(90.9)));
         sellOrder1.setItemPrice(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(1)));
+        sellOrder1.setLeftCommission(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1)));
         sellOrder1.setPlaceDate(placeDate.toDate());
 
         sellOrder2 = new SellOrder();
@@ -65,6 +66,7 @@ public class SellOrderRepositoryMongoIT {
         sellOrder2.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
         sellOrder2.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
         sellOrder2.setItemPrice(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10.01)));
+        sellOrder2.setLeftCommission(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)));
         sellOrder2.setPlaceDate(placeDate.plusMillis(2).toDate());
 
         sellOrder3 = new SellOrder();
@@ -72,6 +74,7 @@ public class SellOrderRepositoryMongoIT {
         sellOrder3.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
         sellOrder3.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)));
         sellOrder3.setItemPrice(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(8)));
+        sellOrder3.setLeftCommission(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(2)));
         sellOrder3.setPlaceDate(placeDate.plusDays(2).toDate());
 
         anotherOrderBookSellOrder = new SellOrder();
@@ -162,7 +165,9 @@ public class SellOrderRepositoryMongoIT {
 
         assertThat(foundPendingOne, equalTo(foundOne));
 
-        sellOrder2.recordTraded(sellOrder2.getItemRemaining(), currentTime());
+        sellOrder2.recordTraded(sellOrder2.getItemRemaining(),
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
+                currentTime());
         sellOrderRepository.save(sellOrder2);
         SellOrder notPending = sellOrderRepository.findPendingOrder(sellOrder2.getPrimaryKey());
         assertThat(notPending, nullValue());

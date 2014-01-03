@@ -50,6 +50,8 @@ public class TransactionEventListenerTest {
 
     public static final BigMoney DEFAULT_TOTAL_ITEMS = BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100));
     public static final BigMoney DEFAULT_ITEM_PRICE = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(8.01));
+    public static final BigMoney DEFAULT_TOTAL_MONEY = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(801));
+    public static final BigMoney DEFAULT_BUY_COMMISSION = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(8.01));
     private static final String DEFAULT_COIN_NAME = "Test Coin";
 
     private TransactionEventListener listener;
@@ -71,10 +73,14 @@ public class TransactionEventListenerTest {
     @Test
     public void handleBuyTransactionStartedEvent() {
         BuyTransactionStartedEvent event = new BuyTransactionStartedEvent(transactionIdentifier,
-                coinId, orderBookIdentifier,
+                coinIdentifier,
+                orderBookIdentifier,
                 portfolioIdentifier,
                 DEFAULT_TOTAL_ITEMS,
-                DEFAULT_ITEM_PRICE);
+                DEFAULT_ITEM_PRICE,
+                DEFAULT_TOTAL_MONEY,
+                DEFAULT_BUY_COMMISSION
+        );
         listener.handleEvent(event);
 
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
@@ -91,10 +97,12 @@ public class TransactionEventListenerTest {
     @Test
     public void handleSellTransactionStartedEvent() {
         SellTransactionStartedEvent event = new SellTransactionStartedEvent(transactionIdentifier,
-                coinId, orderBookIdentifier,
+                coinIdentifier, orderBookIdentifier,
                 portfolioIdentifier,
                 DEFAULT_TOTAL_ITEMS,
-                DEFAULT_ITEM_PRICE);
+                DEFAULT_ITEM_PRICE,
+                DEFAULT_TOTAL_MONEY,
+                DEFAULT_BUY_COMMISSION);
         listener.handleEvent(event);
 
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
@@ -122,8 +130,10 @@ public class TransactionEventListenerTest {
         transactionEntry.setType(TransactionType.SELL);
 
         Mockito.when(transactionQueryRepository.findOne(transactionIdentifier.toString())).thenReturn(transactionEntry);
-        SellTransactionCancelledEvent event = new SellTransactionCancelledEvent(
-                transactionIdentifier, DEFAULT_TOTAL_ITEMS, DEFAULT_TOTAL_ITEMS, DEFAULT_ITEM_PRICE);
+        SellTransactionCancelledEvent event =
+                new SellTransactionCancelledEvent(
+                        transactionIdentifier,
+                        coinIdentifier);
         listener.handleEvent(event);
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,

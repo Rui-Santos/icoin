@@ -18,12 +18,13 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservatio
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationRejectedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashWithdrawnEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemAddedToPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationCancelledForPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemToReserveNotAvailableInPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemAddedToPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemAvailableToReserveInPortfolio;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio;
@@ -34,6 +35,7 @@ import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,6 +51,7 @@ public class PortfolioCommandHandlerTest {
     private FixtureConfiguration<Portfolio> fixture;
     private PortfolioId portfolioIdentifier;
     private OrderBookId orderBookIdentifier;
+    private CoinId coinId;
     private TransactionId transactionIdentifier;
     private UserId userIdentifier;
 
@@ -59,6 +62,7 @@ public class PortfolioCommandHandlerTest {
         commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);
         portfolioIdentifier = new PortfolioId();
+        coinId = new CoinId();
         orderBookIdentifier = new OrderBookId();
         transactionIdentifier = new TransactionId();
         userIdentifier = new UserId();
@@ -78,14 +82,14 @@ public class PortfolioCommandHandlerTest {
     public void testAddItemsToPortfolio() {
         AddAmountToPortfolioCommand command =
                 new AddAmountToPortfolioCommand(portfolioIdentifier,
-                        orderBookIdentifier,
+                        coinId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier))
                 .when(command)
                 .expectEvents(
                         new ItemAddedToPortfolioEvent(
                                 portfolioIdentifier,
-                                orderBookIdentifier,
+                                coinId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))));
     }
 
@@ -93,95 +97,110 @@ public class PortfolioCommandHandlerTest {
     public void testReserveItems_noItemsAvailable() {
         ReserveAmountCommand command = new ReserveAmountCommand(
                 portfolioIdentifier,
-                orderBookIdentifier,
+                coinId,
                 transactionIdentifier,
-                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)));
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(5)));
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier))
                 .when(command)
                 .expectEvents(new ItemToReserveNotAvailableInPortfolioEvent(
-                        portfolioIdentifier, orderBookIdentifier, transactionIdentifier));
+                        portfolioIdentifier, coinId, transactionIdentifier));
     }
 
     @Test
     public void testReserveItems_notEnoughItemsAvailable() {
-        ReserveAmountCommand command = new ReserveAmountCommand(portfolioIdentifier,
-                orderBookIdentifier,
+        ReserveAmountCommand command = new ReserveAmountCommand(
+                portfolioIdentifier,
+                coinId,
                 transactionIdentifier,
-                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)));
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(5)));
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
                 new ItemAddedToPortfolioEvent(
                         portfolioIdentifier,
-                        orderBookIdentifier,
+                        coinId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))))
                 .when(command)
-                .expectEvents(new NotEnoughItemAvailableToReserveInPortfolio(portfolioIdentifier,
-                        orderBookIdentifier,
+                .expectEvents(new NotEnoughItemAvailableToReserveInPortfolio(
+                        portfolioIdentifier,
+                        coinId,
                         transactionIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200))));
+                        Money.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)).toBigMoney(),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(205))));
     }
 
     @Test
     public void testReserveItems() {
-        ReserveAmountCommand command = new ReserveAmountCommand(portfolioIdentifier,
-                orderBookIdentifier,
+        ReserveAmountCommand command = new ReserveAmountCommand(
+                portfolioIdentifier,
+                coinId,
                 transactionIdentifier,
-                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)));
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(5)));
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
                 new ItemAddedToPortfolioEvent(
                         portfolioIdentifier,
-                        orderBookIdentifier,
+                        coinId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(400))))
                 .when(command)
                 .expectEvents(new ItemReservedEvent(
                         portfolioIdentifier,
-                        orderBookIdentifier,
+                        coinId,
                         transactionIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200))));
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(205))));
     }
 
     @Test
     public void testConfirmationOfReservation() {
         ConfirmAmountReservationForPortfolioCommand command =
-                new ConfirmAmountReservationForPortfolioCommand(portfolioIdentifier,
-                        orderBookIdentifier,
+                new ConfirmAmountReservationForPortfolioCommand(
+                        portfolioIdentifier,
+                        coinId,
                         transactionIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(5)));
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
-                new ItemAddedToPortfolioEvent(portfolioIdentifier, orderBookIdentifier,
+                new ItemAddedToPortfolioEvent(
+                        portfolioIdentifier,
+                        coinId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(400))),
                 new ItemReservedEvent(portfolioIdentifier,
-                        orderBookIdentifier,
+                        coinId,
                         transactionIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))))
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(105))))
                 .when(command)
-                .expectEvents(new ItemReservationConfirmedForPortfolioEvent(portfolioIdentifier,
-                        orderBookIdentifier,
+                .expectEvents(new ItemReservationConfirmedForPortfolioEvent(
+                        portfolioIdentifier,
+                        coinId,
                         transactionIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))));
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(5))));
     }
 
     @Test
     public void testCancellationOfReservation() {
         CancelAmountReservationForPortfolioCommand command =
-                new CancelAmountReservationForPortfolioCommand(portfolioIdentifier,
-                        orderBookIdentifier,
+                new CancelAmountReservationForPortfolioCommand(
+                        portfolioIdentifier,
+                        coinId,
                         transactionIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(5)));
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
                 new ItemAddedToPortfolioEvent(
                         portfolioIdentifier,
-                        orderBookIdentifier,
+                        coinId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(400))),
                 new ItemReservedEvent(portfolioIdentifier,
-                        orderBookIdentifier,
+                        coinId,
                         transactionIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))))
                 .when(command)
                 .expectEvents(new ItemReservationCancelledForPortfolioEvent(portfolioIdentifier,
-                        orderBookIdentifier,
+                        coinId,
                         transactionIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))));
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(5))));
     }
 
     /* Money related test methods */
@@ -232,7 +251,8 @@ public class PortfolioCommandHandlerTest {
         ReserveCashCommand command = new ReserveCashCommand(
                 portfolioIdentifier,
                 transactionIdentifier,
-                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 300L));
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 300L),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10));
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
                 new CashDepositedEvent(portfolioIdentifier,
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 400L)))
@@ -240,21 +260,24 @@ public class PortfolioCommandHandlerTest {
                 .expectEvents(new CashReservedEvent(
                         portfolioIdentifier,
                         transactionIdentifier,
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 300L)));
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 300L),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10)));
     }
 
     @Test
     public void testMakingMoneyReservation_withoutEnoughMoney() {
         ReserveCashCommand command = new ReserveCashCommand(portfolioIdentifier,
                 transactionIdentifier,
-                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 600L));
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 600L),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 6));
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
                 new CashDepositedEvent(portfolioIdentifier,
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 400)))
                 .when(command)
                 .expectEvents(new CashReservationRejectedEvent(portfolioIdentifier,
                         transactionIdentifier,
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 600)));
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 600),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 6)));
     }
 
     @Test
@@ -262,12 +285,18 @@ public class PortfolioCommandHandlerTest {
         CancelCashReservationCommand command = new CancelCashReservationCommand(
                 portfolioIdentifier,
                 transactionIdentifier,
-                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 200L));
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 200L),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 5));
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
                 new CashDepositedEvent(portfolioIdentifier,
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 400L)))
                 .when(command)
-                .expectEvents(new CashReservationCancelledEvent(portfolioIdentifier, transactionIdentifier, BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 200L)));
+                .expectEvents(
+                        new CashReservationCancelledEvent(
+                                portfolioIdentifier,
+                                transactionIdentifier,
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 200L),
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 5)));
     }
 
     @Test
@@ -275,7 +304,8 @@ public class PortfolioCommandHandlerTest {
         ConfirmCashReservationCommand command = new ConfirmCashReservationCommand(
                 portfolioIdentifier,
                 transactionIdentifier,
-                event.getExecutedMoney(), BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 200L));
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 500L),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 200L));
         fixture.given(
                 new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
                 new CashDepositedEvent(portfolioIdentifier,
@@ -284,6 +314,7 @@ public class PortfolioCommandHandlerTest {
                 .expectEvents(new CashReservationConfirmedEvent(
                         portfolioIdentifier,
                         transactionIdentifier,
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 200L)));
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 500),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 200)));
     }
 }

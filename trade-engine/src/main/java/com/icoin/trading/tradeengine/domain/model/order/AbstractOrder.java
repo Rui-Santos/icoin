@@ -34,11 +34,11 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     private BigMoney tradeAmount;
     private PortfolioId portfolioId;
     private BigMoney itemRemaining;
-    private BigMoney totalCommission;
+    private BigMoney leftCommission;
     private Date placeDate;
     private CurrencyPair currencyPair;
     private CoinId coinId;
-    private final OrderType orderType;
+    private OrderType orderType;
     private OrderBookId orderBookId;
     private Date completeDate;
     private Date lastTradedTime;
@@ -52,7 +52,6 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
     public void setOrderBookId(OrderBookId orderBookId) {
         this.orderBookId = orderBookId;
     }
-
 
     public AbstractOrder(OrderType orderType) {
         notNull(orderType);
@@ -81,22 +80,18 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
 
     public BigMoney getItemPrice() {
         return itemPrice;
-//        return BigDecimal.valueOf(itemPrice).divide(SCALE);
     }
 
     public void setItemPrice(BigMoney itemPrice) {
         this.itemPrice = itemPrice;
-//        this.itemPrice = itemPrice.multiply(SCALE).longValue();
     }
 
     public BigMoney getTradeAmount() {
         return tradeAmount;
-//       return BigDecimal.valueOf(tradeAmount).divide(SCALE);
     }
 
     public void setTradeAmount(BigMoney tradeAmount) {
         this.tradeAmount = tradeAmount;
-//        this.tradeAmount = tradeAmount.multiply(SCALE).longValue();
     }
 
     public PortfolioId getPortfolioId() {
@@ -109,12 +104,10 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
 
     public BigMoney getItemRemaining() {
         return itemRemaining;
-//        return BigDecimal.valueOf(itemRemaining).divide(SCALE);
     }
 
     public void setItemRemaining(BigMoney itemRemaining) {
         this.itemRemaining = itemRemaining;
-//        this.itemRemaining = itemRemaining.multiply(SCALE).longValue();
     }
 
     public Date getPlaceDate() {
@@ -159,12 +152,12 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
         this.lastTradedTime = lastTradedTime;
     }
 
-    public BigMoney getTotalCommission() {
-        return totalCommission;
+    public BigMoney getLeftCommission() {
+        return leftCommission;
     }
 
-    public void setTotalCommission(BigMoney totalCommission) {
-        this.totalCommission = totalCommission;
+    public void setLeftCommission(BigMoney leftCommission) {
+        this.leftCommission = leftCommission;
     }
 
     public Date getLastTradedTime() {
@@ -183,13 +176,9 @@ public class AbstractOrder<T extends AbstractOrder> extends VersionedEntitySuppo
 
     public void recordTraded(BigMoney tradeAmount, BigMoney commission, Date lastTradedTime) {
         this.itemRemaining = itemRemaining.minus(tradeAmount);
-        if (totalCommission == null) {
-            totalCommission = BigMoney.zero(commission.getCurrencyUnit());
-        }
 
-        totalCommission = totalCommission.plus(commission);
+        leftCommission = leftCommission.minus(commission);
 
-//                itemRemaining.minus(Money.of(CurrencyUnit.getInstance(Currencies.BTC), tradeAmount)) - tradeAmount.multiply(SCALE).longValue();
         this.lastTradedTime = lastTradedTime;
 
         if (itemRemaining.isNegativeOrZero()) {

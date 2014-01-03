@@ -17,11 +17,13 @@ package com.icoin.trading.tradeengine.domain.model.commission;
 
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import org.joda.money.BigMoney;
 
 import java.math.BigDecimal;
 
+import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
 
 /**
@@ -59,6 +61,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
     @Override
     public Commission calculateRemainingSellCommission(SellOrder order) {
         notNull(order);
+        isTrue(order.getOrderType() == OrderType.SELL);
         notNull(order.getItemRemaining());
 
         return calcCommission(order.getItemRemaining());
@@ -67,6 +70,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
     @Override
     public Commission calculateRemainingBuyCommission(BuyOrder order) {
         notNull(order);
+        isTrue(order.getOrderType() == OrderType.BUY);
         notNull(order.getItemRemaining());
         notNull(order.getItemPrice());
         notNull(order.getCurrencyPair());
@@ -82,6 +86,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
     @Override
     public Commission calculateBuyCommission(BuyOrder order, BigMoney tradedAmount, BigMoney tradedPrice) {
         notNull(order);
+        isTrue(order.getOrderType() == OrderType.BUY);
         notNull(order.getCurrencyPair());
         notNull(tradedAmount);
         notNull(tradedPrice);
@@ -91,6 +96,8 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
 
     @Override
     public Commission calculateSellCommission(SellOrder order, BigMoney tradedAmount, BigMoney tradedPrice) {
+        notNull(order);
+        isTrue(order.getOrderType() == OrderType.SELL);
         notNull(tradedAmount);
 
         return calcCommission(tradedAmount);

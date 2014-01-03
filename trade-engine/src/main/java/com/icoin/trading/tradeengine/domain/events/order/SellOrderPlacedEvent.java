@@ -37,9 +37,10 @@ public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent {
                                 TransactionId transactionId,
                                 BigMoney tradeAmount,
                                 BigMoney itemPrice,
+                                BigMoney totalCommission,
                                 PortfolioId portfolioId,
                                 CurrencyPair currencyPair,
                                 Date placeDate) {
-        super(orderBookId, orderId, transactionId, tradeAmount, itemPrice, portfolioId, currencyPair, placeDate);
+        super(orderBookId, orderId, transactionId, tradeAmount, itemPrice,totalCommission, portfolioId, currencyPair, placeDate);
     }
 }

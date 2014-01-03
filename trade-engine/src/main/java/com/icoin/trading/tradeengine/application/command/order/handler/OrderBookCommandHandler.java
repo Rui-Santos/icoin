@@ -16,9 +16,9 @@
 
 package com.icoin.trading.tradeengine.application.command.order.handler;
 
-import com.icoin.trading.tradeengine.application.command.order.AbstractOrderCommand;
 import com.icoin.trading.tradeengine.application.command.order.CreateBuyOrderCommand;
 import com.icoin.trading.tradeengine.application.command.order.CreateOrderBookCommand;
+import com.icoin.trading.tradeengine.application.command.order.CreateOrderCommand;
 import com.icoin.trading.tradeengine.application.command.order.CreateSellOrderCommand;
 import com.icoin.trading.tradeengine.application.command.order.RefreshOrderBookPriceCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
@@ -58,10 +58,12 @@ public class OrderBookCommandHandler {
         final BuyOrder buyOrder = createBuyOrder(command, orderBook.getCurrencyPair());
         buyOrderRepository.save(buyOrder);
 
-        orderBook.addBuyOrder(command.getOrderId(),
+        orderBook.addBuyOrder(
+                command.getOrderId(),
                 command.getTransactionId(),
                 command.getTradeAmount(),
                 command.getItemPrice(),
+                command.getTotalCommission(),
                 command.getPortfolioId(),
                 command.getPlaceDate());
         tradeExecutor.execute(buyOrder);
@@ -82,6 +84,7 @@ public class OrderBookCommandHandler {
                 command.getTransactionId(),
                 command.getTradeAmount(),
                 command.getItemPrice(),
+                command.getTotalCommission(),
                 command.getPortfolioId(),
                 command.getPlaceDate());
 
@@ -92,13 +95,13 @@ public class OrderBookCommandHandler {
     public void handleRefreshOrderBook(RefreshOrderBookPriceCommand command) {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
 
-        if(orderBook == null){
+        if (orderBook == null) {
             logger.warn("Orderbook is null for {}", command.getOrderBookId());
-           return;
+            return;
         }
-        logger.info("Before refresh, order book status is: "+ ReflectionToStringBuilder.toString(orderBook, ToStringStyle.SHORT_PREFIX_STYLE));
+        logger.info("Before refresh, order book status is: " + ReflectionToStringBuilder.toString(orderBook, ToStringStyle.SHORT_PREFIX_STYLE));
         orderExecutorHelper.refresh(orderBook);
-        logger.info("After refresh, order book status is: "+ ReflectionToStringBuilder.toString(orderBook, ToStringStyle.SHORT_PREFIX_STYLE));
+        logger.info("After refresh, order book status is: " + ReflectionToStringBuilder.toString(orderBook, ToStringStyle.SHORT_PREFIX_STYLE));
     }
 
     private SellOrder createSellOrder(CreateSellOrderCommand command, CurrencyPair currencyPair) {
@@ -107,7 +110,7 @@ public class OrderBookCommandHandler {
     }
 
     private <T extends AbstractOrder> T fillOrder(T order,
-                                                  AbstractOrderCommand command,
+                                                  CreateOrderCommand command,
                                                   CurrencyPair currencyPair) {
         order.setPrimaryKey(command.getOrderId().toString());
         order.setOrderBookId(command.getOrderBookId());
@@ -117,6 +120,7 @@ public class OrderBookCommandHandler {
         order.setItemPrice(command.getItemPrice());
         order.setTradeAmount(command.getTradeAmount());
         order.setItemRemaining(command.getTradeAmount());
+        order.setLeftCommission(command.getTotalCommission());
         order.setPortfolioId(command.getPortfolioId());
 
         return order;
@@ -128,13 +132,6 @@ public class OrderBookCommandHandler {
                 new OrderBook(command.getOrderBookIdentifier(), command.getCurrencyPair());
         repository.add(orderBook);
     }
-
-//    @CommandHandler
-//    public void handleRefreshOrderBook(CreateOrderBookCommand command) {
-//        OrderBook orderBook =
-//                new OrderBook(command.getCoinId(), command.getCurrencyPair());
-//        repository.add(orderBook);
-//    }
 
     @Resource(name = "orderBookRepository")
     public void setRepository(Repository<OrderBook> orderBookRepository) {
