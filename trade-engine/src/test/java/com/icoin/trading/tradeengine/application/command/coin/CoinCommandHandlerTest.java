@@ -10,9 +10,12 @@ package com.icoin.trading.tradeengine.application.command.coin;
 
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
+import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.Coin;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
+import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.joda.money.BigMoney;
@@ -49,5 +52,26 @@ public class CoinCommandHandlerTest {
                 .expectEvents(new CoinCreatedEvent(aggregateIdentifier, "TestItem",
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1000)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10000))));
+    }
+
+    @Test
+    public void testAddOrderBook() {
+        CoinId aggregateIdentifier = new CoinId();
+        OrderBookId orderBookId = new OrderBookId();
+        final CurrencyPair xpmCny = CurrencyPair.XPM_CNY;
+        AddOrderBookToCoinCommand command = new AddOrderBookToCoinCommand(aggregateIdentifier,
+                orderBookId, xpmCny);
+
+        fixture.given(
+                new CoinCreatedEvent(aggregateIdentifier,
+                        "TestItem",
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1000)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10000))))
+                .when(command)
+                .expectEvents(
+                        new OrderBookAddedToCoinEvent(
+                                aggregateIdentifier,
+                                orderBookId,
+                                xpmCny));
     }
 }

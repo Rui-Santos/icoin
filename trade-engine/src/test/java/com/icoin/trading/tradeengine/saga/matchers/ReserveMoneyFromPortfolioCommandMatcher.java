@@ -18,6 +18,7 @@ package com.icoin.trading.tradeengine.saga.matchers;
 
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ReserveCashCommand;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.hamcrest.Description;
 import org.joda.money.BigMoney;
 
@@ -27,25 +28,35 @@ import org.joda.money.BigMoney;
 public class ReserveMoneyFromPortfolioCommandMatcher extends BaseCommandMatcher<ReserveCashCommand> {
 
     private PortfolioId portfolioIdentifier;
-    private BigMoney amountOfMoneyToReserve;
+    private TransactionId transactionIdentifier;
+    private BigMoney totalMoney;
+    private BigMoney commission;
 
-    public ReserveMoneyFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier, BigMoney amountOfMoneyToReserve) {
-        this.amountOfMoneyToReserve = amountOfMoneyToReserve;
+    public ReserveMoneyFromPortfolioCommandMatcher(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier, BigMoney totalMoney, BigMoney commission) {
         this.portfolioIdentifier = portfolioIdentifier;
+        this.transactionIdentifier = transactionIdentifier;
+        this.totalMoney = totalMoney;
+        this.commission = commission;
     }
 
     @Override
     protected boolean doMatches(ReserveCashCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && command.getTotalCommission().isEqual(amountOfMoneyToReserve);
+                && command.getTransactionIdentifier().equals(transactionIdentifier)
+                && command.getTotalMoney().isEqual(totalMoney)
+                && command.getTotalCommission().isEqual(commission);
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("ReserveCashCommand with amountOfMoneyToReserve [")
-                .appendValue(amountOfMoneyToReserve)
+        description.appendText("ReserveCashCommand with totalMoney [")
+                .appendValue(totalMoney)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
+                .appendText("] for transaction with identifier [")
+                .appendValue(transactionIdentifier)
+                .appendText("] for commission [")
+                .appendValue(commission)
                 .appendText("]");
     }
 }

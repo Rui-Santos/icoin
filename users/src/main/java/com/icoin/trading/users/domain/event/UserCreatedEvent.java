@@ -16,7 +16,8 @@
 
 package com.icoin.trading.users.domain.event;
 
-import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.users.domain.model.user.Identifier;
+import com.icoin.trading.users.domain.model.user.UserId;
 
 /**
  * Event to indicate a new user has been created.
@@ -24,25 +25,42 @@ import com.icoin.trading.users.domain.UserId;
  * @author Jettro Coenradie
  */
 public class UserCreatedEvent {
-
     private UserId userId;
     private String username;
-    private String name;
+    private String firstName;
+    private String lastName;
+    private Identifier identifier;
+    private String email;
     private String password;
 
-    public UserCreatedEvent(UserId userId, String name, String username, String password) {
+    public UserCreatedEvent(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email,String password) {
         this.userId = userId;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
+        this.identifier = identifier;
+        this.email = email;
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public UserId getUserIdentifier() {
         return this.userId;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Identifier getIdentifier() {
+        return identifier;
     }
 
     public String getUsername() {
@@ -57,8 +75,11 @@ public class UserCreatedEvent {
     public String toString() {
         return "UserCreatedEvent{" +
                 "userId=" + userId +
-                ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", identifier=" + identifier +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

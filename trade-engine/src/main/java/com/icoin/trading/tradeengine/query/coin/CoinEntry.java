@@ -17,17 +17,17 @@ import org.joda.money.BigMoney;
 public class CoinEntry extends AuditAwareEntitySupport<CoinEntry, String, Long> {
 
     private String name;
-    private BigMoney coinPrice;
-    private BigMoney coinAmount;
+//    private BigMoney coinPrice;
+//    private BigMoney coinAmount;
 //    private boolean tradeStarted;
 
-    public BigMoney getCoinAmount() {
-        return coinAmount;
-    }
-
-    public void setCoinAmount(BigMoney coinAmount) {
-        this.coinAmount = coinAmount;
-    }
+//    public BigMoney getCoinAmount() {
+//        return coinAmount;
+//    }
+//
+//    public void setCoinAmount(BigMoney coinAmount) {
+//        this.coinAmount = coinAmount;
+//    }
 
     public String getName() {
         return name;
@@ -45,11 +45,11 @@ public class CoinEntry extends AuditAwareEntitySupport<CoinEntry, String, Long> 
 //        this.tradeStarted = tradeStarted;
 //    }
 
-    public BigMoney getCoinPrice() {
-        return coinPrice;
-    }
-
-    public void setCoinPrice(BigMoney coinPrice) {
-        this.coinPrice = coinPrice;
-    }
+//    public BigMoney getCoinPrice() {
+//        return coinPrice;
+//    }
+//
+//    public void setCoinPrice(BigMoney coinPrice) {
+//        this.coinPrice = coinPrice;
+//    }
 }

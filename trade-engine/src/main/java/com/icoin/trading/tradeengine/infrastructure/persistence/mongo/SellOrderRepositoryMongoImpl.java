@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
@@ -37,7 +38,7 @@ public class SellOrderRepositoryMongoImpl implements SellOrderRepositoryMongoCus
     private MongoTemplate mongoTemplate;
     private final static BigDecimal EQUAL_VALUE = BigDecimal.valueOf(0.0000000001);
 
-    @Autowired
+    @Resource(name = "trade.mongoTemplate")
     public void setMongoTemplate(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }

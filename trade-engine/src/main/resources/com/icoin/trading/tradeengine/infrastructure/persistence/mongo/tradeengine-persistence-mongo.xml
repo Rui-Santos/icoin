@@ -36,9 +36,9 @@
                       id="trade.mongoDbFactory"/>
 
     <!--config the user query here-->
-    <mongo:repositories base-package="com.icoin.trading.users.query.repositories"
-                        mongo-template-ref="trade.mongoTemplate"
-                        factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean"/>
+    <!--<mongo:repositories base-package="com.icoin.trading.users.query.repositories"-->
+                        <!--mongo-template-ref="trade.mongoTemplate"-->
+                        <!--factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean"/>-->
 
     <!--domain query here-->
     <mongo:repositories base-package="com.icoin.trading.tradeengine.infrastructure.persistence.mongo"
@@ -46,7 +46,7 @@
                         factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean"/>
 
     <!--Read query here-->
-    <mongo:repositories base-package="com.icoin.trading.**.query.*.repositories"
+    <mongo:repositories base-package="com.icoin.trading.tradeengine.query.*.repositories"
                         mongo-template-ref="trade.mongoTemplate"
                         factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean">
     </mongo:repositories>
@@ -54,6 +54,7 @@
     <bean id="trade.mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="trade.mongoDbFactory"/>
         <constructor-arg name="mongoConverter" ref="trade.mappingConverter"/>
+        <property name="writeConcern" value="SAFE" />
     </bean>
 
     <bean id="trade.mappingConverter"
@@ -83,16 +84,6 @@
     </bean>
 
     <bean id="trade.mappingContext" class="com.homhon.mongo.core.MongoMappingBaseContext"/>
-
-
-    <bean id="mongoTemplate" class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.CFMongoTemplate">
-        <constructor-arg ref="trade.mongoDbFactory"/>
-    </bean>
-
-    <bean id="mongoSagaTemplate"
-          class="com.icoin.trading.tradeengine.infrastructure.persistence.mongo.CFSagaMongoTemplate">
-        <constructor-arg ref="trade.mongoDbFactory"/>
-    </bean>
 
     <bean class="org.springframework.data.mongodb.core.mapping.event.LoggingEventListener"/>
     <bean class="com.homhon.mongo.audit.AuditingEventListener">

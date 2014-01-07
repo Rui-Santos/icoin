@@ -102,7 +102,7 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    public void cancel(BigMoney cancelledPrice) {
+    public void cancel() {
         switch (this.type) {
             case BUY:
                 apply(new BuyTransactionCancelledEvent(transactionId, coinId));

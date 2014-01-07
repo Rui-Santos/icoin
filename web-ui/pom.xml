@@ -21,7 +21,7 @@
     <parent>
         <artifactId>icoin-trading</artifactId>
         <groupId>com.icoin.trading</groupId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
 
     <groupId>com.icoin.trading</groupId>
@@ -37,6 +37,11 @@
                 <artifactId>maven-jetty-plugin</artifactId>
                 <version>6.1.22</version>
                 <configuration>
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <port>80</port>
+                        </connector>
+                    </connectors>
                     <webAppConfig>
                         <contextPath>/</contextPath>
                     </webAppConfig>
@@ -147,6 +152,18 @@
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!--spring social-->
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-weibo</artifactId>
+            <version>${spring.social.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-web</artifactId>
+            <version>${spring.social.version}</version>
         </dependency>
 
         <!-- test dependencies -->

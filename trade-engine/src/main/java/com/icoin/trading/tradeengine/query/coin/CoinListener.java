@@ -26,8 +26,8 @@ public class CoinListener {
     public void handleCoinCreatedEvent(CoinCreatedEvent event) {
         CoinEntry coinEntry = new CoinEntry();
         coinEntry.setPrimaryKey(event.getCoinIdentifier().toString());
-        coinEntry.setCoinPrice(event.getCoinInitialPrice());
-        coinEntry.setCoinAmount(event.getCoinInitialAmount());
+//        coinEntry.setCoinPrice(event.getCoinInitialPrice());
+//        coinEntry.setCoinAmount(event.getCoinInitialAmount());
 //        coinEntry.setTradeStarted(true);
         coinEntry.setName(event.getCoinName());
 

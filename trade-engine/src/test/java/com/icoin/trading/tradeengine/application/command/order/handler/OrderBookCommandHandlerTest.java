@@ -17,8 +17,10 @@
 package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.application.command.order.CreateBuyOrderCommand;
 import com.icoin.trading.tradeengine.application.command.order.CreateOrderBookCommand;
 import com.icoin.trading.tradeengine.application.command.order.CreateSellOrderCommand;
+import com.icoin.trading.tradeengine.application.command.order.RefreshOrderBookPriceCommand;
 import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.OrderBookCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
@@ -42,7 +44,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import static com.homhon.util.TimeUtils.currentTime;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Allard Buijze
@@ -53,6 +58,7 @@ public class OrderBookCommandHandlerTest {
     private SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
     private BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
     private TradeExecutor tradeExecutor = mock(TradeExecutor.class);
+    private final OrderExecutorHelper helper = mock(OrderExecutorHelper.class);
 
     @Before
     public void setUp() {
@@ -65,10 +71,60 @@ public class OrderBookCommandHandlerTest {
         commandHandler.setBuyOrderRepository(buyOrderRepository);
         commandHandler.setSellOrderRepository(sellOrderRepository);
         commandHandler.setTradeExecutor(tradeExecutor);
+        commandHandler.setOrderExecutorHelper(helper);
     }
 
     @Test
-    public void testSimpleTradeExecution() {
+    public void testBuyTradeExecution() {
+        OrderId buyOrder = new OrderId();
+        PortfolioId sellingUser = new PortfolioId();
+        TransactionId sellingTransaction = new TransactionId();
+        OrderBookId orderBookId = new OrderBookId();
+        final Date sellPlaceDate = currentTime();
+        final Date buyPlaceDate = currentTime();
+
+        CreateBuyOrderCommand orderCommand =
+                new CreateBuyOrderCommand(
+                        buyOrder,
+                        sellingUser,
+                        orderBookId,
+                        sellingTransaction,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(100)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10)),
+                        sellPlaceDate);
+
+        OrderId sellOrder = new OrderId();
+        TransactionId buyTransactionId = new TransactionId();
+        PortfolioId buyPortfolioId = new PortfolioId();
+        final CurrencyPair currencyPair = new CurrencyPair("BTC");
+
+        fixture.given(new OrderBookCreatedEvent(orderBookId, currencyPair),
+                new SellOrderPlacedEvent(
+                        orderBookId,
+                        sellOrder,
+                        buyTransactionId,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(100)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10)),
+                        buyPortfolioId,
+                        currencyPair,
+                        buyPlaceDate))
+                .when(orderCommand)
+                .expectEvents(new BuyOrderPlacedEvent(
+                        orderBookId,
+                        buyOrder,
+                        sellingTransaction,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(100)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10)),
+                        sellingUser,
+                        currencyPair,
+                        sellPlaceDate));
+    }
+
+    @Test
+    public void testSellTradeExecution() {
         OrderId sellOrder = new OrderId();
         PortfolioId sellingUser = new PortfolioId();
         TransactionId sellingTransaction = new TransactionId();
@@ -84,7 +140,7 @@ public class OrderBookCommandHandlerTest {
                         sellingTransaction,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(100)),
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                         sellPlaceDate);
 
         OrderId buyOrder = new OrderId();
@@ -110,10 +166,45 @@ public class OrderBookCommandHandlerTest {
                         sellingTransaction,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(100)),
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10)),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                         sellingUser,
                         currencyPair,
                         sellPlaceDate));
+    }
+
+    @Test
+    public void testHandleRefreshOrderBook() {
+        OrderId sellOrder = new OrderId();
+        PortfolioId sellingUser = new PortfolioId();
+        TransactionId sellingTransaction = new TransactionId();
+        OrderBookId orderBookId = new OrderBookId();
+        final Date sellPlaceDate = currentTime();
+        final Date buyPlaceDate = currentTime();
+
+        RefreshOrderBookPriceCommand orderCommand =
+                new RefreshOrderBookPriceCommand(
+                        orderBookId);
+
+        OrderId buyOrder = new OrderId();
+        TransactionId buyTransactionId = new TransactionId();
+        PortfolioId buyPortfolioId = new PortfolioId();
+        final CurrencyPair currencyPair = new CurrencyPair("BTC");
+
+        fixture.given(new OrderBookCreatedEvent(orderBookId, currencyPair),
+                new BuyOrderPlacedEvent(
+                        orderBookId,
+                        buyOrder,
+                        buyTransactionId,
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(100)),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10)),
+                        buyPortfolioId,
+                        currencyPair,
+                        buyPlaceDate))
+                .when(orderCommand)
+                .expectEvents();
+
+        verify(helper).refresh(any(OrderBook.class));
     }
 
     @Test

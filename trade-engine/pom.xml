@@ -21,7 +21,7 @@
     <parent>
         <artifactId>icoin-trading</artifactId>
         <groupId>com.icoin.trading</groupId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -101,6 +101,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>icoin-trading-users</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>icoin-axon-support</artifactId>
             <version>${project.version}</version>
         </dependency>
 

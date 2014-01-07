@@ -23,7 +23,6 @@ import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmoun
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
@@ -36,7 +35,8 @@ import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQuery
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.transaction.TransactionEntry;
 import com.icoin.trading.users.application.command.CreateUserCommand;
-import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.users.domain.model.user.Identifier;
+import com.icoin.trading.users.domain.model.user.UserId;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
 import org.axonframework.commandhandling.CommandBus;
@@ -46,6 +46,7 @@ import org.axonframework.saga.repository.mongo.MongoTemplate;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -75,6 +76,7 @@ public class DBInit {
                   CoinQueryRepository coinRepository,
                   org.axonframework.eventstore.mongo.MongoTemplate systemMongo,
                   MongoEventStore eventStore,
+                  @Qualifier("trade.mongoTemplate")
                   org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
                   MongoTemplate systemAxonSagaMongo,
                   PortfolioQueryRepository portfolioRepository,
@@ -131,10 +133,10 @@ public class DBInit {
 
     private void addItems(UserId user, String coinId, BigDecimal amount) {
         PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(user.toString());
-        OrderBookEntry orderBookEntry = obtainOrderBookByCoinName(coinId);
+//        OrderBookEntry orderBookEntry = obtainOrderBookByCoinName(coinId);
         AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
-                new OrderBookId(orderBookEntry.getPrimaryKey()),
+                new CoinId(coinId),
                 BigMoney.of(CurrencyUnit.of(coinId), amount));
         commandBus.dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(command));
     }
@@ -193,9 +195,10 @@ public class DBInit {
 
     }
 
-    private UserId createuser(String longName, String userName) {
+    private UserId createuser(String longName, String username) {
         UserId userId = new UserId();
-        CreateUserCommand createUser = new CreateUserCommand(userId, longName, userName, userName);
+        final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
+        CreateUserCommand createUser = new CreateUserCommand(userId, username, longName, longName, identifier, username + "@163.com", username);
         commandBus.dispatch(new GenericCommandMessage<CreateUserCommand>(createUser));
         return userId;
     }

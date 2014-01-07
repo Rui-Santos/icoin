@@ -30,6 +30,7 @@ import java.util.Map;
 public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, String, Long> {
 
     private String userIdentifier;
+    private String fullName;
     private String userName;
     private BigMoney amountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
     private BigMoney reservedAmountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
@@ -153,6 +154,14 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     /*-------------------------------------------------------------------------------------------*/

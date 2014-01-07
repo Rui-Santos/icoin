@@ -19,6 +19,7 @@ package com.icoin.trading.webui.init;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +45,7 @@ public class MongoController {
     private org.springframework.data.mongodb.core.MongoTemplate springTemplate;
 
     @Autowired
-    public MongoController(DBInit dbInit, MongoTemplate springTemplate) {
+    public MongoController(DBInit dbInit, @Qualifier("trade.mongoTemplate") MongoTemplate springTemplate) {
         this.dbInit = dbInit;
         this.springTemplate = springTemplate;
     }

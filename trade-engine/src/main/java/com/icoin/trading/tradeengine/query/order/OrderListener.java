@@ -63,6 +63,7 @@ public class OrderListener {
         OrderEntry entry = new OrderEntry();
         entry.setPrimaryKey(event.getOrderId().toString());
         entry.setOrderBookIdentifier(event.orderBookIdentifier().toString());
+        entry.setTransactionIdentifier(event.getTransactionIdentifier().toString());
         entry.setItemRemaining(event.getTradeAmount());
         entry.setTradeAmount(event.getTradeAmount());
         entry.setUserId(event.getPortfolioId().toString());

@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.application.command.coin;
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
@@ -25,7 +26,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
  *
  * @author Jettro Coenradie
  */
-public class AddOrderBookToCoinCommand {
+public class AddOrderBookToCoinCommand extends CommandSupport<AddOrderBookToCoinCommand>{
     private CoinId coinId;
     private OrderBookId orderBookId;
     private CurrencyPair currencyPair;

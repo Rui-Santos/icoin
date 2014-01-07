@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 @SuppressWarnings("unused")
 @Configuration
 public class MongoEventStoreBean {
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private MongoTemplate mongoTemplate;
 

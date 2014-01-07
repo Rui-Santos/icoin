@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
@@ -35,7 +36,7 @@ public class BuyOrderRepositoryMongoImpl implements BuyOrderRepositoryMongoCusto
 
     private MongoTemplate mongoTemplate;
 
-    @Autowired
+    @Resource(name = "trade.mongoTemplate")
     public void setMongoTemplate(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }

@@ -1,419 +1,439 @@
-22:47:53.239 [pool-1-thread-4] INFO  c.i.t.t.a.e.QueuedTradeExecutor - Excuting order BUY:
-com.icoin.trading.tradeengine.domain.model.order.BuyOrder{id=5abf645a-c55f-4c95-8903-214f2390efd7}
-22:47:53.243 [1740171089@qtp-194735511-0] DEBUG o.a.unitofwork.DefaultUnitOfWork - Publishing event [com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent] to event bus [org.axonframework.eventhandling.ClusteringEventBus@3756a51e]
-22:47:53.243 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.243 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onBeforeConvert: com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7}
-22:47:53.243 [1740171089@qtp-194735511-0] DEBUG c.h.m.audit.AuditingEventListener - Entity id 5abf645a-c55f-4c95-8903-214f2390efd7 audit for class com.icoin.trading.tradeengine.query.order.OrderEntry: AuditMongo[createdBy = AuditUserMongo[id=buyer1], lastModifiedBy = AuditUserMongo[id=<null>], createdTime = 2013-12-20T14:47:53.243, lastModifiedTime = null]
-22:47:53.244 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.244 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onBeforeSave: com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7}, { "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.244 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onBeforeSave(com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7}, { "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.244 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - Inserting DBObject containing fields: [_class, _id, orderBookIdentifier, tradeAmount, userId, itemPrice, itemRemaining, type, placedDate, currencyPair, orderStatus, audit, version] in collection: orderEntry
-22:47:53.245 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.245 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.245 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterSave: com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7}, { "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.245 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterSave(com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7}, { "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.245 [1740171089@qtp-194735511-0] DEBUG o.a.unitofwork.DefaultUnitOfWork - All events successfully published.
-22:47:53.245 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listeners after commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.EventCountSnapshotterTrigger$SnapshotTriggeringListener] after commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.repository.LockingRepository$LockCleaningListener] after commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.CachingEventSourcingRepository$CacheClearingUnitOfWorkListener] after commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.unitofwork.NestableUnitOfWork - Stopping Unit Of Work
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listeners after commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.saga.AbstractSagaManager$2] after commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.saga.AbstractSagaManager$1] after commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.EventCountSnapshotterTrigger$SnapshotTriggeringListener] after commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.repository.LockingRepository$LockCleaningListener] after commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.CachingEventSourcingRepository$CacheClearingUnitOfWorkListener] after commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.unitofwork.NestableUnitOfWork - Stopping Unit Of Work
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listeners of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.saga.AbstractSagaManager$1] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.EventCountSnapshotterTrigger$SnapshotTriggeringListener] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.repository.LockingRepository$LockCleaningListener] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.CachingEventSourcingRepository$CacheClearingUnitOfWorkListener] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Listeners successfully notified
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listeners of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.saga.AbstractSagaManager$1] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.EventCountSnapshotterTrigger$SnapshotTriggeringListener] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.repository.LockingRepository$LockCleaningListener] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.CachingEventSourcingRepository$CacheClearingUnitOfWorkListener] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Listeners successfully notified
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listeners of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.EventCountSnapshotterTrigger$SnapshotTriggeringListener] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.repository.LockingRepository$LockCleaningListener] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.CachingEventSourcingRepository$CacheClearingUnitOfWorkListener] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Listeners successfully notified
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listeners of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.saga.AbstractSagaManager$2] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.saga.AbstractSagaManager$1] of cleanup
-22:47:53.246 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Registering listener: org.axonframework.eventsourcing.CachingEventSourcingRepository$CacheClearingUnitOfWorkListener
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.EventCountSnapshotterTrigger$SnapshotTriggeringListener] of cleanup
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.repository.LockingRepository$LockCleaningListener] of cleanup
-22:47:53.246 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Registering listener: org.axonframework.repository.LockingRepository$LockCleaningListener
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.CachingEventSourcingRepository$CacheClearingUnitOfWorkListener] of cleanup
-22:47:53.246 [pool-1-thread-4] DEBUG o.a.unitofwork.NestableUnitOfWork - Committing Unit Of Work
-22:47:53.246 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listeners of commit request
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.u.UnitOfWorkListenerCollection - Listeners successfully notified
-22:47:53.246 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.CachingEventSourcingRepository$CacheClearingUnitOfWorkListener] of upcoming commit
-22:47:53.246 [1740171089@qtp-194735511-0] DEBUG o.a.unitofwork.NestableUnitOfWork - Clearing resources of this Unit Of Work.
-22:47:53.246 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.repository.LockingRepository$LockCleaningListener] of upcoming commit
-22:47:53.246 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Listeners successfully notified
-22:47:53.246 [pool-1-thread-4] DEBUG o.a.unitofwork.DefaultUnitOfWork - Persisting changes to aggregates
-22:47:53.246 [1740171089@qtp-194735511-0] INFO  c.i.t.webui.trade.TradeController - Buy order BuyOrder{coinId='BTC', coinName='Bitcoin', orderType='null', suggestedPrice=0, balance=0, amountCcy='BTC', priceCcy='CNY', tradeAmount=2, itemPrice=100} dispatched...
-22:47:53.246 [pool-1-thread-4] DEBUG o.a.unitofwork.DefaultUnitOfWork - Persisting changes to [com.icoin.trading.tradeengine.domain.model.order.OrderBook], identifier: [8a6333b3-a618-45c5-9ffd-2937ed0b5a29]
-22:47:53.246 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Registering listener: org.axonframework.eventsourcing.EventCountSnapshotterTrigger$SnapshotTriggeringListener
-22:47:53.247 [pool-1-thread-4] DEBUG net.sf.ehcache.store.disk.Segment - put added 0 on heap
-22:47:53.247 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "primaryKey" : "BTC"} fields: null for class: class com.icoin.trading.tradeengine.query.coin.CoinEntry in collection: coinEntry
-22:47:53.247 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.247 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "_id" : "BTC"} in db.collection: test.coinEntry
-22:47:53.247 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.247 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.247 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.248 [pool-1-thread-4] DEBUG net.sf.ehcache.store.disk.Segment - put updated, deleted 0 on heap
-22:47:53.248 [pool-1-thread-4] DEBUG net.sf.ehcache.store.disk.Segment - put updated, deleted 0 on disk
-22:47:53.248 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.unitofwork.DefaultUnitOfWork - Aggregates successfully persisted
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.unitofwork.NestableUnitOfWork - This Unit Of Work is not nested. Finalizing commit...
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.unitofwork.DefaultUnitOfWork - Publishing events to the event bus
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.unitofwork.DefaultUnitOfWork - All events successfully published.
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listeners after commit
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.EventCountSnapshotterTrigger$SnapshotTriggeringListener] after commit
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.repository.LockingRepository$LockCleaningListener] after commit
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.CachingEventSourcingRepository$CacheClearingUnitOfWorkListener] after commit
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.unitofwork.NestableUnitOfWork - Stopping Unit Of Work
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listeners of cleanup
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.EventCountSnapshotterTrigger$SnapshotTriggeringListener] of cleanup
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.repository.LockingRepository$LockCleaningListener] of cleanup
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Notifying listener [org.axonframework.eventsourcing.CachingEventSourcingRepository$CacheClearingUnitOfWorkListener] of cleanup
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.u.UnitOfWorkListenerCollection - Listeners successfully notified
-22:47:53.248 [pool-1-thread-4] DEBUG o.a.unitofwork.NestableUnitOfWork - Clearing resources of this Unit Of Work.
-22:47:53.248 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.coin.CoinEntry{id=BTC}
-22:47:53.248 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.coin.CoinEntry{id=BTC})
-22:47:53.249 [org%002espringframework%002ecache%002eehcache%002e%0045h%0043ache%0046actory%0042ean#6b839a22.data] DEBUG net.sf.ehcache.store.disk.Segment - fault removed 0 from heap
-22:47:53.249 [org%002espringframework%002ecache%002eehcache%002e%0045h%0043ache%0046actory%0042ean#6b839a22.data] DEBUG net.sf.ehcache.store.disk.Segment - fault added 0 on disk
-22:47:53.250 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - Executing aggregation: { "aggregate" : "orderEntry" , "pipeline" : [ { "$match" : { "orderStatus" : "PENDING" , "type" : "BUY" , "itemRemaining.amount" : { "$gt" : 0} , "placedDate" : { "$lte" : { "$date" : "2013-12-20T14:47:53.248Z"}} , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"}} , { "$group" : { "_id" : { "price" : "$itemPrice.amount" , "priceCurrency" : "$itemPrice.currency" , "amountCurrency" : "$itemRemaining.currency"} , "sumUpAmountPerPrice" : { "$sum" : "$itemRemaining.amount"}}} , { "$sort" : { "_id" : -1}} , { "$limit" : 10}]}
-22:47:53.250 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.250 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.250 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "price" : 100000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 400000000}
-22:47:53.250 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.251 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "price" : 100000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 400000000}, PriceAggregate[price=100000,sumUpAmountPerPrice=400000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 400.000000000]
-22:47:53.251 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.251 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "price" : 1000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 100000000}
-22:47:53.251 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.251 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "price" : 1000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 100000000}, PriceAggregate[price=1000,sumUpAmountPerPrice=100000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 1.000000000]
-22:47:53.251 [1740171089@qtp-194735511-0] DEBUG c.i.t.t.q.o.r.OrderQueryRepositoryImpl - aggregation { "aggregate" : "__collection__" , "pipeline" : [ { "$match" : { "orderStatus" : "PENDING" , "type" : "BUY" , "itemRemaining.amount" : { "$gt" : 0} , "placedDate" : { "$lte" : { "$date" : "2013-12-20T14:47:53.248Z"}} , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"}} , { "$group" : { "_id" : { "price" : "$itemPrice.amount" , "priceCurrency" : "$itemPrice.currency" , "amountCurrency" : "$itemRemaining.currency"} , "sumUpAmountPerPrice" : { "$sum" : "$itemRemaining.amount"}}} , { "$sort" : { "_id" : -1}} , { "$limit" : 10}]} found :[PriceAggregate[price=100000,sumUpAmountPerPrice=400000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 400.000000000], PriceAggregate[price=1000,sumUpAmountPerPrice=100000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 1.000000000]]
-22:47:53.252 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - Executing aggregation: { "aggregate" : "orderEntry" , "pipeline" : [ { "$match" : { "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} , "placedDate" : { "$lte" : { "$date" : "2013-12-20T14:47:53.251Z"}} , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"}} , { "$group" : { "_id" : { "price" : "$itemPrice.amount" , "priceCurrency" : "$itemPrice.currency" , "amountCurrency" : "$itemRemaining.currency"} , "sumUpAmountPerPrice" : { "$sum" : "$itemRemaining.amount"}}} , { "$sort" : { "_id" : -1}} , { "$limit" : 10}]}
-22:47:53.252 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.253 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.253 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "price" : 101000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 100000000}
-22:47:53.253 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.253 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "price" : 101000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 100000000}, PriceAggregate[price=101000,sumUpAmountPerPrice=100000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 101.000000000]
-22:47:53.253 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.253 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "price" : 100000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 10000000}
-22:47:53.254 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.254 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "price" : 100000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 10000000}, PriceAggregate[price=100000,sumUpAmountPerPrice=10000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 10.000000000]
-22:47:53.254 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.254 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "price" : 1000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 9990000000}
-22:47:53.254 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.254 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "price" : 1000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 9990000000}, PriceAggregate[price=1000,sumUpAmountPerPrice=9990000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 99.900000000]
-22:47:53.255 [1740171089@qtp-194735511-0] DEBUG c.i.t.t.q.o.r.OrderQueryRepositoryImpl - aggregation { "aggregate" : "__collection__" , "pipeline" : [ { "$match" : { "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} , "placedDate" : { "$lte" : { "$date" : "2013-12-20T14:47:53.251Z"}} , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"}} , { "$group" : { "_id" : { "price" : "$itemPrice.amount" , "priceCurrency" : "$itemPrice.currency" , "amountCurrency" : "$itemRemaining.currency"} , "sumUpAmountPerPrice" : { "$sum" : "$itemRemaining.amount"}}} , { "$sort" : { "_id" : -1}} , { "$limit" : 10}]} found :[PriceAggregate[price=101000,sumUpAmountPerPrice=100000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 101.000000000], PriceAggregate[price=100000,sumUpAmountPerPrice=10000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 10.000000000], PriceAggregate[price=1000,sumUpAmountPerPrice=9990000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 99.900000000]]
-22:47:53.255 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.r.query.MongoQueryCreator - Created query Query: { "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"}, Fields: null, Sort: null
-22:47:53.255 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - find using query: { "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"} fields: null for class: class com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry in collection: tradeExecutedEntry
-22:47:53.255 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.256 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.256 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b45495036474640efb4f85"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 50000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:29:12.950Z"} , "tradeType" : "Buy" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:30:45.163" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.256 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b45495036474640efb4f85"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 50000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:29:12.950Z"} , "tradeType" : "Buy" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:30:45.163" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.256 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.257 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b45495036474640efb4f85"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 50000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:29:12.950Z"} , "tradeType" : "Buy" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:30:45.163" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b45495036474640efb4f85}
-22:47:53.257 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b45495036474640efb4f85"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 50000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:29:12.950Z"} , "tradeType" : "Buy" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:30:45.163" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b45495036474640efb4f85})
-22:47:53.257 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.257 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b45562036474640efb4f9e"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 80000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:34:09.521Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:34:10.838" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.257 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b45562036474640efb4f9e"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 80000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:34:09.521Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:34:10.838" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.257 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.257 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b45562036474640efb4f9e"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 80000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:34:09.521Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:34:10.838" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b45562036474640efb4f9e}
-22:47:53.258 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b45562036474640efb4f9e"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 80000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:34:09.521Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:34:10.838" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b45562036474640efb4f9e})
-22:47:53.258 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.258 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b455f503646130078015a7"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 20000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.555" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.258 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b455f503646130078015a7"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 20000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.555" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.258 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.258 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b455f503646130078015a7"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 20000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.555" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b455f503646130078015a7}
-22:47:53.258 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b455f503646130078015a7"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 20000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.555" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b455f503646130078015a7})
-22:47:53.259 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.259 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b455f503646130078015aa"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 30000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.610" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.259 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b455f503646130078015aa"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 30000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.610" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.259 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.259 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b455f503646130078015aa"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 30000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.610" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b455f503646130078015aa}
-22:47:53.259 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b455f503646130078015aa"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 30000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.610" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b455f503646130078015aa})
-22:47:53.260 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.260 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b456c00364658ed8c482dd"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:39:59.906Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:40:00.317" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.260 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b456c00364658ed8c482dd"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:39:59.906Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:40:00.317" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.260 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.261 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b456c00364658ed8c482dd"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:39:59.906Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:40:00.317" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b456c00364658ed8c482dd}
-22:47:53.261 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b456c00364658ed8c482dd"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:39:59.906Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:40:00.317" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b456c00364658ed8c482dd})
-22:47:53.261 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.261 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b4574b0364250b95789e32"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:42:19.536Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:42:19.911" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.262 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b4574b0364250b95789e32"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:42:19.536Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:42:19.911" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.262 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.263 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b4574b0364250b95789e32"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:42:19.536Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:42:19.911" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b4574b0364250b95789e32}
-22:47:53.263 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b4574b0364250b95789e32"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:42:19.536Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:42:19.911" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b4574b0364250b95789e32})
-22:47:53.263 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.r.q.StringBasedMongoQuery - Created query { "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "orderStatus" : "PENDING"}
-22:47:53.263 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - find using query: { "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "orderStatus" : "PENDING"} fields: null for class: class com.icoin.trading.tradeengine.query.order.OrderEntry in collection: orderEntry
-22:47:53.263 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.264 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.264 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : "219439ec-135c-4db2-bc0a-0989e76a462d" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 100000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 1000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 100000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:46:47.225Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:46:47.274" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.264 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : "219439ec-135c-4db2-bc0a-0989e76a462d" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 100000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 1000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 100000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:46:47.225Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:46:47.274" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.265 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.265 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : "219439ec-135c-4db2-bc0a-0989e76a462d" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 100000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 1000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 100000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:46:47.225Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:46:47.274" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.order.OrderEntry{id=219439ec-135c-4db2-bc0a-0989e76a462d}
-22:47:53.265 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : "219439ec-135c-4db2-bc0a-0989e76a462d" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 100000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 1000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 100000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:46:47.225Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:46:47.274" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.order.OrderEntry{id=219439ec-135c-4db2-bc0a-0989e76a462d})
-22:47:53.265 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.265 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.265 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.266 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.266 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7}
-22:47:53.266 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7})
-22:47:53.266 [1740171089@qtp-194735511-0] INFO  c.i.t.webui.trade.TradeController - queried active orders for user fb40547a-2a6f-44d4-bc48-bc82ca4e9528 with order book 8a6333b3-a618-45c5-9ffd-2937ed0b5a29: [com.icoin.trading.tradeengine.query.order.OrderEntry{id=219439ec-135c-4db2-bc0a-0989e76a462d}, com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7}]
-22:47:53.267 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.DispatcherServlet - Rendering view [org.springframework.web.servlet.view.RedirectView: name 'redirect:/index'; URL [/index]] in DispatcherServlet with name 'dispatcher'
-22:47:53.267 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.DispatcherServlet - Successfully completed request
-22:47:53.267 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.267 [1740171089@qtp-194735511-0] DEBUG o.s.s.w.a.ExceptionTranslationFilter - Chain processed normally
-22:47:53.267 [1740171089@qtp-194735511-0] DEBUG o.s.s.w.c.SecurityContextPersistenceFilter - SecurityContextHolder now cleared, as request processing completed
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/js/**'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/favicon.ico'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/style/**'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/fonts/**'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/image/**'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/login.jsp*'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/rest/**'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index at position 1 of 10 in additional filter chain; firing Filter: 'SecurityContextPersistenceFilter'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.w.c.HttpSessionSecurityContextRepository - Obtained a valid SecurityContext from SPRING_SECURITY_CONTEXT: 'org.springframework.security.core.context.SecurityContextImpl@2caf1542: Authentication: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@2caf1542: Principal: UserEntry{name='Buyer One', username='buyer1', password='ec5c9b91242f18e1ac487661d8b3ea4206701e0e'}; Credentials: [PROTECTED]; Authenticated: true; Details: org.springframework.security.web.authentication.WebAuthenticationDetails@ffff4c9c: RemoteIpAddress: 0:0:0:0:0:0:0:1; SessionId: 3ak7yzpwue8d; Granted Authorities: ROLE_USER'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index at position 2 of 10 in additional filter chain; firing Filter: 'LogoutFilter'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index at position 3 of 10 in additional filter chain; firing Filter: 'UsernamePasswordAuthenticationFilter'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index at position 4 of 10 in additional filter chain; firing Filter: 'BasicAuthenticationFilter'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index at position 5 of 10 in additional filter chain; firing Filter: 'RequestCacheAwareFilter'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index at position 6 of 10 in additional filter chain; firing Filter: 'SecurityContextHolderAwareRequestFilter'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index at position 7 of 10 in additional filter chain; firing Filter: 'AnonymousAuthenticationFilter'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - SecurityContextHolder not populated with anonymous token, as it already contained: 'org.springframework.security.authentication.UsernamePasswordAuthenticationToken@2caf1542: Principal: UserEntry{name='Buyer One', username='buyer1', password='ec5c9b91242f18e1ac487661d8b3ea4206701e0e'}; Credentials: [PROTECTED]; Authenticated: true; Details: org.springframework.security.web.authentication.WebAuthenticationDetails@ffff4c9c: RemoteIpAddress: 0:0:0:0:0:0:0:1; SessionId: 3ak7yzpwue8d; Granted Authorities: ROLE_USER'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index at position 8 of 10 in additional filter chain; firing Filter: 'SessionManagementFilter'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index at position 9 of 10 in additional filter chain; firing Filter: 'ExceptionTranslationFilter'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index at position 10 of 10 in additional filter chain; firing Filter: 'FilterSecurityInterceptor'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/index.html'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/data/**'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.web.util.AntPathRequestMatcher - Checking match of request : '/index'; against '/coin/*'
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.w.a.i.FilterSecurityInterceptor - Secure object: FilterInvocation: URL: /index; Attributes: [hasRole('ROLE_USER')]
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.w.a.i.FilterSecurityInterceptor - Previously Authenticated: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@2caf1542: Principal: UserEntry{name='Buyer One', username='buyer1', password='ec5c9b91242f18e1ac487661d8b3ea4206701e0e'}; Credentials: [PROTECTED]; Authenticated: true; Details: org.springframework.security.web.authentication.WebAuthenticationDetails@ffff4c9c: RemoteIpAddress: 0:0:0:0:0:0:0:1; SessionId: 3ak7yzpwue8d; Granted Authorities: ROLE_USER
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.access.vote.AffirmativeBased - Voter: org.springframework.security.web.access.expression.WebExpressionVoter@4d3bc863, returned: 1
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.w.a.i.FilterSecurityInterceptor - Authorization successful
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.s.w.a.i.FilterSecurityInterceptor - RunAsManager did not change Authentication object
-22:47:53.269 [1740171089@qtp-194735511-0] DEBUG o.s.security.web.FilterChainProxy - /index reached end of additional filter chain; proceeding with original chain
-22:47:53.270 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.DispatcherServlet - DispatcherServlet with name 'dispatcher' processing GET request for [/index]
-22:47:53.270 [1740171089@qtp-194735511-0] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Looking up handler method for path /index
-22:47:53.270 [1740171089@qtp-194735511-0] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Returning handler method [public java.lang.String com.icoin.trading.webui.trade.TradeController.get(org.springframework.ui.Model)]
-22:47:53.270 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'tradeController'
-22:47:53.270 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.DispatcherServlet - Last-Modified value for [/index] is: -1
-22:47:53.271 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.r.query.MongoQueryCreator - Created query Query: { "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"}}, Fields: null, Sort: null
-22:47:53.271 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"}} fields: null for class: class com.icoin.trading.tradeengine.query.order.OrderBookEntry in collection: orderBookEntry
-22:47:53.271 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.271 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"}} in db.collection: test.orderBookEntry
-22:47:53.271 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.272 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderBookEntry" , "coinIdentifier" : "BTC" , "coinName" : "Bitcoin" , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "highestBuyId" : "7e1140c2-76c5-4607-bc92-a8ead010e303" , "lowestSellId" : "a0355ce8-3053-4f09-8d5c-9f5bb3403ca4" , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "highestBuyPrice" : { "amount" : 100000 , "currency" : "CNY"} , "lowestSellPrice" : { "amount" : 1000 , "currency" : "CNY"} , "buyTransactionId" : "d20de3a7-a22e-4c14-9ad8-fe4d33ffe96a" , "sellTransactionId" : "27a376bc-ca02-4102-9540-190990ea76b4" , "audit" : { "created_by" :  null  , "last_modified_by" :  null  , "last_modified_on" : "2013-12-20T14:42:19.942"} , "version" : 22}
-22:47:53.272 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderBookEntry" , "coinIdentifier" : "BTC" , "coinName" : "Bitcoin" , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "highestBuyId" : "7e1140c2-76c5-4607-bc92-a8ead010e303" , "lowestSellId" : "a0355ce8-3053-4f09-8d5c-9f5bb3403ca4" , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "highestBuyPrice" : { "amount" : 100000 , "currency" : "CNY"} , "lowestSellPrice" : { "amount" : 1000 , "currency" : "CNY"} , "buyTransactionId" : "d20de3a7-a22e-4c14-9ad8-fe4d33ffe96a" , "sellTransactionId" : "27a376bc-ca02-4102-9540-190990ea76b4" , "audit" : { "created_by" :  null  , "last_modified_by" :  null  , "last_modified_on" : "2013-12-20T14:42:19.942"} , "version" : 22})
-22:47:53.272 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.272 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderBookEntry" , "coinIdentifier" : "BTC" , "coinName" : "Bitcoin" , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "highestBuyId" : "7e1140c2-76c5-4607-bc92-a8ead010e303" , "lowestSellId" : "a0355ce8-3053-4f09-8d5c-9f5bb3403ca4" , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "highestBuyPrice" : { "amount" : 100000 , "currency" : "CNY"} , "lowestSellPrice" : { "amount" : 1000 , "currency" : "CNY"} , "buyTransactionId" : "d20de3a7-a22e-4c14-9ad8-fe4d33ffe96a" , "sellTransactionId" : "27a376bc-ca02-4102-9540-190990ea76b4" , "audit" : { "created_by" :  null  , "last_modified_by" :  null  , "last_modified_on" : "2013-12-20T14:42:19.942"} , "version" : 22}, com.icoin.trading.tradeengine.query.order.OrderBookEntry{id=8a6333b3-a618-45c5-9ffd-2937ed0b5a29}
-22:47:53.272 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderBookEntry" , "coinIdentifier" : "BTC" , "coinName" : "Bitcoin" , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "highestBuyId" : "7e1140c2-76c5-4607-bc92-a8ead010e303" , "lowestSellId" : "a0355ce8-3053-4f09-8d5c-9f5bb3403ca4" , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "highestBuyPrice" : { "amount" : 100000 , "currency" : "CNY"} , "lowestSellPrice" : { "amount" : 1000 , "currency" : "CNY"} , "buyTransactionId" : "d20de3a7-a22e-4c14-9ad8-fe4d33ffe96a" , "sellTransactionId" : "27a376bc-ca02-4102-9540-190990ea76b4" , "audit" : { "created_by" :  null  , "last_modified_by" :  null  , "last_modified_on" : "2013-12-20T14:42:19.942"} , "version" : 22}, com.icoin.trading.tradeengine.query.order.OrderBookEntry{id=8a6333b3-a618-45c5-9ffd-2937ed0b5a29})
-22:47:53.272 [1740171089@qtp-194735511-0] DEBUG c.i.t.w.t.f.i.TradeServiceFacadeImpl - Find by currencyPair BTC/CNY : com.icoin.trading.tradeengine.query.order.OrderBookEntry{id=8a6333b3-a618-45c5-9ffd-2937ed0b5a29}
-22:47:53.272 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.r.query.MongoQueryCreator - Created query Query: { "userIdentifier" : "70b65ac8-7f90-42cc-91c4-2211cc5c48cb"}, Fields: null, Sort: null
-22:47:53.273 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "userIdentifier" : "70b65ac8-7f90-42cc-91c4-2211cc5c48cb"} fields: null for class: class com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry in collection: portfolioEntry
-22:47:53.273 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.273 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "userIdentifier" : "70b65ac8-7f90-42cc-91c4-2211cc5c48cb"} in db.collection: test.portfolioEntry
-22:47:53.273 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.273 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "_class" : "com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry" , "userIdentifier" : "70b65ac8-7f90-42cc-91c4-2211cc5c48cb" , "userName" : "Buyer One" , "amountOfMoney" : { "amount" : 99800000 , "currency" : "CNY"} , "reservedAmountOfMoney" : { "amount" : 601000 , "currency" : "CNY"} , "itemsInPossession" : { "BTC" : { "coinIdentifier" : "BTC" , "coinName" : "Bitcoin" , "amount" : { "amount" : 1000200000000 , "currency" : "BTC"}}} , "itemsReserved" : { } , "audit" : { "created_by" :  null  , "last_modified_by" : "buyer1" , "last_modified_on" : "2013-12-20T14:47:53.221"} , "version" : 18}
-22:47:53.273 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "_class" : "com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry" , "userIdentifier" : "70b65ac8-7f90-42cc-91c4-2211cc5c48cb" , "userName" : "Buyer One" , "amountOfMoney" : { "amount" : 99800000 , "currency" : "CNY"} , "reservedAmountOfMoney" : { "amount" : 601000 , "currency" : "CNY"} , "itemsInPossession" : { "BTC" : { "coinIdentifier" : "BTC" , "coinName" : "Bitcoin" , "amount" : { "amount" : 1000200000000 , "currency" : "BTC"}}} , "itemsReserved" : { } , "audit" : { "created_by" :  null  , "last_modified_by" : "buyer1" , "last_modified_on" : "2013-12-20T14:47:53.221"} , "version" : 18})
-22:47:53.274 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.274 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "_class" : "com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry" , "userIdentifier" : "70b65ac8-7f90-42cc-91c4-2211cc5c48cb" , "userName" : "Buyer One" , "amountOfMoney" : { "amount" : 99800000 , "currency" : "CNY"} , "reservedAmountOfMoney" : { "amount" : 601000 , "currency" : "CNY"} , "itemsInPossession" : { "BTC" : { "coinIdentifier" : "BTC" , "coinName" : "Bitcoin" , "amount" : { "amount" : 1000200000000 , "currency" : "BTC"}}} , "itemsReserved" : { } , "audit" : { "created_by" :  null  , "last_modified_by" : "buyer1" , "last_modified_on" : "2013-12-20T14:47:53.221"} , "version" : 18}, PortfolioEntry{amountOfMoney=CNY 99800.000, primaryKey='fb40547a-2a6f-44d4-bc48-bc82ca4e9528', userIdentifier='70b65ac8-7f90-42cc-91c4-2211cc5c48cb', userName='Buyer One', reservedAmountOfMoney=CNY 601.000, itemsInPossession={BTC=ItemEntry{coinIdentifier='BTC', coinName='Bitcoin', amount=BTC 10002.00000000}}, itemsReserved={}}
-22:47:53.274 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "_class" : "com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry" , "userIdentifier" : "70b65ac8-7f90-42cc-91c4-2211cc5c48cb" , "userName" : "Buyer One" , "amountOfMoney" : { "amount" : 99800000 , "currency" : "CNY"} , "reservedAmountOfMoney" : { "amount" : 601000 , "currency" : "CNY"} , "itemsInPossession" : { "BTC" : { "coinIdentifier" : "BTC" , "coinName" : "Bitcoin" , "amount" : { "amount" : 1000200000000 , "currency" : "BTC"}}} , "itemsReserved" : { } , "audit" : { "created_by" :  null  , "last_modified_by" : "buyer1" , "last_modified_on" : "2013-12-20T14:47:53.221"} , "version" : 18}, PortfolioEntry{amountOfMoney=CNY 99800.000, primaryKey='fb40547a-2a6f-44d4-bc48-bc82ca4e9528', userIdentifier='70b65ac8-7f90-42cc-91c4-2211cc5c48cb', userName='Buyer One', reservedAmountOfMoney=CNY 601.000, itemsInPossession={BTC=ItemEntry{coinIdentifier='BTC', coinName='Bitcoin', amount=BTC 10002.00000000}}, itemsReserved={}})
-22:47:53.274 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "primaryKey" : "BTC"} fields: null for class: class com.icoin.trading.tradeengine.query.coin.CoinEntry in collection: coinEntry
-22:47:53.274 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.274 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "_id" : "BTC"} in db.collection: test.coinEntry
-22:47:53.274 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.275 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.275 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.275 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.275 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.coin.CoinEntry{id=BTC}
-22:47:53.275 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.coin.CoinEntry{id=BTC})
-22:47:53.275 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "primaryKey" : "BTC"} fields: null for class: class com.icoin.trading.tradeengine.query.coin.CoinEntry in collection: coinEntry
-22:47:53.275 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.275 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "_id" : "BTC"} in db.collection: test.coinEntry
-22:47:53.276 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.276 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.276 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.276 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.276 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.coin.CoinEntry{id=BTC}
-22:47:53.276 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.coin.CoinEntry{id=BTC})
-22:47:53.277 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "primaryKey" : "BTC"} fields: null for class: class com.icoin.trading.tradeengine.query.coin.CoinEntry in collection: coinEntry
-22:47:53.277 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.277 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - findOne using query: { "_id" : "BTC"} in db.collection: test.coinEntry
-22:47:53.277 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.277 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.277 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.278 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.278 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.coin.CoinEntry{id=BTC}
-22:47:53.278 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : "BTC" , "_class" : "com.icoin.trading.tradeengine.query.coin.CoinEntry" , "name" : "Bitcoin" , "coinPrice" : { "amount" : 10025341 , "currency" : "CNY"} , "coinAmount" : { "amount" : 1000000000000 , "currency" : "BTC"} , "tradeStarted" : true , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:25:07.825" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.coin.CoinEntry{id=BTC})
-22:47:53.279 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - Executing aggregation: { "aggregate" : "orderEntry" , "pipeline" : [ { "$match" : { "orderStatus" : "PENDING" , "type" : "BUY" , "itemRemaining.amount" : { "$gt" : 0} , "placedDate" : { "$lte" : { "$date" : "2013-12-20T14:47:53.278Z"}} , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"}} , { "$group" : { "_id" : { "price" : "$itemPrice.amount" , "priceCurrency" : "$itemPrice.currency" , "amountCurrency" : "$itemRemaining.currency"} , "sumUpAmountPerPrice" : { "$sum" : "$itemRemaining.amount"}}} , { "$sort" : { "_id" : -1}} , { "$limit" : 10}]}
-22:47:53.279 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.280 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.280 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "price" : 100000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 400000000}
-22:47:53.280 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.281 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "price" : 100000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 400000000}, PriceAggregate[price=100000,sumUpAmountPerPrice=400000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 400.000000000]
-22:47:53.281 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.281 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "price" : 1000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 100000000}
-22:47:53.281 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.281 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "price" : 1000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 100000000}, PriceAggregate[price=1000,sumUpAmountPerPrice=100000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 1.000000000]
-22:47:53.281 [1740171089@qtp-194735511-0] DEBUG c.i.t.t.q.o.r.OrderQueryRepositoryImpl - aggregation { "aggregate" : "__collection__" , "pipeline" : [ { "$match" : { "orderStatus" : "PENDING" , "type" : "BUY" , "itemRemaining.amount" : { "$gt" : 0} , "placedDate" : { "$lte" : { "$date" : "2013-12-20T14:47:53.278Z"}} , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"}} , { "$group" : { "_id" : { "price" : "$itemPrice.amount" , "priceCurrency" : "$itemPrice.currency" , "amountCurrency" : "$itemRemaining.currency"} , "sumUpAmountPerPrice" : { "$sum" : "$itemRemaining.amount"}}} , { "$sort" : { "_id" : -1}} , { "$limit" : 10}]} found :[PriceAggregate[price=100000,sumUpAmountPerPrice=400000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 400.000000000], PriceAggregate[price=1000,sumUpAmountPerPrice=100000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 1.000000000]]
-22:47:53.283 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - Executing aggregation: { "aggregate" : "orderEntry" , "pipeline" : [ { "$match" : { "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} , "placedDate" : { "$lte" : { "$date" : "2013-12-20T14:47:53.281Z"}} , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"}} , { "$group" : { "_id" : { "price" : "$itemPrice.amount" , "priceCurrency" : "$itemPrice.currency" , "amountCurrency" : "$itemRemaining.currency"} , "sumUpAmountPerPrice" : { "$sum" : "$itemRemaining.amount"}}} , { "$sort" : { "_id" : -1}} , { "$limit" : 10}]}
-22:47:53.283 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.283 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.283 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "price" : 101000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 100000000}
-22:47:53.284 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.284 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "price" : 101000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 100000000}, PriceAggregate[price=101000,sumUpAmountPerPrice=100000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 101.000000000]
-22:47:53.284 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.284 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "price" : 100000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 10000000}
-22:47:53.284 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.284 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "price" : 100000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 10000000}, PriceAggregate[price=100000,sumUpAmountPerPrice=10000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 10.000000000]
-22:47:53.284 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.284 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "price" : 1000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 9990000000}
-22:47:53.284 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.284 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "price" : 1000 , "priceCurrency" : "CNY" , "amountCurrency" : "BTC" , "sumUpAmountPerPrice" : 9990000000}, PriceAggregate[price=1000,sumUpAmountPerPrice=9990000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 99.900000000]
-22:47:53.285 [1740171089@qtp-194735511-0] DEBUG c.i.t.t.q.o.r.OrderQueryRepositoryImpl - aggregation { "aggregate" : "__collection__" , "pipeline" : [ { "$match" : { "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} , "placedDate" : { "$lte" : { "$date" : "2013-12-20T14:47:53.281Z"}} , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"}} , { "$group" : { "_id" : { "price" : "$itemPrice.amount" , "priceCurrency" : "$itemPrice.currency" , "amountCurrency" : "$itemRemaining.currency"} , "sumUpAmountPerPrice" : { "$sum" : "$itemRemaining.amount"}}} , { "$sort" : { "_id" : -1}} , { "$limit" : 10}]} found :[PriceAggregate[price=101000,sumUpAmountPerPrice=100000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 101.000000000], PriceAggregate[price=100000,sumUpAmountPerPrice=10000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 10.000000000], PriceAggregate[price=1000,sumUpAmountPerPrice=9990000000,priceCurrency=CNY,amountCurrency=BTC,total=CNY 99.900000000]]
-22:47:53.285 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.r.query.MongoQueryCreator - Created query Query: { "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"}, Fields: null, Sort: null
-22:47:53.285 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - find using query: { "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29"} fields: null for class: class com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry in collection: tradeExecutedEntry
-22:47:53.285 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.286 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.286 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b45495036474640efb4f85"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 50000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:29:12.950Z"} , "tradeType" : "Buy" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:30:45.163" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.286 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b45495036474640efb4f85"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 50000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:29:12.950Z"} , "tradeType" : "Buy" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:30:45.163" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.286 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.287 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b45495036474640efb4f85"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 50000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:29:12.950Z"} , "tradeType" : "Buy" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:30:45.163" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b45495036474640efb4f85}
-22:47:53.287 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b45495036474640efb4f85"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 50000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:29:12.950Z"} , "tradeType" : "Buy" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:30:45.163" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b45495036474640efb4f85})
-22:47:53.287 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.287 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b45562036474640efb4f9e"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 80000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:34:09.521Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:34:10.838" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.287 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b45562036474640efb4f9e"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 80000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:34:09.521Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:34:10.838" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.287 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.288 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b45562036474640efb4f9e"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 80000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:34:09.521Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:34:10.838" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b45562036474640efb4f9e}
-22:47:53.288 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b45562036474640efb4f9e"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 80000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:34:09.521Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:34:10.838" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b45562036474640efb4f9e})
-22:47:53.288 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.288 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b455f503646130078015a7"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 20000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.555" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.288 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b455f503646130078015a7"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 20000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.555" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.289 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.289 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b455f503646130078015a7"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 20000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.555" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b455f503646130078015a7}
-22:47:53.289 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b455f503646130078015a7"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 20000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.555" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b455f503646130078015a7})
-22:47:53.289 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.289 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b455f503646130078015aa"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 30000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.610" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.289 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b455f503646130078015aa"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 30000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.610" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.290 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.290 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b455f503646130078015aa"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 30000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.610" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b455f503646130078015aa}
-22:47:53.290 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b455f503646130078015aa"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 30000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:36:37.138Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:36:37.610" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b455f503646130078015aa})
-22:47:53.290 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.290 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b456c00364658ed8c482dd"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:39:59.906Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:40:00.317" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.290 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b456c00364658ed8c482dd"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:39:59.906Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:40:00.317" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.291 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.291 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b456c00364658ed8c482dd"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:39:59.906Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:40:00.317" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b456c00364658ed8c482dd}
-22:47:53.291 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b456c00364658ed8c482dd"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:39:59.906Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:40:00.317" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b456c00364658ed8c482dd})
-22:47:53.291 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.291 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : { "$oid" : "52b4574b0364250b95789e32"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:42:19.536Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:42:19.911" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.292 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : { "$oid" : "52b4574b0364250b95789e32"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:42:19.536Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:42:19.911" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.292 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.292 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : { "$oid" : "52b4574b0364250b95789e32"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:42:19.536Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:42:19.911" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b4574b0364250b95789e32}
-22:47:53.292 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : { "$oid" : "52b4574b0364250b95789e32"} , "_class" : "com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry" , "tradedAmount" : { "amount" : 10000000 , "currency" : "BTC"} , "tradedPrice" : { "amount" : 100000 , "currency" : "CNY"} , "coinName" : "Bitcoin" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeTime" : { "$date" : "2013-12-20T14:42:19.536Z"} , "tradeType" : "Sell" , "audit" : { "created_by" :  null  , "created_on" : "2013-12-20T14:42:19.911" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry{id=52b4574b0364250b95789e32})
-22:47:53.293 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.r.q.StringBasedMongoQuery - Created query { "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "orderStatus" : "PENDING"}
-22:47:53.293 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoTemplate - find using query: { "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "orderStatus" : "PENDING"} fields: null for class: class com.icoin.trading.tradeengine.query.order.OrderEntry in collection: orderEntry
-22:47:53.293 [1740171089@qtp-194735511-0] DEBUG o.s.data.mongodb.core.MongoDbUtils - Getting Mongo Database name=[test]
-22:47:53.294 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.295 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : "219439ec-135c-4db2-bc0a-0989e76a462d" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 100000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 1000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 100000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:46:47.225Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:46:47.274" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.295 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : "219439ec-135c-4db2-bc0a-0989e76a462d" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 100000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 1000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 100000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:46:47.225Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:46:47.274" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.295 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.296 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : "219439ec-135c-4db2-bc0a-0989e76a462d" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 100000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 1000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 100000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:46:47.225Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:46:47.274" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.order.OrderEntry{id=219439ec-135c-4db2-bc0a-0989e76a462d}
-22:47:53.296 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : "219439ec-135c-4db2-bc0a-0989e76a462d" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 100000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 1000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 100000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:46:47.225Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:46:47.274" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.order.OrderEntry{id=219439ec-135c-4db2-bc0a-0989e76a462d})
-22:47:53.296 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.296 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterLoad: { "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0}
-22:47:53.296 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterLoad({ "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0})
-22:47:53.296 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.297 [1740171089@qtp-194735511-0] INFO  o.s.d.m.c.m.e.LoggingEventListener - onAfterConvert: { "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7}
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.d.m.c.m.e.AbstractMongoEventListener - onAfterConvert({ "_id" : "5abf645a-c55f-4c95-8903-214f2390efd7" , "_class" : "com.icoin.trading.tradeengine.query.order.OrderEntry" , "orderBookIdentifier" : "8a6333b3-a618-45c5-9ffd-2937ed0b5a29" , "tradeAmount" : { "amount" : 200000000 , "currency" : "BTC"} , "userId" : "fb40547a-2a6f-44d4-bc48-bc82ca4e9528" , "itemPrice" : { "amount" : 100000 , "currency" : "CNY"} , "itemRemaining" : { "amount" : 200000000 , "currency" : "BTC"} , "type" : "BUY" , "placedDate" : { "$date" : "2013-12-20T14:47:53.226Z"} , "currencyPair" : { "baseCurrency" : "BTC" , "counterCurrency" : "CNY"} , "orderStatus" : "PENDING" , "audit" : { "created_by" : "buyer1" , "created_on" : "2013-12-20T14:47:53.243" , "last_modified_by" :  null } , "version" : 0}, com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7})
-22:47:53.297 [1740171089@qtp-194735511-0] INFO  c.i.t.webui.trade.TradeController - queried active orders for user fb40547a-2a6f-44d4-bc48-bc82ca4e9528 with order book 8a6333b3-a618-45c5-9ffd-2937ed0b5a29: [com.icoin.trading.tradeengine.query.order.OrderEntry{id=219439ec-135c-4db2-bc0a-0989e76a462d}, com.icoin.trading.tradeengine.query.order.OrderEntry{id=5abf645a-c55f-4c95-8903-214f2390efd7}]
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.DispatcherServlet - Rendering view [org.springframework.web.servlet.view.JstlView: name 'index'; URL [/WEB-INF/jsp/index.jsp]] in DispatcherServlet with name 'dispatcher'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'org.springframework.validation.BindingResult.buyOrder' of type [org.springframework.validation.BeanPropertyBindingResult] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'buyOrder' of type [com.icoin.trading.webui.order.BuyOrder] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'sellOrder' of type [com.icoin.trading.webui.order.SellOrder] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'org.springframework.validation.BindingResult.orderBook' of type [org.springframework.validation.BeanPropertyBindingResult] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'activeOrders' of type [java.util.ArrayList] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'coin' of type [com.icoin.trading.tradeengine.query.coin.CoinEntry] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'org.springframework.validation.BindingResult.coin' of type [org.springframework.validation.BeanPropertyBindingResult] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'buyOrders' of type [java.util.Collections$UnmodifiableRandomAccessList] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'executedTrades' of type [java.util.ArrayList] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'orderBook' of type [com.icoin.trading.tradeengine.query.order.OrderBookEntry] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'org.springframework.validation.BindingResult.sellOrder' of type [org.springframework.validation.BeanPropertyBindingResult] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Added model object 'sellOrders' of type [java.util.Collections$UnmodifiableRandomAccessList] to request in view with name 'index'
-22:47:53.297 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.view.JstlView - Forwarding to resource [/WEB-INF/jsp/index.jsp] in InternalResourceView 'index'
-22:47:53.299 [1740171089@qtp-194735511-0] DEBUG o.s.c.s.ReloadableResourceBundleMessageSource - No properties file found for [/WEB-INF/messages/validation_zh_CN] - neither plain properties nor XML
-22:47:53.299 [1740171089@qtp-194735511-0] DEBUG o.s.c.s.ReloadableResourceBundleMessageSource - No properties file found for [/WEB-INF/messages/validation_zh] - neither plain properties nor XML
-22:47:53.299 [1740171089@qtp-194735511-0] DEBUG o.s.c.s.ReloadableResourceBundleMessageSource - Re-caching properties for filename [/WEB-INF/messages/validation] - file hasn't been modified
-22:47:53.299 [1740171089@qtp-194735511-0] DEBUG o.s.c.s.ReloadableResourceBundleMessageSource - No properties file found for [/WEB-INF/messages/fields_zh_CN] - neither plain properties nor XML
-22:47:53.300 [1740171089@qtp-194735511-0] DEBUG o.s.c.s.ReloadableResourceBundleMessageSource - No properties file found for [/WEB-INF/messages/fields_zh] - neither plain properties nor XML
-22:47:53.300 [1740171089@qtp-194735511-0] DEBUG o.s.c.s.ReloadableResourceBundleMessageSource - Re-caching properties for filename [/WEB-INF/messages/fields] - file hasn't been modified
-22:47:53.303 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler#0'
-22:47:53.307 [1740171089@qtp-194735511-0] DEBUG o.s.web.servlet.DispatcherServlet - Successfully completed request
-22:47:53.307 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'beanParameterResolverFactory'
-22:47:53.308 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler#0'
-22:47:53.309 [1740171089@qtp-194735511-0] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Returning cached instance of singleton bean 'org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler#0'
-22:47:53.311 [1740171089@qtp-194735511-0] DEBUG o.s.s.w.a.ExceptionTranslationFilter - Chain processed normally
-22:47:53.311 [1740171089@qtp-194735511-0] DEBUG o.s.s.w.c.SecurityContextPersistenceFilter - SecurityContextHolder now cleared, as request processing completed
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-db.orderEntry.aggregate([
-                      { "$match" : { "orderStatus" : "PENDING" , "type" : "SELL"} },
-                      { "$group" : { "_id" : "$itemPrice" , "amount" : { "$sum" : "$itemRemaining"}}} ,
-                      { "$sort" : { "_id" : -1} }
-                      ])
-
-
-db.orderEntry.aggregate([
-{ "$match" : { "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} , "placeDate" : { "$lte" : { "$date" : "2013-12-15T16:00:00.000Z"}} , "orderBookIdentifier" : "6359bd3f-4196-442d-84bf-fba40df584d0"}} ,
-{ "$group" : { "_id" : "$itemPrice" , "amount" : { "$sum" : "$itemRemaining.amount"}}} ,
-{ "$sort" : { "_id" : -1}} , { "$limit" : 10}])
-
-
-"placedDate" : { "$lte" : ISODate("2013-12-15T16:00:00.000Z")} ,
-
-,"placeDate" : { "$lte" : ISODate("2013-12-16")}
-
-db.orderEntry.aggregate([
-{ "$match" : { "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} ,"placedDate" : { "$lte" : ISODate("2013-12-16T16:00:00.000Z")} , "orderBookIdentifier" : "a13f20c3-b35a-4542-9a56-df689d2fc1dc"}} ,
-{ "$group" : { "_id" : "$itemPrice" , "amount" : { "$sum" : "$itemRemaining.amount"}}} ,
-{ "$sort" : { "_id" : -1}} , { "$limit" : 10}])
-
-
-db.orderEntry.aggregate([
-{ "$match" : { "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} ,"placedDate" : { "$lte" : ISODate("2013-12-16T16:00:00.000Z")} , "orderBookIdentifier" : "a13f20c3-b35a-4542-9a56-df689d2fc1dc"}} ,
-{ "$group" : { "_id" :{ "amount" : "$itemPrice.amount", "priceCcy" : "$itemPrice.currency", "amountCcy" : "$itemRemaining.currency"}, "sum" : { "$sum" : "$itemRemaining.amount"}}} ,
-{ "$sort" : { "_id" : -1}} , { "$limit" : 10}])
-
-
-
-{ _id : { author: '$author', pageViews: '$pageViews', posted: '$posted' } }
-
-db.orderEntry.find({ "orderStatus" : "PENDING" , "type" : "SELL" , "itemRemaining.amount" : { "$gt" : 0} , "orderBookIdentifier" : "6359bd3f-4196-442d-84bf-fba40df584d0"})
-
-
-db.products.aggregate( {
-     $group : {
-               _id : { type :"$type", stocked : "$stocked"}
-   } }
-)
-
-
-
-"tradeAmount" : { "amount" : (1050000000),"BTC" }, "itemPrice" :(1034567),"itemRemaining" : { "amount" : (0), "currency" : "BTC" }, "type" : "SELL", "placedDate" : ISODate("2013-12-16T16:00:00Z"), "orderStatus" : "DONE",
-"tradeAmount" : { "amount" : (1050000000),"BTC" }, "itemPrice" :(1034567),"itemRemaining" : { "amount" : (100000000), "currency" : "BTC" }, "type" : "SELL", "placedDate" : ISODate("2013-12-16T16:00:00Z"), "orderStatus" : "DONE",
-"tradeAmount" : { "amount" : ("102765449987770") "BTC" }, "itemPrice" :(1034567), "itemRemaining" : { "amount" : NumberLong("102765449987770")}, "type" : "SELL", "placedDate" : ISODate("2013-12-16T16:00:00Z"), "orderStatus" : "PENDING",
-"tradeAmount" : { "amount" : (1050000000),"BTC" }, "itemPrice" :(1000000),"itemRemaining" : { "amount" : (100000000), "currency" : "BTC" }, "type" : "SELL", "placedDate" : ISODate("2013-12-16T16:00:00Z"), "orderStatus" : "PENDING",
-"tradeAmount" : { "amount" : (1550000000),"BTC" }, "itemPrice" :(1000000),"itemRemaining" : { "amount" : (100000000), "currency" : "BTC" }, "type" : "SELL", "placedDate" : ISODate("2013-12-16T16:00:00Z"), "orderStatus" : "PENDING",
-
-
+import java.text.ParseException;   
+import java.text.SimpleDateFormat;   
+import java.util.Calendar;   
+import java.util.Date;   
+import java.util.HashMap;   
+import java.util.Map;   
+import java.util.regex.Pattern;   
+  
+/**  
+ *         <p>  
+ *         类说明:身份证合法性校验  
+ *         </p>  
+ *         <p>  
+ *         --15位身份证号码：第7、8位为出生年份(两位数)，第9、10位为出生月份，第11、12位代表出生日期，第15位代表性别，奇数为男，偶数为女。  
+ *         --18位身份证号码：第7、8、9、10位为出生年份(四位数)，第11、第12位为出生月份，第13、14位代表出生日期，第17位代表性别，奇数为男，偶数为女。  
+ *         </p>  
+ */  
+@SuppressWarnings({"unchecked","unused","all"})   
+public class IdcardValidator {   
+  
+    /**  
+     * 省，直辖市代码表： { 11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",  
+     * 21:"辽宁",22:"吉林",23:"黑龙江",31:"上海",32:"江苏",  
+     * 33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",  
+     * 42:"湖北",43:"湖南",44:"广东",45:"广西",46:"海南",50:"重庆",  
+     * 51:"四川",52:"贵州",53:"云南",54:"西藏",61:"陕西",62:"甘肃",  
+     * 63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门",91:"国外"}  
+     */  
+    protected String codeAndCity[][] = { { "11", "北京" }, { "12", "天津" },   
+            { "13", "河北" }, { "14", "山西" }, { "15", "内蒙古" }, { "21", "辽宁" },   
+            { "22", "吉林" }, { "23", "黑龙江" }, { "31", "上海" }, { "32", "江苏" },   
+            { "33", "浙江" }, { "34", "安徽" }, { "35", "福建" }, { "36", "江西" },   
+            { "37", "山东" }, { "41", "河南" }, { "42", "湖北" }, { "43", "湖南" },   
+            { "44", "广东" }, { "45", "广西" }, { "46", "海南" }, { "50", "重庆" },   
+            { "51", "四川" }, { "52", "贵州" }, { "53", "云南" }, { "54", "西藏" },   
+            { "61", "陕西" }, { "62", "甘肃" }, { "63", "青海" }, { "64", "宁夏" },   
+            { "65", "新疆" }, { "71", "台湾" }, { "81", "香港" }, { "82", "澳门" },   
+            { "91", "国外" } };   
+  
+        private String cityCode[] = { "11", "12", "13", "14", "15", "21", "22",   
+            "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43",   
+            "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63",   
+            "64", "65", "71", "81", "82", "91" };   
+  
+    // 每位加权因子   
+    private int power[] = { 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 };   
+  
+    // 第18位校检码   
+    private String verifyCode[] = { "1", "0", "X", "9", "8", "7", "6", "5",   
+            "4", "3", "2" };   
+  
+       
+    /**  
+     * 验证所有的身份证的合法性  
+     * @param idcard  
+     * @return  
+     */  
+    public boolean isValidatedAllIdcard(String idcard) {   
+        if (idcard.length() == 15) {   
+            idcard = this.convertIdcarBy15bit(idcard);   
+        }   
+        return this.isValidate18Idcard(idcard);   
+    }   
+  
+    /**  
+     * <p>  
+     * 判断18位身份证的合法性  
+     * </p>  
+     * 根据〖中华人民共和国国家标准GB11643-1999〗中有关公民身份号码的规定，公民身份号码是特征组合码，由十七位数字本体码和一位数字校验码组成。  
+     * 排列顺序从左至右依次为：六位数字地址码，八位数字出生日期码，三位数字顺序码和一位数字校验码。  
+     * <p>  
+     * 顺序码: 表示在同一地址码所标识的区域范围内，对同年、同月、同 日出生的人编定的顺序号，顺序码的奇数分配给男性，偶数分配 给女性。  
+     * </p>  
+     * <p>  
+     * 1.前1、2位数字表示：所在省份的代码； 2.第3、4位数字表示：所在城市的代码； 3.第5、6位数字表示：所在区县的代码；  
+     * 4.第7~14位数字表示：出生年、月、日； 5.第15、16位数字表示：所在地的派出所的代码；  
+     * 6.第17位数字表示性别：奇数表示男性，偶数表示女性；  
+     * 7.第18位数字是校检码：也有的说是个人信息码，一般是随计算机的随机产生，用来检验身份证的正确性。校检码可以是0~9的数字，有时也用x表示。  
+     * </p>  
+     * <p>  
+     * 第十八位数字(校验码)的计算方法为： 1.将前面的身份证号码17位数分别乘以不同的系数。从第一位到第十七位的系数分别为：7 9 10 5 8 4  
+     * 2 1 6 3 7 9 10 5 8 4 2  
+     * </p>  
+     * <p>  
+     * 2.将这17位数字和系数相乘的结果相加。  
+     * </p>  
+     * <p>  
+     * 3.用加出来和除以11，看余数是多少？  
+     * </p>  
+     * 4.余数只可能有0 1 2 3 4 5 6 7 8 9 10这11个数字。其分别对应的最后一位身份证的号码为1 0 X 9 8 7 6 5 4 3  
+     * 2。  
+     * <p>  
+     * 5.通过上面得知如果余数是2，就会在身份证的第18位数字上出现罗马数字的Ⅹ。如果余数是10，身份证的最后一位号码就是2。  
+     * </p>  
+     *   
+     * @param idcard  
+     * @return  
+     */  
+    public boolean isValidate18Idcard(String idcard) {   
+        // 非18位为假   
+        if (idcard.length() != 18) {   
+            return false;   
+        }   
+        // 获取前17位   
+        String idcard17 = idcard.substring(0, 17);   
+        // 获取第18位   
+        String idcard18Code = idcard.substring(17, 18);   
+        char c[] = null;   
+        String checkCode = "";   
+        // 是否都为数字   
+        if (isDigital(idcard17)) {   
+            c = idcard17.toCharArray();   
+        } else {   
+            return false;   
+        }   
+  
+        if (null != c) {   
+            int bit[] = new int[idcard17.length()];   
+  
+            bit = converCharToInt(c);   
+  
+            int sum17 = 0;   
+  
+            sum17 = getPowerSum(bit);   
+  
+            // 将和值与11取模得到余数进行校验码判断   
+            checkCode = getCheckCodeBySum(sum17);   
+            if (null == checkCode) {   
+                return false;   
+            }   
+            // 将身份证的第18位与算出来的校码进行匹配，不相等就为假   
+            if (!idcard18Code.equalsIgnoreCase(checkCode)) {   
+                return false;   
+            }   
+        }   
+        return true;   
+    }   
+  
+    /**  
+     * 验证15位身份证的合法性,该方法验证不准确，最好是将15转为18位后再判断，该类中已提供。  
+     *   
+     * @param idcard  
+     * @return  
+     */  
+    public boolean isValidate15Idcard(String idcard) {   
+        // 非15位为假   
+        if (idcard.length() != 15) {   
+            return false;   
+        }   
+  
+        // 是否全都为数字   
+        if (isDigital(idcard)) {   
+            String provinceid = idcard.substring(0, 2);   
+            String birthday = idcard.substring(6, 12);   
+            int year = Integer.parseInt(idcard.substring(6, 8));   
+            int month = Integer.parseInt(idcard.substring(8, 10));   
+            int day = Integer.parseInt(idcard.substring(10, 12));   
+  
+            // 判断是否为合法的省份   
+            boolean flag = false;   
+            for (String id : cityCode) {   
+                if (id.equals(provinceid)) {   
+                    flag = true;   
+                    break;   
+                }   
+            }   
+            if (!flag) {   
+                return false;   
+            }   
+            // 该身份证生出日期在当前日期之后时为假   
+            Date birthdate = null;   
+            try {   
+                birthdate = new SimpleDateFormat("yyMMdd").parse(birthday);   
+            } catch (ParseException e) {   
+                e.printStackTrace();   
+            }   
+            if (birthdate == null || new Date().before(birthdate)) {   
+                return false;   
+            }   
+  
+            // 判断是否为合法的年份   
+            GregorianCalendar curDay = new GregorianCalendar();   
+            int curYear = curDay.get(Calendar.YEAR);   
+            int year2bit = Integer.parseInt(String.valueOf(curYear)   
+                    .substring(2));   
+  
+            // 判断该年份的两位表示法，小于50的和大于当前年份的，为假   
+            if ((year < 50 && year > year2bit)) {   
+                return false;   
+            }   
+  
+            // 判断是否为合法的月份   
+            if (month < 1 || month > 12) {   
+                return false;   
+            }   
+  
+            // 判断是否为合法的日期   
+            boolean mflag = false;   
+            curDay.setTime(birthdate);  //将该身份证的出生日期赋于对象curDay   
+            switch (month) {   
+            case 1:   
+            case 3:   
+            case 5:   
+            case 7:   
+            case 8:   
+            case 10:   
+            case 12:   
+                mflag = (day >= 1 && day <= 31);   
+                break;   
+            case 2: //公历的2月非闰年有28天,闰年的2月是29天。   
+                if (curDay.isLeapYear(curDay.get(Calendar.YEAR))) {   
+                    mflag = (day >= 1 && day <= 29);   
+                } else {   
+                    mflag = (day >= 1 && day <= 28);   
+                }   
+                break;   
+            case 4:   
+            case 6:   
+            case 9:   
+            case 11:   
+                mflag = (day >= 1 && day <= 30);   
+                break;   
+            }   
+            if (!mflag) {   
+                return false;   
+            }   
+        } else {   
+            return false;   
+        }   
+        return true;   
+    }   
+  
+    /**  
+     * 将15位的身份证转成18位身份证  
+     *   
+     * @param idcard  
+     * @return  
+     */  
+    public String convertIdcarBy15bit(String idcard) {   
+        String idcard17 = null;   
+        // 非15位身份证   
+        if (idcard.length() != 15) {   
+            return null;   
+        }   
+  
+        if (isDigital(idcard)) {   
+            // 获取出生年月日   
+            String birthday = idcard.substring(6, 12);   
+            Date birthdate = null;   
+            try {   
+                birthdate = new SimpleDateFormat("yyMMdd").parse(birthday);   
+            } catch (ParseException e) {   
+                e.printStackTrace();   
+            }   
+            Calendar cday = Calendar.getInstance();   
+            cday.setTime(birthdate);   
+            String year = String.valueOf(cday.get(Calendar.YEAR));   
+  
+            idcard17 = idcard.substring(0, 6) + year + idcard.substring(8);   
+  
+            char c[] = idcard17.toCharArray();   
+            String checkCode = "";   
+  
+            if (null != c) {   
+                int bit[] = new int[idcard17.length()];   
+  
+                // 将字符数组转为整型数组   
+                bit = converCharToInt(c);   
+                int sum17 = 0;   
+                sum17 = getPowerSum(bit);   
+  
+                // 获取和值与11取模得到余数进行校验码   
+                checkCode = getCheckCodeBySum(sum17);   
+                // 获取不到校验位   
+                if (null == checkCode) {   
+                    return null;   
+                }   
+  
+                // 将前17位与第18位校验码拼接   
+                idcard17 += checkCode;   
+            }   
+        } else { // 身份证包含数字   
+            return null;   
+        }   
+        return idcard17;   
+    }   
+  
+    /**  
+     * 15位和18位身份证号码的基本数字和位数验校  
+     *   
+     * @param idcard  
+     * @return  
+     */  
+    public boolean isIdcard(String idcard) {   
+        return idcard == null || "".equals(idcard) ? false : Pattern.matches(   
+                "(^\\d{15}$)|(\\d{17}(?:\\d|x|X)$)", idcard);   
+    }   
+  
+    /**  
+     * 15位身份证号码的基本数字和位数验校  
+     *   
+     * @param idcard  
+     * @return  
+     */  
+    public boolean is15Idcard(String idcard) {   
+        return idcard == null || "".equals(idcard) ? false : Pattern.matches(   
+                "^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$",   
+                idcard);   
+    }   
+  
+    /**  
+     * 18位身份证号码的基本数字和位数验校  
+     *   
+     * @param idcard  
+     * @return  
+     */  
+    public boolean is18Idcard(String idcard) {   
+        return Pattern   
+                .matches(   
+                        "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([\\d|x|X]{1})$",   
+                        idcard);   
+    }   
+  
+    /**  
+     * 数字验证  
+     *   
+     * @param str  
+     * @return  
+     */  
+    public boolean isDigital(String str) {   
+        return str == null || "".equals(str) ? false : str.matches("^[0-9]*$");   
+    }   
+  
+    /**  
+     * 将身份证的每位和对应位的加权因子相乘之后，再得到和值  
+     *   
+     * @param bit  
+     * @return  
+     */  
+    public int getPowerSum(int[] bit) {   
+  
+        int sum = 0;   
+  
+        if (power.length != bit.length) {   
+            return sum;   
+        }   
+  
+        for (int i = 0; i < bit.length; i++) {   
+            for (int j = 0; j < power.length; j++) {   
+                if (i == j) {   
+                    sum = sum + bit[i] * power[j];   
+                }   
+            }   
+        }   
+        return sum;   
+    }   
+  
+    /**  
+     * 将和值与11取模得到余数进行校验码判断  
+     *   
+     * @param checkCode  
+     * @param sum17  
+     * @return 校验位  
+     */  
+    public String getCheckCodeBySum(int sum17) {   
+        String checkCode = null;   
+        switch (sum17 % 11) {   
+        case 10:   
+            checkCode = "2";   
+            break;   
+        case 9:   
+            checkCode = "3";   
+            break;   
+        case 8:   
+            checkCode = "4";   
+            break;   
+        case 7:   
+            checkCode = "5";   
+            break;   
+        case 6:   
+            checkCode = "6";   
+            break;   
+        case 5:   
+            checkCode = "7";   
+            break;   
+        case 4:   
+            checkCode = "8";   
+            break;   
+        case 3:   
+            checkCode = "9";   
+            break;   
+        case 2:   
+            checkCode = "x";   
+            break;   
+        case 1:   
+            checkCode = "0";   
+            break;   
+        case 0:   
+            checkCode = "1";   
+            break;   
+        }   
+        return checkCode;   
+    }   
+  
+    /**  
+     * 将字符数组转为整型数组  
+     *   
+     * @param c  
+     * @return  
+     * @throws NumberFormatException  
+     */  
+    public int[] converCharToInt(char[] c) throws NumberFormatException {   
+        int[] a = new int[c.length];   
+        int k = 0;   
+        for (char temp : c) {   
+            a[k++] = Integer.parseInt(String.valueOf(temp));   
+        }   
+        return a;   
+    }   
+  
+    public static void main(String[] args) throws Exception {   
+                  String idcard15 = "";   
+                  String idcard18 = "";   
+        IdcardValidator iv = new IdcardValidator();   
+        boolean flag = false;   
+        flag = iv.isValidate18Idcard(idcard18);   
+        System.out.println(flag);   
+  
+        flag = iv.isValidate15Idcard(idcard15);   
+        System.out.println(flag);   
+  
+        System.out.println(iv.convertIdcarBy15bit(idcard15));   
+        flag = iv.isValidate18Idcard(iv.convertIdcarBy15bit(idcard15));   
+        System.out.println(flag);   
+  
+        System.out.println(iv.isValidatedAllIdcard(idcard18));   
+           
+        }   
+}  

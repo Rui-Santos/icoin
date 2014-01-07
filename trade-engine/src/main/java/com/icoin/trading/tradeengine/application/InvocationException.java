@@ -14,6 +14,7 @@ public class InvocationException extends IZookeyException {
 
     public InvocationException(String string, Exception root) {
         super(string, root);
+        this.target = root;
     }
 
     /**

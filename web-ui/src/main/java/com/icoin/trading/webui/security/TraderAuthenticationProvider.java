@@ -21,7 +21,7 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import com.icoin.trading.users.application.command.AuthenticateUserCommand;
-import com.icoin.trading.users.domain.UserAccount;
+import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;

@@ -41,7 +41,7 @@ public class ItemReservationCancelledForPortfolioEvent {
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
         this.leftTotalItem = leftTotalItem;
-        this.leftTotalItem = leftCommission;
+        this.leftCommission = leftCommission;
     }
 
     public BigMoney getLeftTotalItem() {

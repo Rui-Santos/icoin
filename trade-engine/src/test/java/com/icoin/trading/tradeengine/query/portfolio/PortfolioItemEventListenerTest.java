@@ -29,9 +29,8 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.users.domain.model.user.UserId;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.junit.Before;
@@ -59,8 +58,8 @@ public class PortfolioItemEventListenerTest {
     private PortfolioItemEventListener listener;
 
     final UserId userIdentifier = new UserId();
-    final OrderBookId itemIdentifier = new OrderBookId();
     final PortfolioId portfolioIdentifier = new PortfolioId();
+    final OrderBookId itemIdentifier = new OrderBookId();
     final CoinId coinIdentifier = new CoinId();
     final TransactionId transactionIdentifier = new TransactionId();
 

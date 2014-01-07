@@ -27,12 +27,45 @@ public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, 
     private String orderBookIdentifier;
     private String portfolioIdentifier;
 
-    private String coinName;
+    //    private String coinName;
     private BigMoney amountOfItem;
-    private BigMoney amountOfExecutedItem;
-    private BigMoney pricePerItem;
+    private BigMoney totalCommission;
+    private BigMoney totalMoney;
     private TransactionState state;
+    private BigMoney amountOfExecutedItem;
+    private BigMoney executedMoney;
+    private BigMoney commission;
     private TransactionType type;
+
+    public TransactionEntry addCommission(BigMoney commission) {
+        if (this.commission == null) {
+            this.commission = commission;
+            return this;
+        }
+
+        this.commission = this.commission.plus(commission);
+        return this;
+    }
+
+    public TransactionEntry addExecutedMoney(BigMoney executedMoney) {
+        if (this.executedMoney == null) {
+            this.executedMoney = executedMoney;
+            return this;
+        }
+
+        this.executedMoney = this.executedMoney.plus(executedMoney);
+        return this;
+    }
+
+    public TransactionEntry addAmountOfExecutedItem(BigMoney amountOfExecutedItem) {
+        if (this.amountOfExecutedItem == null) {
+            this.amountOfExecutedItem = amountOfExecutedItem;
+            return this;
+        }
+
+        this.amountOfExecutedItem = this.amountOfExecutedItem.plus(amountOfExecutedItem);
+        return this;
+    }
 
     public BigMoney getAmountOfExecutedItem() {
         return amountOfExecutedItem;
@@ -50,13 +83,13 @@ public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, 
         this.amountOfItem = amountOfItem;
     }
 
-    public String getCoinName() {
-        return coinName;
-    }
-
-    public void setCoinName(String coinName) {
-        this.coinName = coinName;
-    }
+//    public String getCoinName() {
+//        return coinName;
+//    }
+//
+//    public void setCoinName(String coinName) {
+//        this.coinName = coinName;
+//    }
 
     public String getOrderBookIdentifier() {
         return orderBookIdentifier;
@@ -74,12 +107,36 @@ public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, 
         this.portfolioIdentifier = portfolioIdentifier;
     }
 
-    public BigMoney getPricePerItem() {
-        return pricePerItem;
+    public BigMoney getExecutedMoney() {
+        return executedMoney;
     }
 
-    public void setPricePerItem(BigMoney pricePerItem) {
-        this.pricePerItem = pricePerItem;
+    public void setExecutedMoney(BigMoney executedMoney) {
+        this.executedMoney = executedMoney;
+    }
+
+    public BigMoney getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigMoney commission) {
+        this.commission = commission;
+    }
+
+    public BigMoney getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(BigMoney totalMoney) {
+        this.totalMoney = totalMoney;
+    }
+
+    public BigMoney getTotalCommission() {
+        return totalCommission;
+    }
+
+    public void setTotalCommission(BigMoney totalCommission) {
+        this.totalCommission = totalCommission;
     }
 
     public TransactionState getState() {

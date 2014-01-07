@@ -123,6 +123,8 @@ public class OrderListenerIT {
         assertThat(orderEntry.getPrimaryKey(), equalTo(orderId.toString()));
         assertThat(orderEntry.getOrderStatus(), equalTo(OrderStatus.PENDING));
         assertThat(orderEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
+        assertThat(orderEntry.getTransactionIdentifier(), equalTo(transactionId.toString()));
+        assertThat(orderEntry.getPlacedDate(), equalTo(placeDate));
 
         assertThat(orderEntry.getTradeAmount().isEqual(
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(300))),

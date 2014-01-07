@@ -99,7 +99,7 @@ public class QueuedTradeExecutor implements TradeExecutor {
             }
         }
 
-        public void stop(){
+        public void stop() {
             stop = true;
             queue.clear();
         }
@@ -138,8 +138,12 @@ public class QueuedTradeExecutor implements TradeExecutor {
     class Setup implements Runnable {
         final ExecutorService executor;
 
-        private Setup(){
-            executor =  Executors.newFixedThreadPool(orderBookPool.size());
+        private Setup() {
+            int size = orderBookPool.size();
+            if (size <= 0) {
+                size = 1;
+            }
+            executor = Executors.newFixedThreadPool(size);
         }
 
         @Override

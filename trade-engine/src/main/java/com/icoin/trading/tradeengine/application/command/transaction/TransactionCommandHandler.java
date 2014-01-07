@@ -134,6 +134,7 @@ public class TransactionCommandHandler {
 
     private void fillOrder(AbstractStartTransactionCommand command, AbstractOrder order) {
         order.setItemRemaining(command.getTradeAmount());
+        order.setTradeAmount(command.getTradeAmount());
         order.setItemPrice(command.getItemPrice());
         order.setPortfolioId(command.getPortfolioIdentifier());
         order.setOrderBookId(command.getOrderBookIdentifier());
@@ -174,7 +175,7 @@ public class TransactionCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Transaction transaction = repository.load(command.getTransactionIdentifier());
-                        transaction.cancel(command.getCancelledPrice());
+                        transaction.cancel();
                         return null;
                     }
                 }

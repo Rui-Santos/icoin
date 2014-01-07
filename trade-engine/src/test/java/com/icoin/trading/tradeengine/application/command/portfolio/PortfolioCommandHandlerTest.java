@@ -3,6 +3,7 @@ package com.icoin.trading.tradeengine.application.command.portfolio;
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.EqualsWithMoneyFieldMatcher;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.CancelCashReservationCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.ClearReservedCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ReserveCashCommand;
@@ -16,6 +17,7 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashDepositedE
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationCancelledEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationConfirmedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationRejectedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedClearedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashWithdrawnEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemAddedToPortfolioEvent;
@@ -30,7 +32,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.users.domain.model.user.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.joda.money.BigMoney;
@@ -309,12 +311,36 @@ public class PortfolioCommandHandlerTest {
         fixture.given(
                 new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
                 new CashDepositedEvent(portfolioIdentifier,
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 400L)))
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 700L)))
                 .when(command)
                 .expectEvents(new CashReservationConfirmedEvent(
                         portfolioIdentifier,
                         transactionIdentifier,
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 500),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 200)));
+    }
+
+    @Test
+    public void testClearReservedCash() {
+        ClearReservedCashCommand command = new ClearReservedCashCommand(
+                portfolioIdentifier,
+                transactionIdentifier,
+                orderBookIdentifier,
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 5L),
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 2L));
+        fixture.given(
+                new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
+                new CashDepositedEvent(portfolioIdentifier,
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 700L)),
+                new CashReservationConfirmedEvent(
+                        portfolioIdentifier,
+                        transactionIdentifier,
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 495),
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 198)))
+                .when(command)
+                .expectEvents(new CashReservedClearedEvent(
+                        portfolioIdentifier,
+                        transactionIdentifier,
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 7L)));
     }
 }

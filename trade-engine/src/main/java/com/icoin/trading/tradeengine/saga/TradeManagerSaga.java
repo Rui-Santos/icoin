@@ -125,10 +125,11 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
             return zero;
         }
 
-        final BigMoney left = leftCommission.minus(executedCommission);
+        BigMoney left = leftCommission.minus(executedCommission);
         if (left.isNegative()) {
+            BigMoney adjusted = leftCommission;
             leftCommission = zero;
-            return executedCommission;
+            return adjusted;
         }
 
         leftCommission = left;

@@ -19,13 +19,15 @@ package com.icoin.trading.tradeengine.query.order;
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
+import com.icoin.trading.tradeengine.domain.events.order.RefreshedHighestBuyPriceEvent;
+import com.icoin.trading.tradeengine.domain.events.order.RefreshedLowestSellPriceEvent;
 import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.order.TradeType;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
+import com.icoin.trading.tradeengine.domain.model.order.TradeType;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.CoinListener;
@@ -62,6 +64,7 @@ import static org.junit.Assert.assertNotNull;
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class OrderBookListenerIT {
 
+    private final String coinName = "Test Coin";
     private OrderBookListener orderBookListener;
 
     @Autowired
@@ -87,7 +90,7 @@ public class OrderBookListenerIT {
         coinListener.handleCoinCreatedEvent(
                 new CoinCreatedEvent(
                         coinId,
-                        "Test Coin",
+                        coinName,
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))));
 
@@ -117,8 +120,8 @@ public class OrderBookListenerIT {
 
     @Test
     public void testHandleTradeExecuted() throws Exception {
-        CoinEntry coin = createCoin();
-        createOrderBook(coin);
+//        CoinEntry coin = createCoin();
+        createOrderBook(coinId.toString(), coinName);
         OrderId sellOrderId = new OrderId();
         OrderId buyOrderId = new OrderId();
         TransactionId sellTransactionId = new TransactionId();
@@ -152,23 +155,66 @@ public class OrderBookListenerIT {
                 is(true));
         assertThat(orderBookEntry.getBuyTransactionId(), equalTo(buyTransactionId.toString()));
         assertThat(orderBookEntry.getSellTransactionId(), equalTo(sellTransactionId.toString()));
+        assertThat(orderBookEntry.getLastTradedTime(), equalTo(tradeTime));
+    }
+
+    @Test
+    public void testHandleRefreshedHighestBuyPrice() throws Exception {
+//        CoinEntry coin = createCoin();
+        createOrderBook(coinId.toString(), coinName);
+
+        final OrderId orderId = new OrderId();
+        final BigMoney price = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(149));
+        final RefreshedHighestBuyPriceEvent event =
+                new RefreshedHighestBuyPriceEvent(orderBookId, orderId.toString(), price);
+
+        orderBookListener.handleRefreshedHighestBuyPrice(event);
+
+        Iterable<OrderBookEntry> all = orderBookRepository.findAll();
+        OrderBookEntry orderBookEntry = all.iterator().next();
+        assertNotNull("The first item of the iterator for orderBooks should not be null", orderBookEntry);
+        assertEquals("Test Coin", orderBookEntry.getCoinName());
+        assertThat(orderBookEntry.getHighestBuyPrice().isEqual(price),
+                is(true));
+        assertThat(orderBookEntry.getHighestBuyId(), equalTo(orderId.toString()));
+    }
+
+    @Test
+    public void testHandleRefreshedLowestSellPrice() throws Exception {
+//        CoinEntry coin = createCoin();
+        createOrderBook(coinId.toString(), coinName);
+
+        final OrderId orderId = new OrderId();
+        final BigMoney price = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(280));
+        final RefreshedLowestSellPriceEvent event =
+                new RefreshedLowestSellPriceEvent(orderBookId, orderId.toString(), price);
+
+        orderBookListener.handleRefreshedLowestSellPrice(event);
+
+        Iterable<OrderBookEntry> all = orderBookRepository.findAll();
+        OrderBookEntry orderBookEntry = all.iterator().next();
+        assertNotNull("The first item of the iterator for orderBooks should not be null", orderBookEntry);
+        assertEquals("Test Coin", orderBookEntry.getCoinName());
+        assertThat(orderBookEntry.getLowestSellPrice().isEqual(price),
+                is(true));
+        assertThat(orderBookEntry.getLowestSellId(), equalTo(orderId.toString()));
     }
 
     private CoinEntry createCoin() {
         CoinEntry coinEntry = new CoinEntry();
         coinEntry.setPrimaryKey(coinId.toString());
         coinEntry.setName("Test Coin");
-        coinEntry.setCoinAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100000)));
-        coinEntry.setCoinPrice(BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)));
+//        coinEntry.setCoinAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100000)));
+//        coinEntry.setCoinPrice(BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)));
         coinRepository.save(coinEntry);
         return coinEntry;
     }
 
-    private OrderBookEntry createOrderBook(CoinEntry coin) {
+    private OrderBookEntry createOrderBook(String coinId, String coinName) {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         orderBookEntry.setPrimaryKey(orderBookId.toString());
-        orderBookEntry.setCoinIdentifier(coin.getPrimaryKey());
-        orderBookEntry.setCoinName(coin.getName());
+        orderBookEntry.setCoinIdentifier(coinId);
+        orderBookEntry.setCoinName(coinName);
         orderBookRepository.save(orderBookEntry);
         return orderBookEntry;
     }

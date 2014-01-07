@@ -32,7 +32,7 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
     private String coinIdentifier;
     private String coinName;
     private CurrencyPair currencyPair;
-    private CoinId coinId;
+//    private CoinId coinId;
 
     private String highestBuyId;
     private String lowestSellId;
@@ -77,13 +77,13 @@ public class OrderBookEntry extends AuditAwareEntitySupport<OrderBookEntry, Stri
         this.currencyPair = currencyPair;
     }
 
-    public CoinId getCoinId() {
-        return coinId;
-    }
-
-    public void setCoinId(CoinId coinId) {
-        this.coinId = coinId;
-    }
+//    public CoinId getCoinId() {
+//        return coinId;
+//    }
+//
+//    public void setCoinId(CoinId coinId) {
+//        this.coinId = coinId;
+//    }
 
     public String getHighestBuyId() {
         return highestBuyId;

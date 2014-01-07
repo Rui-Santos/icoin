@@ -40,6 +40,7 @@
             classpath:META-INF/spring/order-context.xml,
             classpath:META-INF/spring/trade-engine-context.xml,
             classpath:META-INF/spring/users-context.xml,
+            classpath:META-INF/spring/users-persistence-mongo.xml,
             classpath:META-INF/spring/coin-context.xml,
             classpath:META-INF/spring/configuration-context.xml,
             classpath:META-INF/spring/security-context.xml,

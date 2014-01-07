@@ -32,14 +32,12 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
     private String coinName;
     private BigMoney amountOfItem;
     private BigMoney amountOfItemsExecuted;
-    private BigMoney pricePerItem;
 
-    public TransactionEntryMatcher(BigMoney amountOfItem, BigMoney amountOfItemsExecuted, String coinName, BigMoney pricePerItem,
+    public TransactionEntryMatcher(BigMoney amountOfItem, BigMoney amountOfItemsExecuted, String coinName,
                                    TransactionState state, TransactionType type) {
         this.amountOfItem = amountOfItem;
         this.amountOfItemsExecuted = amountOfItemsExecuted;
         this.coinName = coinName;
-        this.pricePerItem = pricePerItem;
         this.state = state;
         this.type = type;
     }
@@ -66,17 +64,8 @@ public class TransactionEntryMatcher extends ArgumentMatcher<TransactionEntry> {
                     transactionEntry.getAmountOfExecutedItem());
             return false;
         }
-        if (!coinName.equals(transactionEntry.getCoinName())) {
-            problem = String.format("Coin name is not %s but %s", coinName, transactionEntry.getCoinName());
-            return false;
-        }
 
-        if (pricePerItem.minus(transactionEntry.getPricePerItem()).isPositive()) {
-            problem = String.format("Price per item is not %s but %s",
-                    pricePerItem,
-                    transactionEntry.getPricePerItem());
-            return false;
-        }
+
         if (state != transactionEntry.getState()) {
             problem = String.format("State is not %s but %s", state, transactionEntry.getState());
             return false;

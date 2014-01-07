@@ -26,6 +26,5 @@ public class SynchronizedOnIdentifierHandler {
         } finally {
             lock.releaseLock(callback.getIdentifier());
         }
-
     }
 }

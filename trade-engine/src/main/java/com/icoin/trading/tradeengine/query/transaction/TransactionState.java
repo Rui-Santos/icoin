@@ -22,7 +22,7 @@ import com.homhon.base.domain.ValueObject;
  * @author Jettro Coenradie
  */
 public enum TransactionState implements ValueObject<TransactionState> {
-    STARTED, CONFIRMED, CANCELLED, EXECUTED, PARTIALLYEXECUTED;
+    STARTED, CONFIRMED, CANCELLED, EXECUTED, PARTIALLY_EXECUTED;
 
     @Override
     public boolean sameValueAs(TransactionState transactionState) {

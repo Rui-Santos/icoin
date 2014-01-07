@@ -28,6 +28,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepositoryCustom {
 
     private MongoTemplate mongoTemplate;
 
-    @Autowired
+    @Resource(name = "trade.mongoTemplate")
     public void setMongoTemplate(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }

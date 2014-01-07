@@ -30,6 +30,7 @@ import static com.homhon.mongo.TimeUtils.currentTime;
  */
 public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long> {
     private String orderBookIdentifier;
+    private String transactionIdentifier;
     private BigMoney tradeAmount;
     private String userId;
     private BigMoney itemPrice;
@@ -42,6 +43,15 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
     private Date placedDate;
     private CurrencyPair currencyPair;
     private OrderStatus orderStatus = OrderStatus.PENDING;
+
+
+    public String getTransactionIdentifier() {
+        return transactionIdentifier;
+    }
+
+    public void setTransactionIdentifier(String transactionIdentifier) {
+        this.transactionIdentifier = transactionIdentifier;
+    }
 
     public BigMoney getItemPrice() {
         return itemPrice;

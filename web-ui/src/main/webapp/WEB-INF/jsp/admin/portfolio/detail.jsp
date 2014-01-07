@@ -63,9 +63,9 @@
     <div class="span8">
         <form method="GET" action="${ctx}/admin/portfolio/<c:out value="${portfolio.primaryKey}"/>/item/">
             <select name="orderbook" class="span3">
-                <c:forEach items="${orderbooks}" var="orderbook">
-                    <option value="<c:out value="${orderbook.primaryKey}"/>"><c:out
-                            value="${orderbook.coinName}"/></option>
+                <c:forEach items="${coins}" var="coin">
+                    <option value="<c:out value="${coin.primaryKey}"/>"><c:out
+                            value="${coin.coinName}"/></option>
                 </c:forEach>
             </select>
             <input name="amount" value="0" class="span2"/>

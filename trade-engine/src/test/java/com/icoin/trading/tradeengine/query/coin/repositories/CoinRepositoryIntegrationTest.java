@@ -47,8 +47,8 @@ public class CoinRepositoryIntegrationTest {
     public void storeCoinInRepository() {
         CoinEntry coinEntry = new CoinEntry();
         coinEntry.setPrimaryKey(new CoinId().toString());
-        coinEntry.setCoinAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100000)));
-        coinEntry.setCoinPrice(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(1000)));
+//        coinEntry.setCoinAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100000)));
+//        coinEntry.setCoinPrice(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(1000)));
 
         coinQueryRepository.save(coinEntry);
     }

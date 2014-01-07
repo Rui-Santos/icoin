@@ -26,18 +26,12 @@ import org.joda.money.BigMoney;
 public class CancelTransactionCommand {
 
     private TransactionId transactionIdentifier;
-    private BigMoney cancelledPrice;
 
-    public CancelTransactionCommand(TransactionId transactionIdentifier, BigMoney cancelledPrice) {
+    public CancelTransactionCommand(TransactionId transactionIdentifier) {
         this.transactionIdentifier = transactionIdentifier;
-        this.cancelledPrice = cancelledPrice;
     }
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
-    }
-
-    public BigMoney getCancelledPrice() {
-        return cancelledPrice;
     }
 }

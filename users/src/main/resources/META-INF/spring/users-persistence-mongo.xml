@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2010-2012. Axon Framework
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:util="http://www.springframework.org/schema/util"
+
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/data/mongo
+        http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.icoin.trading.users.infrastructure"/>
+
+    <!--<mongo:repositories base-package="com.icoin.trading.tradeengine.query.*.repositories" mongo-template-ref="mongoSpringTemplate"/>-->
+    <mongo:db-factory host="${mongodb.server.name}" port="${mongodb.server.port}" dbname="${mongodb.name}"
+                      id="users.mongoDbFactory"/>
+
+    <!--config the user query here-->
+    <mongo:repositories base-package="com.icoin.trading.users.query.repositories"
+                        mongo-template-ref="users.mongoTemplate"
+                        factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean"/>
+
+    <!--config social connection stuff-->
+    <mongo:repositories base-package="com.icoin.trading.users.infrastructure.persistence.mongo"
+                        mongo-template-ref="users.mongoTemplate"
+                        factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean"/>
+
+    <bean id="users.mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="users.mongoDbFactory"/>
+        <constructor-arg name="mongoConverter" ref="users.mappingConverter"/>
+        <property name="writeConcern" value="SAFE" />
+    </bean>
+
+    <bean id="users.mappingConverter"
+          class="org.springframework.data.mongodb.core.convert.MappingMongoConverter">
+        <constructor-arg name="mongoDbFactory" ref="users.mongoDbFactory"/>
+        <constructor-arg name="mappingContext" ref="users.mappingContext"/>
+        <property name="customConversions" ref="users.customConversions"/>
+    </bean>
+
+    <!--homhon mongo repo config-->
+    <bean id="users.customConversions"
+          class="org.springframework.data.mongodb.core.convert.CustomConversions">
+        <constructor-arg name="converters">
+            <util:list>
+                <bean class="com.homhon.mongo.converter.AuditWriteConverter"/>
+                <bean class="com.homhon.mongo.converter.AuditReadConverter"/>
+                <bean class="com.homhon.mongo.converter.ProbabilityReadConverter"/>
+                <bean class="com.homhon.mongo.converter.ProbabilityWriteConverter"/>
+                <bean class="com.homhon.mongo.converter.BigDecimalToDoubleConverter"/>
+                <bean class="com.homhon.mongo.converter.DoubleToBigDecimalConverter"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="users.mappingContext" class="com.homhon.mongo.core.MongoMappingBaseContext"/>
+
+    <beans profile="dev">
+        <context:property-placeholder
+                location="classpath:META-INF/spring/mongo-db.dev.properties"/>
+        <!--<bean id="trade.userService" class="com.icoin.trading.tradeengine.application.FakeUserService"/>-->
+        
+    </beans>
+    <beans profile="prod">
+        <context:property-placeholder
+                location="classpath:META-INF/spring/mongo-db.prod.properties"/>
+
+    </beans>
+
+    <!--<beans profile="default">-->
+    <!--<mongo:db-factory id="mongoDbFactory" dbname="icointrading" host="127.0.0.1" port="27017"/>-->
+    <!--</beans>-->
+
+    <!--<beans profile="cloud">-->
+    <!--<cloud:mongo-db-factory id="mongoDbFactory"/>-->
+    <!--</beans>-->
+
+</beans>

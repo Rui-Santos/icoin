@@ -17,7 +17,8 @@
 package com.icoin.trading.users.query;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-import com.icoin.trading.users.domain.UserAccount;
+import com.icoin.trading.users.domain.model.user.Identifier;
+import com.icoin.trading.users.domain.model.user.UserAccount;
 
 
 /**
@@ -25,21 +26,21 @@ import com.icoin.trading.users.domain.UserAccount;
  */
 public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> implements UserAccount<UserEntry> {
 
-    private String name;
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private Identifier identifier;
 
     @Override
     public String getId() {
         return username;
     }
 
+    @Override
     public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return getFullName();
     }
 
     public String getUsername() {
@@ -60,21 +61,60 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
         return this.username;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Identifier getIdentifier() {
+        return identifier;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setIdentifier(Identifier identifier) {
+        this.identifier = identifier;
+    }
+
     @Override
     public String getFullName() {
-        return this.name;
+        return "" + lastName + firstName;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "UserEntry{" +
-                "name='" + name + '\'' +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", identifier=" + identifier +
                 '}';
     }
 
@@ -87,9 +127,12 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
     public UserEntry copy() {
         final UserEntry userEntry = new UserEntry();
 
-        userEntry.setName(name);
         userEntry.setPassword(password);
         userEntry.setUsername(username);
+        userEntry.setPrimaryKey(primaryKey);
+        userEntry.setLastName(lastName);
+        userEntry.setFirstName(firstName);
+        userEntry.setIdentifier(identifier);
 
         return userEntry;
     }

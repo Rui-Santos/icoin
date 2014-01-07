@@ -41,6 +41,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 import static com.homhon.mongo.TimeUtils.currentTime;
@@ -78,7 +79,7 @@ public class BuyTradeManagerSagaIT {
     }
 
     @Test
-    public void testHandle_SellTransactionStarted() throws Exception {
+    public void testHandle_BuyTransactionStarted() throws Exception {
         fixture.givenAggregate(transactionIdentifier).published()
                 .whenAggregate(transactionIdentifier).publishes(
                 new BuyTransactionStartedEvent(transactionIdentifier,
@@ -93,7 +94,9 @@ public class BuyTradeManagerSagaIT {
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(new ReserveMoneyFromPortfolioCommandMatcher(
                                 portfolioIdentifier,
-                                TOTAL_ITEMS.convertedTo(PRICE_PER_ITEM.getCurrencyUnit(), PRICE_PER_ITEM.getAmount()))));
+                                transactionIdentifier,
+                                TOTAL_MONEY,
+                                TOTAL_COMMISSION)));
     }
 
     @Test
@@ -223,7 +226,7 @@ public class BuyTradeManagerSagaIT {
                                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
                                 buyOrderIdentifier.toString(),
                                 sellOrderIdentifier.toString(),
-                                TOTAL_COMMISSION,
+                                TOTAL_COMMISSION.minus(1),
                                 BigMoney.of(CurrencyUnit.of("BTC"), 10),
                                 transactionIdentifier,
                                 sellTransactionIdentifier,
@@ -232,8 +235,11 @@ public class BuyTradeManagerSagaIT {
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(
                         new ExecutedTransactionCommandMatcher(TOTAL_ITEMS,
+                                TOTAL_MONEY,
                                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
-                                transactionIdentifier),
+                                TOTAL_COMMISSION.minus(1),
+                                transactionIdentifier,
+                                coinId),
                         andNoMore()));
     }
 
@@ -270,8 +276,8 @@ public class BuyTradeManagerSagaIT {
                                 orderBookIdentifier,
                                 coinId,
                                 TOTAL_ITEMS,
-                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
-                                TOTAL_MONEY,
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, price),
+                                TOTAL_ITEMS.convertedTo(PRICE_PER_ITEM.getCurrencyUnit(), price),
                                 buyOrderIdentifier.toString(),//todo change
                                 sellOrderIdentifier.toString(),//todo change
                                 TOTAL_COMMISSION,
@@ -287,13 +293,14 @@ public class BuyTradeManagerSagaIT {
                                 coinId,
                                 TOTAL_ITEMS,
                                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, price),
-                                TOTAL_MONEY,
+                                TOTAL_ITEMS.convertedTo(PRICE_PER_ITEM.getCurrencyUnit(), price),
                                 TOTAL_COMMISSION))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
                                 new ConfirmMoneyReservationFromPortfolionCommandMatcher(portfolioIdentifier,
-                                        TOTAL_ITEMS.convertedTo(PRICE_PER_ITEM.getCurrencyUnit(), BigDecimal.valueOf(99))),
+                                        TOTAL_ITEMS.convertedTo(PRICE_PER_ITEM.getCurrencyUnit(), price),
+                                        TOTAL_COMMISSION),
                                 new AddItemToPortfolioCommandMatcher(portfolioIdentifier,
                                         coinId,
                                         TOTAL_ITEMS)));
@@ -331,7 +338,7 @@ public class BuyTradeManagerSagaIT {
                         new TradeExecutedEvent(
                                 orderBookIdentifier,
                                 coinId,
-                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                                TOTAL_ITEMS.dividedBy(2, RoundingMode.HALF_EVEN),
                                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
                                 TOTAL_MONEY,
                                 buyOrderIdentifier.toString(),//todo change
@@ -346,17 +353,19 @@ public class BuyTradeManagerSagaIT {
                 .publishes(
                         new BuyTransactionPartiallyExecutedEvent(
                                 transactionIdentifier,
-                                coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
-                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                                coinId,
+                                TOTAL_ITEMS.dividedBy(2, RoundingMode.HALF_EVEN),
+                                TOTAL_ITEMS,
                                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
-                                TOTAL_MONEY,
+                                TOTAL_ITEMS.dividedBy(2, RoundingMode.HALF_EVEN).convertedTo(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
                                 TOTAL_COMMISSION))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
                                 new ConfirmMoneyReservationFromPortfolionCommandMatcher(
                                         portfolioIdentifier,
-                                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99))),
+                                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99)),
+                                        TOTAL_COMMISSION),
                                 new AddItemToPortfolioCommandMatcher(
                                         portfolioIdentifier,
                                         coinId,
@@ -393,11 +402,11 @@ public class BuyTradeManagerSagaIT {
                         coinId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
-                        TOTAL_MONEY,
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99)),
                         buyOrderIdentifier.toString(),//todo change
                         sellOrderIdentifier.toString(),//todo change
-                        TOTAL_MONEY,
-                        TOTAL_COMMISSION,
+                        TOTAL_COMMISSION.dividedBy(2, RoundingMode.HALF_EVEN),
+                        BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(5)),
                         transactionIdentifier,
                         sellTransactionIdentifier,
                         tradeTime,
@@ -406,17 +415,19 @@ public class BuyTradeManagerSagaIT {
                 .publishes(
                         new BuyTransactionPartiallyExecutedEvent(
                                 transactionIdentifier,
-                                coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                                coinId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
+                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
-                                TOTAL_MONEY,
-                                TOTAL_COMMISSION))
+                                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99)),
+                                TOTAL_COMMISSION.dividedBy(2, RoundingMode.HALF_EVEN)))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
                                 new ConfirmMoneyReservationFromPortfolionCommandMatcher(
                                         portfolioIdentifier,
-                                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99))),
+                                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99)),
+                                        TOTAL_COMMISSION.dividedBy(2, RoundingMode.HALF_EVEN)),
                                 new AddItemToPortfolioCommandMatcher(
                                         portfolioIdentifier,
                                         coinId,

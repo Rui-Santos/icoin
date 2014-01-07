@@ -33,7 +33,7 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemToReserveN
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemAvailableToReserveInPortfolio;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.users.domain.model.user.UserId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;

@@ -24,6 +24,7 @@ import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservatio
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashWithdrawnEvent;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
+import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.money.BigMoney;
@@ -51,8 +52,9 @@ public class PortfolioMoneyEventListener {
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         portfolioEntry.setIdentifier(event.getPortfolioId().toString());
         portfolioEntry.setUserIdentifier(event.getUserId().toString());
-        portfolioEntry.setUserName(userQueryRepository.findOne(event.getUserId().toString())
-                .getFullName());
+        final UserEntry userQueryRepositoryOne = userQueryRepository.findOne(event.getUserId().toString());
+        portfolioEntry.setUserName(userQueryRepositoryOne.getUserName());
+        portfolioEntry.setFullName(userQueryRepositoryOne.getFullName());
         portfolioEntry.setAmountOfMoney(BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT));
         portfolioEntry.setReservedAmountOfMoney(BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT));
 

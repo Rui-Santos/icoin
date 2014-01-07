@@ -19,8 +19,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:axon="http://www.axonframework.org/schema/core"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+       xsi:schemaLocation=
+          "http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.axonframework.org/schema/core
+           http://www.axonframework.org/schema/axon-core.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
     <axon:annotation-config/>
     <context:annotation-config/>
@@ -44,11 +49,20 @@
     </bean>
 
     <!--<bean id="eventStore" class="org.axonframework.eventstore.mongo.MongoEventStore">-->
-        <!--<constructor-arg ref="mongoTemplate"/>-->
+    <!--<constructor-arg ref="mongoTemplate"/>-->
     <!--</bean>-->
 
+    <bean id="axon.mongoTemplate" class="com.icoin.axonsupport.infrastructure.mongo.EventStoreTemplete">
+        <constructor-arg ref="trade.mongoDbFactory"/>
+    </bean>
+
+    <bean id="axon.mongoSagaTemplate"
+          class="com.icoin.axonsupport.infrastructure.mongo.SagaTemplate">
+        <constructor-arg ref="trade.mongoDbFactory"/>
+    </bean>
+
     <bean id="sagaRepository" class="org.axonframework.saga.repository.mongo.MongoSagaRepository">
-        <constructor-arg ref="mongoSagaTemplate"/>
+        <constructor-arg ref="axon.mongoSagaTemplate"/>
         <property name="resourceInjector">
             <bean class="org.axonframework.saga.spring.SpringResourceInjector"/>
         </property>

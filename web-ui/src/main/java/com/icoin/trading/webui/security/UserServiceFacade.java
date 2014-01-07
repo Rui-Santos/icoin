@@ -1,7 +1,7 @@
 package com.icoin.trading.webui.security;
 
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
-import com.icoin.trading.users.domain.UserAccount;
+import com.icoin.trading.users.domain.model.user.UserAccount;
 
 /**
  * Created with IntelliJ IDEA.

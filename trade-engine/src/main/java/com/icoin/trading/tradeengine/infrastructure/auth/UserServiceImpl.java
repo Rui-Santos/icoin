@@ -2,9 +2,7 @@ package com.icoin.trading.tradeengine.infrastructure.auth;
 
 
 import com.homhon.base.domain.service.UserService;
-import com.icoin.trading.users.domain.UserAccount;
-import com.icoin.trading.users.query.repositories.UserQueryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

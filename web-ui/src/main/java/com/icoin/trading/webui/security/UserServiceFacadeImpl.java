@@ -3,9 +3,7 @@ package com.icoin.trading.webui.security;
 import com.homhon.base.domain.service.UserService;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.users.domain.UserAccount;
-import com.icoin.trading.users.query.UserEntry;
-import com.icoin.trading.users.query.repositories.UserQueryRepository;
+import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

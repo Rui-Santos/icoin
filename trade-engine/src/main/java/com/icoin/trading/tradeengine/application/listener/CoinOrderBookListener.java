@@ -24,6 +24,7 @@ import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CoinOrderBookListener {
     private final static Logger logger = LoggerFactory.getLogger(CoinOrderBookListener.class);
-    private CommandBus commandBus;
+    private CommandGateway commandGateway;
 
     @EventHandler
     public void handleCoinCreated(CoinCreatedEvent event) {
@@ -47,9 +48,10 @@ public class CoinOrderBookListener {
 
         OrderBookId orderBookId = new OrderBookId();
         final CoinId coinId = event.getCoinIdentifier();
+        final CurrencyPair currencyPair = new CurrencyPair(coinId.toString());
         CreateOrderBookCommand createOrderBookCommand =
-                new CreateOrderBookCommand(orderBookId, new CurrencyPair(coinId.toString()));
-        commandBus.dispatch(new GenericCommandMessage<CreateOrderBookCommand>(createOrderBookCommand));
+                new CreateOrderBookCommand(orderBookId, currencyPair);
+        commandGateway.send(createOrderBookCommand);
 
 
         //todo list:
@@ -59,13 +61,13 @@ public class CoinOrderBookListener {
                 new AddOrderBookToCoinCommand(
                         event.getCoinIdentifier(),
                         orderBookId,
-                        new CurrencyPair(coinId.toString()));
+                        currencyPair);
 
-        commandBus.dispatch(new GenericCommandMessage<AddOrderBookToCoinCommand>(addOrderBookToCoinCommand));
+        commandGateway.send(addOrderBookToCoinCommand);
     }
 
     @Autowired
-    public void setCommandBus(CommandBus commandBus) {
-        this.commandBus = commandBus;
+    public void setCommandGateway(CommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
     }
 }

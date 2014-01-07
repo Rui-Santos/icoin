@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.saga.matchers;
 
 import com.icoin.trading.tradeengine.application.command.transaction.command.ExecutedTransactionCommand;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.hamcrest.Description;
 import org.joda.money.BigMoney;
@@ -27,28 +28,46 @@ import org.joda.money.BigMoney;
 public class ExecutedTransactionCommandMatcher extends BaseCommandMatcher<ExecutedTransactionCommand> {
 
     private TransactionId transactionIdentifier;
-    private BigMoney amountOfItems;
+    private CoinId coinId;
+    private BigMoney amountOfItem;
     private BigMoney itemPrice;
+    private BigMoney executedMoney;
+    private BigMoney commission;
 
-    public ExecutedTransactionCommandMatcher(BigMoney amountOfItems, BigMoney itemPrice, TransactionId transactionIdentifier) {
-        this.amountOfItems = amountOfItems;
+    public ExecutedTransactionCommandMatcher(BigMoney amountOfItem,
+                                             BigMoney itemPrice,
+                                             BigMoney executedMoney,
+                                             BigMoney commission,
+                                             TransactionId transactionIdentifier,
+                                             CoinId coinId) {
+        this.amountOfItem = amountOfItem;
         this.itemPrice = itemPrice;
+        this.executedMoney = executedMoney;
+        this.commission = commission;
         this.transactionIdentifier = transactionIdentifier;
+        this.coinId = coinId;
     }
 
     @Override
     protected boolean doMatches(ExecutedTransactionCommand command) {
         return command.getTransactionIdentifier().equals(transactionIdentifier)
-                && command.getTradeAmount().minus(amountOfItems).isNegativeOrZero()
-                && command.getItemPrice().minus(itemPrice).isNegativeOrZero();
+                && command.getCoinId().equals(coinId)
+                && command.getTradeAmount().isEqual(amountOfItem)
+                && command.getExecutedMoney().isEqual(executedMoney)
+                && command.getCommission().isEqual(commission)
+                && command.getItemPrice().isEqual(itemPrice);
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("ExecutedTransactionCommand with amountOfItems [")
-                .appendValue(amountOfItems)
+        description.appendText("ExecutedTransactionCommand with amountOfItem [")
+                .appendValue(amountOfItem)
                 .appendText("], itemPrice [")
                 .appendValue(itemPrice)
+                .appendText("], executedMoney [")
+                .appendValue(executedMoney)
+                .appendText("], commission [")
+                .appendValue(commission)
                 .appendText("] for Transaction with identifier [")
                 .appendValue(transactionIdentifier)
                 .appendText("]");

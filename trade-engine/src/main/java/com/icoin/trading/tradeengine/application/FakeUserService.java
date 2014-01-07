@@ -3,7 +3,7 @@ package com.icoin.trading.tradeengine.application;
 import com.homhon.base.domain.model.ValueObjectSupport;
 import com.homhon.base.domain.model.user.User;
 import com.homhon.base.domain.service.UserService;
-import com.icoin.trading.users.domain.UserAccount;
+import com.icoin.trading.users.domain.model.user.UserAccount;
 
 /**
  * Created with IntelliJ IDEA.

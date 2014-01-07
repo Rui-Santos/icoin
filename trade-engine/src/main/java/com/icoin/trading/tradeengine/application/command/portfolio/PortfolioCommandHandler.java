@@ -243,7 +243,7 @@ public class PortfolioCommandHandler {
     }
 
     @CommandHandler
-    public void handleAddBackLeftReservedCommand(final ClearReservedCashCommand command) {
+    public void handleClearReservedCashCommand(final ClearReservedCashCommand command) {
         synchronizedOnIdentifierHandler.perform(
                 new Callback<Void>() {
                     @Override

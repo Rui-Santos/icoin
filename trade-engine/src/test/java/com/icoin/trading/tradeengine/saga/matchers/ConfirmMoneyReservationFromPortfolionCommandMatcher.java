@@ -29,17 +29,21 @@ public class ConfirmMoneyReservationFromPortfolionCommandMatcher
 
     private PortfolioId portfolioIdentifier;
     private BigMoney amountOfMoneyToConfirm;
+    private BigMoney commission;
 
     public ConfirmMoneyReservationFromPortfolionCommandMatcher(PortfolioId portfolioIdentifier,
-                                                               BigMoney amountOfMoneyToConfirm) {
+                                                               BigMoney amountOfMoneyToConfirm,
+                                                               BigMoney commission) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountOfMoneyToConfirm = amountOfMoneyToConfirm;
+        this.commission = commission;
     }
 
     @Override
     protected boolean doMatches(ConfirmCashReservationCommand command) {
         return command.getPortfolioIdentifier().equals(portfolioIdentifier)
-                && command.getAmountOfMoney().isEqual(amountOfMoneyToConfirm);
+                && command.getAmountOfMoney().isEqual(amountOfMoneyToConfirm)
+                && command.getCommission().isEqual(commission);
     }
 
     @Override
@@ -48,6 +52,8 @@ public class ConfirmMoneyReservationFromPortfolionCommandMatcher
                 .appendValue(amountOfMoneyToConfirm)
                 .appendText("] for Portfolio with identifier [")
                 .appendValue(portfolioIdentifier)
+                .appendText("] for commission [")
+                .appendValue(commission)
                 .appendText("]");
     }
 }

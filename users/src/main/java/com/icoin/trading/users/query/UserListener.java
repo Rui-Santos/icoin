@@ -34,8 +34,11 @@ public class UserListener {
     public void handleUserCreated(UserCreatedEvent event) {
         UserEntry userEntry = new UserEntry();
         userEntry.setPrimaryKey(event.getUserIdentifier().toString());
-        userEntry.setName(event.getName());
+        userEntry.setLastName(event.getLastName());
+        userEntry.setFirstName(event.getFirstName());
+        userEntry.setIdentifier(event.getIdentifier());
         userEntry.setUsername(event.getUsername());
+        userEntry.setEmail(event.getEmail());
         userEntry.setPassword(event.getPassword());
 
         userRepository.save(userEntry);

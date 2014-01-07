@@ -16,11 +16,13 @@
 
 package com.icoin.trading.users.application.command;
 
-import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.users.domain.model.user.Identifier;
+import com.icoin.trading.users.domain.model.user.UserId;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import com.homhon.util.Asserts;
+import org.hibernate.validator.constraints.Email;
 
 /**
  * Command to create a new user.
@@ -32,20 +34,34 @@ public class CreateUserCommand {
     @NotNull
     @Size(min = 3)
     private String username;
-    private String name;
-    @NotNull
-    @Size(min = 3)
+
+    @Size(min = 6)
     private String password;
 
-    public CreateUserCommand(UserId userId, String name, String username, String password) {
+    @Email
+    private String email;
+
+    @NotNull
+    private String firstName;
+    @NotNull
+    private String lastName;
+
+    private Identifier identifier;
+
+    public CreateUserCommand(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email, String password) {
         Asserts.notNull(userId, "The provided userId cannot be null");
-        Asserts.notNull(name, "The provided name cannot be null");
         Asserts.notNull(username, "The provided username cannot be null");
-        Asserts.notNull(password, "The provided password cannot be null");
+//        Asserts.notNull(identifier, "The provided name cannot be null");
+//        Asserts.notNull(password, "The provided password cannot be null");
+//        Asserts.notNull(firstName, "The provided first name cannot be null");
+//        Asserts.notNull(lastName, "The provided last name cannot be null");
 
         this.userId = userId;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
+        this.identifier = identifier;
+        this.email = email;
         this.password = password;
     }
 
@@ -53,8 +69,18 @@ public class CreateUserCommand {
         return userId;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
+    }
+
+
+    public String getLastName() {
+        return lastName;
+    }
+
+
+    public Identifier getIdentifier() {
+        return identifier;
     }
 
     public String getUsername() {
@@ -63,5 +89,9 @@ public class CreateUserCommand {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

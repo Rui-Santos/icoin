@@ -120,11 +120,11 @@
                 <h3 class="footer-title">Subscribe</h3>
                 <p>Do you like this freebie? Want to get more stuff like this?<br/>
                     Subscribe to designmodo news and updates to stay tuned on great designs.<br/>
-                    Go to: <a href="http://designmodo.com/flat-free" target="_blank">designmodo.com/flat-free</a>
+                    Go to: <a href="#" target="_blank">designmodo.com/flat-free</a>
                 </p>
 
                 <p class="pvl">
-                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://designmodo.com/flat-free/" data-text="Flat UI Free - PSD&amp;amp;HTML User Interface Kit" data-via="designmodo">Tweet</a>
+                    <a href="#" class="twitter-share-button" data-url="http://designmodo.com/flat-free/" data-text="Flat UI Free - PSD&amp;amp;HTML User Interface Kit" data-via="designmodo">Tweet</a>
                     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
                     <iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=watch&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>
                     <iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=fork&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>
@@ -148,5 +148,8 @@
 <!-- /container -->
 <script src="${ctx}/js/jquery-1.10.2.min.js"></script>
 <script src="${ctx}/js/bootstrap.min.js"></script>
+<script src="${ctx}/js/highstock.js"></script>
+<script src="${ctx}/js/exporting.js"></script>
+<script src="${ctx}/js/icoin-charts.js"></script>
 </body>
 </html>

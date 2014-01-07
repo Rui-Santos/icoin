@@ -16,7 +16,7 @@
 
 package com.icoin.trading.users.domain.event;
 
-import com.icoin.trading.users.domain.UserId;
+import com.icoin.trading.users.domain.model.user.UserId;
 
 /**
  * Event to indicate that the user with the specified userId has been authenticated.

@@ -22,5 +22,4 @@ public enum OrderType implements ValueObject<OrderType> {
     public OrderType copy() {
         return this;
     }
-
 }
