@@ -1,6 +1,7 @@
-package com.icoin.trading.tradeengine.domain.model.order;
+package com.icoin.trading.tradeengine.infrastructure.persistence.mongo;
 
-import com.homhon.base.domain.repository.GenericCrudRepository;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
+import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -8,12 +9,13 @@ import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
- * User: liougehooa
- * Date: 13-12-2
- * Time: PM10:54
+ * User: jihual
+ * Date: 1/10/14
+ * Time: 12:30 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface OrderRepository extends GenericCrudRepository<Order, String> {
+public interface OrderRepositoryMongoCustom {
+    //when the price&time are equal, should put biggest amount first 
     List<Order> findAscPendingSellOrdersByPriceTime(Date toTime,
                                                     BigMoney price,
                                                     OrderBookId orderBookId,

@@ -1,6 +1,6 @@
 package com.icoin.trading.tradeengine.application.command.order.handler;
 
-import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,5 +10,7 @@ import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
  * To change this template use File | Settings | File Templates.
  */
 public interface TradeExecutor {
-    <T extends AbstractOrder> void execute(T element);
+    void execute(Order element);
+
+    void reinitialize();
 }

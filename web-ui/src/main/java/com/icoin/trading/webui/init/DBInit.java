@@ -22,8 +22,7 @@ import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositC
 import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
@@ -106,8 +105,7 @@ public class DBInit {
         mongoTemplate.dropCollection(TradeExecutedEntry.class);
         mongoTemplate.dropCollection(PortfolioEntry.class);
         mongoTemplate.dropCollection(TransactionEntry.class);
-        mongoTemplate.dropCollection(SellOrder.class);
-        mongoTemplate.dropCollection(BuyOrder.class);
+        mongoTemplate.dropCollection(Order.class);
 
         UserId buyer1 = createuser("Buyer One", "buyer1");
         UserId buyer2 = createuser("Buyer two", "buyer2");

@@ -4,9 +4,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.icoin.trading.tradeengine.application.command.order.ExecuteBuyOrderCommand;
 import com.icoin.trading.tradeengine.application.command.order.ExecuteSellOrderCommand;
-import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -15,12 +16,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.homhon.util.Collections.isEmpty;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,8 +38,12 @@ import java.util.concurrent.LinkedBlockingDeque;
 @Component
 public class QueuedTradeExecutor implements TradeExecutor {
     private static Logger logger = LoggerFactory.getLogger(QueuedTradeExecutor.class);
-    private Map<OrderBookId, BlockingQueue<AbstractOrder>> orderBookPool;
+    private Map<OrderBookId, BlockingQueue<Order>> orderBookPool;
     private CommandGateway commandGateway;
+    private OrderRepository orderRepository;
+    private ExecutorService executor;
+    private OrderBookQueryRepository orderBookRepository;
+    private AtomicBoolean halted;
 
     //todo, load orderbook id from the repo
     //todo cannot reloaded runtime
@@ -42,69 +52,132 @@ public class QueuedTradeExecutor implements TradeExecutor {
 //    }
 
     @Autowired
-    public QueuedTradeExecutor(OrderBookQueryRepository orderBookRepository, CommandGateway commandGateway) {
+    public QueuedTradeExecutor(OrderBookQueryRepository orderBookRepository,
+                               CommandGateway commandGateway,
+                               OrderRepository orderRepository) {
+        this.orderBookRepository = orderBookRepository;
         this.commandGateway = commandGateway;
-
-        initOrderBookPool(orderBookRepository);
+        this.orderRepository = orderRepository;
+        initialize();
         start();
+        resolveNotExecutedOrders();
+    }
+
+    public void reinitialize() {
+        logger.info("Shutting down executor.");
+        stop();
+        logger.info("Stopped executor.");
+        if(executor !=null){
+            executor.shutdown();
+            logger.info("Shut down executor already.");
+        }
+
+        logger.info("reinitializing orderbook queues.");
+        initialize();
+        logger.info("reinitialized orderbook queues.");
+        logger.info("starting executors...");
+        start();
+        logger.info("resolving unfinished orders ...");
+        resolveNotExecutedOrders();
+        logger.info("resolved unfinished orders ...");
+    }
+
+    private void stop() {
+        halted.set(true);
+    }
+
+    protected void initialize() {
+        initOrderBookPool(orderBookRepository);
+//        executor = Executors.newFixedThreadPool(orderBookPool.size());
+    }
+
+    //OrderBookListener.handleTradeExecuted, add lastTradedTime
+    private void resolveNotExecutedOrders() {
+        for (OrderBookId orderBookId : orderBookPool.keySet()) {
+            Order highestBuyOrder = orderRepository.findHighestPricePendingBuyOrder(orderBookId);
+
+            if (highestBuyOrder == null) {
+                continue;
+            }
+
+            Order lowestSellOrder = orderRepository.findLowestPricePendingSellOrder(orderBookId);
+            if (lowestSellOrder == null) {
+                continue;
+            }
+
+            //some orders not executed
+            if (highestBuyOrder.getItemPrice().isLessThan(lowestSellOrder.getItemPrice())) {
+                continue;
+            }
+
+            OrderBookEntry orderBook = orderBookRepository.findOne(orderBookId.toString());
+            Date lastTradedTime = orderBook.getLastTradedTime();
+
+            List<Order> orders = orderRepository.findPlacedPendingOrdersAfter(lastTradedTime, orderBookId, 100);
+
+            while (!isEmpty(orders)) {
+                for (Order order : orders) {
+                    execute(order);
+                }
+
+                orders = orderRepository.findPlacedPendingOrdersAfter(lastTradedTime, orderBookId, 100);
+            }
+        }
     }
 
     private void initOrderBookPool(OrderBookQueryRepository orderBookRepository) {
         final Iterable<OrderBookEntry> orderBookEntries = orderBookRepository.findAll();
-        final HashMap<OrderBookId, BlockingQueue<AbstractOrder>> map = Maps.newHashMap();
+        final HashMap<OrderBookId, BlockingQueue<Order>> map = Maps.newHashMap();
 
         for (OrderBookEntry orderBook : orderBookEntries) {
             map.put(new OrderBookId(orderBook.getPrimaryKey()),
-                    new LinkedBlockingDeque<AbstractOrder>());
+                    new LinkedBlockingDeque<Order>());
             logger.warn("initialized order book trading pool with {}", orderBook);
         }
         this.orderBookPool = ImmutableMap.copyOf(map);
     }
 
     @Override
-    public <T extends AbstractOrder> void execute(T element) {
-        final OrderBookId orderBookId = element.getOrderBookId();
+    public void execute(Order order) {
+        final OrderBookId orderBookId = order.getOrderBookId();
 
         if (!orderBookPool.containsKey(orderBookId)) {
             logger.warn("order book id is {}, not in the pool {}", orderBookId, orderBookPool.keySet());
             return;
         }
 
-        final BlockingQueue<AbstractOrder> orderQueue = orderBookPool.get(orderBookId);
+        final BlockingQueue<Order> orderQueue = orderBookPool.get(orderBookId);
 
         try {
-            orderQueue.put(element);
+            orderQueue.put(order);
         } catch (InterruptedException e) {
             logger.warn("Interrupted Queue for orderbookId {} when En-queuing", orderBookId);
         }
     }
 
     class TradeExecutor implements Runnable {
-        private final BlockingQueue<AbstractOrder> queue;
+        private final BlockingQueue<Order> queue;
         private final OrderBookId orderBookId;
-        private boolean stop;
+        private final AtomicBoolean stop;
 
-        TradeExecutor(OrderBookId orderBookId, BlockingQueue<AbstractOrder> q) {
-            this.queue = q;
+        TradeExecutor(OrderBookId orderBookId, AtomicBoolean stop, BlockingQueue<Order> q) {
             this.orderBookId = orderBookId;
+            this.stop = stop;
+            this.queue = q;
         }
 
         public void run() {
             try {
-                while (!stop) {
-                    consume(queue.take());
+                while (!stop.get()) {
+                    final Order take = queue.take();
+                    consume(take);
                 }
             } catch (InterruptedException ex) {
                 logger.warn("Interruppted Queue for orderbookId {} when De-queuing", orderBookId);
             }
         }
 
-        public void stop() {
-            stop = true;
-            queue.clear();
-        }
-
-        void consume(AbstractOrder order) {
+        void consume(Order order) {
             logger.info("Excuting order {}:{}", order.getOrderType(), order);
             switch (order.getOrderType()) {
                 case BUY:
@@ -150,10 +223,10 @@ public class QueuedTradeExecutor implements TradeExecutor {
         public void run() {
 //             ExecutorService executor = Executors.newFixedThreadPool(orderBookPool.size());
             for (OrderBookId orderBookId : orderBookPool.keySet()) {
-                final BlockingQueue<AbstractOrder> queue = orderBookPool.get(orderBookId);
+                final BlockingQueue<Order> queue = orderBookPool.get(orderBookId);
 
                 executor.execute(
-                        new TradeExecutor(orderBookId, queue)
+                        new TradeExecutor(orderBookId, halted, queue)
                 );
             }
         }
@@ -161,6 +234,7 @@ public class QueuedTradeExecutor implements TradeExecutor {
 
     public void start() {
         final Runnable setup = new Setup();
+        halted = new AtomicBoolean(false);
         new Thread(setup).start();
     }
 }

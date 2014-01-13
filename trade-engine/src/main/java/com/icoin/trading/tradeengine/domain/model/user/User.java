@@ -7,5 +7,6 @@ package com.icoin.trading.tradeengine.domain.model.user;
  * Time: PM11:39
  * To change this template use File | Settings | File Templates.
  */
+@Deprecated
 public class User {
 }

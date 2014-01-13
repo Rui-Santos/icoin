@@ -17,6 +17,7 @@ import static com.homhon.util.Asserts.notNull;
 /**
  * @author Jettro Coenradie
  */
+@Deprecated
 public class UserId implements Serializable {
     private static final long serialVersionUID = -4860092244272266543L;
 

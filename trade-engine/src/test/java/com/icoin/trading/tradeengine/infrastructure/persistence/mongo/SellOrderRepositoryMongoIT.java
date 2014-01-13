@@ -4,7 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
+import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.joda.time.LocalDateTime;
@@ -44,16 +45,16 @@ import static org.hamcrest.Matchers.nullValue;
 public class SellOrderRepositoryMongoIT {
     private final LocalDateTime placeDate = currentLocalTime();
     private OrderBookId orderBookId = new OrderBookId(), anotherOrderBookId = new OrderBookId();
-    private SellOrder sellOrder1, sellOrder2, sellOrder3, anotherOrderBookSellOrder;
+    private Order sellOrder1, sellOrder2, sellOrder3, anotherOrderBookSellOrder;
 
     @Autowired
-    private SellOrderRepositoryMongo sellOrderRepository;
+    private OrderRepositoryMongo sellOrderRepository;
 
     @Before
     public void setUp() throws Exception {
         sellOrderRepository.deleteAll();
 
-        sellOrder1 = new SellOrder();
+        sellOrder1 = new Order(OrderType.SELL);
         sellOrder1.setOrderBookId(orderBookId);
         sellOrder1.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
         sellOrder1.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(90.9)));
@@ -61,7 +62,7 @@ public class SellOrderRepositoryMongoIT {
         sellOrder1.setLeftCommission(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1)));
         sellOrder1.setPlaceDate(placeDate.toDate());
 
-        sellOrder2 = new SellOrder();
+        sellOrder2 = new Order(OrderType.SELL);
         sellOrder2.setOrderBookId(orderBookId);
         sellOrder2.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
         sellOrder2.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
@@ -69,7 +70,7 @@ public class SellOrderRepositoryMongoIT {
         sellOrder2.setLeftCommission(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)));
         sellOrder2.setPlaceDate(placeDate.plusMillis(2).toDate());
 
-        sellOrder3 = new SellOrder();
+        sellOrder3 = new Order(OrderType.SELL);
         sellOrder3.setOrderBookId(orderBookId);
         sellOrder3.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
         sellOrder3.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)));
@@ -77,7 +78,7 @@ public class SellOrderRepositoryMongoIT {
         sellOrder3.setLeftCommission(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(2)));
         sellOrder3.setPlaceDate(placeDate.plusDays(2).toDate());
 
-        anotherOrderBookSellOrder = new SellOrder();
+        anotherOrderBookSellOrder = new Order(OrderType.SELL);
         anotherOrderBookSellOrder.setOrderBookId(anotherOrderBookId);
         anotherOrderBookSellOrder.setItemRemaining(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)));
         anotherOrderBookSellOrder.setTradeAmount(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1000)));
@@ -92,7 +93,7 @@ public class SellOrderRepositoryMongoIT {
 
     @Test
     public void testFindAscPendingOrdersByPriceTime() throws Exception {
-        List<SellOrder> sellOrderList = sellOrderRepository.findAscPendingOrdersByPriceTime(
+        List<Order> sellOrderList = sellOrderRepository.findAscPendingSellOrdersByPriceTime(
                 placeDate.minusDays(1).toDate(),
                 sellOrder1.getItemPrice(),
                 orderBookId,
@@ -101,19 +102,19 @@ public class SellOrderRepositoryMongoIT {
         assertThat(sellOrderList, anyOf(nullValue(), empty()));
 
         //
-        sellOrderList = sellOrderRepository.findAscPendingOrdersByPriceTime(
+        sellOrderList = sellOrderRepository.findAscPendingSellOrdersByPriceTime(
                 placeDate.toDate(),
                 sellOrder1.getItemPrice(),
                 orderBookId,
                 10);
 
         assertThat(sellOrderList, hasSize(1));
-        SellOrder sellOrder = sellOrderList.get(0);
+        Order sellOrder = sellOrderList.get(0);
         assertThat(sellOrder, equalTo(sellOrder1));
 
 //        db.sellOrder.find({ "orderBookId" : "58bc676a-a99c-4d15-a323-7b0429b7808f", "itemPrice" : { "$lt" : 10.01000000010}, "placeDate" : { "$lte" : ISODate("2013-12-06T17:38:48.584Z")}, "orderStatus" :'PENDING', "orderType": 'SELL' }
 
-        sellOrderList = sellOrderRepository.findAscPendingOrdersByPriceTime(
+        sellOrderList = sellOrderRepository.findAscPendingSellOrdersByPriceTime(
                 placeDate.plusDays(1).toDate(),
                 sellOrder2.getItemPrice(),
                 orderBookId,
@@ -122,7 +123,7 @@ public class SellOrderRepositoryMongoIT {
         assertThat(sellOrderList, hasSize(2));
         assertThat(sellOrderList, contains(sellOrder1, sellOrder2));
 
-        sellOrderList = sellOrderRepository.findAscPendingOrdersByPriceTime(
+        sellOrderList = sellOrderRepository.findAscPendingSellOrdersByPriceTime(
                 placeDate.plusDays(2).toDate(),
                 sellOrder2.getItemPrice(),
                 orderBookId,
@@ -131,7 +132,7 @@ public class SellOrderRepositoryMongoIT {
         assertThat(sellOrderList, hasSize(3));
         assertThat(sellOrderList, contains(sellOrder1, sellOrder3, sellOrder2));
 
-        sellOrderList = sellOrderRepository.findAscPendingOrdersByPriceTime(
+        sellOrderList = sellOrderRepository.findAscPendingSellOrdersByPriceTime(
                 placeDate.plusDays(3).toDate(),
                 sellOrder2.getItemPrice(),
                 orderBookId,
@@ -140,7 +141,7 @@ public class SellOrderRepositoryMongoIT {
         assertThat(sellOrderList, hasSize(2));
         assertThat(sellOrderList, contains(sellOrder1, sellOrder3));
 
-        sellOrderList = sellOrderRepository.findAscPendingOrdersByPriceTime(
+        sellOrderList = sellOrderRepository.findAscPendingSellOrdersByPriceTime(
                 placeDate.plusDays(3).toDate(),
                 sellOrder1.getItemPrice().plus(BigDecimal.valueOf(0.01)),
                 orderBookId,
@@ -149,7 +150,7 @@ public class SellOrderRepositoryMongoIT {
         assertThat(sellOrderList, hasSize(1));
         assertThat(sellOrderList, contains(sellOrder1));
 
-        sellOrderList = sellOrderRepository.findAscPendingOrdersByPriceTime(
+        sellOrderList = sellOrderRepository.findAscPendingSellOrdersByPriceTime(
                 placeDate.minusDays(1).toDate(),
                 sellOrder1.getItemPrice().plus(BigDecimal.valueOf(0.01)),
                 orderBookId,
@@ -160,8 +161,8 @@ public class SellOrderRepositoryMongoIT {
 
     @Test
     public void testFindPending() throws Exception {
-        SellOrder foundPendingOne = sellOrderRepository.findPendingOrder(sellOrder2.getPrimaryKey());
-        SellOrder foundOne = sellOrderRepository.findOne(sellOrder2.getPrimaryKey());
+        Order foundPendingOne = sellOrderRepository.findPendingOrder(sellOrder2.getPrimaryKey());
+        Order foundOne = sellOrderRepository.findOne(sellOrder2.getPrimaryKey());
 
         assertThat(foundPendingOne, equalTo(foundOne));
 
@@ -169,7 +170,7 @@ public class SellOrderRepositoryMongoIT {
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                 currentTime());
         sellOrderRepository.save(sellOrder2);
-        SellOrder notPending = sellOrderRepository.findPendingOrder(sellOrder2.getPrimaryKey());
+        Order notPending = sellOrderRepository.findPendingOrder(sellOrder2.getPrimaryKey());
         assertThat(notPending, nullValue());
 
         foundOne = sellOrderRepository.findOne(sellOrder2.getPrimaryKey());
@@ -178,7 +179,7 @@ public class SellOrderRepositoryMongoIT {
 
     @Test
     public void testFindLowest() throws Exception {
-        SellOrder lowestOrder = sellOrderRepository.findLowestPricePendingOrder(orderBookId);
+        Order lowestOrder = sellOrderRepository.findLowestPricePendingSellOrder(orderBookId);
 
         assertThat(lowestOrder, equalTo(sellOrder1));
     }

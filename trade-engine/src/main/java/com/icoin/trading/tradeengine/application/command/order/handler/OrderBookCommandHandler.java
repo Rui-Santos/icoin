@@ -22,12 +22,10 @@ import com.icoin.trading.tradeengine.application.command.order.CreateOrderComman
 import com.icoin.trading.tradeengine.application.command.order.CreateSellOrderCommand;
 import com.icoin.trading.tradeengine.application.command.order.RefreshOrderBookPriceCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
-import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.axonframework.commandhandling.annotation.CommandHandler;
@@ -47,16 +45,16 @@ public class OrderBookCommandHandler {
     private static Logger logger = LoggerFactory.getLogger(OrderBookCommandHandler.class);
 
     private Repository<OrderBook> repository;
-    private SellOrderRepository sellOrderRepository;
-    private BuyOrderRepository buyOrderRepository;
+    private OrderRepository orderRepository;
     private TradeExecutor tradeExecutor;
     private OrderExecutorHelper orderExecutorHelper;
 
+    @SuppressWarnings("unused")
     @CommandHandler
     public void handleBuyOrder(CreateBuyOrderCommand command) {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
-        final BuyOrder buyOrder = createBuyOrder(command, orderBook.getCurrencyPair());
-        buyOrderRepository.save(buyOrder);
+        final Order buyOrder = createBuyOrder(command, orderBook.getCurrencyPair());
+        orderRepository.save(buyOrder);
 
         orderBook.addBuyOrder(
                 command.getOrderId(),
@@ -69,17 +67,18 @@ public class OrderBookCommandHandler {
         tradeExecutor.execute(buyOrder);
     }
 
-    private BuyOrder createBuyOrder(CreateBuyOrderCommand command, CurrencyPair currencyPair) {
-        final BuyOrder buyOrder = new BuyOrder();
+    private Order createBuyOrder(CreateBuyOrderCommand command, CurrencyPair currencyPair) {
+        final Order buyOrder = new Order(OrderType.BUY);
         return fillOrder(buyOrder, command, currencyPair);
     }
 
+    @SuppressWarnings("unused")
     @CommandHandler
     public void handleSellOrder(CreateSellOrderCommand command) {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
-        final SellOrder sellOrder = createSellOrder(command, orderBook.getCurrencyPair());
+        final Order sellOrder = createSellOrder(command, orderBook.getCurrencyPair());
 
-        sellOrderRepository.save(sellOrder);
+        orderRepository.save(sellOrder);
         orderBook.addSellOrder(command.getOrderId(),
                 command.getTransactionId(),
                 command.getTradeAmount(),
@@ -91,6 +90,7 @@ public class OrderBookCommandHandler {
         tradeExecutor.execute(sellOrder);
     }
 
+    @SuppressWarnings("unused")
     @CommandHandler
     public void handleRefreshOrderBook(RefreshOrderBookPriceCommand command) {
         OrderBook orderBook = repository.load(command.getOrderBookId(), null);
@@ -104,14 +104,14 @@ public class OrderBookCommandHandler {
         logger.info("After refresh, order book status is: " + ReflectionToStringBuilder.toString(orderBook, ToStringStyle.SHORT_PREFIX_STYLE));
     }
 
-    private SellOrder createSellOrder(CreateSellOrderCommand command, CurrencyPair currencyPair) {
-        SellOrder sellOrder = new SellOrder();
+    private Order createSellOrder(CreateSellOrderCommand command, CurrencyPair currencyPair) {
+        Order sellOrder = new Order(OrderType.SELL);
         return fillOrder(sellOrder, command, currencyPair);
     }
 
-    private <T extends AbstractOrder> T fillOrder(T order,
-                                                  CreateOrderCommand command,
-                                                  CurrencyPair currencyPair) {
+    private Order fillOrder(Order order,
+                            CreateOrderCommand command,
+                            CurrencyPair currencyPair) {
         order.setPrimaryKey(command.getOrderId().toString());
         order.setOrderBookId(command.getOrderBookId());
         order.setTransactionId(command.getTransactionId());
@@ -126,6 +126,7 @@ public class OrderBookCommandHandler {
         return order;
     }
 
+    @SuppressWarnings("unused")
     @CommandHandler
     public void handleCreateOrderBook(CreateOrderBookCommand command) {
         OrderBook orderBook =
@@ -139,13 +140,8 @@ public class OrderBookCommandHandler {
     }
 
     @Autowired
-    public void setSellOrderRepository(SellOrderRepository sellOrderRepository) {
-        this.sellOrderRepository = sellOrderRepository;
-    }
-
-    @Autowired
-    public void setBuyOrderRepository(BuyOrderRepository buyOrderRepository) {
-        this.buyOrderRepository = buyOrderRepository;
+    public void setOrderRepository(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     @Autowired

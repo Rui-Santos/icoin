@@ -17,7 +17,6 @@
 package com.icoin.trading.tradeengine.query.order;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;

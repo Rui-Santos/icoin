@@ -26,11 +26,10 @@ import com.icoin.trading.tradeengine.domain.events.order.OrderBookCreatedEvent;
 import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.test.FixtureConfiguration;
@@ -45,7 +44,6 @@ import java.util.Date;
 
 import static com.homhon.util.TimeUtils.currentTime;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -55,8 +53,7 @@ import static org.mockito.Mockito.verify;
 public class OrderBookCommandHandlerTest {
 
     private FixtureConfiguration fixture;
-    private SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
-    private BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
+    private OrderRepository orderRepository = mock(OrderRepository.class);
     private TradeExecutor tradeExecutor = mock(TradeExecutor.class);
     private final OrderExecutorHelper helper = mock(OrderExecutorHelper.class);
 
@@ -68,8 +65,7 @@ public class OrderBookCommandHandlerTest {
         fixture.registerAnnotatedCommandHandler(commandHandler);
 
 
-        commandHandler.setBuyOrderRepository(buyOrderRepository);
-        commandHandler.setSellOrderRepository(sellOrderRepository);
+        commandHandler.setOrderRepository(orderRepository);
         commandHandler.setTradeExecutor(tradeExecutor);
         commandHandler.setOrderExecutorHelper(helper);
     }
@@ -174,11 +170,7 @@ public class OrderBookCommandHandlerTest {
 
     @Test
     public void testHandleRefreshOrderBook() {
-        OrderId sellOrder = new OrderId();
-        PortfolioId sellingUser = new PortfolioId();
-        TransactionId sellingTransaction = new TransactionId();
         OrderBookId orderBookId = new OrderBookId();
-        final Date sellPlaceDate = currentTime();
         final Date buyPlaceDate = currentTime();
 
         RefreshOrderBookPriceCommand orderCommand =
