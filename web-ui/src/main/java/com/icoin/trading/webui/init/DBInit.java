@@ -92,20 +92,26 @@ public class DBInit {
         this.tradeServiceFacade = tradeServiceFacade;
     }
 
+    public void reinstallDB(){
+        logger.info("Reinstalling the collections ..");
+        commandGateway.sendAndWait(new ReinstallDataBaseCommand());
+        logger.info("Reinstalled the collections.");
+    }
+
+    public void ensureCqrsIndexes(){
+        logger.info("Building the cqrs framework index.");
+        commandGateway.sendAndWait(new ReinstallDataBaseCommand());
+        logger.info("Indexes rebuilt.");
+    }
+
+    public void reinitializeTradingExecutors(){
+        logger.info("Reinitializing Trading Executors ..");
+        commandGateway.sendAndWait(new ReinitializeOrderBookTradingExecutorsCommand());
+        logger.info("Reinitialized Trading Executors.");
+    }
+
     public void createItems() {
-        systemAxonMongo.domainEventCollection().drop();
-        systemAxonMongo.snapshotEventCollection().drop();
-
-        systemAxonSagaMongo.sagaCollection().drop();
-
-        mongoTemplate.dropCollection(UserEntry.class);
-        mongoTemplate.dropCollection(OrderBookEntry.class);
-        mongoTemplate.dropCollection(OrderEntry.class);
-        mongoTemplate.dropCollection(CoinEntry.class);
-        mongoTemplate.dropCollection(TradeExecutedEntry.class);
-        mongoTemplate.dropCollection(PortfolioEntry.class);
-        mongoTemplate.dropCollection(TransactionEntry.class);
-        mongoTemplate.dropCollection(Order.class);
+        reinstallDB();
 
         UserId buyer1 = createuser("Buyer One", "buyer1");
         UserId buyer2 = createuser("Buyer two", "buyer2");
@@ -124,9 +130,8 @@ public class DBInit {
         addMoney(buyer5, BigDecimal.valueOf(100000));
         addItems(buyer6, "LTC", BigDecimal.valueOf(100000));
 
-        eventStore.ensureIndexes();
-
-        tradeServiceFacade.refreshOrderBookPrice();
+        ensureCqrsIndexes();
+        reinitializeTradingExecutors();
     }
 
     private void addItems(UserId user, String coinId, BigDecimal amount) {
