@@ -18,6 +18,9 @@ package com.icoin.trading.webui.init;
 
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.application.command.coin.CreateCoinCommand;
+import com.icoin.trading.tradeengine.application.command.admin.EnsureCqrsIndexesCommand;
+import com.icoin.trading.tradeengine.application.command.admin.ReinitializeOrderBookTradingExecutorsCommand;
+import com.icoin.trading.tradeengine.application.command.admin.ReinstallDataBaseCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
