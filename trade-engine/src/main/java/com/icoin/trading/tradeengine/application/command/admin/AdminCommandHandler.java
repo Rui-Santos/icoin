@@ -54,6 +54,11 @@ public class AdminCommandHandler {
     public void handleEnsureCqrsIndexes(EnsureCqrsIndexesCommand command) {
         eventStore.ensureIndexes();
     }
+    
+    @CommandHandler
+    public void handleReinitializeOrderBookTradingExecutors(ReinitializeOrderBookTradingExecutorsCommand command) {
+       tradeExecutor.reinitialize();
+    }
 
     private void dropQueryTables() {
         for (Class queryEntityClass : queryEntityClasses) {
@@ -85,5 +90,10 @@ public class AdminCommandHandler {
     @Autowired
     public void setSystemAxonMongo(org.axonframework.eventstore.mongo.MongoTemplate systemAxonMongo) {
         this.systemAxonMongo = systemAxonMongo;
+    }
+    
+    @Autowired
+    public void setTradeExecutor(TradeExecutor tradeExecutor) {
+        this.tradeExecutor = tradeExecutor;
     }
 }
