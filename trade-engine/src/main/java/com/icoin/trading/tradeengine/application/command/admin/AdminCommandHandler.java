@@ -50,6 +50,11 @@ public class AdminCommandHandler {
         dropQueryTables();
     }
 
+     /**
+     * this is to ensure event store relating collection indexes. In case that the collections
+     * are not created at very first, it should be invoked after some events generated in.
+     * @param command
+     * */
     @CommandHandler
     public void handleEnsureCqrsIndexes(EnsureCqrsIndexesCommand command) {
         eventStore.ensureIndexes();
