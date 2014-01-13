@@ -60,16 +60,20 @@ public class QueuedTradeExecutor implements TradeExecutor {
         this.orderRepository = orderRepository;
         initialize();
         start();
+        logger.info("resolving unfinished orders ...");
         resolveNotExecutedOrders();
+        logger.info("resolved unfinished orders ...");
+        logger.info("Trading executor started ...");
     }
 
     public void reinitialize() {
-        logger.info("Shutting down executor.");
+        logger.info("Start to reinitialize trade executors.");
+        logger.info("Shutting down thread executor pool.");
         stop();
-        logger.info("Stopped executor.");
+        logger.info("Stopped thread executor pool first.");
         if(executor !=null){
             executor.shutdown();
-            logger.info("Shut down executor already.");
+            logger.info("Shut down thread executor pool already.");
         }
 
         logger.info("reinitializing orderbook queues.");
@@ -80,6 +84,8 @@ public class QueuedTradeExecutor implements TradeExecutor {
         logger.info("resolving unfinished orders ...");
         resolveNotExecutedOrders();
         logger.info("resolved unfinished orders ...");
+        logger.info("Trading executor started ...");
+        logger.info("Trading executor reinitialization finished ...");
     }
 
     private void stop() {
