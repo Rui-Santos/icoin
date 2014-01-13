@@ -39,7 +39,7 @@ public class RunDBInitializerWhenNeeded implements ApplicationListener<ContextRe
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        DBInit init = event.getApplicationContext().getBean(DBInit.class);
+        DBInit init = event.getApplicationContext().getBean(SystemInit.class);
         MongoTemplate mongoTemplate = event.getApplicationContext().getBean("trade.mongoTemplate",MongoTemplate.class);
 
         if ("Root WebApplicationContext".equals(event.getApplicationContext().getDisplayName())) {
