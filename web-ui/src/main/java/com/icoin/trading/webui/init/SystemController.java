@@ -39,14 +39,14 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/data")
-public class MongoController {
+public class SystemController {
 
-    private DBInit dbInit;
+    private SystemInit systemInit;
     private org.springframework.data.mongodb.core.MongoTemplate springTemplate;
 
     @Autowired
-    public MongoController(DBInit dbInit, @Qualifier("trade.mongoTemplate") MongoTemplate springTemplate) {
-        this.dbInit = dbInit;
+    public SystemController(SystemInit systemInit, @Qualifier("trade.mongoTemplate") MongoTemplate springTemplate) {
+        this.systemInit = systemInit;
         this.springTemplate = springTemplate;
     }
 
@@ -82,9 +82,32 @@ public class MongoController {
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public String initializeMongo(Model model) {
-        dbInit.createItems();
+        systemInit.createItems();
 
         model.addAttribute("info", "Mongo database is initialized.");
+        return "data/info";
+    }
+
+    @RequestMapping(value = "/initExecutor", method = RequestMethod.GET)
+    public String initializeTradingExecutor(Model model) {
+        systemInit.reinitializeTradingExecutors();
+
+        model.addAttribute("info", "Trading executor is initialized.");
+        return "data/info";
+    }
+
+    @RequestMapping(value = "/initTradingSystem", method = RequestMethod.GET)
+    public String initTradingSystem(Model model) {
+        systemInit.reinstallDB();
+        systemInit.reinitializeTradingExecutors();
+        model.addAttribute("info", "Trading system is initialized.");
+        return "data/info";
+    }
+
+    @RequestMapping(value = "/initCqrs", method = RequestMethod.GET)
+    public String initCqrs(Model model) {
+        systemInit.ensureCqrsIndexes();
+        model.addAttribute("info", "Cqrs Frame work index is initialized.");
         return "data/info";
     }
 
@@ -92,7 +115,7 @@ public class MongoController {
     public String addMoneyToPortfolio(@PathVariable("identifier") String portfolioIdentifier,
                                       @PathVariable("amount") BigDecimal amount,
                                       Model model) {
-        dbInit.depositMoneyToPortfolio(portfolioIdentifier, amount);
+        systemInit.depositMoneyToPortfolio(portfolioIdentifier, amount);
         model.addAttribute("info", "Added cash to the portfolio.");
         return "data/info";
     }

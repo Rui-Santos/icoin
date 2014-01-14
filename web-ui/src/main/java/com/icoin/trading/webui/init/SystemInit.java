@@ -17,36 +17,29 @@
 package com.icoin.trading.webui.init;
 
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.application.command.coin.CreateCoinCommand;
 import com.icoin.trading.tradeengine.application.command.admin.EnsureCqrsIndexesCommand;
 import com.icoin.trading.tradeengine.application.command.admin.ReinitializeOrderBookTradingExecutorsCommand;
 import com.icoin.trading.tradeengine.application.command.admin.ReinstallDataBaseCommand;
+import com.icoin.trading.tradeengine.application.command.coin.CreateCoinCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.order.OrderEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
-import com.icoin.trading.tradeengine.query.transaction.TransactionEntry;
 import com.icoin.trading.users.application.command.CreateUserCommand;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
-import com.icoin.trading.users.query.UserEntry;
-import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.eventstore.mongo.MongoEventStore;
-import org.axonframework.saga.repository.mongo.MongoTemplate;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -61,53 +54,40 @@ import java.util.List;
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Component
-public class DBInit {
+public class SystemInit {
+    private static Logger logger = LoggerFactory.getLogger(SystemInit.class);
 
-    private CommandBus commandBus;
+    private CommandGateway commandGateway;
     private CoinQueryRepository coinRepository;
     private PortfolioQueryRepository portfolioRepository;
     private OrderBookQueryRepository orderBookRepository;
-    private org.axonframework.eventstore.mongo.MongoTemplate systemAxonMongo;
-    private MongoEventStore eventStore;
-    private org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
-    private MongoTemplate systemAxonSagaMongo;
-    private TradeServiceFacade tradeServiceFacade;
 
     @Autowired
-    public DBInit(CommandBus commandBus,
-                  CoinQueryRepository coinRepository,
-                  org.axonframework.eventstore.mongo.MongoTemplate systemMongo,
-                  MongoEventStore eventStore,
-                  @Qualifier("trade.mongoTemplate")
-                  org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
-                  MongoTemplate systemAxonSagaMongo,
-                  PortfolioQueryRepository portfolioRepository,
-                  OrderBookQueryRepository orderBookRepository,
-                  TradeServiceFacade tradeServiceFacade) {
-        this.commandBus = commandBus;
+    public SystemInit(CommandGateway commandGateway,
+                      CoinQueryRepository coinRepository,
+                      @Qualifier("trade.mongoTemplate")
+                      org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
+                      PortfolioQueryRepository portfolioRepository,
+                      OrderBookQueryRepository orderBookRepository) {
+        this.commandGateway = commandGateway;
         this.coinRepository = coinRepository;
-        this.systemAxonMongo = systemMongo;
-        this.eventStore = eventStore;
-        this.mongoTemplate = mongoTemplate;
-        this.systemAxonSagaMongo = systemAxonSagaMongo;
         this.portfolioRepository = portfolioRepository;
         this.orderBookRepository = orderBookRepository;
-        this.tradeServiceFacade = tradeServiceFacade;
     }
 
-    public void reinstallDB(){
+    public void reinstallDB() {
         logger.info("Reinstalling the collections ..");
         commandGateway.sendAndWait(new ReinstallDataBaseCommand());
         logger.info("Reinstalled the collections.");
     }
 
-    public void ensureCqrsIndexes(){
+    public void ensureCqrsIndexes() {
         logger.info("Building the cqrs framework index.");
-        commandGateway.sendAndWait(new ReinstallDataBaseCommand());
+        commandGateway.sendAndWait(new EnsureCqrsIndexesCommand());
         logger.info("Indexes rebuilt.");
     }
 
-    public void reinitializeTradingExecutors(){
+    public void reinitializeTradingExecutors() {
         logger.info("Reinitializing Trading Executors ..");
         commandGateway.sendAndWait(new ReinitializeOrderBookTradingExecutorsCommand());
         logger.info("Reinitialized Trading Executors.");
@@ -139,12 +119,11 @@ public class DBInit {
 
     private void addItems(UserId user, String coinId, BigDecimal amount) {
         PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(user.toString());
-//        OrderBookEntry orderBookEntry = obtainOrderBookByCoinName(coinId);
         AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
                 new CoinId(coinId),
                 BigMoney.of(CurrencyUnit.of(coinId), amount));
-        commandBus.dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(command));
+        commandGateway.send(command);
     }
 
     private OrderBookEntry obtainOrderBookByCoinName(String coinId) {
@@ -168,7 +147,7 @@ public class DBInit {
     public void depositMoneyToPortfolio(String portfolioIdentifier, BigDecimal amountOfMoney) {
         DepositCashCommand command =
                 new DepositCashCommand(new PortfolioId(portfolioIdentifier), BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, amountOfMoney));
-        commandBus.dispatch(new GenericCommandMessage<DepositCashCommand>(command));
+        commandGateway.send(command);
     }
 
 
@@ -180,32 +159,31 @@ public class DBInit {
                 "Bitcoin",
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10025.341)),
                 BigMoney.of(Constants.CURRENCY_UNIT_BTC, BigDecimal.valueOf(10000)));
-        commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
+        commandGateway.send(command);
 
         command = new CreateCoinCommand(
                 new CoinId(Currencies.LTC),
                 "Litecoin",
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(1026.341)),
                 BigMoney.of(Constants.CURRENCY_UNIT_LTC, BigDecimal.valueOf(10000)));
-        commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
+        commandGateway.send(command);
 
         command = new CreateCoinCommand(new CoinId(Currencies.PPC), "Peercoin",
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(66.341)),
                 BigMoney.of(Constants.CURRENCY_UNIT_PPC, BigDecimal.valueOf(5000)));
-        commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
+        commandGateway.send(command);
 
         command = new CreateCoinCommand(new CoinId(Currencies.XPM), "Primecoin",
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(56.341)),
                 BigMoney.of(Constants.CURRENCY_UNIT_XPM, BigDecimal.valueOf(10000)));
-        commandBus.dispatch(new GenericCommandMessage<CreateCoinCommand>(command));
-
+        commandGateway.send(command);
     }
 
     private UserId createuser(String longName, String username) {
         UserId userId = new UserId();
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
-        CreateUserCommand createUser = new CreateUserCommand(userId, username, longName, longName, identifier, username + "@163.com", username);
-        commandBus.dispatch(new GenericCommandMessage<CreateUserCommand>(createUser));
+        CreateUserCommand command = new CreateUserCommand(userId, username, longName, longName, identifier, username + "@163.com", username);
+        commandGateway.send(command);
         return userId;
     }
 }

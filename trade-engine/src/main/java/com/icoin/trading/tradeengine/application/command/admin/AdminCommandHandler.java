@@ -1,6 +1,7 @@
 package com.icoin.trading.tradeengine.application.command.admin;
 
 import com.google.common.collect.ImmutableList;
+import com.icoin.trading.tradeengine.application.command.order.handler.TradeExecutor;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
@@ -42,6 +43,7 @@ public class AdminCommandHandler {
     private MongoTemplate mongoTemplate;
     private org.axonframework.saga.repository.mongo.MongoTemplate systemAxonSagaMongo;
     private org.axonframework.eventstore.mongo.MongoTemplate systemAxonMongo;
+    private TradeExecutor tradeExecutor;
 
     @CommandHandler
     public void handleReInstallDataBase(ReinstallDataBaseCommand command) {
