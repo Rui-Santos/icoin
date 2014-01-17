@@ -1,4 +1,4 @@
-package com.icoin.trading.webui.security;
+package com.icoin.trading.webui.user;
 
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.users.domain.model.user.UserAccount;

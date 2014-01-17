@@ -27,7 +27,7 @@ import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecu
 import com.icoin.trading.webui.order.AbstractOrder;
 import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
-import com.icoin.trading.webui.security.UserServiceFacade;
+import com.icoin.trading.webui.user.UserServiceFacade;
 import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
 import com.icoin.trading.webui.trade.facade.internal.assembler.BuyOrderAssembler;
 import com.icoin.trading.webui.trade.facade.internal.assembler.SellOrderAssembler;

@@ -33,48 +33,56 @@
     <http pattern="/image/**" security="none"/>
     <http pattern="/login.jsp*" security="none"/>
     <http pattern="/rest/**" security="none"/>
-    
+
     <!--<http auto-config='true' use-expressions="true">-->
-        <!--<intercept-url pattern="/index.html" access="isAnonymous() or isAuthenticated()"/>-->
-        <!--<intercept-url pattern="/" access="isAnonymous() or isAuthenticated()"/>-->
-        <!--<intercept-url pattern="/data/**" access="isAnonymous() or isAuthenticated()"/>-->
-        <!--<intercept-url pattern="/coin/*" access="hasRole('ROLE_USER')"/>-->
-        <!--<intercept-url pattern="/auth/**" access="permitAll" />-->
-        <!--<intercept-url pattern="/signin/**" access="permitAll" />-->
-        <!--<intercept-url pattern="/signup/**" access="permitAll" />-->
-        <!--<intercept-url pattern="/disconnect/weibo" access="permitAll" />-->
-        <!--<form-login login-page="/signin" login-processing-url="/signin/authenticate" authentication-failure-url="/signin?param.error=bad_credentials"/>-->
-        <!--<intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>-->
-        <!--<logout logout-success-url="/" logout-url="/signout" delete-cookies="JSESSIONID"/>-->
-        <!--<session-management>-->
-            <!--<concurrency-control max-sessions="1" />-->
-        <!--</session-management>-->
+    <!--<intercept-url pattern="/index.html" access="isAnonymous() or isAuthenticated()"/>-->
+    <!--<intercept-url pattern="/" access="isAnonymous() or isAuthenticated()"/>-->
+    <!--<intercept-url pattern="/data/**" access="isAnonymous() or isAuthenticated()"/>-->
+    <!--<intercept-url pattern="/coin/*" access="hasRole('ROLE_USER')"/>-->
+    <!--<intercept-url pattern="/auth/**" access="permitAll" />-->
+    <!--<intercept-url pattern="/signin/**" access="permitAll" />-->
+    <!--<intercept-url pattern="/signup/**" access="permitAll" />-->
+    <!--<intercept-url pattern="/disconnect/weibo" access="permitAll" />-->
+    <!--<form-login login-page="/signin" login-processing-url="/signin/authenticate" authentication-failure-url="/signin?param.error=bad_credentials"/>-->
+    <!--<intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>-->
+    <!--<logout logout-success-url="/" logout-url="/signout" delete-cookies="JSESSIONID"/>-->
+    <!--<session-management>-->
+    <!--<concurrency-control max-sessions="1" />-->
+    <!--</session-management>-->
     <!--</http>-->
 
     <http auto-config='true' use-expressions="true">
         <intercept-url pattern="/index.html" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/data/**" access="isAnonymous() or isAuthenticated()"/>
+        <intercept-url pattern="/auth/**" access="permitAll" />
+        <intercept-url pattern="/signin/**" access="permitAll" />
+        <intercept-url pattern="/signup/**" access="permitAll" />
         <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
-        <form-login login-page="/signin" login-processing-url="/signin/authenticate" authentication-failure-url="/signin?param.error=bad_credentials"/>
+        <form-login login-page="/signin" login-processing-url="/signin/authenticate"
+                    authentication-failure-url="/signin?param.error=bad_credentials"
+                    />
 
+        <!--login-processing-url="/signin/authenticate"-->
+        <!--  Spring Social Security authentication filter -->
+        <custom-filter ref="socialAuthenticationFilter" before="PRE_AUTH_FILTER" />
         <!--<form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1"/>-->
         <logout logout-success-url="/"/>
     </http>
 
     <!--<http use-expressions="true">-->
-        <!--&lt;!&ndash; Authentication policy &ndash;&gt;-->
-        <!--<form-login login-page="/signin" login-processing-url="/signin/authenticate"-->
-                    <!--authentication-failure-url="/signin?param.error=bad_credentials" />-->
-        <!--<logout logout-url="/signout" delete-cookies="JSESSIONID" />-->
-        <!--<intercept-url pattern="/favicon.ico" access="permitAll" />-->
-        <!--<intercept-url pattern="/resources/**" access="permitAll" />-->
-        <!--<intercept-url pattern="/signin/**" access="permitAll" />-->
-        <!--<intercept-url pattern="/signup/**" access="permitAll" />-->
-        <!--<intercept-url pattern="/**" access="isAuthenticated()"  />-->
+    <!--&lt;!&ndash; Authentication policy &ndash;&gt;-->
+    <!--<form-login login-page="/signin" login-processing-url="/signin/authenticate"-->
+    <!--authentication-failure-url="/signin?param.error=bad_credentials" />-->
+    <!--<logout logout-url="/signout" delete-cookies="JSESSIONID" />-->
+    <!--<intercept-url pattern="/favicon.ico" access="permitAll" />-->
+    <!--<intercept-url pattern="/resources/**" access="permitAll" />-->
+    <!--<intercept-url pattern="/signin/**" access="permitAll" />-->
+    <!--<intercept-url pattern="/signup/**" access="permitAll" />-->
+    <!--<intercept-url pattern="/**" access="isAuthenticated()"  />-->
     <!--</http>-->
 
-    <authentication-manager>
+    <authentication-manager alias="authenticationManager">
         <authentication-provider ref="traderAuthenticationProvider"/>
     </authentication-manager>
 

@@ -31,14 +31,14 @@
         <homhon.version>1.1-SNAPSHOT</homhon.version>
         <logback.version>1.0.13</logback.version>
         <slf4j.version>1.7.5</slf4j.version>
-        <spring.version>3.2.2.RELEASE</spring.version>
-        <spring.security.version>3.1.4.RELEASE</spring.security.version>
+        <spring.version>3.2.3.RELEASE</spring.version>
+        <spring.security.version>3.2.0.RELEASE</spring.security.version>
         <junit.version>4.11</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <hamcrest.version>1.3</hamcrest.version>
         <mongodb.java.version>2.11.3</mongodb.java.version>
-        <spring.social.version>1.0.3.RELEASE</spring.social.version>
-        <spring.social.security.version>1.1.0.M4</spring.social.security.version>
+        <spring.social.weibo.version>1.0.3.RELEASE</spring.social.weibo.version>
+        <spring.social.version>1.1.0.BUILD-SNAPSHOT</spring.social.version>
         <!--<springdata.mongodb.version>1.3.2.RELEASE</springdata.mongodb.version>-->
         <springdata.mongodb.version>1.3.2.RELEASE</springdata.mongodb.version>
         <xstream.version>1.4.5</xstream.version>

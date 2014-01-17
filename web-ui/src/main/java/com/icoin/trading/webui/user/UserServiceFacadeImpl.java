@@ -1,4 +1,4 @@
-package com.icoin.trading.webui.security;
+package com.icoin.trading.webui.user;
 
 import com.homhon.base.domain.service.UserService;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserServiceFacadeImpl implements UserServiceFacade {
     private UserService userService;
-//    private UserQueryRepository userRepository;
+    //    private UserQueryRepository userRepository;
     private PortfolioQueryRepository portfolioQueryRepository;
 
     @Autowired
@@ -30,6 +30,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 //        this.userRepository = userRepository;
 //    }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setPortfolioQueryRepository(PortfolioQueryRepository portfolioQueryRepository) {
         this.portfolioQueryRepository = portfolioQueryRepository;
@@ -37,7 +38,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
     @Override
     public UserAccount currentUser() {
-        return (UserAccount)userService.getCurrentUser();
+        return (UserAccount) userService.getCurrentUser();
     }
 
     /**
@@ -46,7 +47,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
      * @return The found portfolio for the logged in user.
      */
     public PortfolioEntry obtainPortfolioForUser() {
-        UserAccount userAccount = (UserAccount)userService.getCurrentUser();
+        UserAccount userAccount = (UserAccount) userService.getCurrentUser();
 
         if (userAccount == null) {
             return null;

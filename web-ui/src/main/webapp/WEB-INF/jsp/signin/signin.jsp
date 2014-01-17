@@ -29,7 +29,7 @@
     </div>
 </c:if>
 
-<form name="f" action="<c:url value='j_spring_security_check'/>" method="POST" class="form-stacked">
+<form name="f" action="<c:url value='${ctx}/signin/authenticate'/>" method="POST" class="form-stacked">
     <fieldset>
         <legend>Login to get access</legend>
         <div class="clearfix">

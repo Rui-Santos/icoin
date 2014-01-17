@@ -158,7 +158,7 @@
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-weibo</artifactId>
-            <version>${spring.social.version}</version>
+            <version>${spring.social.weibo.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.social</groupId>
@@ -167,8 +167,13 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-config</artifactId>
+            <version>${spring.social.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-security</artifactId>
-            <version>${spring.social.security.version}</version>
+            <version>${spring.social.version}</version>
         </dependency>
 
         <!-- test dependencies -->

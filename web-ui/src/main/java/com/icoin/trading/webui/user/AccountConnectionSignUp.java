@@ -37,8 +37,8 @@ public class AccountConnectionSignUp implements ConnectionSignUp {
 
         final UserEntry created = userQueryRepository.findByUsername(profile.getUsername());
 
-        if(created!=null){
-           logger.warn("user {} is already there with id: {}.", profile.getUsername(), created.getPrimaryKey());
+        if (created != null) {
+            logger.warn("user {} is already there with id: {}.", profile.getUsername(), created.getPrimaryKey());
         }
 
         UserId userId = new UserId();

@@ -27,10 +27,6 @@
 
     <artifactId>icoin-trading-trade-engine</artifactId>
 
-    <properties>
-        <spring.security.version>3.1.0.RELEASE</spring.security.version>
-    </properties>
-
     <dependencies>
         <!--<dependency>-->
         <!--<groupId>${project.groupId}</groupId>-->

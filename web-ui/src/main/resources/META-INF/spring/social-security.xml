@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="socialAuthenticationFilter" class="org.springframework.social.security.SocialAuthenticationFilter"
+          c:_0-ref="authenticationManager"
+          c:_1-ref="userIdSource"
+          c:_2-ref="usersConnectionRepository"
+          c:_3-ref="connectionFactoryLocator"
+          p:signupUrl="/spring-social-showcase/signup"/>
+
+    <bean id="socialAuthenticationProvider" class="org.springframework.social.security.SocialAuthenticationProvider"
+          c:_0-ref="usersConnectionRepository"
+          c:_1-ref="socialUsersDetailService" />
+
+    <bean id="socialUsersDetailService" class="com.icoin.trading.webui.user.SimpleSocialUsersDetailService"
+          c:_-ref="userDetailsService" />
+
+    <bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource" />
+
+    <bean id="userDetailsService" class="com.icoin.trading.webui.user.MongoUserDetailService" autowire="constructor"/>
+
+</beans>

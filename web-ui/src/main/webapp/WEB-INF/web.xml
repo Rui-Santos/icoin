@@ -44,6 +44,7 @@
             classpath:META-INF/spring/coin-context.xml,
             classpath:META-INF/spring/configuration-context.xml,
             classpath:META-INF/spring/security-context.xml,
+            classpath:META-INF/spring/social-security.xml,
             classpath:META-INF/spring/external-context.xml
         </param-value>
     </context-param>

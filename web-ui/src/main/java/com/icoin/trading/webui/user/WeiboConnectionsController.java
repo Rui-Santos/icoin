@@ -1,4 +1,4 @@
-package com.icoin.trading.webui.security;
+package com.icoin.trading.webui.user;
 
 import org.springframework.social.weibo.api.Weibo;
 import org.springframework.social.weibo.api.WeiboProfile;

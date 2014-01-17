@@ -1,8 +1,6 @@
 package com.icoin.trading.webui.trade;
 
-import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
-import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
@@ -14,7 +12,7 @@ import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
-import com.icoin.trading.webui.security.UserServiceFacade;
+import com.icoin.trading.webui.user.UserServiceFacade;
 import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;

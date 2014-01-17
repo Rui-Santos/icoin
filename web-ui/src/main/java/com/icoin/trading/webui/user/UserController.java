@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icoin.trading.webui.security;
+package com.icoin.trading.webui.user;
 
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;

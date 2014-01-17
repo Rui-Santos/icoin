@@ -94,7 +94,7 @@
                 </ul>
             </sec:authorize>
             <sec:authorize access="isAnonymous()">
-                <form action="<c:url value='j_spring_security_check'/>" class="navbar-form navbar-right"  method="POST">
+                <form action="<c:url value='${ctx}/signin/authenticate'/>" class="navbar-form navbar-right"  method="POST">
                     <div class="form-group">
                         <input type="text" placeholder="Username" name='j_username' class="form-control"
                                value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'/>
