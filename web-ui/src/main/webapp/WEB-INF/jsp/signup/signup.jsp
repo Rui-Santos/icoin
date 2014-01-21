@@ -2,15 +2,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<link href="${ctx}/style/sign.css" rel="stylesheet">
 
-<h3>Sign Up</h3>
+<%--<h3>Sign Up</h3>--%>
 
 <c:if test="${not empty message}">
     <div class="${message.type.cssClass}">${message.text}</div>
 </c:if>
 
 <c:url value="/signup" var="signupUrl" />
-<form:form id="signup" action="${signupUrl}" method="post" modelAttribute="signupForm">
+
+<form:form id="signup" action="${signupUrl}" method="post" class="form-signup" modelAttribute="signupForm">
+    <h2 class="form-signip-heading">Please sign up</h2>
     <div class="formInfo">
         <s:bind path="*">
             <c:choose>
@@ -22,14 +25,89 @@
     </div>
 
     <fieldset>
-        <form:label path="firstName">First Name <form:errors path="firstName" cssClass="error" /></form:label>
-        <form:input path="firstName" />
-        <form:label path="lastName">Last Name <form:errors path="lastName" cssClass="error" /></form:label>
-        <form:input path="lastName" />
-        <form:label path="username">Username <form:errors path="username" cssClass="error" /></form:label>
-        <form:input path="username" />
-        <form:label path="password">Password (at least 6 characters) <form:errors path="password" cssClass="error" /></form:label>
-        <form:password path="password" />
+        <%--<div class="input-group">--%>
+            <input type="text" name="username"  type="text" class="form-control" placeholder="Username" data-placement="top"
+                   title="At least 6 characters" required autofocus/>
+            <%--<form:errors path="username" cssClass="error" />--%>
+        <%--</div>--%>
+        <%--<div class="input-group">--%>
+            <input type="password" name="password" class="form-control" placeholder="Password" data-placement="top"
+                   title="At least 6 characters" required/>
+            <%--<form:errors path="password" cssClass="error" />--%>
+        <%--</div>--%>
+        <%--<div class="input-group">--%>
+            <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm Password" data-placement="top"
+                   title="At least 6 characters" required/>
+            <%--<form:errors path="confirmPassword" cssClass="error" />--%>
+        <%--</div>--%>
+
+        <%--<div class="input-group">--%>
+            <form:input path="identifier" type="text" class="form-control" placeholder="ID Card Number" data-placement="top"
+                        title="15 or 18 characters"/>
+            <%--<form:errors path="identifier" cssClass="error" />--%>
+        <%--</div>--%>
+        <%--<div class="input-group">--%>
+            <form:input path="firstName" type="text" class="form-control" placeholder="First Name" data-placement="top"
+                   title="At least 3 characters"/>
+            <%--<form:errors path="firstName" cssClass="error" />--%>
+        <%--</div>--%>
+        <%--<div class="input-group">--%>
+            <form:input path="lastName" type="text" class="form-control" placeholder="Last Name"/>
+            <%--<form:errors path="lastName" cssClass="error" />--%>
+        <%--</div>--%>
+
+        <div id="signupTerms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Terms</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Overflowing text to show scroll behavior</h4>
+                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <%--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--%>
+                        <button type="button" class="btn btn-primary">Confirm</button>
+                    </div>
+
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <label class="checkbox">
+            <input type="checkbox" value="aggreed"> I agree with <a data-toggle="modal" data-target="#signupTerms">terms</a>
+        </label>
     </fieldset>
-    <p><button type="submit">Sign Up</button></p>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+</form:form>
+
+
+<hr />
+<p>Or you can Login with one of the following</p>
+<!-- TWITTER SIGNIN -->
+<%--<form id="tw_signin" action="<c:url value="/signin/twitter"/>" method="POST">--%>
+<%--<button type="submit"><img src="<c:url value="/resources/social/twitter/sign-in-with-twitter-d.png"/>" /></button>--%>
+<%--</form>--%>
+
+<!-- FACEBOOK SIGNIN -->
+<%--<form name="fb_signin" id="fb_signin" action="<c:url value="/signin/facebook"/>" method="POST">--%>
+<%--<input type="hidden" name="scope" value="publish_stream,user_photos,offline_access" />--%>
+<%--<button type="submit"><img src="<c:url value="/image/w_logo.jpg"/>" /></button>--%>
+<%--</form>--%>
+
+<!-- weibo SIGNIN -->
+<form:form  class="form-signup" name="wb_signin" id="wb_signin" action="<c:url value='/signin/weibo'/>" method="POST">
+    <input type="hidden" name="scope" value="publish_stream,user_photos,offline_access" />
+    <button type="submit"><img src="<c:url value="/image/w_logo.jpg"/>" /></button>
 </form:form>

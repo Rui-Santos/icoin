@@ -16,6 +16,7 @@
 package com.icoin.trading.webui.user;
 
 import com.icoin.trading.users.application.command.CreateUserCommand;
+import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
 import com.icoin.trading.users.domain.model.user.UsernameAlreadyInUseException;
 import com.icoin.trading.users.query.UserEntry;
@@ -49,6 +50,7 @@ public class SignupController {
     @Inject
     private CommandGateway gateway;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Inject
     public SignupController(UserQueryRepository userQueryRepository) {
         this.userQueryRepository = userQueryRepository;
@@ -98,7 +100,7 @@ public class SignupController {
                             form.getUsername(),
                             form.getFirstName(),
                             form.getLastName(),
-                            form.getIdentifier(),
+                            new Identifier(Identifier.Type.IDENTITY_CARD, form.getIdentifier()),
                             form.getEmail(),
                             null);
 

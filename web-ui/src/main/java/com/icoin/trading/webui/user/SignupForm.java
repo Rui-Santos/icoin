@@ -15,33 +15,57 @@
  */
 package com.icoin.trading.webui.user;
 
-import com.icoin.trading.users.domain.model.user.Identifier;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.social.connect.UserProfile;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class SignupForm {
 
-    @NotEmpty
+    @Size(min = 6, message = "must be at least 6 characters")
     private String username;
 
     @Size(min = 6, message = "must be at least 6 characters")
     private String password;
 
-    @NotEmpty
+    @Size(min = 6, message = "must be at least 6 characters")
+    private String confirmPassword;
+
+    @Size(min = 3, message = "must be at least 3 characters")
     private String firstName;
 
     @NotEmpty
     private String lastName;
 
+    private String mobile;
+
+    @AssertTrue
+    private boolean aggreed;
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public boolean isAggreed() {
+        return aggreed;
+    }
+
+    public void setAggreed(boolean aggreed) {
+        this.aggreed = aggreed;
+    }
+
     @Email
     private String email;
 
-    @NotNull
-    private Identifier identifier;
+    @Pattern(regexp = "(^\\d{15}$)|(\\d{17}(?:\\d|x|X)$)", message = "must be valid 15 or 18 characters")
+    private String identifier;
 
     public String getUsername() {
         return username;
@@ -57,6 +81,14 @@ public class SignupForm {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     public String getFirstName() {
@@ -75,11 +107,11 @@ public class SignupForm {
         this.lastName = lastName;
     }
 
-    public Identifier getIdentifier() {
+    public String getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(Identifier identifier) {
+    public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 

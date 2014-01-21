@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
   ~ Copyright (c) 2010-2012. Axon Framework
   ~
@@ -15,7 +16,9 @@
   ~ limitations under the License.
   --%>
 
-<p>You need to login to access this part of the site. Please provided your username and password</p>
+<link href="${ctx}/style/sign.css" rel="stylesheet">
+
+<%--<p>You need to login to access this part of the site. Please provided your username and password</p>--%>
 
 <c:if test="${not empty param.login_error}">
     <div class="alert-message error">
@@ -29,58 +32,21 @@
     </div>
 </c:if>
 
-<form name="f" action="<c:url value='${ctx}/signin/authenticate'/>" method="POST" class="form-stacked">
-    <fieldset>
-        <legend>Login to get access</legend>
-        <div class="clearfix">
-            <label for="j_username">Username</label>
+<form:form action="<c:url value='${ctx}/signin/authenticate'/>" class="form-signin" role="form">
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <div class="input-group input-group-lg">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input type="text" class="form-control"
+               id="j_username" name='j_username'
+               value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'
+               placeholder="Username" required autofocus>
+    </div>
 
-            <div class="input">
-                <input type='text' id="j_username" name='j_username'
-                       value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'/>
-            </div>
-        </div>
-        <div class="clearfix">
-            <label for="j_password">Password</label>
-
-            <div class="input">
-                <input type='password' id="j_password" name='j_password'/>
-            </div>
-        </div>
-        <div class="clearfix">
-            <label>
-                <input type="checkbox" name="_spring_security_remember_me">
-                <span>Don't ask for my password for two weeks</span>
-            </label>
-        </div>
-        <div class="actions">
-            <input name="submit" type="submit" class="btn primary">
-            <input name="reset" type="reset" class="btn">
-        </div>
-    </fieldset>
-
-    <tr>
-        <td colspan='2'></td>
-    </tr>
-    </table>
+    <div class="input-group input-group-lg">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+        <input type="password" id="j_password" name='j_password' class="form-control" placeholder="Password" required>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     <p>Or you can <a href="<c:url value="/signup"/>">signup</a> with a new account.</p>
-
-</form>
-
-
-<!-- TWITTER SIGNIN -->
-<%--<form id="tw_signin" action="<c:url value="/signin/twitter"/>" method="POST">--%>
-    <%--<button type="submit"><img src="<c:url value="/resources/social/twitter/sign-in-with-twitter-d.png"/>" /></button>--%>
-<%--</form>--%>
-
-<!-- FACEBOOK SIGNIN -->
-<%--<form name="fb_signin" id="fb_signin" action="<c:url value="/signin/facebook"/>" method="POST">--%>
-    <%--<input type="hidden" name="scope" value="publish_stream,user_photos,offline_access" />--%>
-    <%--<button type="submit"><img src="<c:url value="/image/w_logo.jpg"/>" /></button>--%>
-<%--</form>--%>
-
-<!-- weibo SIGNIN -->
-<form name="wb_signin" id="wb_signin" action="<c:url value="/signin/weibo"/>" method="POST">
-    <input type="hidden" name="scope" value="publish_stream,user_photos,offline_access" />
-    <button type="submit"><img src="<c:url value="/image/w_logo.jpg"/>" /></button>
-</form>
+    <%--<a class="login-link" href="#">Lost your password?</a>--%>
+</form:form>
