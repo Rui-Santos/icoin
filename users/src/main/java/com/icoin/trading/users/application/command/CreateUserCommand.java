@@ -21,9 +21,10 @@ import com.icoin.trading.users.domain.model.user.UserId;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import com.homhon.util.Asserts;
 import org.hibernate.validator.constraints.Email;
 
+import static com.homhon.util.Asserts.hasLength;
+import static com.homhon.util.Asserts.notNull;
 /**
  * Command to create a new user.
  *
@@ -54,8 +55,8 @@ public class CreateUserCommand {
     private Identifier identifier;
 
     public CreateUserCommand(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email, String password, String confirmedPassword) {
-        Asserts.notNull(userId, "The provided userId cannot be null");
-        Asserts.notNull(username, "The provided username cannot be null");
+        notNull(userId, "The provided userId cannot be null");
+        hasLength(username, "The provided username cannot be null");
 //        Asserts.notNull(identifier, "The provided name cannot be null");
 //        Asserts.notNull(password, "The provided password cannot be null");
 //        Asserts.notNull(firstName, "The provided first name cannot be null");
