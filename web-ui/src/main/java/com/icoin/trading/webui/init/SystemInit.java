@@ -182,7 +182,7 @@ public class SystemInit {
     private UserId createuser(String longName, String username) {
         UserId userId = new UserId();
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
-        CreateUserCommand command = new CreateUserCommand(userId, username, longName, longName, identifier, username + "@163.com", username);
+        CreateUserCommand command = new CreateUserCommand(userId, username, longName, longName, identifier, username + "@163.com", username, username);
         commandGateway.send(command);
         return userId;
     }

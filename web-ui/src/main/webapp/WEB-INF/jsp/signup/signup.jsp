@@ -26,34 +26,39 @@
 
     <fieldset>
         <%--<div class="input-group">--%>
-            <input type="text" name="username"  type="text" class="form-control" placeholder="Username" data-placement="top"
-                   title="At least 6 characters" required autofocus/>
-            <%--<form:errors path="username" cssClass="error" />--%>
+            <input type="text" name="username"  type="text" class="form-control" placeholder="Username"
+                   data-placement="right" title="At least 6 characters" required autofocus/>
+            <form:errors path="username" cssClass="error" />
         <%--</div>--%>
         <%--<div class="input-group">--%>
-            <input type="password" name="password" class="form-control" placeholder="Password" data-placement="top"
-                   title="At least 6 characters" required/>
-            <%--<form:errors path="password" cssClass="error" />--%>
+            <input type="password" name="password" class="form-control" placeholder="Password"
+                   data-placement="right" title="At least 6 characters" required/>
+            <form:errors path="password" cssClass="error" />
         <%--</div>--%>
         <%--<div class="input-group">--%>
-            <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm Password" data-placement="top"
-                   title="At least 6 characters" required/>
-            <%--<form:errors path="confirmPassword" cssClass="error" />--%>
+            <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm Password"
+                   data-placement="right" title="At least 6 characters" required/>
+            <form:errors path="confirmPassword" cssClass="error" />
         <%--</div>--%>
 
         <%--<div class="input-group">--%>
-            <form:input path="identifier" type="text" class="form-control" placeholder="ID Card Number" data-placement="top"
+            <form:input path="identifier" type="text" class="form-control" placeholder="ID Card Number" data-placement="right"
                         title="15 or 18 characters"/>
-            <%--<form:errors path="identifier" cssClass="error" />--%>
+            <form:errors path="identifier" cssClass="error" />
         <%--</div>--%>
+                <%--<div class="input-group">--%>
+            <form:input path="email" type="email" class="form-control" placeholder="Email" data-placement="right"
+                        title="15 or 18 characters"/>
+                <form:errors path="email" cssClass="error" />
+                <%--</div>--%>
         <%--<div class="input-group">--%>
-            <form:input path="firstName" type="text" class="form-control" placeholder="First Name" data-placement="top"
+            <form:input path="firstName" type="text" class="form-control" placeholder="First Name" data-placement="right"
                    title="At least 3 characters"/>
-            <%--<form:errors path="firstName" cssClass="error" />--%>
+            <form:errors path="firstName" cssClass="error" />
         <%--</div>--%>
         <%--<div class="input-group">--%>
-            <form:input path="lastName" type="text" class="form-control" placeholder="Last Name"/>
-            <%--<form:errors path="lastName" cssClass="error" />--%>
+            <form:input path="lastName" type="text" class="form-control" placeholder="Last Name" data-placement="right" title="Your last name"/>
+            <form:errors path="lastName" cssClass="error" />
         <%--</div>--%>
 
         <div id="signupTerms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -78,7 +83,7 @@
                     </div>
                     <div class="modal-footer">
                         <%--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--%>
-                        <button type="button" class="btn btn-primary">Confirm</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Confirm</button>
                     </div>
 
                 </div><!-- /.modal-content -->
@@ -86,7 +91,7 @@
         </div><!-- /.modal -->
 
         <label class="checkbox">
-            <input type="checkbox" value="aggreed"> I agree with <a data-toggle="modal" data-target="#signupTerms">terms</a>
+            <input type="checkbox" name="agreed"> I agree with <a data-toggle="modal" data-target="#signupTerms">terms</a>
         </label>
     </fieldset>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
@@ -107,7 +112,9 @@
 <%--</form>--%>
 
 <!-- weibo SIGNIN -->
-<form:form  class="form-signup" name="wb_signin" id="wb_signin" action="<c:url value='/signin/weibo'/>" method="POST">
+<%--<form name="wb_signin" id="wb_signin" action="<c:url value="/signin/weibo"/>" method="POST">--%>
+<c:url value="/signin/weibo" var="signinWeiboUrl" />
+<form:form  class="form-signup" name="wb_signin" id="wb_signin" action="${signinWeiboUrl}" method="POST">
     <input type="hidden" name="scope" value="publish_stream,user_photos,offline_access" />
     <button type="submit"><img src="<c:url value="/image/w_logo.jpg"/>" /></button>
 </form:form>

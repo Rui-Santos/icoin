@@ -30,13 +30,18 @@ import org.hibernate.validator.constraints.Email;
  * @author Jettro Coenradie
  */
 public class CreateUserCommand {
+    @NotNull(message = "The provided userId cannot be null")
     private UserId userId;
+
     @NotNull
-    @Size(min = 3)
+    @Size(min = 3, message = "The provided username cannot be null")
     private String username;
 
-    @Size(min = 6)
+    @Size(min = 6, message = "The provided password cannot be null")
     private String password;
+
+    @Size(min = 6, message = "The provided confirmedPassword cannot be null")
+    private String confirmedPassword;
 
     @Email
     private String email;
@@ -48,7 +53,7 @@ public class CreateUserCommand {
 
     private Identifier identifier;
 
-    public CreateUserCommand(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email, String password) {
+    public CreateUserCommand(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email, String password, String confirmedPassword) {
         Asserts.notNull(userId, "The provided userId cannot be null");
         Asserts.notNull(username, "The provided username cannot be null");
 //        Asserts.notNull(identifier, "The provided name cannot be null");
@@ -63,6 +68,7 @@ public class CreateUserCommand {
         this.identifier = identifier;
         this.email = email;
         this.password = password;
+        this.confirmedPassword = confirmedPassword;
     }
 
     public UserId getUserId() {
@@ -93,5 +99,9 @@ public class CreateUserCommand {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getConfirmedPassword() {
+        return confirmedPassword;
     }
 }

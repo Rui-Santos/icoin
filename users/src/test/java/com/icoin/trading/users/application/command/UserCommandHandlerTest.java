@@ -66,6 +66,7 @@ public class UserCommandHandlerTest {
                         "Buyer One",
                         identifier,
                         "buyer1@163.com",
+                        "buyer1",
                         "buyer1"))
                 .expectEvents(new UserCreatedEvent(aggregateIdentifier,
                         "Buyer 1",

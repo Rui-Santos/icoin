@@ -32,19 +32,24 @@
     </div>
 </c:if>
 
-<form:form action="<c:url value='${ctx}/signin/authenticate'/>" class="form-signin" role="form">
+<form:form id="signin" action="<c:url value='${ctx}/signin/authenticate'/>" class="form-signin" role="form">
     <h2 class="form-signin-heading">Please sign in</h2>
     <div class="input-group input-group-lg">
         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
         <input type="text" class="form-control"
                id="j_username" name='j_username'
                value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'
-               placeholder="Username" required autofocus>
+               placeholder="Username"
+               data-placement="right" title="Your registered username"
+               required autofocus>
     </div>
 
     <div class="input-group input-group-lg">
         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-        <input type="password" id="j_password" name='j_password' class="form-control" placeholder="Password" required>
+        <input type="password" id="j_password" name='j_password' class="form-control"
+               placeholder="Password"
+               data-placement="right" title="Your password"
+               required>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     <p>Or you can <a href="<c:url value="/signup"/>">signup</a> with a new account.</p>

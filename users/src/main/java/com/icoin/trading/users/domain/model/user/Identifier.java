@@ -12,12 +12,12 @@ import static com.homhon.util.Asserts.notNull;
  * Time: PM10:08
  * To change this template use File | Settings | File Templates.
  */
-public class Identifier extends ValueObjectSupport<Identifier>{
+public class Identifier extends ValueObjectSupport<Identifier> {
     public static enum Type {
-        IDENTITY_CARD{
-            private IdentityCardHelper helper= new IdentityCardHelper();
-            public boolean isValid(String number){
-                return helper.isValidatedAllIdcard(number);
+        IDENTITY_CARD {
+            public boolean isValid(String number) {
+                IdentityCard identityCard = IdentityCardHelper.INSTANCE.createIdentityCard(number);
+                return identityCard.isValid();
             }
         };
 
@@ -39,4 +39,12 @@ public class Identifier extends ValueObjectSupport<Identifier>{
     public boolean isValid() {
         return type.isValid(number);
     }
-}
+
+    @Override
+    public String toString() {
+        return "Identifier{" +
+                "type=" + type +
+                ", number='" + number + '\'' +
+                '}';
+    }
+} 

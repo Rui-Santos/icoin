@@ -97,6 +97,8 @@
 
         <p>Here you see your current transactions.</p>
 
+        <%--pls check if it's empty or null--%>
+
         <table class="zebra-striped condensed-table">
             <thead>
             <tr>

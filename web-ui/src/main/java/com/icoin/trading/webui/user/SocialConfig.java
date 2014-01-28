@@ -24,6 +24,7 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.web.ConnectController;
 import org.springframework.social.connect.web.ProviderSignInController;
+import org.springframework.social.oauth2.OAuth2Template;
 import org.springframework.social.weibo.api.Weibo;
 import org.springframework.social.weibo.api.impl.WeiboTemplate;
 import org.springframework.social.weibo.connect.WeiboConnectionFactory;
@@ -49,7 +50,10 @@ public class SocialConfig extends SocialConfigurerAdapter {
 
     @Override
     public void addConnectionFactories(ConnectionFactoryConfigurer cfConfig, Environment env) {
-        cfConfig.addConnectionFactory(new WeiboConnectionFactory(env.getProperty("weibo.consumerKey"), env.getProperty("weibo.consumerSecret")));
+        final WeiboConnectionFactory connectionFactory = new WeiboConnectionFactory(env.getProperty("weibo.consumerKey"), env.getProperty("weibo.consumerSecret"));
+        final OAuth2Template template = (OAuth2Template) connectionFactory.getOAuthOperations();
+        template.setUseParametersForClientAuthentication(true);
+        cfConfig.addConnectionFactory(connectionFactory);
     }
 
     @Override

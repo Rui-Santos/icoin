@@ -60,7 +60,7 @@
         <intercept-url pattern="/signup/**" access="permitAll" />
         <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
         <form-login login-page="/signin" login-processing-url="/signin/authenticate"
-                    authentication-failure-url="/signin?param.error=bad_credentials"
+                    authentication-failure-url="/signin/signin?param.error=bad_credentials"
                     />
 
         <!--login-processing-url="/signin/authenticate"-->

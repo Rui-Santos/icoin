@@ -73,21 +73,24 @@ public class SignupController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signup(@Valid SignupForm form, BindingResult formBinding, WebRequest request) {
         if (formBinding.hasErrors()) {
-            return null;
+            return "signup/signup";
         }
 
         UserId userId = createAccount(form, formBinding);
         if (userId != null) {
             final UserEntry created = userQueryRepository.findOne(userId.toString());
             if (created == null) {
-                return null;
+                return "signup/signup";
             }
             logger.info("successfully created user " + form.getUsername());
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(created.getUsername(), null, null));
+
+            //todo add credential
+            //new SimpleGrantedAuthority("ROLE_USER")
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(created, null, null));
             ProviderSignInUtils.handlePostSignUp(created.getUsername(), request);
             return "redirect:/";
         }
-        return null;
+        return "signup/signup";
     }
 
     // internal helpers
@@ -102,7 +105,8 @@ public class SignupController {
                             form.getLastName(),
                             new Identifier(Identifier.Type.IDENTITY_CARD, form.getIdentifier()),
                             form.getEmail(),
-                            null);
+                            form.getPassword(),
+                            form.getConfirmedPassword());
 
             gateway.sendAndWait(createUser, 60, TimeUnit.SECONDS);
             return userId;

@@ -11,7 +11,7 @@
           c:_1-ref="userIdSource"
           c:_2-ref="usersConnectionRepository"
           c:_3-ref="connectionFactoryLocator"
-          p:signupUrl="/spring-social-showcase/signup"/>
+          p:signupUrl="/signup"/>
 
     <bean id="socialAuthenticationProvider" class="org.springframework.social.security.SocialAuthenticationProvider"
           c:_0-ref="usersConnectionRepository"

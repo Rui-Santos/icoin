@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="image/favicon.ico">
+    <link rel="icon" href="image/favicon.ico">
+    <title></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Website for BTC & Alt-BTC Trading">
+    <meta name="keywords"
+          content="BTC, ???±?????? BTC, ?±???????° BTC, ???±???????????? BTC, Bitcoin, ?±????????????, ???±?????? ?±????????????, ?±???????° ?±????????????, ???±???????????? ?±????????????, ?????????????° BTC, ?????????°???° BTC, ?????????????° bitcoin, ?????????°???° bitcoin, ?±???????° bitcoin, ???±???????????? bitcoin, echange trading">
+    <meta name="author" content="cooder">
+    <meta name="description" content="Website contaning the Axon sample using a trader application">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js" type="text/javascript"></script>
+    <script src="js/ie8-responsive-file-warning.js"></script>
+    <![endif]-->
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/jumbotron.css" rel="stylesheet">
+    <link href="css/offcanvas.css" rel="stylesheet">
+    <link href="css/justified-nav.css" rel="stylesheet">
+    <link href="css/btn.css" rel="stylesheet">
+    <link href="css/footer.css" rel="stylesheet">
+    <link href="css/flat-ui.css" rel="stylesheet">
+    <link href="css/sign.css" rel="stylesheet">
+    <link href="css/admin.css" rel="stylesheet">
+
+
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">iCoin</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#" class="active">Last price:$639.00000</a>
+                </li>
+                <li>
+                    <a href="#">High:$650.15316</a>
+                </li>
+                <li>
+                    <a href="#">Low:$453.29000</a>
+                </li>
+                <li>
+                    <a href="#">Volume:61645 BTC</a>
+                </li>
+            </ul>
+
+
+            <form action="/signin/authenticate" class="navbar-form navbar-right" method="POST">
+                <div class="form-group">
+                    <input type="text" placeholder="Username" name='j_username' class="form-control"
+                           value=''/>
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" class="form-control" name='j_password'/>
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+<div class="row">
+<div class="col-md-3">
+    <div class="bs-sidebar hidden-print" role="complementary">
+        <ul class="nav bs-sidenav">
+
+            <li>
+                <a href="#portfolio">Portfolio</a>
+                <ul class="nav">
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#transactions">Transactions</a></li>
+                    <li><a href="#topup">Topup</a></li>
+                    <li><a href="#trade_history">Trade History</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#profile">Profile</a>
+                <ul class="nav">
+                    <li><a href="#profile_details">Details</a></li>
+                    <li><a href="#privacy">Privacy</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="col-md-9" role="main">
+    <!-- Global Bootstrap settings
+    ================================================== -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="portfolio">Portfolio</h1>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title" id="overview">Overview</h3>
+            </div>
+
+            <div class="panel-body">
+                <div class="admin-information">
+                    <!--<ul class="pi-nav">-->
+                        <!--<li class="edit-information">-->
+                            <!--<a href="https://designmodo.com/my-account/edit-address/?address=billing"-->
+                                <!--class="icn_pen"><span class="glyphicon glyphicon-edit"></span></a></li>-->
+                    <!--</ul>-->
+
+                    <dl class="myacc-col2">
+                        <dt>Available Money</dt>
+                        <dd>CNY 100000.000</dd>
+                    </dl>
+                    <dl class="myacc-col2">
+                        <dt>Available BTC</dt>
+                        <dd>BTC 100000.000</dd>
+                    </dl>
+                    <dl class="myacc-col2">
+                        <dt>Reserved Money</dt>
+                        <dd>CNY 100000.000</dd>
+                    </dl>
+                    <dl class="myacc-col2">
+                        <dt>Reserved BTC</dt>
+                        <dd>BTC 100000.000</dd>
+                    </dl>
+                    <dl class="myacc-col2">
+                        <dt>E-mail:</dt>
+                        <dd>liougehooa@163.com</dd>
+                    </dl>
+                    <dl class="myacc-col2">
+                        <dt>Phone:</dt>
+                        <dd>13601884817</dd>
+                    </dl>
+                </div>
+
+            </div>
+            <div class="panel-heading">
+                <h3 class="panel-title" id="transactions">Transactions</h3>
+            </div>
+
+            <div class="panel-body">
+                <table class="table table-condensed table-hover">
+                    <thead>
+                    <tr >
+                        <th class="text-center">Buy/Sell</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Amount</th>
+                        <th class="text-center">CNY</th>
+                        <th class="text-center">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-center">Buy</td>
+                        <td class="text-center">593.998</td>
+                        <td class="text-center">0.01</td>
+                        <td class="text-center">5.93998</td>
+                        <td class="text-center">21.11.13 15:35</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">Buy</td>
+                        <td class="text-center">593.998</td>
+                        <td class="text-center">0.01</td>
+                        <td class="text-center">5.93998</td>
+                        <td class="text-center">21.11.13 15:35</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="panel-heading">
+                <h3 class="panel-title" id="topup">Topup</h3>
+            </div>
+
+            <div class="panel-body">
+                <form method="GET" action="${ctx}/admin/portfolio/<c:out value="${portfolio.primaryKey}"/>/item/">
+                <select name="orderbook" class="span3">
+                    <c:forEach items="${coins}" var="coin">
+                        <option value="<c:out value="${coin.primaryKey}"/>"><c:out
+                            value="${coin.coinName}"/></option>
+                    </c:forEach>
+                </select>
+                <input name="amount" value="0" class="span2"/>
+                <input type="submit" class="btn" value="Add Items">
+                </form>
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="highestAsk" class="col-sm-5 control-label">Highest Ask Price</label>
+                        <label id="highestAsk" class="col-sm-2  form-control-static text-success">5.0098</label>
+                        <label class="col-sm-1  form-control-static text-info">CNY</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="balanceToSell" class="col-sm-5 control-label">Balance</label>
+                        <label id="balanceToSell" class="col-sm-2  form-control-static text-success">50.098</label>
+                        <label class="col-sm-1  form-control-static text-info">BTC</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="amountToSell" class="col-sm-5 control-label">Amount</label>
+                        <div class="input-group col-sm-7">
+                            <input type="text" class="form-control" placeholder="Sell Amount" id="amountToSell">
+                            <span class="input-group-addon alert-warning">BTC</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="priceToSell" class="col-sm-5 control-label">Price per BTC</label>
+                        <div class="input-group col-sm-7">
+                            <input type="text" class="form-control" placeholder="Price" id="priceToSell">
+                            <span class="input-group-addon alert-warning">CNY</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalToSell" class="col-sm-5 control-label">Total</label>
+                        <label id="totalToSell" class="col-sm-2  form-control-static text-danger">50.098</label>
+                        <label class="col-sm-1  form-control-static text-info">CNY</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="feeToSell" class="col-sm-5 control-label">Fee</label>
+                        <label id="feeToSell" class="col-sm-2  form-control-static text-danger">1</label>
+                        <label class="col-sm-1  form-control-static text-info">BTC</label>
+                    </div>
+                    <div class="alert alert-warning alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <span></span>
+                        <!--<form:errors path="*" element="div"/>-->
+                    </div>
+                    <!--<button type="submit" class="btn btn-danger col-lg-offset-5 col-sm-3">Sell</button>-->
+                    <button type="submit" class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
+                </form>
+            </div>
+        </div>
+
+        <!--<div class="panel-group" id="accordion">-->
+        <!--<div class="panel panel-default">-->
+        <!--<div class="panel-heading">-->
+        <!--<h4 class="panel-title">-->
+        <!--<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">-->
+        <!--Collapsible Group Item #1-->
+        <!--</a>-->
+        <!--</h4>-->
+        <!--</div>-->
+        <!--<div id="collapseOne" class="panel-collapse collapse in">-->
+        <!--<div class="panel-body">-->
+        <!--Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="panel panel-default">-->
+        <!--<div class="panel-heading">-->
+        <!--<h4 class="panel-title">-->
+        <!--<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">-->
+        <!--Collapsible Group Item #2-->
+        <!--</a>-->
+        <!--</h4>-->
+        <!--</div>-->
+        <!--<div id="collapseTwo" class="panel-collapse collapse">-->
+        <!--<div class="panel-body">-->
+        <!--Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="panel panel-primary">-->
+        <!--<div class="panel-heading">-->
+        <!--<h4 class="panel-title">-->
+        <!--<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">-->
+        <!--Collapsible Group Item #3-->
+        <!--</a>-->
+        <!--</h4>-->
+        <!--</div>-->
+        <!--<div id="collapseThree" class="panel-collapse collapse">-->
+        <!--<div class="panel-body">-->
+        <!--Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+
+        <!--<h3 id="overview">Overview</h3>-->
+
+
+
+        <p>Images in Bootstrap 3 can be made responsive-friendly via the addition of the
+            <code>.img-responsive</code> class. This applies <code>max-width: 100%;</code> and <code>height:
+                auto;</code> to the image so that it scales nicely to the parent element.</p>
+
+        <div class="highlight"><pre><code class="html"><span class="nt">&lt;img</span> <span
+                class="na">src=</span><span class="s">&quot;...&quot;</span> <span class="na">class=</span><span
+                class="s">&quot;img-responsive&quot;</span> <span class="na">alt=</span><span class="s">&quot;Responsive image&quot;</span><span
+                class="nt">&gt;</span>
+        </code></pre>
+        </div>
+
+        <h3 id="trade_history">Trade History</h3>
+
+        <p>Bootstrap sets basic global display, typography, and link styles. Specifically, we:</p>
+        <ul>
+            <li>Set <code>background-color: #fff;</code> on the <code>body</code></li>
+            <li>Use the <code>@font-family-base</code>, <code>@font-size-base</code>, and <code>@line-height-base</code>
+                attributes as our typographic base
+            </li>
+            <li>Set the global link color via <code>@link-color</code> and apply link underlines only on
+                <code>:hover</code>
+            </li>
+        </ul>
+        <p>These styles can be found within <code>scaffolding.less</code>.</p>
+    </div>
+
+
+    <!-- Grid system
+    ================================================== -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="profile">Profile</h1>
+        </div>
+        <h3 id="profile_details">Details</h3>
+
+        <h3 id="privacy">Privacy</h3>
+
+    </div>
+
+</div>
+</div>
+</div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7" data-spy="scroll">
+                <h3 class="footer-title">Subscribe</h3>
+
+                <p>Do you like this freebie? Want to get more stuff like this?<br/>
+                    Subscribe to designmodo news and updates to stay tuned on great designs.<br/>
+                    Go to: <a href="#" target="_blank">designmodo.com/flat-free</a>
+                </p>
+
+                <p class="pvl">
+                    <a href="#" class="twitter-share-button" data-url="http://designmodo.com/flat-free/"
+                       data-text="Flat UI Free - PSD&amp;amp;HTML User Interface Kit" data-via="designmodo">Tweet</a>
+                    <!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>-->
+                    <!--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=watch&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>-->
+                    <!--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=fork&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>-->
+                    <!--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&type=follow&count=true" height="20" width="195" frameborder="0" scrolling="0" style="width:195px; height: 20px;" allowTransparency="true"></iframe>-->
+                </p>
+            </div>
+            <!-- /col-md-7 -->
+
+            <div class="col-md-5">
+                <div class="footer-banner">
+                    <h3 class="footer-title">Get Flat UI Pro</h3>
+                    <ul>
+                        <li>Tons of Basic and Custom UI Elements</li>
+                        <li>A Lot of Useful Samples</li>
+                    </ul>
+                    Email : <a href="mailto:icoin@icoin.net" target="_blank">designmodo.com/flat</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- /container -->
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/highstock.js"></script>
+<script src="js/exporting.js"></script>
+<script src="js/icoin.js"></script>
+
+
+</body>
+<script>
+</script>
+</html>

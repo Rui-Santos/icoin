@@ -18,6 +18,7 @@ public class SimpleSignInAdapter implements SignInAdapter {
 
     private final RequestCache requestCache;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Inject
     public SimpleSignInAdapter(RequestCache requestCache) {
         this.requestCache = requestCache;

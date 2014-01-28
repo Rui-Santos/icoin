@@ -1,6 +1,7 @@
 package com.icoin.trading.webui.user;
 
 import com.icoin.trading.users.application.command.CreateUserCommand;
+import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
@@ -26,6 +27,7 @@ public class AccountConnectionSignUp implements ConnectionSignUp {
     private final UserQueryRepository userQueryRepository;
     private final CommandGateway gateway;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Inject
     public AccountConnectionSignUp(UserQueryRepository UserQueryRepository, CommandGateway gateway) {
         this.userQueryRepository = UserQueryRepository;
@@ -47,8 +49,9 @@ public class AccountConnectionSignUp implements ConnectionSignUp {
                         profile.getUsername(),
                         profile.getFirstName(),
                         profile.getLastName(),
-                        null,
+                        new Identifier(Identifier.Type.IDENTITY_CARD,""),
                         profile.getEmail(),
+                        null,
                         null);
 
         gateway.sendAndWait(createUser, 60, TimeUnit.SECONDS);

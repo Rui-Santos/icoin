@@ -32,6 +32,9 @@ public class SignupForm {
     private String password;
 
     @Size(min = 6, message = "must be at least 6 characters")
+    private String confirmedPassword;
+
+    @Size(min = 6, message = "must be at least 6 characters")
     private String confirmPassword;
 
     @Size(min = 3, message = "must be at least 3 characters")
@@ -43,23 +46,7 @@ public class SignupForm {
     private String mobile;
 
     @AssertTrue
-    private boolean aggreed;
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public boolean isAggreed() {
-        return aggreed;
-    }
-
-    public void setAggreed(boolean aggreed) {
-        this.aggreed = aggreed;
-    }
+    private boolean agreed;
 
     @Email
     private String email;
@@ -121,6 +108,31 @@ public class SignupForm {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public boolean isAgreed() {
+        return agreed;
+    }
+
+    public void setAgreed(boolean agreed) {
+        this.agreed = agreed;
+    }
+
+    public String getConfirmedPassword() {
+        return confirmedPassword;
+    }
+
+    public void setConfirmedPassword(String confirmedPassword) {
+        this.confirmedPassword = confirmedPassword;
     }
 
     public static SignupForm fromProviderUser(UserProfile providerUser) {

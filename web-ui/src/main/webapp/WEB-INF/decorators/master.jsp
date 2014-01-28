@@ -56,7 +56,7 @@
     <decorator:head/>
 </head>
 <body>
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="header">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -151,5 +151,6 @@
 <script src="${ctx}/js/highstock.js"></script>
 <script src="${ctx}/js/exporting.js"></script>
 <script src="${ctx}/js/icoin-charts.js"></script>
+<script src="${ctx}/js/icoin.js"></script>
 </body>
 </html>

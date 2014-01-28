@@ -147,6 +147,7 @@ public class TradingIT {
                         lastName,
                         new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252"),
                         userName + "@163.com",
+                        userName,
                         userName);
         commandGateway.send(createUser);
         return userId;

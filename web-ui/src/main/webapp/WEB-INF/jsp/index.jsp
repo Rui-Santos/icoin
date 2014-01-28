@@ -46,7 +46,7 @@
             <div class="jumbotron">
                 <h2>Trade with confidence on Bitcoin exchange!</h2>
                 <p class="lead">iCoin is the world's most established Bitcoin exchange. You can quickly and securely trade bitcoins with other people around the world!</p>
-                <p><a class="btn btn-success btn-wide" href="#" role="button">Sign up today</a></p>
+                <p><a class="btn btn-success btn-wide" href="/signup" role="button">Sign up today</a></p>
             </div>
         </div>
         <div class="col-lg-6" id="sidebar" role="navigation">

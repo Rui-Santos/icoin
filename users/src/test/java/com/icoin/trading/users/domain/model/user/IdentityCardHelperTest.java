@@ -18,21 +18,21 @@ public class IdentityCardHelperTest {
         String idCard15 = "320311770706002";
         String invalidIdCard15 = "320311770732002";
         String idCard18 = "110101201101019252";
-        String invalidIdcard18 = "110101201101019253";
-        IdentityCardHelper helper = new IdentityCardHelper();
+        String invalidIdCard18 = "110101201101019253";
+        IdentityCardHelper helper = IdentityCardHelper.INSTANCE;
 
-        boolean valid15 = helper.isValidate15Idcard(idCard15);
-        boolean invalid15 = helper.isValidate15Idcard(invalidIdCard15);
-        boolean valid18 = helper.isValidate18Idcard(idCard18);
-        boolean invalid18 = helper.isValidate18Idcard(invalidIdcard18);
-        boolean invalid18All = helper.isValidatedAllIdcard(invalidIdcard18);
-        boolean valid15All = helper.isValidatedAllIdcard(idCard15);
+        IdentityCard identity15Card = helper.createIdentityCard(idCard15);
+        IdentityCard invalidIdentity15Card = helper.createIdentityCard(invalidIdCard15);
+        IdentityCard identity18Card = helper.createIdentityCard(idCard18);
+        IdentityCard invalidIdentity18Card = helper.createIdentityCard(invalidIdCard18);
+        boolean valid15 = identity15Card.isValid();
+        boolean invalid15 = invalidIdentity15Card.isValid();
+        boolean valid18 = identity18Card.isValid();
+        boolean invalid18 = invalidIdentity18Card.isValid();
 
         assertThat(valid15, is(true));
         assertThat(invalid15, is(false));
         assertThat(valid18, is(true));
         assertThat(invalid18, is(false));
-        assertThat(invalid18All, is(false));
-        assertThat(valid15All, is(true));
     }
 }
