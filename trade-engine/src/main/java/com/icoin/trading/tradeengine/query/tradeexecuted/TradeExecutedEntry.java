@@ -28,11 +28,13 @@ public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEnt
 
     private BigMoney tradedAmount;
     private BigMoney tradedPrice;
+    private BigMoney executedMoney;
     private String coinName;
     private String orderBookIdentifier;
     private Date tradeTime;
 
     private TradeType tradeType;
+
 
     public BigMoney getTradedAmount() {
         return tradedAmount;
@@ -56,6 +58,14 @@ public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEnt
 
     public void setTradedPrice(BigMoney tradedPrice) {
         this.tradedPrice = tradedPrice;
+    }
+
+    public BigMoney getExecutedMoney() {
+        return executedMoney;
+    }
+
+    public void setExecutedMoney(BigMoney executedMoney) {
+        this.executedMoney = executedMoney;
     }
 
     public String getOrderBookIdentifier() {

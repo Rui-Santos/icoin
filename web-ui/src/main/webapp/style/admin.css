@@ -1,5 +1,24 @@
 
 
+.bs-sidebar{
+    /*height: 100%;*/
+    z-index: -1;
+    background-color: #f3f4f5;
+    -webkit-backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+
+    /*font-size: 14px;*/
+    /*line-height: 1.214;*/
+    /*left: 0;*/
+    /*margin: 0;*/
+    /*list-style-type: none;*/
+    /*overflow: auto;*/
+    /*position: fixed;*/
+    /*top: 0;*/
+    /*padding: 0;*/
+    /*width: 150px;*/
+}
+
 /*
  * Side navigation
  *
@@ -8,12 +27,14 @@
  */
 
 /* By default it's not affixed in mobile views, so undo that */
-.bs-sidebar.affix {
-    position: static;
-}
+/*.bs-sidebar.affix {*/
+    /*position: static;*/
+/*}*/
 
 /* First level of nav */
 .bs-sidenav {
+    height: 100%;
+    z-index: -1;
     margin-top: 30px;
     margin-bottom: 30px;
     padding-top:    10px;
@@ -124,10 +145,13 @@ h3[id] {
     padding-bottom: 8px;
 }
 .admin-information dl.myacc-col1 {
-    width: 22.268%;
+    width: 32%;
 }
 .admin-information dl.myacc-col2 {
-    width: 22.272%;
+    width: 32%;
+}
+.admin-information dl.myacc-col3 {
+    width: 36%;
 }
 .admin-information dl.myacc-row2 {
     margin-top: 10px;
@@ -138,6 +162,18 @@ h3[id] {
 }
 .admin-information dd {
     color: #383838;
+    font-size: 1.2em;
+    padding-top: 5px;
+    line-height: 1.2;
+}
+
+.privacy-information dt {
+    /*color: #a9a9a9;*/
+    padding-top: 7px;
+    font-size: 1.2em;
+}
+.privacy-information dd {
+    /*color: #383838;*/
     font-size: 1.2em;
     padding-top: 5px;
     line-height: 1.2;
@@ -158,6 +194,13 @@ h3[id] {
 }
 .pi-nav a:hover {
     color: #446DB2;
+}
+
+.error{
+     border-color: #D8000C;
+}
+ .success{
+    border-color: #4F8A10;
 }
 
 

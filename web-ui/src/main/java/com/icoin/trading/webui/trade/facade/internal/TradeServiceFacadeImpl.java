@@ -194,7 +194,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
         }
         if (portfolioEntry != null) {
             order.setBalance(portfolioEntry
-                    .obtainAmountOfAvailableItemsFor(coinId, orderBookEntry.getBaseCurrency())
+                    .obtainAmountOfAvailableItemFor(coinId, orderBookEntry.getBaseCurrency())
                     .getAmount());
         }
 

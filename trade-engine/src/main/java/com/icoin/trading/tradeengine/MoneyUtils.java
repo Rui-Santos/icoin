@@ -26,18 +26,25 @@ public abstract class MoneyUtils {
 
     public static BigMoney convertToBigMoney(String ccy, double amount, RoundingMode roundingMode) {
         hasLength(ccy);
-        notNull(roundingMode);
-
         final CurrencyUnit currency = CurrencyUnit.of(ccy);
+
+        return convertToBigMoney(currency, amount, roundingMode);
+    }
+
+    public static BigMoney convertToBigMoney(CurrencyUnit currency, double amount) {
+        return convertToBigMoney(currency, amount, RoundingMode.HALF_EVEN);
+    }
+
+    public static BigMoney convertToBigMoney(CurrencyUnit currency, double amount, RoundingMode roundingMode) {
+        notNull(currency);
+        notNull(roundingMode);
 
         if (currency.getDecimalPlaces() < 0) {
             return BigMoney.of(currency, amount);
         }
 
         final long multiplier = getMultiplier(currency);
-
         return BigMoney.ofScale(currency, BigDecimal.valueOf(amount), currency.getDecimalPlaces()).dividedBy(multiplier, roundingMode);
-
     }
 
     public static long getMultiplier(String currency) {

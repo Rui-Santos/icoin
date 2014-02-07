@@ -226,14 +226,14 @@ public class TradingIT {
         //buyPortfolio 
         buyPortfolio = portfolioRepository.findByUserIdentifier(userId1.toString());
         BigMoney buyerLeftAmount = buyPortfolio.getAmountOfMoney();
-        BigMoney buyerLeftItem = buyPortfolio.obtainAmountOfAvailableItemsFor(coinId.toString(), CurrencyUnit.of(coinId.toString()));
+        BigMoney buyerLeftItem = buyPortfolio.obtainAmountOfAvailableItemFor(coinId.toString(), CurrencyUnit.of(coinId.toString()));
         assertThat(buyerLeftAmount.compareTo(Money.of(CurrencyUnit.of(Currencies.CNY), 99934.487)), is(0));
         assertThat(buyerLeftItem.compareTo(Money.of(CurrencyUnit.of(Currencies.BTC), 5.133412)), is(0));
 
         //sellPortfolio 
         sellPortfolio = portfolioRepository.findByUserIdentifier(userId2.toString());
         BigMoney sellerLeftAmount = sellPortfolio.getAmountOfMoney();
-        BigMoney sellerLeftItem = sellPortfolio.obtainAmountOfAvailableItemsFor(coinId.toString(), CurrencyUnit.of(coinId.toString()));
+        BigMoney sellerLeftItem = sellPortfolio.obtainAmountOfAvailableItemFor(coinId.toString(), CurrencyUnit.of(coinId.toString()));
         assertThat(sellerLeftAmount.compareTo(Money.of(CurrencyUnit.of(Currencies.CNY), 65.187)), is(0));
         assertThat(sellerLeftItem.compareTo(Money.of(CurrencyUnit.of(Currencies.BTC), 0.07092094)), is(0));
 

@@ -36,8 +36,7 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
     private BigMoney reservedAmountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
 //    private BigMoney lowestPrice = BigDecimal.valueOf(0.00000001);
 
-    private Map<String, ItemEntry> itemsInPossession = new HashMap<String, ItemEntry>();
-    private Map<String, ItemEntry> itemsReserved = new HashMap<String, ItemEntry>();
+    private Map<String, ItemEntry> items = new HashMap<String, ItemEntry>();
 
 //    @Value("${trade.lowestPrice}")
 //    public void setLowestPrice(BigDecimal lowestPrice) {
@@ -47,55 +46,105 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
     /*-------------------------------------------------------------------------------------------*/
     /* utility functions                                                                         */
     /*-------------------------------------------------------------------------------------------*/
-    public BigMoney obtainAmountOfAvailableItemsFor(String primaryKey, CurrencyUnit currencyUnit) {
-        BigMoney possession = obtainAmountOfItemsInPossessionFor(primaryKey, currencyUnit);
-        BigMoney reserved = obtainAmountOfReservedItemsFor(primaryKey, currencyUnit);
-        return possession.minus(reserved);
-    }
-
-    public BigMoney obtainAmountOfReservedItemsFor(String primaryKey, CurrencyUnit currencyUnit) {
-        ItemEntry item = findReservedItemByIdentifier(primaryKey);
+    public BigMoney obtainAmountOfAvailableItemFor(String primaryKey, CurrencyUnit currencyUnit) {
+        ItemEntry item = findItemByIdentifier(primaryKey);
         if (null == item) {
             return BigMoney.zero(currencyUnit);
         }
-        return item.getAmount();
+        return item.getAvailableAmount();
     }
 
-    public BigMoney obtainAmountOfItemsInPossessionFor(String primaryKey, CurrencyUnit currencyUnit) {
-        ItemEntry item = findItemInPossession(primaryKey);
+    public BigMoney obtainAmountOfReservedItemFor(String primaryKey, CurrencyUnit currencyUnit) {
+        ItemEntry item = findItemByIdentifier(primaryKey);
         if (null == item) {
             return BigMoney.zero(currencyUnit);
         }
-        return item.getAmount();
+        return item.getReservedAmount();
+    }
+
+    public BigMoney obtainAmountOfItemInPossessionFor(String primaryKey, CurrencyUnit currencyUnit) {
+        ItemEntry item = findItemByIdentifier(primaryKey);
+        if (null == item) {
+            return BigMoney.zero(currencyUnit);
+        }
+        return item.getAmountInPossession();
+    }
+
+    public void confirmReserved(String coinIdentifier, BigMoney amount) {
+        if (!hasItem(coinIdentifier)) {
+            throw new IllegalArgumentException("cannot find item with " + coinIdentifier + ", please add it first if necessary");
+        }
+
+        ItemEntry foundEntry = findItemByIdentifier(coinIdentifier);
+        foundEntry.confirmReserved(amount);
     }
 
     public BigMoney obtainMoneyToSpend() {
         return amountOfMoney.minus(reservedAmountOfMoney);
     }
 
-    public ItemEntry findReservedItemByIdentifier(String primaryKey) {
-        return itemsReserved.get(primaryKey);
+    public ItemEntry findItemByIdentifier(String primaryKey) {
+        return items.get(primaryKey);
     }
 
-    public ItemEntry findItemInPossession(String primaryKey) {
-        return itemsInPossession.get(primaryKey);
+//    public ItemEntry findItemInPossession(String primaryKey) {
+//        return items.get(primaryKey);
+//    }
+
+    public void addReserved(String coinIdentifier, BigMoney reserved) {
+        if (!hasItem(coinIdentifier)) {
+            throw new IllegalArgumentException("cannot find item with " + coinIdentifier + ", please add it first if necessary");
+        }
+        handleAddReserved(coinIdentifier, reserved);
     }
 
-    public void addReservedItem(ItemEntry itemEntry) {
-        handleAdd(itemsReserved, itemEntry);
+    public void addItemInPossession(String coinIdentifier, BigMoney amount) {
+        if (!hasItem(coinIdentifier)) {
+            throw new IllegalArgumentException("cannot find item with " + coinIdentifier + ", please add it first if necessary");
+        }
+        handleAddPossession(coinIdentifier, amount);
     }
 
-    public void addItemInPossession(ItemEntry itemEntry) {
-        handleAdd(itemsInPossession, itemEntry);
+    public boolean hasItem(String coinIdentifier) {
+        return items.containsKey(coinIdentifier);
     }
 
-    public void removeReservedItem(String itemIdentifier, BigMoney amount) {
-        handleRemoveItem(itemsReserved, itemIdentifier, amount);
+    private void handleAddPossession(String coinIdentifier, BigMoney amount) {
+        ItemEntry foundEntry = findItemByIdentifier(coinIdentifier);
+        foundEntry.addAmountInPossession(amount);
     }
 
-    public void removeItemsInPossession(String itemIdentifier, BigMoney amount) {
-        handleRemoveItem(itemsInPossession, itemIdentifier, amount);
+    private void handleAddReserved(String coinIdentifier, BigMoney amount) {
+        ItemEntry foundEntry = findItemByIdentifier(coinIdentifier);
+        foundEntry.addReservedAmount(amount);
     }
+
+    public ItemEntry createItem(String coinIdentifier, String coinName) {
+        if (hasItem(coinIdentifier)) {
+            return findItemByIdentifier(coinIdentifier);
+        }
+        ItemEntry itemEntry = new ItemEntry(coinIdentifier);
+        itemEntry.setCoinName(coinName);
+        items.put(coinIdentifier, itemEntry);
+        return itemEntry;
+    }
+
+    public void cancelReserved(String coinIdentifier, BigMoney amount) {
+        if (!hasItem(coinIdentifier)) {
+            throw new IllegalArgumentException("cannot find item with " + coinIdentifier + ", please add it first if necessary");
+        }
+        ItemEntry foundEntry = findItemByIdentifier(coinIdentifier);
+        foundEntry.cancelReserved(amount);
+    }
+
+
+//    public void removeReservedItem(String coinIdentifier, BigMoney amount) {
+//        handleRemoveItem(itemsReserved, coinIdentifier, amount);
+//    }
+
+//    public void removeItemInPossession(String coinIdentifier, BigMoney amount) {
+//        handleRemoveItem(items, itemIdentifier, amount);
+//    }
 
     /*-------------------------------------------------------------------------------------------*/
     /* Getters and setters                                                                       */
@@ -132,21 +181,17 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
         this.reservedAmountOfMoney = reservedAmountOfMoney;
     }
 
-    public Map<String, ItemEntry> getItemsInPossession() {
-        return itemsInPossession;
+    public Map<String, ItemEntry> getItems() {
+        return items;
     }
 
-    public void setItemsInPossession(Map<String, ItemEntry> itemsInPossession) {
-        this.itemsInPossession = itemsInPossession;
+    public void setItems(Map<String, ItemEntry> iterms) {
+        this.items = iterms;
     }
 
-    public Map<String, ItemEntry> getItemsReserved() {
-        return itemsReserved;
-    }
-
-    public void setItemsReserved(Map<String, ItemEntry> itemsReserved) {
-        this.itemsReserved = itemsReserved;
-    }
+//    public Map<String, ItemEntry> getItemsReserved() {
+//        return items;
+//    }
 
     public String getUserName() {
         return userName;
@@ -164,27 +209,27 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
         this.fullName = fullName;
     }
 
-    /*-------------------------------------------------------------------------------------------*/
-    /* Private helper methods                                                                    */
-    /*-------------------------------------------------------------------------------------------*/
-    private void handleAdd(Map<String, ItemEntry> items, ItemEntry itemEntry) {
-        if (items.containsKey(itemEntry.getCoinIdentifier())) {
-            ItemEntry foundEntry = items.get(itemEntry.getCoinIdentifier());
-            foundEntry.setAmount(foundEntry.getAmount().plus(itemEntry.getAmount()));
-        } else {
-            items.put(itemEntry.getCoinIdentifier(), itemEntry);
-        }
-    }
-
-    private void handleRemoveItem(Map<String, ItemEntry> items, String itemIdentifier, BigMoney amount) {
-        if (items.containsKey(itemIdentifier)) {
-            ItemEntry foundEntry = items.get(itemIdentifier);
-            foundEntry.setAmount(foundEntry.getAmount().minus(amount));
-            if (foundEntry.getAmount().isNegativeOrZero()) {
-                items.remove(foundEntry.getCoinIdentifier());
-            }
-        }
-    }
+//    /*-------------------------------------------------------------------------------------------*/
+//    /* Private helper methods                                                                    */
+//    /*-------------------------------------------------------------------------------------------*/
+//    private void handleAdd(Map<String, ItemEntry> items, ItemEntry itemEntry) {
+//        if (items.containsKey(itemEntry.getCoinIdentifier())) {
+//            ItemEntry foundEntry = findItemByIdentifier(itemEntry.getCoinIdentifier());
+//            foundEntry.setAmountInPossession(foundEntry.getAmountInPossession().plus(itemEntry.getAmountInPossession()));
+//        } else {
+//            items.put(itemEntry.getCoinIdentifier(), itemEntry);
+//        }
+//    }
+//
+//    private void handleRemoveItem(Map<String, ItemEntry> items, String itemIdentifier, BigMoney amount) {
+//        if (items.containsKey(itemIdentifier)) {
+//            ItemEntry foundEntry = findItemByIdentifier(itemIdentifier);
+//            foundEntry.setAmountInPossession(foundEntry.getAmountInPossession().minus(amount));
+//            if (foundEntry.getAmountInPossession().isNegativeOrZero()) {
+//                items.remove(foundEntry.getCoinIdentifier());
+//            }
+//        }
+//    }
 
     @Override
     public String toString() {
@@ -194,8 +239,7 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
                 ", userIdentifier='" + userIdentifier + '\'' +
                 ", userName='" + userName + '\'' +
                 ", reservedAmountOfMoney=" + reservedAmountOfMoney +
-                ", itemsInPossession=" + itemsInPossession +
-                ", itemsReserved=" + itemsReserved +
+                ", items=" + items +
                 '}';
     }
 }

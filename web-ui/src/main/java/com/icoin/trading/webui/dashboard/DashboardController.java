@@ -20,6 +20,8 @@ import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.tradeengine.query.transaction.TransactionEntry;
 import com.icoin.trading.tradeengine.query.transaction.repositories.TransactionQueryRepository;
+import com.icoin.trading.users.query.UserEntry;
+import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import com.icoin.trading.webui.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,7 @@ public class DashboardController {
     private final static Logger logger = LoggerFactory.getLogger(DashboardController.class);
     private PortfolioQueryRepository portfolioRepository;
     private TransactionQueryRepository transactionRepository;
+    private UserQueryRepository userRepository;
 
     @RequestMapping(method = RequestMethod.GET)
     public String show(Model model) {
@@ -54,10 +57,18 @@ public class DashboardController {
         }
         model.addAttribute("portfolio", portfolio);
 
-        List<TransactionEntry> transactions = transactionRepository.findByPortfolioIdentifier(portfolio
-                                                                                                      .getIdentifier());
+        List<TransactionEntry> transactions = transactionRepository.findByPortfolioIdentifier(portfolio.getIdentifier());
         model.addAttribute("transactions", transactions);
+
+        final UserEntry userInfo = userRepository.findOne(identifier);
+        model.addAttribute("userInfo", userInfo);
         return "dashboard/index";
+    }
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    public void setUserRepository(UserQueryRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")

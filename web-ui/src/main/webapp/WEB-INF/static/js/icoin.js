@@ -1,3 +1,14 @@
+$(document).ready(function () {
+    $("#signup input").tooltip({
+        container: "body"
+    });
+    $("#signin input").tooltip({
+        container: "body"
+    });
+
+    $("[data-toggle='switch']").wrap('<div class="switch" />').parent().bootstrapSwitch();
+});
+
 // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
 // IT'S ALL JUST JUNK FOR OUR DOCS!
 // ++++++++++++++++++++++++++++++++++++++++++
@@ -29,8 +40,8 @@
         }
 
 
-        var $window = $(window)
-        var $body   = $(document.body)
+//        var $window = $(window)
+        var $body = $(document.body)
 
         var navHeight = $('.navbar').outerHeight(true) + 10
 

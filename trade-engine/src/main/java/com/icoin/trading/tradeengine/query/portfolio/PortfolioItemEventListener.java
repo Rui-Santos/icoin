@@ -16,15 +16,15 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemAddedToPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationCancelledForPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemAddedToPortfolioEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservedEvent;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.joda.money.BigMoney;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,24 +44,41 @@ public class PortfolioItemEventListener {
     public void handleEvent(ItemAddedToPortfolioEvent event) {
         logger.debug("Handle ItemAddedToPortfolioEvent for orderbook with primaryKey {}",
                 event.getCoinId());
-        ItemEntry itemEntry = createItemEntry(event.getCoinId().toString(), event.getAmountOfItemAdded());
+        CoinEntry coin = findCoinEntry(event.getCoinId());
+
+        if (coin == null) {
+            logger.error("coin {} cannot be found.", event.getCoinId());
+            return;
+        }
 
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.addItemInPossession(itemEntry);
+
+        if (!portfolioEntry.hasItem(event.getCoinId().toString())) {
+            portfolioEntry.createItem(coin.getPrimaryKey(), coin.getName());
+        }
+
+        portfolioEntry.addItemInPossession(coin.getPrimaryKey(), event.getAmountOfItemAdded());
 
         portfolioRepository.save(portfolioEntry);
+    }
+
+    private CoinEntry findCoinEntry(CoinId coinId) {
+        return coinQueryRepository.findOne(coinId.toString());
     }
 
     @EventHandler
     public void handleEvent(ItemReservationCancelledForPortfolioEvent event) {
         logger.debug("Handle ItemReservationCancelledForPortfolioEvent for orderbook with primaryKey {}",
                 event.getCoinId());
-        ItemEntry itemEntry = createItemEntry(event.getCoinId().toString(),
-                event.getLeftTotalItem());
+        CoinEntry coin = findCoinEntry(event.getCoinId());
+
+        if (coin == null) {
+            logger.error("coin {} cannot be found.", event.getCoinId());
+            return;
+        }
 
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.removeReservedItem(itemEntry.getCoinIdentifier(), event.getLeftTotalItem());
-        portfolioEntry.addItemInPossession(itemEntry);
+        portfolioEntry.cancelReserved(coin.getPrimaryKey(), event.getLeftTotalItem().plus(event.getLeftCommission()));
 
         portfolioRepository.save(portfolioEntry);
     }
@@ -70,10 +87,15 @@ public class PortfolioItemEventListener {
     public void handleEvent(ItemReservationConfirmedForPortfolioEvent event) {
         logger.debug("Handle ItemReservationConfirmedForPortfolioEvent for orderbook with primaryKey {}",
                 event.getCoinId());
+        CoinEntry coin = findCoinEntry(event.getCoinId());
+
+        if (coin == null) {
+            logger.error("coin {} cannot be found.", event.getCoinId());
+            return;
+        }
+
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.removeReservedItem(event.getCoinId().toString(), event.getAmount());
-        portfolioEntry.removeItemsInPossession(event.getCoinId().toString(),
-                event.getAmount());
+        portfolioEntry.confirmReserved(event.getCoinId().toString(), event.getAmount().plus(event.getCommission()));
 
         portfolioRepository.save(portfolioEntry);
     }
@@ -81,22 +103,17 @@ public class PortfolioItemEventListener {
     @EventHandler
     public void handleEvent(ItemReservedEvent event) {
         logger.debug("Handle ItemReservedEvent for orderbook with primaryKey {}", event.getCoinId());
-        ItemEntry itemEntry = createItemEntry(event.getCoinId().toString(),
-                event.getAmountOfItemReserved());
+        final CoinEntry coin = findCoinEntry(event.getCoinId());
+
+        if (coin == null) {
+            logger.error("coin {} cannot be found.", event.getCoinId());
+            return;
+        }
 
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.addReservedItem(itemEntry);
+        portfolioEntry.addReserved(coin.getPrimaryKey(), event.getAmountOfItemReserved());
 
         portfolioRepository.save(portfolioEntry);
-    }
-
-    private ItemEntry createItemEntry(String primaryKey, BigMoney amount) {
-        CoinEntry coin = coinQueryRepository.findOne(primaryKey);
-        ItemEntry itemEntry = new ItemEntry();
-        itemEntry.setCoinIdentifier(coin.getPrimaryKey());
-        itemEntry.setCoinName(coin.getName());
-        itemEntry.setAmount(amount);
-        return itemEntry;
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")

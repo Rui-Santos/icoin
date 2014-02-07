@@ -136,7 +136,7 @@ public class TradeController {
 
             final BigMoney totalMoney = tradeServiceFacade.calculateSellOrderEffectiveAmount(order);
 
-            if (portfolioEntry.obtainAmountOfAvailableItemsFor(coinId, coinCcy).isLessThan(totalMoney)) {
+            if (portfolioEntry.obtainAmountOfAvailableItemFor(coinId, coinCcy).isLessThan(totalMoney)) {
                 bindingResult.rejectValue("tradeAmount", "error.order.sell.tomanyitems", "Not enough items available to create sell order.");
                 BuyOrder buyOrder = tradeServiceFacade.prepareBuyOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
                 model.addAttribute("buyOrder", buyOrder);

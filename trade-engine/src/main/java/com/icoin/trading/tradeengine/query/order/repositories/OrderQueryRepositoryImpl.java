@@ -22,7 +22,6 @@ import com.icoin.trading.tradeengine.query.order.OrderType;
 import com.icoin.trading.tradeengine.query.order.PriceAggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.Fields;
@@ -32,6 +31,9 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
+import static com.homhon.util.Asserts.hasLength;
+import static com.homhon.util.Asserts.isTrue;
+import static com.homhon.util.Asserts.notNull;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
@@ -40,7 +42,6 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.previousOperation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static com.homhon.util.Asserts.isTrue;
 
 /**
  * @author Jettro Coenradie
@@ -56,8 +57,12 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepositoryCustom {
         this.mongoTemplate = mongoTemplate;
     }
 
+    @Override
     public List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate, int limit) {
-        isTrue(limit>=1);
+        hasLength(orderBookIdentifier);
+        notNull(type);
+        notNull(toDate);
+        isTrue(limit >= 1);
         //order is: match, order, sort, limit
         TypedAggregation<OrderEntry> aggregation = newAggregation(OrderEntry.class,
                 match(where("orderStatus").is(OrderStatus.PENDING.toString())

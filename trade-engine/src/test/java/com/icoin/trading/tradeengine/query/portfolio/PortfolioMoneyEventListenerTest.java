@@ -73,7 +73,7 @@ public class PortfolioMoneyEventListenerTest {
 
         assertThat(saved, notNullValue());
         assertThat(saved.getPrimaryKey(), equalTo(portfolioIdentifier.toString()));
-        assertThat(saved.getFullName(), equalTo(lastName + firstName));
+        assertThat(saved.getFullName(), equalTo(lastName +" " +firstName));
         assertThat(saved.getUserName(), equalTo(username));
         assertThat(saved.getUserIdentifier(), equalTo(userIdentifier.toString()));
         assertThat(saved.getAmountOfMoney(), equalTo(BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT)));

@@ -37,7 +37,6 @@
     <!--[if lt IE 9]>
     <script src="${ctx}/js/html5shiv.js" type="text/javascript"></script>
     <script src="${ctx}/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <![endif]-->
 
     <!-- Bootstrap core CSS -->
     <link href="${ctx}/style/bootstrap.css" rel="stylesheet">
@@ -126,9 +125,9 @@
                 <p class="pvl">
                     <a href="#" class="twitter-share-button" data-url="http://designmodo.com/flat-free/" data-text="Flat UI Free - PSD&amp;amp;HTML User Interface Kit" data-via="designmodo">Tweet</a>
                     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-                    <iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=watch&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>
-                    <iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=fork&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>
-                    <iframe src="http://ghbtns.com/github-btn.html?user=designmodo&type=follow&count=true" height="20" width="195" frameborder="0" scrolling="0" style="width:195px; height: 20px;" allowTransparency="true"></iframe>
+                    <%--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=watch&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>--%>
+                    <%--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=fork&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>--%>
+                    <%--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&type=follow&count=true" height="20" width="195" frameborder="0" scrolling="0" style="width:195px; height: 20px;" allowTransparency="true"></iframe>--%>
                 </p>
             </div> <!-- /col-md-7 -->
 
@@ -151,6 +150,5 @@
 <script src="${ctx}/js/highstock.js"></script>
 <script src="${ctx}/js/exporting.js"></script>
 <script src="${ctx}/js/icoin-charts.js"></script>
-<script src="${ctx}/js/icoin.js"></script>
 </body>
 </html>

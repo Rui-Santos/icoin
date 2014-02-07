@@ -16,11 +16,8 @@
 
 package com.icoin.trading.tradeengine.query.tradeexecuted.repositories;
 
-import com.homhon.base.domain.repository.GenericCrudRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.OpenHighLowCloseVolume;
-import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.Date;
 import java.util.List;
@@ -28,13 +25,6 @@ import java.util.List;
 /**
  * @author Jettro Coenradie
  */
-public interface TradeExecutedQueryRepository extends
-        PagingAndSortingRepository<TradeExecutedEntry, String>,
-        GenericCrudRepository<TradeExecutedEntry, String>,
-        TradeExecutedQueryRepositoryCustom {
-
-    List<TradeExecutedEntry> findByOrderBookIdentifier(String orderBookIdentifier, Pageable pageable);
-
-    @Override
+public interface TradeExecutedQueryRepositoryCustom {
     List<OpenHighLowCloseVolume> ohlc(String orderBookIdentifier, Date startD, Date end, Pageable pageable);
 }

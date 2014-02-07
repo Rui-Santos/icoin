@@ -36,7 +36,6 @@
     <!--[if lt IE 9]>
     <script src="${ctx}/js/html5shiv.js" type="text/javascript"></script>
     <script src="${ctx}/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <![endif]-->
 
     <!-- Bootstrap core CSS -->
     <link href="${ctx}/style/bootstrap.css" rel="stylesheet">
@@ -48,6 +47,8 @@
     <link href="${ctx}/style/btn.css" rel="stylesheet">
     <link href="${ctx}/style/footer.css" rel="stylesheet">
     <link href="${ctx}/style/flat-ui.css" rel="stylesheet">
+    <link href="${ctx}/style/admin.css" rel="stylesheet">
+    <link href="${ctx}/style/switch.css" rel="stylesheet">
 
     <script src="js/html5shiv.js"></script>
     <script src="js/respond.min.js"></script>
@@ -111,11 +112,11 @@
 <div class="container">
 
     <%--<h4><decorator:getProperty property="page.herounit"/></h4>--%>
-    <div class="page-header">
-        <h1><decorator:getProperty property="page.title"/>
-            <small><decorator:getProperty property="page.tagline"/></small>
-        </h1>
-    </div>
+    <%--<div class="page-header">--%>
+        <%--<h1><decorator:getProperty property="page.title"/>--%>
+            <%--<small><decorator:getProperty property="page.tagline"/></small>--%>
+        <%--</h1>--%>
+    <%--</div>--%>
     <decorator:getProperty property="page.breadcrumb"/>
     <decorator:body/>
 
@@ -134,11 +135,7 @@
                 </p>
 
                 <p class="pvl">
-                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://designmodo.com/flat-free/" data-text="Flat UI Free - PSD&amp;amp;HTML User Interface Kit" data-via="designmodo">Tweet</a>
-                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-                    <iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=watch&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>
-                    <iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=fork&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>
-                    <iframe src="http://ghbtns.com/github-btn.html?user=designmodo&type=follow&count=true" height="20" width="195" frameborder="0" scrolling="0" style="width:195px; height: 20px;" allowTransparency="true"></iframe>
+                    <a href="#" class="twitter-share-button" data-url="http://designmodo.com/flat-free/" data-text="Flat UI Free - PSD&amp;amp;HTML User Interface Kit" data-via="designmodo">Tweet</a>
                 </p>
             </div> <!-- /col-md-7 -->
 
@@ -158,5 +155,6 @@
 <!-- /container -->
 <script src="${ctx}/js/jquery-1.10.2.min.js"></script>
 <script src="${ctx}/js/bootstrap.min.js"></script>
+<decorator:getProperty property="page.additionalJs"/>
 </body>
 </html>

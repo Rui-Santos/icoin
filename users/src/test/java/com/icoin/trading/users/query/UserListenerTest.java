@@ -33,7 +33,7 @@ public class UserListenerTest {
 
         final UserQueryRepository repository = mock(UserQueryRepository.class);
 
-        final UserCreatedEvent event = new UserCreatedEvent(userId, username, firstName, lastName, identifier, email,password);
+        final UserCreatedEvent event = new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password);
         final UserListener listener = new UserListener();
         listener.setUserRepository(repository);
 
@@ -45,8 +45,8 @@ public class UserListenerTest {
 
         assertThat(userEntry, notNullValue());
         assertThat(userEntry.getPrimaryKey(), equalTo(userId.toString()));
-        assertThat(userEntry.getName(), equalTo(lastName + firstName));
-        assertThat(userEntry.getFullName(), equalTo(lastName + firstName));
+        assertThat(userEntry.getName(), equalTo(lastName + " " + firstName));
+        assertThat(userEntry.getFullName(), equalTo(lastName + " " + firstName));
         assertThat(userEntry.getUsername(), equalTo(username));
         assertThat(userEntry.getPassword(), equalTo(password));
         assertThat(userEntry.getIdentifier(), equalTo(identifier));

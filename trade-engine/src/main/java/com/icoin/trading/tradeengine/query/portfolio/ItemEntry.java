@@ -18,30 +18,100 @@ package com.icoin.trading.tradeengine.query.portfolio;
 
 import com.homhon.base.domain.model.ValueObjectSupport;
 import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
+import org.springframework.data.annotation.Transient;
+
+import static com.homhon.util.Asserts.hasLength;
+import static com.homhon.util.Asserts.isTrue;
+import static com.homhon.util.Asserts.notNull;
 
 /**
  * @author Jettro Coenradie
  */
 public class ItemEntry extends ValueObjectSupport<ItemEntry> {
     private String coinIdentifier;
-//    private String orderBookIdentifier;
-    private String coinName;
-    private BigMoney amount;
 
-    public BigMoney getAmount() {
-        return amount;
+    @Transient
+    private CurrencyUnit currencyUnit;
+    private String coinName;
+    private BigMoney amountInPossession;
+    private BigMoney reservedAmount;
+
+    public ItemEntry(String coinIdentifier) {
+        hasLength(coinIdentifier);
+        this.coinIdentifier = coinIdentifier;
+        this.currencyUnit = CurrencyUnit.of(coinIdentifier);
     }
 
-    public void setAmount(BigMoney amount) {
-        this.amount = amount;
+    public BigMoney getAmountInPossession() {
+        return amountInPossession == null ? BigMoney.zero(currencyUnit) : amountInPossession;
+    }
+
+    public BigMoney getReservedAmount() {
+        return reservedAmount == null ? BigMoney.zero(currencyUnit) : reservedAmount;
+    }
+
+    public BigMoney getAvailableAmount() {
+        return amountInPossession == null ? BigMoney.zero(currencyUnit) : amountInPossession.minus(getReservedAmount());
+    }
+
+    @SuppressWarnings("unused")
+    private void setReservedAmount(BigMoney reservedAmount) {
+        this.reservedAmount = reservedAmount;
+    }
+
+    public void addAmountInPossession(BigMoney amount) {
+        notNull(amount);
+        isTrue(amount.isPositiveOrZero());
+
+        if (amountInPossession == null) {
+            amountInPossession = BigMoney.zero(currencyUnit);
+        }
+        this.amountInPossession = amountInPossession.plus(amount);
+    }
+
+    public void addReservedAmount(BigMoney amount) {
+        notNull(amount);
+        isTrue(amount.isPositiveOrZero());
+        if (reservedAmount == null) {
+            reservedAmount = BigMoney.zero(currencyUnit);
+        }
+        this.reservedAmount = reservedAmount.plus(amount);
+    }
+
+    public void cancelReserved(BigMoney amount) {
+        if (reservedAmount == null) {
+            reservedAmount = BigMoney.zero(currencyUnit);
+        }
+
+        isTrue(reservedAmount.minus(amount).isPositiveOrZero(), "reserved amount " + reservedAmount + " cannot be less than "+ amount +"!");
+
+        this.reservedAmount = reservedAmount.minus(amount);
+    }
+
+    public void confirmReserved(BigMoney amount) {
+        if (reservedAmount == null) {
+            reservedAmount = BigMoney.zero(currencyUnit);
+        }
+        if (amountInPossession == null) {
+            amountInPossession = BigMoney.zero(currencyUnit);
+        }
+
+        isTrue(reservedAmount.minus(amount).isPositiveOrZero(), "reserved amount " + reservedAmount + " cannot be less than "+ amount +"!");
+        isTrue(amountInPossession.minus(amount).isPositiveOrZero(), "amount in possession " + amountInPossession + " cannot be less than "+ amount +"!");
+
+        this.amountInPossession = amountInPossession.minus(amount);
+        this.reservedAmount = reservedAmount.minus(amount);
+
+    }
+
+    @SuppressWarnings("unused")
+    private void setAmountInPossession(BigMoney amountInPossession) {
+        this.amountInPossession = amountInPossession;
     }
 
     public String getCoinIdentifier() {
         return coinIdentifier;
-    }
-
-    public void setCoinIdentifier(String coinIdentifier) {
-        this.coinIdentifier = coinIdentifier;
     }
 
     public String getCoinName() {
@@ -52,14 +122,6 @@ public class ItemEntry extends ValueObjectSupport<ItemEntry> {
         this.coinName = coinName;
     }
 
-//    public String getCoinId() {
-//        return orderBookIdentifier;
-//    }
-//
-//    public void setOrderBookIdentifier(String orderBookIdentifier) {
-//        this.orderBookIdentifier = orderBookIdentifier;
-//    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -69,9 +131,11 @@ public class ItemEntry extends ValueObjectSupport<ItemEntry> {
 
         ItemEntry itemEntry = (ItemEntry) o;
 
-        if (amount != null ? !amount.equals(itemEntry.amount) : itemEntry.amount != null) return false;
-        if (coinIdentifier != null ? !coinIdentifier.equals(itemEntry.coinIdentifier) : itemEntry.coinIdentifier != null)
+        if (amountInPossession != null ? !amountInPossession.equals(itemEntry.amountInPossession) : itemEntry.amountInPossession != null)
             return false;
+        if (reservedAmount != null ? !reservedAmount.equals(itemEntry.reservedAmount) : itemEntry.reservedAmount != null)
+            return false;
+        if (!coinIdentifier.equals(itemEntry.coinIdentifier)) return false;
         if (coinName != null ? !coinName.equals(itemEntry.coinName) : itemEntry.coinName != null) return false;
 
         return true;
@@ -80,9 +144,10 @@ public class ItemEntry extends ValueObjectSupport<ItemEntry> {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (coinIdentifier != null ? coinIdentifier.hashCode() : 0);
+        result = 31 * result + coinIdentifier.hashCode();
         result = 31 * result + (coinName != null ? coinName.hashCode() : 0);
-        result = 31 * result + (amount != null ? amount.hashCode() : 0);
+        result = 31 * result + (amountInPossession != null ? amountInPossession.hashCode() : 0);
+        result = 31 * result + (reservedAmount != null ? reservedAmount.hashCode() : 0);
         return result;
     }
 
@@ -91,7 +156,8 @@ public class ItemEntry extends ValueObjectSupport<ItemEntry> {
         return "ItemEntry{" +
                 "coinIdentifier='" + coinIdentifier + '\'' +
                 ", coinName='" + coinName + '\'' +
-                ", amount=" + amount +
+                ", amountInPossession=" + amountInPossession +
+                ", reservedAmount=" + reservedAmount +
                 '}';
     }
 }

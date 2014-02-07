@@ -30,6 +30,7 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
     private String password;
     private String firstName;
     private String lastName;
+    private String realName;
     private String email;
     private Identifier identifier;
 
@@ -85,9 +86,17 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
         this.identifier = identifier;
     }
 
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
     @Override
     public String getFullName() {
-        return "" + lastName + firstName;
+        return "" + lastName + " " + firstName;
     }
 
     public void setPassword(String password) {

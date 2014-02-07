@@ -54,7 +54,14 @@ public class CreateUserCommand {
 
     private Identifier identifier;
 
-    public CreateUserCommand(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email, String password, String confirmedPassword) {
+    public CreateUserCommand(UserId userId,
+                             String username,
+                             String firstName,
+                             String lastName,
+                             Identifier identifier,
+                             String email,
+                             String password,
+                             String confirmedPassword) {
         notNull(userId, "The provided userId cannot be null");
         hasLength(username, "The provided username cannot be null");
 //        Asserts.notNull(identifier, "The provided name cannot be null");

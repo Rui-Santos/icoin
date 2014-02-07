@@ -24,18 +24,14 @@ import org.mockito.ArgumentMatcher;
  * @author Jettro Coenradie
  */
 public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
-    private int itemsInPossession;
     private String coinIdentifier;
     private BigMoney amountOfItemInPossession;
-    private int itemsInReservation;
     private BigMoney amountOfItemInReservation;
 
-    public PortfolioEntryMatcher(String coinIdentifier, int itemsInPossession, BigMoney amountOfItemInPossession,
-                                 int itemsInReservation, BigMoney amountOfItemInReservation) {
-        this.itemsInPossession = itemsInPossession;
+    public PortfolioEntryMatcher(String coinIdentifier, BigMoney amountOfItemInPossession,
+                                 BigMoney amountOfItemInReservation) {
         this.coinIdentifier = coinIdentifier;
         this.amountOfItemInPossession = amountOfItemInPossession;
-        this.itemsInReservation = itemsInReservation;
         this.amountOfItemInReservation = amountOfItemInReservation;
     }
 
@@ -46,23 +42,16 @@ public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
         }
         PortfolioEntry portfolioEntry = (PortfolioEntry) argument;
 
-        return portfolioEntry.getItemsInPossession().size() == itemsInPossession
-                && amountOfItemInPossession.minus(portfolioEntry.findItemInPossession(coinIdentifier).getAmount()).isNegativeOrZero()
-                && portfolioEntry.getItemsReserved().size() == itemsInReservation
-                && !(itemsInReservation != 0
-                && amountOfItemInReservation.minus(portfolioEntry.findReservedItemByIdentifier(coinIdentifier).getAmount()).isPositive());
+        return  amountOfItemInPossession.minus(portfolioEntry.findItemByIdentifier(coinIdentifier).getAmountInPossession()).isZero()
+                && amountOfItemInReservation.minus(portfolioEntry.findItemByIdentifier(coinIdentifier).getReservedAmount()).isZero();
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("PortfolioEntry with itemsInPossession [")
-                .appendValue(itemsInPossession)
-                .appendText("] and amountOfItemsInPossession [")
+        description.appendText("PortfolioEntry with amountOfItemsInPossession [")
                 .appendValue(amountOfItemInPossession)
                 .appendText("] and amountOfItemsInReservation [")
                 .appendValue(amountOfItemInReservation)
-                .appendText("] and itemsInReservation [")
-                .appendValue(itemsInReservation)
                 .appendText("]");
     }
 }

@@ -19,17 +19,18 @@
     <![endif]-->
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="style/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/jumbotron.css" rel="stylesheet">
-    <link href="css/offcanvas.css" rel="stylesheet">
-    <link href="css/justified-nav.css" rel="stylesheet">
-    <link href="css/btn.css" rel="stylesheet">
-    <link href="css/footer.css" rel="stylesheet">
-    <link href="css/flat-ui.css" rel="stylesheet">
-    <link href="css/sign.css" rel="stylesheet">
-    <link href="css/admin.css" rel="stylesheet">
+    <link href="style/jumbotron.css" rel="stylesheet">
+    <link href="style/offcanvas.css" rel="stylesheet">
+    <link href="style/justified-nav.css" rel="stylesheet">
+    <link href="style/btn.css" rel="stylesheet">
+    <link href="style/footer.css" rel="stylesheet">
+    <link href="style/flat-ui.css" rel="stylesheet">
+    <link href="style/sign.css" rel="stylesheet">
+    <link href="style/admin.css" rel="stylesheet">
+    <link href="style/switch.css" rel="stylesheet">
 
 
     <script src="js/html5shiv.js"></script>
@@ -94,7 +95,6 @@
                 <ul class="nav">
                     <li><a href="#overview">Overview</a></li>
                     <li><a href="#transactions">Transactions</a></li>
-                    <li><a href="#topup">Topup</a></li>
                     <li><a href="#trade_history">Trade History</a></li>
                 </ul>
             </li>
@@ -109,236 +109,269 @@
     </div>
 </div>
 <div class="col-md-9" role="main">
-    <!-- Global Bootstrap settings
-    ================================================== -->
-    <div class="bs-docs-section">
-        <div class="page-header">
-            <h1 id="portfolio">Portfolio</h1>
-        </div>
-
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title" id="overview">Overview</h3>
-            </div>
-
-            <div class="panel-body">
-                <div class="admin-information">
-                    <!--<ul class="pi-nav">-->
-                        <!--<li class="edit-information">-->
-                            <!--<a href="https://designmodo.com/my-account/edit-address/?address=billing"-->
-                                <!--class="icn_pen"><span class="glyphicon glyphicon-edit"></span></a></li>-->
-                    <!--</ul>-->
-
-                    <dl class="myacc-col2">
-                        <dt>Available Money</dt>
-                        <dd>CNY 100000.000</dd>
-                    </dl>
-                    <dl class="myacc-col2">
-                        <dt>Available BTC</dt>
-                        <dd>BTC 100000.000</dd>
-                    </dl>
-                    <dl class="myacc-col2">
-                        <dt>Reserved Money</dt>
-                        <dd>CNY 100000.000</dd>
-                    </dl>
-                    <dl class="myacc-col2">
-                        <dt>Reserved BTC</dt>
-                        <dd>BTC 100000.000</dd>
-                    </dl>
-                    <dl class="myacc-col2">
-                        <dt>E-mail:</dt>
-                        <dd>liougehooa@163.com</dd>
-                    </dl>
-                    <dl class="myacc-col2">
-                        <dt>Phone:</dt>
-                        <dd>13601884817</dd>
-                    </dl>
-                </div>
-
-            </div>
-            <div class="panel-heading">
-                <h3 class="panel-title" id="transactions">Transactions</h3>
-            </div>
-
-            <div class="panel-body">
-                <table class="table table-condensed table-hover">
-                    <thead>
-                    <tr >
-                        <th class="text-center">Buy/Sell</th>
-                        <th class="text-center">Price</th>
-                        <th class="text-center">Amount</th>
-                        <th class="text-center">CNY</th>
-                        <th class="text-center">Date</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class="text-center">Buy</td>
-                        <td class="text-center">593.998</td>
-                        <td class="text-center">0.01</td>
-                        <td class="text-center">5.93998</td>
-                        <td class="text-center">21.11.13 15:35</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">Buy</td>
-                        <td class="text-center">593.998</td>
-                        <td class="text-center">0.01</td>
-                        <td class="text-center">5.93998</td>
-                        <td class="text-center">21.11.13 15:35</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="panel-heading">
-                <h3 class="panel-title" id="topup">Topup</h3>
-            </div>
-
-            <div class="panel-body">
-                <form method="GET" action="${ctx}/admin/portfolio/<c:out value="${portfolio.primaryKey}"/>/item/">
-                <select name="orderbook" class="span3">
-                    <c:forEach items="${coins}" var="coin">
-                        <option value="<c:out value="${coin.primaryKey}"/>"><c:out
-                            value="${coin.coinName}"/></option>
-                    </c:forEach>
-                </select>
-                <input name="amount" value="0" class="span2"/>
-                <input type="submit" class="btn" value="Add Items">
-                </form>
-
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label for="highestAsk" class="col-sm-5 control-label">Highest Ask Price</label>
-                        <label id="highestAsk" class="col-sm-2  form-control-static text-success">5.0098</label>
-                        <label class="col-sm-1  form-control-static text-info">CNY</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="balanceToSell" class="col-sm-5 control-label">Balance</label>
-                        <label id="balanceToSell" class="col-sm-2  form-control-static text-success">50.098</label>
-                        <label class="col-sm-1  form-control-static text-info">BTC</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="amountToSell" class="col-sm-5 control-label">Amount</label>
-                        <div class="input-group col-sm-7">
-                            <input type="text" class="form-control" placeholder="Sell Amount" id="amountToSell">
-                            <span class="input-group-addon alert-warning">BTC</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="priceToSell" class="col-sm-5 control-label">Price per BTC</label>
-                        <div class="input-group col-sm-7">
-                            <input type="text" class="form-control" placeholder="Price" id="priceToSell">
-                            <span class="input-group-addon alert-warning">CNY</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="totalToSell" class="col-sm-5 control-label">Total</label>
-                        <label id="totalToSell" class="col-sm-2  form-control-static text-danger">50.098</label>
-                        <label class="col-sm-1  form-control-static text-info">CNY</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="feeToSell" class="col-sm-5 control-label">Fee</label>
-                        <label id="feeToSell" class="col-sm-2  form-control-static text-danger">1</label>
-                        <label class="col-sm-1  form-control-static text-info">BTC</label>
-                    </div>
-                    <div class="alert alert-warning alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <span></span>
-                        <!--<form:errors path="*" element="div"/>-->
-                    </div>
-                    <!--<button type="submit" class="btn btn-danger col-lg-offset-5 col-sm-3">Sell</button>-->
-                    <button type="submit" class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
-                </form>
-            </div>
-        </div>
-
-        <!--<div class="panel-group" id="accordion">-->
-        <!--<div class="panel panel-default">-->
-        <!--<div class="panel-heading">-->
-        <!--<h4 class="panel-title">-->
-        <!--<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">-->
-        <!--Collapsible Group Item #1-->
-        <!--</a>-->
-        <!--</h4>-->
-        <!--</div>-->
-        <!--<div id="collapseOne" class="panel-collapse collapse in">-->
-        <!--<div class="panel-body">-->
-        <!--Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="panel panel-default">-->
-        <!--<div class="panel-heading">-->
-        <!--<h4 class="panel-title">-->
-        <!--<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">-->
-        <!--Collapsible Group Item #2-->
-        <!--</a>-->
-        <!--</h4>-->
-        <!--</div>-->
-        <!--<div id="collapseTwo" class="panel-collapse collapse">-->
-        <!--<div class="panel-body">-->
-        <!--Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="panel panel-primary">-->
-        <!--<div class="panel-heading">-->
-        <!--<h4 class="panel-title">-->
-        <!--<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">-->
-        <!--Collapsible Group Item #3-->
-        <!--</a>-->
-        <!--</h4>-->
-        <!--</div>-->
-        <!--<div id="collapseThree" class="panel-collapse collapse">-->
-        <!--<div class="panel-body">-->
-        <!--Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<h3 id="overview">Overview</h3>-->
-
-
-
-        <p>Images in Bootstrap 3 can be made responsive-friendly via the addition of the
-            <code>.img-responsive</code> class. This applies <code>max-width: 100%;</code> and <code>height:
-                auto;</code> to the image so that it scales nicely to the parent element.</p>
-
-        <div class="highlight"><pre><code class="html"><span class="nt">&lt;img</span> <span
-                class="na">src=</span><span class="s">&quot;...&quot;</span> <span class="na">class=</span><span
-                class="s">&quot;img-responsive&quot;</span> <span class="na">alt=</span><span class="s">&quot;Responsive image&quot;</span><span
-                class="nt">&gt;</span>
-        </code></pre>
-        </div>
-
-        <h3 id="trade_history">Trade History</h3>
-
-        <p>Bootstrap sets basic global display, typography, and link styles. Specifically, we:</p>
-        <ul>
-            <li>Set <code>background-color: #fff;</code> on the <code>body</code></li>
-            <li>Use the <code>@font-family-base</code>, <code>@font-size-base</code>, and <code>@line-height-base</code>
-                attributes as our typographic base
-            </li>
-            <li>Set the global link color via <code>@link-color</code> and apply link underlines only on
-                <code>:hover</code>
-            </li>
-        </ul>
-        <p>These styles can be found within <code>scaffolding.less</code>.</p>
+<!-- Global Bootstrap settings
+================================================== -->
+<div class="bs-docs-section">
+    <div class="page-header">
+        <h1 id="portfolio">Portfolio</h1>
     </div>
 
-
-    <!-- Grid system
-    ================================================== -->
-    <div class="bs-docs-section">
-        <div class="page-header">
-            <h1 id="profile">Profile</h1>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title" id="overview">Overview</h3>
         </div>
-        <h3 id="profile_details">Details</h3>
 
-        <h3 id="privacy">Privacy</h3>
+        <div class="panel-body">
+            <div class="admin-information">
+                <!--<ul class="pi-nav">-->
+                <!--<li class="edit-information">-->
+                <!--<a href="https://designmodo.com/my-account/edit-address/?address=billing"-->
+                <!--class="icn_pen"><span class="glyphicon glyphicon-edit"></span></a></li>-->
+                <!--</ul>-->
 
+                <dl class="myacc-col1">
+                    <dt>Available Money</dt>
+                    <dd>CNY 100000.000</dd>
+                </dl>
+                <dl class="myacc-col2">
+                    <dt>Reserved Money</dt>
+                    <dd>CNY 100000.000</dd>
+                </dl>
+                <dl class="myacc-col3">
+                    <dt>Money Action</dt>
+                    <dd>
+                        <!--<form id="add_money" method="post" action="/admin/portfolio/coin/item/">-->
+                        <!--<div class="input-group input-group-sm">-->
+                        <!--<span class="input-group-addon">CNY</span>-->
+                        <!--<input type="text" class="form-control" name="cny_money" required id="cny_money">-->
+                        <!--<span class="input-group-btn">-->
+                        <!--<input type="submit" class="btn btn-primary" name="add"   value="Add"/>-->
+                        <!--</span>-->
+                        <!--<span class="input-group-btn">-->
+                        <!--<input type="submit" class="btn btn-danger" name="withdraw" value="Withdraw"/>-->
+                        <!--</span>-->
+                        <!--</div>-->
+                        <!--</form>-->
+                        <!--<div class="btn-group-sm">-->
+                        <!--<div class="col-md-6">-->
+                        <!--<a href="#" class="btn btn-primary btn-sm btn-block">Add</a>-->
+                        <!--</div>-->
+                        <!--<div class="col-md-6">-->
+                        <!--<a href="#" class="btn btn-primary btn-sm btn-block">Withdraw</a>-->
+                        <!--</div>-->
+                        <!--</div>-->
+
+                        <div class="btn-group btn-group-sm">
+                            <a href="#" class="btn btn-primary btn-sm">Add</a>
+                            <a href="#" class="btn btn-danger btn-sm">Withdraw</a>
+                        </div>
+
+                    </dd>
+                </dl>
+                <dl class="myacc-col1">
+                    <dt>Available BTC</dt>
+                    <dd>BTC 100000.000
+                    </dd>
+                </dl>
+                <dl class="myacc-col2">
+                    <dt>Reserved BTC</dt>
+                    <dd>BTC 100000.000</dd>
+                </dl>
+                <dl class="myacc-col3">
+                    <dt>BTC Action</dt>
+                    <dd>
+                        <!--<form method="post" action="/admin/portfolio/coin/item/">-->
+                        <!--<div class="input-group input-group-sm">-->
+                        <!--<span class="input-group-addon">BTC</span>-->
+                        <!--<input type="text" class="form-control input-lg">-->
+                        <!--<span class="input-group-btn">-->
+                        <!--<input type="submit" class="btn btn-primary" name="add" value="Add"/>-->
+                        <!--</span>-->
+                        <!--<span class="input-group-btn">-->
+                        <!--<input type="submit" class="btn btn-danger" name="withdraw" value="Withdraw"/>-->
+                        <!--</span>-->
+                        <!--</div>-->
+                        <!--</form>-->
+                        <div class="btn-group btn-group-sm">
+                            <a href="#" class="btn btn-primary btn-sm">Add</a>
+                            <a href="#" class="btn btn-danger btn-sm">Withdraw</a>
+                        </div>
+                    </dd>
+                </dl>
+                <dl class="myacc-col2">
+                    <dt>Phone:</dt>
+                    <dd>13601884817</dd>
+                </dl>
+            </div>
+
+        </div>
+        <div class="panel-heading">
+            <h3 class="panel-title" id="transactions">Transactions</h3>
+        </div>
+
+        <div class="panel-body">
+            <table class="table table-condensed table-hover">
+                <thead>
+                <tr>
+                    <th class="text-center">Buy/Sell</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Amount</th>
+                    <th class="text-center">CNY</th>
+                    <th class="text-center">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="text-center">Buy</td>
+                    <td class="text-center">593.998</td>
+                    <td class="text-center">0.01</td>
+                    <td class="text-center">5.93998</td>
+                    <td class="text-center">21.11.13 15:35</td>
+                </tr>
+                <tr>
+                    <td class="text-center">Buy</td>
+                    <td class="text-center">593.998</td>
+                    <td class="text-center">0.01</td>
+                    <td class="text-center">5.93998</td>
+                    <td class="text-center">21.11.13 15:35</td>
+                </tr>
+                </tbody>
+            </table>
+            <ul class="pagination pull-right">
+                <li class="disabled"><a href="#">&laquo;</a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">&raquo;</a></li>
+            </ul>
+        </div>
     </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title" id="trade_history">Trade History</h3>
+        </div>
+
+        <div class="panel-body">
+            <table class="table table-condensed table-hover">
+                <thead>
+                <tr>
+                    <th class="text-center">Buy/Sell</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Amount</th>
+                    <th class="text-center">CNY</th>
+                    <th class="text-center">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="text-center">Buy</td>
+                    <td class="text-center">593.998</td>
+                    <td class="text-center">0.01</td>
+                    <td class="text-center">5.93998</td>
+                    <td class="text-center">21.11.13 15:35</td>
+                </tr>
+                <tr>
+                    <td class="text-center">Buy</td>
+                    <td class="text-center">593.998</td>
+                    <td class="text-center">0.01</td>
+                    <td class="text-center">5.93998</td>
+                    <td class="text-center">21.11.13 15:35</td>
+                </tr>
+                </tbody>
+            </table>
+            <ul class="pagination pull-right">
+                <li class="disabled"><a href="#">&laquo;</a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">&raquo;</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<!-- Grid system
+================================================== -->
+<div class="bs-docs-section">
+    <div class="page-header">
+        <h1 id="profile">Profile</h1>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title" id="profile_details">Details</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="admin-information">
+                <ul class="pi-nav">
+                    <li class="edit-information">
+                        <a href="https://designmodo.com/my-account/edit-address/?address=billing"
+                           class="icn_pen"><span class="glyphicon glyphicon-lock pull-right"></span></a></li>
+                    <a href="https://designmodo.com/my-account/edit-address/?address=billing"
+                       class="icn_pen"><span class="glyphicon glyphicon-edit pull-right"></span></a></li>
+                </ul>
+                <p/>
+                <dl class="myacc-col1">
+                    <dt>Username</dt>
+                    <dd>liougehooa</dd>
+                </dl>
+                <dl class="myacc-col2">
+                    <dt>Email</dt>
+                    <dd>liougehooa@163.com</dd>
+                </dl>
+                <dl class="myacc-col3">
+                    <dt>ID Card</dt>
+                    <dd>
+                        Identifier: 31011023902123901209
+                    </dd>
+                </dl>
+                <dl class="myacc-col1">
+                    <dt>Cell Phone Number</dt>
+                    <dd>136-0219-8763</dd>
+                </dl>
+                <dl class="myacc-col2">
+                    <dt>Real Name</dt>
+                    <dd>St. Hual</dd>
+                </dl>
+                <dl class="myacc-col3">
+                    <dt>Add BTC</dt>
+                    <dd>
+
+                    </dd>
+                </dl>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title" id="privacy">Privacy</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="privacy-information">
+            <dl class="dl-horizontal">
+                <dt>Logon notification</dt>
+                <dd>
+                    <input type="checkbox" checked="" data-toggle="switch" />
+                </dd>
+                <dt>Logon notification</dt>
+                <dd>
+                    <input type="checkbox" checked="" data-toggle="switch" />
+                </dd>
+            </dl>
+           </div>
+        </div>
+    </div>
+
+</div>
 
 </div>
 </div>
@@ -384,10 +417,180 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/highstock.js"></script>
 <script src="js/exporting.js"></script>
+<script src="js/bootstrap-switch.js"></script>
 <script src="js/icoin.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<!--<script src="http://thrilleratplay.github.io/jquery-validation-bootstrap-tooltip/js/jquery-validate.bootstrap-tooltip.js"></script>-->
 
 
 </body>
+
 <script>
+    //    $(document).ready(function(){
+    //        var validator = $("#add_money").validate({
+    //            errorElement: "div",
+    //            wrapper: "div",  // a wrapper around the error message
+    //            errorPlacement: function(error, element) {
+    //                offset = element.offset();
+    //                error.insertBefore(element)
+    //                error.addClass('alert alert-danger');  // add a class to the wrapper
+    //                error.css('left', offset.left + element.outerWidth());
+    //                error.css('top', offset.top);
+    //            }
+    //        });
+    //    });
+
+    //    $(document).ready(function () {
+    //        $("#add_money").validate({
+    //            rules: {
+    //                cny_money: {
+    //                    minlength: 2
+    //                },
+    //                email: "required",
+    //                confirm_email: {
+    //                    required: true,
+    //
+    //                    email: true
+    //                },
+    //                password: {
+    //                    required: true,
+    //                    minlength: 5
+    //                },
+    //                confirm_password: {
+    //                    required: true,
+    //                    minlength: 5,
+    //                    equalTo: "#password"
+    //                }
+    //            },
+    //            messages: {
+    //                cny_money: {
+    //                    minlength: jQuery.format("at least {0} characters")
+    //                }
+    //            }
+    //        });
+    //    });
+
+    (function ($) {
+        $.extend(true, $.validator, {
+            prototype: {
+                defaultShowErrors: function () {
+                    var self = this;
+                    $.each(this.successList, function (index, value) {
+                        $(value).tooltip('destroy');
+                        $(value).removeClass('error').addClass('success');
+                    });
+                    $.each(this.errorList, function (index, value) {
+                        $(value.element).tooltip('destroy').tooltip(self.apply_tooltip_options(value.element, value.message)).tooltip('show');
+                        $(value.element).removeClass('success').addClass('error');
+                    });
+                },
+
+                apply_tooltip_options: function (element, message) {
+                    var options = {
+                        /* Using Twitter Bootstrap Defaults if no settings are given */
+                        animation: $(element).data('animation') || true,
+                        html: $(element).data('html') || false,
+                        placement: $(element).data('placement') || 'top',
+                        selector: $(element).data('animation') || true,
+                        title: $(element).attr('title') || message,
+                        trigger: $.trim('manual ' + ($(element).data('trigger') || '')),
+                        delay: $(element).data('delay') || 0,
+                        container: $(element).data('container') || false
+                    };
+                    if (this.settings.tooltip_options && this.settings.tooltip_options[element.name]) {
+                        $.extend(options, this.settings.tooltip_options[element.name]);
+                    }
+                    return options;
+                }
+            }
+        });
+    }(jQuery));
+
+    //    $(document).ready(function () {
+    //        $("#add_money").validate({
+    //            tooltip_options: {
+    //                cny_money: { placement: 'top' }
+    //            },
+    //            errorElement: "div",
+    ////            errorClass: "has-error",
+    //            highlight: function (element) {
+    ////                alert("dd");
+    //                $(element).removeClass('success').addClass('error');
+    //            },
+    ////            success: function (element) {
+    ////                element.text('OK!').addClass('valid')
+    ////                        .closest('.control-group').removeClass('error').addClass('success');
+    ////            },
+    //            rules: {
+    //                cny_money: {
+    //                    required:true,
+    //                    minlength: 3
+    //                },
+    //                email: "required",
+    //                confirm_email: {
+    //                    required: true,
+    //
+    //                    email: true
+    //                },
+    //                password: {
+    //                    required: true,
+    //                    minlength: 5
+    //                },
+    //                confirm_password: {
+    //                    required: true,
+    //                    minlength: 5,
+    //                    equalTo: "#password"
+    //                }
+    //            },
+    //            messages: {
+    //                cny_money: {
+    //                    minlength: jQuery.format("at least {0} characters")
+    //                }
+    //            }
+    //        })
+    //    });
+
+    $(document).ready(function () {
+        $("#add_money").validate({
+//            tooltip_options: {
+//                cny_money: { placement: 'top' }
+//            },
+            highlight: function (element) {
+                $(element).removeClass('success').addClass('error');
+            },
+//            success: function (element) {
+//                element.text('OK!').addClass('valid')
+//                        .closest('.control-group').removeClass('error').addClass('success');
+//            },
+            rules: {
+                cny_money: {
+                    required: true,
+                    minlength: 2
+                },
+                email: "required",
+                confirm_email: {
+                    required: true,
+
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 5
+                },
+                confirm_password: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                cny_money: {
+                    minlength: jQuery.format("at least {0} characters")
+                }
+            }
+        })
+    });
+
+
 </script>
 </html>

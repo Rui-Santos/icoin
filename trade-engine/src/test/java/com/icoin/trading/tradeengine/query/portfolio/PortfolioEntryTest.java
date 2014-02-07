@@ -25,13 +25,14 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Jettro Coenradie
  */
 public class PortfolioEntryTest {
 
-    private static final BigMoney AMOUNT_ITEMS = BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100));
+    private static final BigMoney AMOUNT_ITEM = BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100));
     private static final BigMoney AMOUNT_RESERVED = BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(40));
     private static final BigMoney AMOUNT_SELL = BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10));
     private static final String COIN_IDENTIFIER = "BTC";
@@ -39,36 +40,81 @@ public class PortfolioEntryTest {
     private static final BigMoney RESERVED_AMOUNT_OF_MONEY = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(200));
 
     @Test
-    public void testRemovingItems() {
+    public void testReserve() {
         PortfolioEntry portfolio = createDefaultPortfolio();
 
-        portfolio.removeReservedItem(COIN_IDENTIFIER, AMOUNT_SELL);
-        portfolio.removeItemsInPossession(COIN_IDENTIFIER, AMOUNT_SELL);
+        //assertion
+        assertEquals(AMOUNT_ITEM,
+                portfolio.obtainAmountOfItemInPossessionFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+        assertEquals(AMOUNT_RESERVED,
+                portfolio.obtainAmountOfReservedItemFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+        assertEquals(AMOUNT_ITEM.minus(AMOUNT_RESERVED),
+                portfolio.obtainAmountOfAvailableItemFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
 
-        assertEquals(AMOUNT_RESERVED.minus(AMOUNT_SELL),
-                portfolio.findReservedItemByIdentifier(COIN_IDENTIFIER).getAmount());
-        assertEquals(AMOUNT_ITEMS.minus(AMOUNT_SELL), portfolio.findItemInPossession(COIN_IDENTIFIER).getAmount());
+        //confirm reservation
+        portfolio.confirmReserved(COIN_IDENTIFIER, AMOUNT_RESERVED);
+
+        //assertion
+        assertEquals(AMOUNT_ITEM.minus(AMOUNT_RESERVED),
+                portfolio.obtainAmountOfItemInPossessionFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+        assertEquals(BigMoney.zero(CurrencyUnit.of(COIN_IDENTIFIER)),
+                portfolio.obtainAmountOfReservedItemFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+        assertEquals(AMOUNT_ITEM.minus(AMOUNT_RESERVED),
+                portfolio.obtainAmountOfAvailableItemFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+    }
+
+    @Test
+    public void testCancel() {
+        PortfolioEntry portfolio = createDefaultPortfolio();
+
+        //assertion
+        assertEquals(AMOUNT_ITEM,
+                portfolio.obtainAmountOfItemInPossessionFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+        assertEquals(AMOUNT_RESERVED,
+                portfolio.obtainAmountOfReservedItemFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+        assertEquals(AMOUNT_ITEM.minus(AMOUNT_RESERVED),
+                portfolio.obtainAmountOfAvailableItemFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+
+        //confirm reservation
+        portfolio.confirmReserved(COIN_IDENTIFIER, AMOUNT_RESERVED.minus(2));
+
+        //assertion
+        assertEquals(AMOUNT_ITEM.minus(AMOUNT_RESERVED).plus(2),
+                portfolio.obtainAmountOfItemInPossessionFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+        assertEquals(BigMoney.of(CurrencyUnit.of(COIN_IDENTIFIER), 2),
+                portfolio.obtainAmountOfReservedItemFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+        assertTrue(AMOUNT_ITEM.minus(AMOUNT_RESERVED).isEqual(portfolio.obtainAmountOfAvailableItemFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER))));
+
+        //confirm reservation
+        portfolio.cancelReserved(COIN_IDENTIFIER, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1)));
+
+        //assertion
+        assertEquals(AMOUNT_ITEM.minus(AMOUNT_RESERVED).plus(2),
+                portfolio.obtainAmountOfItemInPossessionFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+        assertEquals(BigMoney.of(CurrencyUnit.of(COIN_IDENTIFIER), 1),
+                portfolio.obtainAmountOfReservedItemFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
+        assertEquals(AMOUNT_ITEM.minus(AMOUNT_RESERVED).plus(1),
+                portfolio.obtainAmountOfAvailableItemFor(COIN_IDENTIFIER, CurrencyUnit.of(COIN_IDENTIFIER)));
     }
 
     @Test
     public void testObtainAvailableItems() {
         PortfolioEntry portfolio = createDefaultPortfolio();
 
-        final BigMoney bigMoney = portfolio.obtainAmountOfAvailableItemsFor(COIN_IDENTIFIER, AMOUNT_ITEMS.getCurrencyUnit());
+        final BigMoney bigMoney = portfolio.obtainAmountOfAvailableItemFor(COIN_IDENTIFIER, AMOUNT_ITEM.getCurrencyUnit());
 
-        final ItemEntry item = createItem(bigMoney);
-        portfolio.addItemInPossession(item);
+        portfolio.addItemInPossession(COIN_IDENTIFIER, bigMoney);
 
         assertEquals(bigMoney.multipliedBy(2),
-                portfolio.obtainAmountOfAvailableItemsFor(COIN_IDENTIFIER, AMOUNT_ITEMS.getCurrencyUnit()));
+                portfolio.obtainAmountOfAvailableItemFor(COIN_IDENTIFIER, AMOUNT_ITEM.getCurrencyUnit()));
     }
 
     @Test
-    public void testObtainAmountOfAvailableItemsFor(){
+    public void testObtainAmountOfAvailableItemFor() {
         PortfolioEntry portfolio = createDefaultPortfolio();
 
-        assertEquals(AMOUNT_ITEMS.minus(AMOUNT_RESERVED),
-                portfolio.obtainAmountOfAvailableItemsFor(COIN_IDENTIFIER, AMOUNT_ITEMS.getCurrencyUnit()));
+        assertEquals(AMOUNT_ITEM.minus(AMOUNT_RESERVED),
+                portfolio.obtainAmountOfAvailableItemFor(COIN_IDENTIFIER, AMOUNT_ITEM.getCurrencyUnit()));
     }
 
     @Test
@@ -80,18 +126,12 @@ public class PortfolioEntryTest {
     private PortfolioEntry createDefaultPortfolio() {
         PortfolioEntry portfolio = new PortfolioEntry();
 
-        portfolio.addItemInPossession(createItem(AMOUNT_ITEMS));
-        portfolio.addReservedItem(createItem(AMOUNT_RESERVED));
+        portfolio.createItem(COIN_IDENTIFIER, "Bitcoin");
+
+        portfolio.addItemInPossession(COIN_IDENTIFIER, AMOUNT_ITEM);
+        portfolio.addReserved(COIN_IDENTIFIER, AMOUNT_RESERVED);
         portfolio.setAmountOfMoney(AMOUNT_OF_MONEY);
         portfolio.setReservedAmountOfMoney(RESERVED_AMOUNT_OF_MONEY);
         return portfolio;
-    }
-
-    private ItemEntry createItem(BigMoney amount) {
-        ItemEntry item1InPossession = new ItemEntry();
-        item1InPossession.setAmount(amount);
-        item1InPossession.setCoinIdentifier(COIN_IDENTIFIER);
-        item1InPossession.setCoinName("Bitcoin");
-        return item1InPossession;
     }
 }

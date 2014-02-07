@@ -16,13 +16,7 @@
 
 package com.icoin.trading.webui.coins;
 
-import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand;
-import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
@@ -41,9 +35,7 @@ import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
 import com.icoin.trading.webui.util.SecurityUtil;
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.GenericCommandMessage;
 import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,15 +43,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -162,7 +149,7 @@ public class CoinController {
 //            final Money btcAmount = Money.of(Constants.CURRENCY_UNIT_BTC, tradeAmount, RoundingMode.HALF_EVEN);
 ////            final Money totalMoney = price.convertedTo(price.getCurrencyUnit(), btcAmount.getAmount(), RoundingMode.HALF_EVEN);
 //
-//            if (portfolioEntry.obtainAmountOfAvailableItemsFor(bookEntry.getPrimaryKey(), Constants.CURRENCY_UNIT_BTC).isLessThan(btcAmount)) {
+//            if (portfolioEntry.obtainAmountOfAvailableItemFor(bookEntry.getPrimaryKey(), Constants.CURRENCY_UNIT_BTC).isLessThan(btcAmount)) {
 //                bindingResult.rejectValue("tradeAmount",
 //                        "error.order.sell.tomanyitems",
 //                        "Not enough items available to create sell order.");
@@ -233,8 +220,8 @@ public class CoinController {
     }
 
     private void addPortfolioItemInfoToModel(PortfolioEntry entry, String orderBookIdentifier, CurrencyUnit currencyUnit, Model model) {
-        model.addAttribute("itemsInPossession", entry.obtainAmountOfItemsInPossessionFor(orderBookIdentifier, currencyUnit));
-        model.addAttribute("itemsReserved", entry.obtainAmountOfReservedItemsFor(orderBookIdentifier, currencyUnit));
+        model.addAttribute("itemsInPossession", entry.obtainAmountOfItemInPossessionFor(orderBookIdentifier, currencyUnit));
+        model.addAttribute("itemsReserved", entry.obtainAmountOfReservedItemFor(orderBookIdentifier, currencyUnit));
     }
 
     private void addPortfolioMoneyInfoToModel(Model model) {

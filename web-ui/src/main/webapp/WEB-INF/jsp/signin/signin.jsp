@@ -32,7 +32,7 @@
     </div>
 </c:if>
 
-<form:form id="signin" action="<c:url value='${ctx}/signin/authenticate'/>" class="form-signin" role="form">
+<form:form id="signin" action="/signin/authenticate" class="form-signin" role="form">
     <h2 class="form-signin-heading">Please sign in</h2>
     <div class="input-group input-group-lg">
         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>

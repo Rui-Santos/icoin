@@ -30,6 +30,7 @@ public class TradeExecutedListener {
         tradeExecutedEntry.setCoinName(orderBookEntry.getCoinName());
         tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getPrimaryKey());
         tradeExecutedEntry.setTradedAmount(event.getTradeAmount());
+        tradeExecutedEntry.setExecutedMoney(event.getExecutedMoney());
         tradeExecutedEntry.setTradedPrice(event.getTradedPrice());
         tradeExecutedEntry.setTradeTime(event.getTradeTime());
         tradeExecutedEntry.setTradeType(TradeType.convert(event.getTradeType()));

@@ -16,10 +16,8 @@
 
 package com.icoin.trading.test
 
-import com.icoin.trading.tradeengine.Constants
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand
 import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand
-import com.icoin.trading.tradeengine.domain.model.coin.Currencies
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId
@@ -79,8 +77,8 @@ class CommandCreator {
         def counterOrderBook = 0
         while (counterOrderBook < amountOfOrderBooks) {
             def identifier = portfolioEntry.itemsInPossession.keySet().toArray()[counterOrderBook]
-            def amountAvailable = portfolioEntry.itemsInPossession[identifier].amount
-            def reserved = (portfolioEntry.itemsReserved[identifier]) ? portfolioEntry.itemsReserved[identifier].amount : BigMoney.zero(amountAvailable.getCurrencyUnit())
+            def amountAvailable = portfolioEntry.itemsInPossession[identifier].amountInPossession
+            def reserved = (portfolioEntry.itemsReserved[identifier]) ? portfolioEntry.itemsReserved[identifier].amountInPossession : BigMoney.zero(amountAvailable.getCurrencyUnit())
             if (amountAvailable.isGreaterThan(reserved)) {
                 def amountToSell = amountAvailable.isGreaterThan(reserved.plus(50)) ? BigMoney.of(amountAvailable.getCurrencyUnit(),randomFactory.nextInt(50) + 1)  : amountAvailable.minus(reserved)
                 return [coinToOrderBooks[identifier], amountToSell]
