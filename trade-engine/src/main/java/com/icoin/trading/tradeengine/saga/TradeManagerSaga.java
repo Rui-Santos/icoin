@@ -21,6 +21,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.saga.annotation.AbstractAnnotatedSaga;
 import org.joda.money.BigMoney;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
 
-    private transient CommandBus commandBus;
+    private transient CommandGateway commandGateway;
     private TransactionId transactionIdentifier;
     private OrderBookId orderBookIdentifier;
     private PortfolioId portfolioIdentifier;
@@ -44,12 +45,12 @@ public abstract class TradeManagerSaga extends AbstractAnnotatedSaga {
     /* Getters and setters                                                                       */
     /*-------------------------------------------------------------------------------------------*/
     @Autowired
-    public void setCommandBus(CommandBus commandBus) {
-        this.commandBus = commandBus;
+    public void setCommandGateway(CommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
     }
 
-    protected CommandBus getCommandBus() {
-        return commandBus;
+    protected CommandGateway getCommandGateway() {
+        return commandGateway;
     }
 
     protected OrderBookId getOrderBookIdentifier() {

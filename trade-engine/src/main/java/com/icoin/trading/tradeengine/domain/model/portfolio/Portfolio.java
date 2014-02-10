@@ -172,7 +172,8 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     public void onItemReserved(ItemReservedEvent event) {
         CurrencyUnit currencyUnit = currencyUnit(event.getAmountOfItemReserved());
         Item available = obtainCurrentAvailableItem(event.getCoinId(), currencyUnit);
-        availableCoins.put(event.getCoinId(), available.reserve(event.getAmountOfItemReserved()));
+        available.reserve(event.getAmountOfItemReserved());
+//        availableCoins.put(event.getCoinId(), available.reserve(event.getAmountOfItemReserved()));
 //        Item reserved = obtainCurrentReservedItem(event.getCoinId(), currencyUnit);
 //        reservedItems.put(event.getCoinId(), reserved.add(event.getAmountOfItemReserved()));
     }

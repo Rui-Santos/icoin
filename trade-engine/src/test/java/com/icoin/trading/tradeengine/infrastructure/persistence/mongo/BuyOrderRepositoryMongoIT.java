@@ -94,8 +94,8 @@ public class BuyOrderRepositoryMongoIT {
     }
 
     @Test
-    public void testFindDescPendingOrdersByPriceTime() throws Exception {
-        List<Order> buyOrderList = orderRepository.findDescPendingBuyOrdersByPriceTime(
+    public void testFindPendingOrdersByPriceTime() throws Exception {
+        List<Order> buyOrderList = orderRepository.findPendingBuyOrdersByPriceTime(
                 placeDate.minusDays(1).toDate(),
                 buyOrder1.getItemPrice(),
                 orderBookId,
@@ -103,7 +103,7 @@ public class BuyOrderRepositoryMongoIT {
 
         assertThat(buyOrderList, anyOf(nullValue(), empty()));
 
-        buyOrderList = orderRepository.findDescPendingBuyOrdersByPriceTime(
+        buyOrderList = orderRepository.findPendingBuyOrdersByPriceTime(
                 placeDate.toDate(),
                 buyOrder1.getItemPrice(),
                 orderBookId,
@@ -113,34 +113,34 @@ public class BuyOrderRepositoryMongoIT {
         Order buyOrder = buyOrderList.get(0);
         assertThat(buyOrder, equalTo(buyOrder1));
 
-        buyOrderList = orderRepository.findDescPendingBuyOrdersByPriceTime(
+        buyOrderList = orderRepository.findPendingBuyOrdersByPriceTime(
                 placeDate.plusDays(1).toDate(),
                 buyOrder1.getItemPrice(),
                 orderBookId,
                 10);
 
         assertThat(buyOrderList, hasSize(2));
-        assertThat(buyOrderList, contains(buyOrder2, buyOrder1));
+        assertThat(buyOrderList, contains(buyOrder1, buyOrder2));
 
-        buyOrderList = orderRepository.findDescPendingBuyOrdersByPriceTime(
+        buyOrderList = orderRepository.findPendingBuyOrdersByPriceTime(
                 placeDate.plusDays(2).toDate(),
                 buyOrder1.getItemPrice(),
                 orderBookId,
                 10);
 
         assertThat(buyOrderList, hasSize(3));
-        assertThat(buyOrderList, contains(buyOrder2, buyOrder3, buyOrder1));
+        assertThat(buyOrderList, contains(buyOrder1, buyOrder2, buyOrder3));
 
-        buyOrderList = orderRepository.findDescPendingBuyOrdersByPriceTime(
+        buyOrderList = orderRepository.findPendingBuyOrdersByPriceTime(
                 placeDate.plusDays(3).toDate(),
                 buyOrder1.getItemPrice(),
                 orderBookId,
                 2);
 
         assertThat(buyOrderList, hasSize(2));
-        assertThat(buyOrderList, contains(buyOrder2, buyOrder3));
+        assertThat(buyOrderList, contains(buyOrder1, buyOrder2));
 
-        buyOrderList = orderRepository.findDescPendingBuyOrdersByPriceTime(
+        buyOrderList = orderRepository.findPendingBuyOrdersByPriceTime(
                 placeDate.plusDays(1).toDate(),
                 buyOrder1.getItemPrice().plus(BigDecimal.valueOf(0.01)),
                 orderBookId,
@@ -149,7 +149,7 @@ public class BuyOrderRepositoryMongoIT {
         assertThat(buyOrderList, hasSize(1));
         assertThat(buyOrderList, contains(buyOrder2));
 
-        buyOrderList = orderRepository.findDescPendingBuyOrdersByPriceTime(
+        buyOrderList = orderRepository.findPendingBuyOrdersByPriceTime(
                 placeDate.plusDays(1).toDate(),
                 buyOrder3.getItemPrice().plus(BigDecimal.valueOf(0.01)),
                 orderBookId,

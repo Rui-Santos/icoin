@@ -44,6 +44,7 @@ public class UserListener {
         userRepository.save(userEntry);
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setUserRepository(UserQueryRepository userRepository) {
         this.userRepository = userRepository;

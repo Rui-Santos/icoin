@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.coin;
 
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
@@ -26,7 +27,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
  *
  * @author Jettro Coenradie
  */
-public class OrderBookAddedToCoinEvent {
+public class OrderBookAddedToCoinEvent extends EventSupport<OrderBookAddedToCoinEvent>{
     private CoinId coinId;
     private OrderBookId orderBookId;
     private CurrencyPair currencyPair;

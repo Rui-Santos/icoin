@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.transaction;
 
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
 import java.util.Date;
@@ -24,7 +25,7 @@ import java.util.Date;
 /**
  * @author Jettro Coenradie
  */
-public abstract class AbstractTransactionConfirmedEvent {
+public abstract class AbstractTransactionConfirmedEvent<T extends AbstractTransactionConfirmedEvent> extends EventSupport<T> {
     private TransactionId transactionIdentifier;
     private Date confirmedDate;
 

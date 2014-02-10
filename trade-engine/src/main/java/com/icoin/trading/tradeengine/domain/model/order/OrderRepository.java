@@ -14,10 +14,10 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface OrderRepository extends GenericCrudRepository<Order, String> {
-    List<Order> findAscPendingSellOrdersByPriceTime(Date toTime,
-                                                    BigMoney price,
-                                                    OrderBookId orderBookId,
-                                                    int size);
+    List<Order> findPendingSellOrdersByPriceTime(Date toTime,
+                                                 BigMoney price,
+                                                 OrderBookId orderBookId,
+                                                 int size);
 
     List<Order> findPlacedPendingOrdersAfter(Date toTime,
                                              OrderBookId orderBookId,
@@ -28,10 +28,10 @@ public interface OrderRepository extends GenericCrudRepository<Order, String> {
     Order findLowestPricePendingSellOrder(OrderBookId orderBookId);
 
 
-    List<Order> findDescPendingBuyOrdersByPriceTime(Date toTime,
-                                                    BigMoney price,
-                                                    OrderBookId orderBookId,
-                                                    int size);
+    List<Order> findPendingBuyOrdersByPriceTime(Date toTime,
+                                                BigMoney price,
+                                                OrderBookId orderBookId,
+                                                int size);
 
     Order findHighestPricePendingBuyOrder(OrderBookId orderBookId);
 } 

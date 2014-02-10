@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.domain.events.coin;
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import org.joda.money.BigMoney;
 
@@ -25,7 +26,7 @@ import org.joda.money.BigMoney;
  *
  * @author Jettro Coenradie
  */
-public class CoinCreatedEvent {
+public class CoinCreatedEvent extends EventSupport<CoinCreatedEvent> {
     private CoinId coinId;
     private String coinName;
     private BigMoney coinInitialPrice;

@@ -17,6 +17,7 @@ package com.icoin.trading.tradeengine.domain.model.commission;
 
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import org.joda.money.BigMoney;
@@ -43,7 +44,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
     }
 
     @Override
-    public Commission calculateSellCommission(SellOrder order) {
+    public Commission calculateSellCommission(Order order) {
         notNull(order);
         notNull(order.getTradeAmount());
 
@@ -59,7 +60,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
     }
 
     @Override
-    public Commission calculateRemainingSellCommission(SellOrder order) {
+    public Commission calculateRemainingSellCommission(Order order) {
         notNull(order);
         isTrue(order.getOrderType() == OrderType.SELL);
         notNull(order.getItemRemaining());
@@ -68,7 +69,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
     }
 
     @Override
-    public Commission calculateRemainingBuyCommission(BuyOrder order) {
+    public Commission calculateRemainingBuyCommission(Order order) {
         notNull(order);
         isTrue(order.getOrderType() == OrderType.BUY);
         notNull(order.getItemRemaining());
@@ -84,7 +85,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
     }
 
     @Override
-    public Commission calculateBuyCommission(BuyOrder order, BigMoney tradedAmount, BigMoney tradedPrice) {
+    public Commission calculateBuyCommission(Order order, BigMoney tradedAmount, BigMoney tradedPrice) {
         notNull(order);
         isTrue(order.getOrderType() == OrderType.BUY);
         notNull(order.getCurrencyPair());
@@ -95,7 +96,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
     }
 
     @Override
-    public Commission calculateSellCommission(SellOrder order, BigMoney tradedAmount, BigMoney tradedPrice) {
+    public Commission calculateSellCommission(Order order, BigMoney tradedAmount, BigMoney tradedPrice) {
         notNull(order);
         isTrue(order.getOrderType() == OrderType.SELL);
         notNull(tradedAmount);
@@ -104,7 +105,7 @@ public class FixedRateCommissionPolicy implements CommissionPolicy {
     }
 
     @Override
-    public Commission calculateBuyCommission(BuyOrder order) {
+    public Commission calculateBuyCommission(Order order) {
         notNull(order);
         notNull(order.getTradeAmount());
         notNull(order.getItemPrice());

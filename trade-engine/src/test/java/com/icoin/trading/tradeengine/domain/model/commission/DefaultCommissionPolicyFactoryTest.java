@@ -1,7 +1,7 @@
 package com.icoin.trading.tradeengine.domain.model.commission;
 
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
+import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -19,10 +19,10 @@ public class DefaultCommissionPolicyFactoryTest {
     public void testCreateCommissionPolicy() throws Exception {
         final DefaultCommissionPolicyFactory factory = new DefaultCommissionPolicyFactory();
 
-        final SellOrder sellOrder = new SellOrder();
+        final Order sellOrder = new Order(OrderType.SELL);
         final CommissionPolicy sellPolicy = factory.createCommissionPolicy(sellOrder);
 
-        final BuyOrder buyOrder = new BuyOrder();
+        final Order buyOrder = new Order(OrderType.BUY);
         final CommissionPolicy buyPolicy = factory.createCommissionPolicy(buyOrder);
 
         assertThat(sellPolicy, instanceOf(FixedRateCommissionPolicy.class));

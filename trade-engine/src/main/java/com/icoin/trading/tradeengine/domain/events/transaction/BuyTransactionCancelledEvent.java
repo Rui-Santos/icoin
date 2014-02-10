@@ -24,7 +24,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public class BuyTransactionCancelledEvent extends AbstractTransactionCancelledEvent {
+public class BuyTransactionCancelledEvent extends AbstractTransactionCancelledEvent<BuyTransactionCancelledEvent> {
 
     public BuyTransactionCancelledEvent(TransactionId transactionIdentifier,
                                         CoinId coinId) {

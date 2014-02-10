@@ -30,7 +30,7 @@ import java.util.Date;
  *
  * @author Allard Buijze
  */
-public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent {
+public class SellOrderPlacedEvent extends AbstractOrderPlacedEvent<SellOrderPlacedEvent> {
 
     public SellOrderPlacedEvent(OrderBookId orderBookId,
                                 OrderId orderId,

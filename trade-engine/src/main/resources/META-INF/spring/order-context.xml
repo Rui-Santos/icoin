@@ -30,7 +30,7 @@
                                     aggregate-type="com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio"
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
-                                    event-store="eventStore">
+                                    event-store="eventStore" locking-strategy="OPTIMISTIC">
         <axon:snapshotter-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
     </axon:event-sourcing-repository>
 
@@ -38,7 +38,7 @@
                                     aggregate-type="com.icoin.trading.tradeengine.domain.model.transaction.Transaction"
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
-                                    event-store="eventStore">
+                                    event-store="eventStore" locking-strategy="OPTIMISTIC">
         <axon:snapshotter-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
     </axon:event-sourcing-repository>
 

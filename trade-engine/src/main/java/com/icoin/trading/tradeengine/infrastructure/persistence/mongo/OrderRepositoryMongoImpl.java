@@ -40,7 +40,7 @@ public class OrderRepositoryMongoImpl implements OrderRepositoryMongoCustom {
     }
 
     @Override
-    public List<Order> findAscPendingSellOrdersByPriceTime(Date toTime, BigMoney price, OrderBookId orderBookId, int size) {
+    public List<Order> findPendingSellOrdersByPriceTime(Date toTime, BigMoney price, OrderBookId orderBookId, int size) {
         notNull(toTime);
         notNull(price);
         notNull(orderBookId);
@@ -83,7 +83,7 @@ public class OrderRepositoryMongoImpl implements OrderRepositoryMongoCustom {
 
     @Override
     public List<Order> findPlacedPendingOrdersAfter(Date toTime, OrderBookId orderBookId, int size) {
-        notNull(toTime);
+//        notNull(toTime);
         notNull(orderBookId);
         hasLength(orderBookId.toString());
         isTrue(size > 0);
@@ -95,11 +95,14 @@ public class OrderRepositoryMongoImpl implements OrderRepositoryMongoCustom {
 
         final Query query = new Query()
                 .addCriteria(Criteria.where("orderBookId").is(orderBookId))
-                .addCriteria(Criteria.where("placeDate").lte(toTime))
                 .addCriteria(Criteria.where("orderStatus").is(OrderStatus.PENDING))
                 .addCriteria(Criteria.where("orderType").is(OrderType.SELL))
                 .with(new Sort(Sort.Direction.ASC, "placeDate"))
                 .limit(size);
+
+        if(toTime!= null){
+            query.addCriteria(Criteria.where("placeDate").lte(toTime));
+        }
 
         //.with(new Sort(Sort.Direction.DESC, "itemPrice", "placeDate").and(new Sort(Sort.Direction.ASC, "placeDate"))) 
         final List<Order> sellOrders = mongoTemplate.find(query, Order.class);
@@ -156,7 +159,7 @@ public class OrderRepositoryMongoImpl implements OrderRepositoryMongoCustom {
     }
 
     @Override
-    public List<Order> findDescPendingBuyOrdersByPriceTime(Date toTime, BigMoney price, OrderBookId orderBookId, int size) {
+    public List<Order> findPendingBuyOrdersByPriceTime(Date toTime, BigMoney price, OrderBookId orderBookId, int size) {
         notNull(toTime);
         notNull(price);
         notNull(orderBookId);
@@ -185,8 +188,8 @@ public class OrderRepositoryMongoImpl implements OrderRepositoryMongoCustom {
                 .addCriteria(Criteria.where("placeDate").lte(toTime))
                 .addCriteria(Criteria.where("orderStatus").is(OrderStatus.PENDING))
                 .addCriteria(Criteria.where("orderType").is(OrderType.BUY))
-                .with(new Sort(Sort.Direction.DESC, "itemPrice.amount")
-                        .and(new Sort(Sort.Direction.ASC, "placeDate")).and(new Sort(Sort.Direction.DESC, "itemRemaining.amount")))
+                .with(new Sort(Sort.Direction.ASC, "itemPrice.amount","placeDate")
+                        .and(new Sort(Sort.Direction.DESC, "itemRemaining.amount")))
                 .limit(size);
 
         //.with(new Sort(Sort.Direction.DESC, "itemPrice", "placeDate").and(new Sort(Sort.Direction.ASC, "placeDate"))) 

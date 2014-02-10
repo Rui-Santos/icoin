@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -24,7 +25,7 @@ import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 /**
  * @author Jettro Coenradie
  */
-public class ItemToReserveNotAvailableInPortfolioEvent {
+public class ItemToReserveNotAvailableInPortfolioEvent extends EventSupport<ItemToReserveNotAvailableInPortfolioEvent> {
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
     private TransactionId transactionIdentifier;

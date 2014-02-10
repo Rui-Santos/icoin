@@ -132,7 +132,7 @@ public class TradeExecutedListenerIT {
         assertThat(tradeExecutedEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
         assertThat(tradeExecutedEntry.getCoinName(), equalTo("Test Coin"));
         assertThat(tradeExecutedEntry.getTradeTime(), equalTo(tradeTime));
-        assertThat(tradeExecutedEntry.getTradeType(), equalTo(com.icoin.trading.tradeengine.query.tradeexecuted.TradeType.Buy));
+        assertThat(tradeExecutedEntry.getTradeType(), equalTo(com.icoin.trading.tradeengine.query.tradeexecuted.TradeType.BUY));
         assertThat(tradeExecutedEntry
                 .getTradedAmount()
                 .isEqual(BigMoney.of(

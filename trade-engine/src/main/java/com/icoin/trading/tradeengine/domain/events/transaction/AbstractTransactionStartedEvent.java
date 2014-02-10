@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.domain.events.transaction;
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -25,7 +26,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public abstract class AbstractTransactionStartedEvent {
+public abstract class AbstractTransactionStartedEvent <T extends AbstractTransactionStartedEvent> extends EventSupport<T> {
     private TransactionId transactionIdentifier;
     private CoinId coinId;
     private OrderBookId orderBookIdentifier;

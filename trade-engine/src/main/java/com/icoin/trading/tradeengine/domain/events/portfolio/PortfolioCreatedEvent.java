@@ -16,13 +16,14 @@
 
 package com.icoin.trading.tradeengine.domain.events.portfolio;
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.users.domain.model.user.UserId;
 
 /**
  * @author Jettro Coenradie
  */
-public class PortfolioCreatedEvent {
+public class PortfolioCreatedEvent extends EventSupport<PortfolioCreatedEvent> {
 
     private PortfolioId portfolioId;
     private UserId userId;

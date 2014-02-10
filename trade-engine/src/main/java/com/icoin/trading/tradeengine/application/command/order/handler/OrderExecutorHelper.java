@@ -5,13 +5,11 @@ import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.commission.Commission;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.slf4j.Logger;
@@ -35,13 +33,13 @@ import static com.homhon.util.Asserts.notNull;
  */
 @Component
 public class OrderExecutorHelper {
-    private SellOrderRepository sellOrderRepository;
-    private BuyOrderRepository buyOrderRepository;
+    private OrderRepository orderRepository;
+//    private BuyOrderRepository buyOrderRepository;
     private CommissionPolicyFactory commissionPolicyFactory;
 
     private static Logger logger = LoggerFactory.getLogger(OrderExecutorHelper.class);
 
-    public List<SellOrder> findAscPendingOrdersByPriceTime(Date toTime,
+    public List<Order> findAscPendingOrdersByPriceTime(Date toTime,
                                                            BigMoney price,
                                                            OrderBookId orderBookId,
                                                            int size) {
@@ -55,8 +53,7 @@ public class OrderExecutorHelper {
             logger.debug("To find asc sell pending orders with toTime{}, price {}, orderBookId {}, size {} ",
                     toTime, price, orderBookId, size);
         }
-
-        List<SellOrder> list = sellOrderRepository.findAscPendingOrdersByPriceTime(toTime, price, orderBookId, size);
+        List<Order> list = orderRepository.findPendingSellOrdersByPriceTime(toTime, price, orderBookId, size);
 
         if (logger.isDebugEnabled()) {
             logger.debug("Found asc sell pending orders with toTime{}, price {}, orderBookId {}, size {}: ",
@@ -66,7 +63,7 @@ public class OrderExecutorHelper {
     }
 
 
-    public List<BuyOrder> findDescPendingOrdersByPriceTime(Date toTime,
+    public List<Order> findDescPendingOrdersByPriceTime(Date toTime,
                                                            BigMoney price,
                                                            OrderBookId orderBookId,
                                                            int size) {
@@ -77,11 +74,11 @@ public class OrderExecutorHelper {
 
 
         if (logger.isDebugEnabled()) {
-            logger.debug("To find desc buy pending orders with toTime{}, price {}, orderBookId {}, size {} ",
+            logger.debug("To find desc buy pending orders with toTime {}, price {}, orderBookId {}, size {} ",
                     toTime, price, orderBookId, size);
         }
 
-        List<BuyOrder> list = buyOrderRepository.findDescPendingOrdersByPriceTime(toTime, price, orderBookId, size);
+        List<Order> list = orderRepository.findPendingBuyOrdersByPriceTime(toTime, price, orderBookId, size);
 
         if (logger.isDebugEnabled()) {
             logger.debug("Found desc buy pending orders with toTime{}, price {}, orderBookId {}, size {}: ",
@@ -90,9 +87,9 @@ public class OrderExecutorHelper {
         return list;
     }
 
-    public SellOrder findSellOrder(OrderId orderId) {
+    public Order findSellOrder(OrderId orderId) {
         notNull(orderId);
-        final SellOrder sellOrder = sellOrderRepository.findOne(orderId.toString());
+        final Order sellOrder = orderRepository.findOne(orderId.toString());
 
         if (logger.isDebugEnabled()) {
             logger.debug("sellOrder {} found: {}", orderId, sellOrder);
@@ -101,9 +98,9 @@ public class OrderExecutorHelper {
         return sellOrder;
     }
 
-    public BuyOrder findBuyOrder(OrderId orderId) {
+    public Order findBuyOrder(OrderId orderId) {
         notNull(orderId);
-        final BuyOrder buyOrder = buyOrderRepository.findOne(orderId.toString());
+        final Order buyOrder = orderRepository.findOne(orderId.toString());
 
         if (logger.isDebugEnabled()) {
             logger.debug("buyOrder {} found: {}", orderId, buyOrder);
@@ -126,8 +123,8 @@ public class OrderExecutorHelper {
         BigMoney highestBuyPrice = BigMoney.zero(CurrencyUnit.of(currencyPair.getCounterCurrency()));
 
 
-        final SellOrder lowestSell = sellOrderRepository.findLowestPricePendingOrder(orderBookId);
-        final BuyOrder highestBuy = buyOrderRepository.findHighestPricePendingOrder(orderBookId);
+        final Order lowestSell = orderRepository.findLowestPricePendingSellOrder(orderBookId);
+        final Order highestBuy = orderRepository.findHighestPricePendingBuyOrder(orderBookId);
 
         if (lowestSell != null) {
             lowestSellOrderId = lowestSell.getPrimaryKey();
@@ -144,8 +141,8 @@ public class OrderExecutorHelper {
         orderBook.resetHighestBuyPrice(highestBuyOrderId, highestBuyPrice);
     }
 
-    public void recordTraded(BuyOrder buyOrder,
-                             SellOrder sellOrder,
+    public void recordTraded(Order buyOrder,
+                             Order sellOrder,
                              BigMoney buyCommission,
                              BigMoney sellCommission,
                              BigMoney matchedTradeAmount,
@@ -160,31 +157,26 @@ public class OrderExecutorHelper {
         logger.info("for this trade, buy order {} and sell order {} have commission {} and {}.",
                 buyOrder, sellOrder, buyCommission, sellCommission);
 
-        buyOrderRepository.save(buyOrder);
-        sellOrderRepository.save(sellOrder);
+        orderRepository.save(buyOrder);
+        orderRepository.save(sellOrder);
     }
 
-    public BigMoney calcExecutedSellCommission(SellOrder sellOrder, BigMoney matchedTradePrice, BigMoney matchedTradeAmount) {
+    public BigMoney calcExecutedSellCommission(Order sellOrder, BigMoney matchedTradePrice, BigMoney matchedTradeAmount) {
         CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(sellOrder);
         Commission commission = commissionPolicy.calculateSellCommission(sellOrder, matchedTradeAmount, matchedTradePrice);
         return commission.getBigMoneyCommission();
     }
 
-    public BigMoney calcExecutedBuyCommission(BuyOrder buyOrder, BigMoney matchedTradePrice, BigMoney matchedTradeAmount) {
+    public BigMoney calcExecutedBuyCommission(Order buyOrder, BigMoney matchedTradePrice, BigMoney matchedTradeAmount) {
         CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(buyOrder);
         Commission commission = commissionPolicy.calculateBuyCommission(buyOrder, matchedTradeAmount, matchedTradePrice);
         return commission.getBigMoneyCommission();
     }
 
-
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public void setBuyOrderRepository(BuyOrderRepository buyOrderRepository) {
-        this.buyOrderRepository = buyOrderRepository;
-    }
-
-    @Autowired
-    public void setSellOrderRepository(SellOrderRepository sellOrderRepository) {
-        this.sellOrderRepository = sellOrderRepository;
+    public void setOrderRepository(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     @Autowired

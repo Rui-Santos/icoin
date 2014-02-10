@@ -18,10 +18,8 @@ import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.commission.Commission;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
-import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.Transaction;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -68,7 +66,7 @@ public class TransactionCommandHandlerTest {
 
         policyFactory = mock(CommissionPolicyFactory.class);
         policy = mock(CommissionPolicy.class);
-        when(policyFactory.createCommissionPolicy(any(AbstractOrder.class))).thenReturn(policy);
+        when(policyFactory.createCommissionPolicy(any(Order.class))).thenReturn(policy);
 
         commandHandler.setCommissionPolicyFactory(policyFactory);
         fixture.registerAnnotatedCommandHandler(commandHandler);
@@ -76,7 +74,7 @@ public class TransactionCommandHandlerTest {
 
     @Test
     public void testStartBuyTransaction() {
-        when(policy.calculateBuyCommission(any(BuyOrder.class)))
+        when(policy.calculateBuyCommission(any(Order.class)))
                 .thenReturn(new Commission(BigMoney.of(CurrencyUnit.of(Currencies.EUR), BigDecimal.valueOf(10)),
                         "test buy"));
 
@@ -102,9 +100,9 @@ public class TransactionCommandHandlerTest {
                                 BigMoney.of(CurrencyUnit.EUR, BigDecimal.valueOf(4000)).toMoney().toBigMoney(),
                                 BigMoney.of(CurrencyUnit.EUR, BigDecimal.valueOf(10)).toMoney().toBigMoney()));
 
-        ArgumentCaptor<BuyOrder> captor = ArgumentCaptor.forClass(BuyOrder.class);
+        ArgumentCaptor<Order> captor = ArgumentCaptor.forClass(Order.class);
         verify(policy).calculateBuyCommission(captor.capture());
-        final BuyOrder order = captor.getValue();
+        final Order order = captor.getValue();
 
         assertThat(order, notNullValue());
         assertThat(order.getTradeAmount(), equalTo(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200))));
@@ -113,12 +111,12 @@ public class TransactionCommandHandlerTest {
         assertThat(order.getPortfolioId(), equalTo(portfolio));
         assertThat(order.getOrderBookId(), equalTo(orderBook));
         assertThat(order.getCurrencyPair(), equalTo(CurrencyPair.BTC_EUR));
-        assertThat(order.getCoinId(), equalTo(coinId));
+//        assertThat(order.getCoinId(), equalTo(coinId));
     }
 
     @Test
     public void testStartSellTransaction() {
-        when(policy.calculateSellCommission(any(SellOrder.class)))
+        when(policy.calculateSellCommission(any(Order.class)))
                 .thenReturn(new Commission(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                         "test sell"));
 
@@ -144,9 +142,9 @@ public class TransactionCommandHandlerTest {
                                 BigMoney.of(CurrencyUnit.CAD, BigDecimal.valueOf(4000)).toMoney().toBigMoney(),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)).toMoney().toBigMoney()));
 
-        ArgumentCaptor<SellOrder> captor = ArgumentCaptor.forClass(SellOrder.class);
+        ArgumentCaptor<Order> captor = ArgumentCaptor.forClass(Order.class);
         verify(policy).calculateSellCommission(captor.capture());
-        final SellOrder order = captor.getValue();
+        final Order order = captor.getValue();
 
         assertThat(order, notNullValue());
         assertThat(order.getTradeAmount(), equalTo(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200))));
@@ -155,7 +153,7 @@ public class TransactionCommandHandlerTest {
         assertThat(order.getPortfolioId(), equalTo(portfolio));
         assertThat(order.getOrderBookId(), equalTo(orderBook));
         assertThat(order.getCurrencyPair(), equalTo(CurrencyPair.BTC_CAD));
-        assertThat(order.getCoinId(), equalTo(coinId));
+//        assertThat(order.getCoinId(), equalTo(coinId));
     }
 
     @Test

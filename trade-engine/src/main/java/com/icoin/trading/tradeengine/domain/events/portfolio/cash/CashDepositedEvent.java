@@ -17,13 +17,14 @@
 package com.icoin.trading.tradeengine.domain.events.portfolio.cash;
 
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
  */
-public class CashDepositedEvent {
+public class CashDepositedEvent extends EventSupport<CashDepositedEvent> {
     private PortfolioId portfolioId;
     private BigMoney moneyAdded;
 

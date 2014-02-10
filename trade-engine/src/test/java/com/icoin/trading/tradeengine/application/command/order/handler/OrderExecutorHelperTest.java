@@ -7,13 +7,12 @@ import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.commission.Commission;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.joda.time.LocalDate;
@@ -52,18 +51,18 @@ public class OrderExecutorHelperTest {
         OrderBookId orderBookId = new OrderBookId();
         BigMoney price = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.23));
 
-        SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
-        List<SellOrder> sellOrders = createSellOrders(price.plus(BigDecimal.valueOf(0.01)), price.plus(BigDecimal.valueOf(1)));
-        when(sellOrderRepository.findAscPendingOrdersByPriceTime(
+        OrderRepository sellOrderRepository = mock(OrderRepository.class);
+        List<Order> sellOrders = createSellOrders(price.plus(BigDecimal.valueOf(0.01)), price.plus(BigDecimal.valueOf(1)));
+        when(sellOrderRepository.findPendingSellOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(price),
                 eq(orderBookId),
                 eq(100))).thenReturn(sellOrders);
 
         OrderExecutorHelper helper = new OrderExecutorHelper();
-        helper.setSellOrderRepository(sellOrderRepository);
+        helper.setOrderRepository(sellOrderRepository);
 
-        List<SellOrder> orders = helper.findAscPendingOrdersByPriceTime(
+        List<Order> orders = helper.findAscPendingOrdersByPriceTime(
                 placeDate.toDate(),
                 price,
                 orderBookId,
@@ -72,7 +71,7 @@ public class OrderExecutorHelperTest {
 
         assertThat(orders, equalTo(sellOrders));
 
-        verify(sellOrderRepository).findAscPendingOrdersByPriceTime(
+        verify(sellOrderRepository).findPendingSellOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(price),
                 eq(orderBookId),
@@ -80,11 +79,11 @@ public class OrderExecutorHelperTest {
     }
 
 
-    private List<SellOrder> createSellOrders(BigMoney... prices) {
-        ArrayList<SellOrder> list = Lists.newArrayList();
+    private List<Order> createSellOrders(BigMoney... prices) {
+        ArrayList<Order> list = Lists.newArrayList();
 
         for (int i = 0; i < prices.length; i++) {
-            SellOrder sellOrder = new SellOrder();
+            Order sellOrder = new Order(OrderType.SELL);
             sellOrder.setPrimaryKey(new OrderId().toString());
             sellOrder.setItemPrice(prices[i]);
             list.add(sellOrder);
@@ -98,19 +97,19 @@ public class OrderExecutorHelperTest {
         OrderBookId orderBookId = new OrderBookId();
         BigMoney price = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.23));
 
-        BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
-        List<BuyOrder> buyOrders = createBuyOrders(price.plus(BigDecimal.valueOf(0.01)), price.plus(BigDecimal.valueOf(1)));
+        OrderRepository buyOrderRepository = mock(OrderRepository.class);
+        List<Order> buyOrders = createBuyOrders(price.plus(BigDecimal.valueOf(0.01)), price.plus(BigDecimal.valueOf(1)));
 
-        when(buyOrderRepository.findDescPendingOrdersByPriceTime(
+        when(buyOrderRepository.findPendingBuyOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(price),
                 eq(orderBookId),
                 eq(100))).thenReturn(buyOrders);
 
         OrderExecutorHelper helper = new OrderExecutorHelper();
-        helper.setBuyOrderRepository(buyOrderRepository);
+        helper.setOrderRepository(buyOrderRepository);
 
-        List<BuyOrder> orders =
+        List<Order> orders =
                 helper.findDescPendingOrdersByPriceTime(
                         placeDate.toDate(),
                         price,
@@ -119,18 +118,18 @@ public class OrderExecutorHelperTest {
 
         assertThat(orders, equalTo(buyOrders));
 
-        verify(buyOrderRepository).findDescPendingOrdersByPriceTime(
+        verify(buyOrderRepository).findPendingBuyOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(price),
                 eq(orderBookId),
                 eq(100));
     }
 
-    private List<BuyOrder> createBuyOrders(BigMoney... prices) {
-        ArrayList<BuyOrder> list = Lists.newArrayList();
+    private List<Order> createBuyOrders(BigMoney... prices) {
+        ArrayList<Order> list = Lists.newArrayList();
 
         for (int i = 0; i < prices.length; i++) {
-            BuyOrder buyOrder = new BuyOrder();
+            Order buyOrder = new Order(OrderType.BUY);
             buyOrder.setPrimaryKey(new OrderId().toString());
             buyOrder.setItemPrice(prices[i]);
             list.add(buyOrder);
@@ -143,14 +142,14 @@ public class OrderExecutorHelperTest {
         OrderId orderId = new OrderId();
         BigMoney price = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.23));
 
-        SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
-        SellOrder sellOrder = createSellOrders(price.plus(BigDecimal.valueOf(7.01))).get(0);
+        OrderRepository sellOrderRepository = mock(OrderRepository.class);
+        Order sellOrder = createSellOrders(price.plus(BigDecimal.valueOf(7.01))).get(0);
         when(sellOrderRepository.findOne(eq(orderId.toString()))).thenReturn(sellOrder);
 
         OrderExecutorHelper helper = new OrderExecutorHelper();
-        helper.setSellOrderRepository(sellOrderRepository);
+        helper.setOrderRepository(sellOrderRepository);
 
-        SellOrder order = helper.findSellOrder(orderId);
+        Order order = helper.findSellOrder(orderId);
 
         assertThat(order, notNullValue());
         assertThat(order, equalTo(sellOrder));
@@ -163,15 +162,15 @@ public class OrderExecutorHelperTest {
         OrderId orderId = new OrderId();
         BigMoney price = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.23));
 
-        BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
-        BuyOrder buyOrder = createBuyOrders(price.plus(BigDecimal.valueOf(0.01))).get(0);
+        OrderRepository buyOrderRepository = mock(OrderRepository.class);
+        Order buyOrder = createBuyOrders(price.plus(BigDecimal.valueOf(0.01))).get(0);
 
         when(buyOrderRepository.findOne(eq(orderId.toString()))).thenReturn(buyOrder);
 
         OrderExecutorHelper helper = new OrderExecutorHelper();
-        helper.setBuyOrderRepository(buyOrderRepository);
+        helper.setOrderRepository(buyOrderRepository);
 
-        BuyOrder order = helper.findBuyOrder(orderId);
+        Order order = helper.findBuyOrder(orderId);
 
         assertThat(order, notNullValue());
         assertThat(order, equalTo(buyOrder));
@@ -190,17 +189,15 @@ public class OrderExecutorHelperTest {
         when(orderBook.getOrderBookId()).thenReturn(orderBookId);
         when(orderBook.getCurrencyPair()).thenReturn(new CurrencyPair(Currencies.BTC, Currencies.AUD));
 
-        BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
-        BuyOrder buyOrder = createBuyOrders(highestBuyPrice.minus(BigDecimal.valueOf(0.01))).get(0);
-        when(buyOrderRepository.findHighestPricePendingOrder(eq(orderBookId))).thenReturn(buyOrder);
+        OrderRepository orderRepository = mock(OrderRepository.class);
+        Order buyOrder = createBuyOrders(highestBuyPrice.minus(BigDecimal.valueOf(0.01))).get(0);
+        when(orderRepository.findHighestPricePendingBuyOrder(eq(orderBookId))).thenReturn(buyOrder);
 
-        SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
-        SellOrder sellOrder = createSellOrders(lowestSellPrice.plus(BigDecimal.valueOf(7.01))).get(0);
-        when(sellOrderRepository.findLowestPricePendingOrder(eq(orderBookId))).thenReturn(sellOrder);
+        Order sellOrder = createSellOrders(lowestSellPrice.plus(BigDecimal.valueOf(7.01))).get(0);
+        when(orderRepository.findLowestPricePendingSellOrder(eq(orderBookId))).thenReturn(sellOrder);
 
         OrderExecutorHelper helper = new OrderExecutorHelper();
-        helper.setSellOrderRepository(sellOrderRepository);
-        helper.setBuyOrderRepository(buyOrderRepository);
+        helper.setOrderRepository(orderRepository);
 
         helper.refresh(orderBook);
 
@@ -208,8 +205,8 @@ public class OrderExecutorHelperTest {
         verify(orderBook).resetLowestSellPrice(sellOrder.getPrimaryKey(), sellOrder.getItemPrice());
         verify(orderBook, atLeast(1)).getCurrencyPair();
 
-        verify(sellOrderRepository).findLowestPricePendingOrder(eq(orderBookId));
-        verify(buyOrderRepository).findHighestPricePendingOrder(eq(orderBookId));
+        verify(orderRepository).findLowestPricePendingSellOrder(eq(orderBookId));
+        verify(orderRepository).findHighestPricePendingBuyOrder(eq(orderBookId));
     }
 
     @Test
@@ -223,12 +220,10 @@ public class OrderExecutorHelperTest {
         when(orderBook.getOrderBookId()).thenReturn(orderBookId);
         when(orderBook.getCurrencyPair()).thenReturn(new CurrencyPair(Currencies.BTC, Currencies.AUD));
 
-        BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
-        SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
+        OrderRepository orderRepository = mock(OrderRepository.class);
 
         OrderExecutorHelper helper = new OrderExecutorHelper();
-        helper.setSellOrderRepository(sellOrderRepository);
-        helper.setBuyOrderRepository(buyOrderRepository);
+        helper.setOrderRepository(orderRepository);
 
         helper.refresh(orderBook);
 
@@ -236,8 +231,8 @@ public class OrderExecutorHelperTest {
         verify(orderBook).resetHighestBuyPrice(isNull(String.class), eq(highestBuyPrice));
         verify(orderBook, atLeast(1)).getCurrencyPair();
 
-        verify(sellOrderRepository).findLowestPricePendingOrder(eq(orderBookId));
-        verify(buyOrderRepository).findHighestPricePendingOrder(eq(orderBookId));
+        verify(orderRepository).findLowestPricePendingSellOrder(eq(orderBookId));
+        verify(orderRepository).findHighestPricePendingBuyOrder(eq(orderBookId));
     }
 
     @Test
@@ -247,21 +242,21 @@ public class OrderExecutorHelperTest {
         BigMoney sellCommission = BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.valueOf(10.009));
         BigMoney buyCommission = BigMoney.of(CurrencyUnit.of("CNY"), BigDecimal.valueOf(1.009));
 
-        BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
-        BuyOrder buyOrder = new BuyOrder();
+        OrderRepository orderRepository = mock(OrderRepository.class);
+        Order buyOrder = new Order(OrderType.BUY);
         buyOrder.setItemRemaining(tradeAmount);
         buyOrder.setLeftCommission(buyCommission);
-        when(buyOrderRepository.save(eq(buyOrder))).thenReturn(buyOrder);
+        buyOrder.setPrimaryKey("buyOrder");
+        when(orderRepository.save(eq(buyOrder))).thenReturn(buyOrder);
 
-        SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
-        SellOrder sellOrder = new SellOrder();
+        Order sellOrder = new Order(OrderType.SELL);
         sellOrder.setItemRemaining(tradeAmount.plus(10));
         sellOrder.setLeftCommission(sellCommission);
-        when(sellOrderRepository.save(eq(sellOrder))).thenReturn(sellOrder);
+        sellOrder.setPrimaryKey("sellOrder");
+        when(orderRepository.save(eq(sellOrder))).thenReturn(sellOrder);
 
         OrderExecutorHelper helper = new OrderExecutorHelper();
-        helper.setBuyOrderRepository(buyOrderRepository);
-        helper.setSellOrderRepository(sellOrderRepository);
+        helper.setOrderRepository(orderRepository);
 
         //executing
         helper.recordTraded(buyOrder, sellOrder, buyCommission, sellCommission, tradeAmount, price, new Date());
@@ -276,15 +271,15 @@ public class OrderExecutorHelperTest {
         assertThat(sellOrder.getLeftCommission().getAmount(), is(closeTo(BigDecimal.valueOf(0), BigDecimal.valueOf(0.00000000001d))));
         assertThat(buyOrder.getLeftCommission().getAmount(), is(closeTo(BigDecimal.valueOf(0), BigDecimal.valueOf(0.00000000001d))));
 
-        verify(buyOrderRepository).save(eq(buyOrder));
-        verify(sellOrderRepository).save(eq(sellOrder));
+        verify(orderRepository).save(eq(buyOrder));
+        verify(orderRepository).save(eq(sellOrder));
     }
 
     @Test
     public void testCalcExecutedBuyCommission() throws Exception {
         final BigMoney price = BigMoney.of(CurrencyUnit.of(Currencies.CNY), 100);
         final BigMoney amount = BigMoney.of(CurrencyUnit.of(Currencies.CNY), 10);
-        final BuyOrder buyOrder = new BuyOrder();
+        final Order buyOrder = new Order(OrderType.BUY);
 
         final CommissionPolicyFactory factory = mock(CommissionPolicyFactory.class);
         final CommissionPolicy policy = mock(CommissionPolicy.class);
@@ -314,7 +309,7 @@ public class OrderExecutorHelperTest {
     public void testCalcExecutedSellCommission() throws Exception {
         final BigMoney price = BigMoney.of(CurrencyUnit.of(Currencies.CNY), 100);
         final BigMoney amount = BigMoney.of(CurrencyUnit.of(Currencies.CNY), 10);
-        final SellOrder sellOrder = new SellOrder();
+        final Order sellOrder = new Order(OrderType.BUY);
 
         final CommissionPolicyFactory factory = mock(CommissionPolicyFactory.class);
         final CommissionPolicy policy = mock(CommissionPolicy.class);

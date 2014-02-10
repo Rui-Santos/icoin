@@ -1,5 +1,6 @@
 package com.icoin.trading.tradeengine.domain.events.order;
 
+import com.homhon.base.domain.event.EventSupport;
 import com.homhon.base.domain.model.ValueObjectSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
@@ -16,7 +17,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class RefreshedBuyOrdersToOrderBookEvent
-        extends ValueObjectSupport<RefreshedBuyOrdersToOrderBookEvent> {
+        extends EventSupport<RefreshedBuyOrdersToOrderBookEvent> {
     private OrderBookId orderBookId;
     private CurrencyPair currencyPair;
     private CoinId coinId;

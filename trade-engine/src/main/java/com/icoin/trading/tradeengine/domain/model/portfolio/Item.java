@@ -44,7 +44,7 @@ public class Item extends ValueObjectSupport<Item>{
     }
 
     public BigMoney getAvailableAmount() {
-        return totalAmount.minus(reservedAmount).toMoney(RoundingMode.HALF_EVEN).toBigMoney();
+        return totalAmount.toMoney(RoundingMode.HALF_EVEN).toBigMoney();
     }
 
     public void setReservedAmount(BigMoney reservedAmount) {

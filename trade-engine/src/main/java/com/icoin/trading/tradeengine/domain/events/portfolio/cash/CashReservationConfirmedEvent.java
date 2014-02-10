@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.portfolio.cash;
 
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
@@ -24,7 +25,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public class CashReservationConfirmedEvent {
+public class CashReservationConfirmedEvent extends EventSupport<CashReservationConfirmedEvent> {
     private TransactionId transactionIdentifier;
     private PortfolioId portfolioIdentifier;
     private BigMoney amountOfMoney;

@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.trade;
 
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.TradeType;
@@ -35,7 +36,7 @@ import java.util.Date;
  *
  * @author Allard Buijze
  */
-public class TradeExecutedEvent implements Serializable {
+public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent>{
     private static final long serialVersionUID = 6292249351659536792L;
 
     private final BigMoney tradeAmount;

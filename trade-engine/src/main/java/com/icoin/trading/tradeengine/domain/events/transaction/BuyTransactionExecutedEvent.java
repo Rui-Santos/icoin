@@ -24,7 +24,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public class BuyTransactionExecutedEvent extends AbstractTransactionExecutedEvent {
+public class BuyTransactionExecutedEvent extends AbstractTransactionExecutedEvent<BuyTransactionExecutedEvent> {
 
     public BuyTransactionExecutedEvent(TransactionId transactionIdentifier,
                                        CoinId coinId,

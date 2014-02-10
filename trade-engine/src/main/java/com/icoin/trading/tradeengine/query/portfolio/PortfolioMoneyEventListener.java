@@ -46,8 +46,10 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(PortfolioCreatedEvent event) {
-        logger.debug("About to handle the PortfolioCreatedEvent for user with primaryKey {}",
-                event.getUserId().toString());
+        if (logger.isDebugEnabled()) {
+            logger.debug("About to handle the PortfolioCreatedEvent for user with primaryKey {}, portfolio id {}",
+                    event.getUserId(), event.getPortfolioId());
+        }
 
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         portfolioEntry.setIdentifier(event.getPortfolioId().toString());
@@ -63,6 +65,10 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(CashDepositedEvent event) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Handle CashDepositedEvent {} to add money {} ",
+                    event.getPortfolioIdentifier(), event.getMoneyAdded());
+        }
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().plus(event.getMoneyAdded()));
         portfolioRepository.save(portfolioEntry);
@@ -70,6 +76,10 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(CashWithdrawnEvent event) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Handle CashWithdrawnEvent {} to withdraw money {} ",
+                    event.getPortfolioIdentifier(), event.getAmountPaid());
+        }
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().minus(event.getAmountPaid()));
         portfolioRepository.save(portfolioEntry);
@@ -77,6 +87,11 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(CashReservedEvent event) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Handle CashReservedEvent {} to withdraw money {} '+' commission {}",
+                    event.getPortfolioIdentifier(), event.getTotalMoney(), event.getTotalCommission());
+        }
+
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         final BigMoney total = event.getTotalMoney().plus(event.getTotalCommission());
         portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney().plus(total));
@@ -85,6 +100,10 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(CashReservationCancelledEvent event) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Handle CashReservationCancelledEvent {} with left money {} '+' left commission {}",
+                    event.getPortfolioIdentifier(), event.getLeftTotalMoney(), event.getLeftCommission());
+        }
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         final BigMoney totalLeft = event.getLeftTotalMoney().plus(event.getLeftCommission());
         portfolioEntry.setReservedAmountOfMoney(
@@ -96,6 +115,10 @@ public class PortfolioMoneyEventListener {
 
     @EventHandler
     public void handleEvent(CashReservationConfirmedEvent event) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Handle CashReservationConfirmedEvent {} with money {} '+'  commission {}",
+                    event.getPortfolioIdentifier(), event.getAmountOfMoney(), event.getCommission());
+        }
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
         BigMoney reservedAmountOfMoney = portfolioEntry.getReservedAmountOfMoney();
         BigMoney amountOfMoneyConfirmed = event.getAmountOfMoney().plus(event.getCommission());

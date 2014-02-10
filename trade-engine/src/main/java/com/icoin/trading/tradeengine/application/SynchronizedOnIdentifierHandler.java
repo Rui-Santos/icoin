@@ -13,18 +13,23 @@ import static com.homhon.util.Asserts.notNull;
  */
 public class SynchronizedOnIdentifierHandler {
     private final IdentifierBasedLock lock = new IdentifierBasedLock();
+    private boolean obtainLock;
 
     public <V> V perform(Callback<V> callback) {
         notNull(callback);
         notNull(callback.getIdentifier());
 
-        lock.obtainLock(callback.getIdentifier());
+        if(obtainLock){
+            lock.obtainLock(callback.getIdentifier());
+        }
         try {
             return callback.execute();
         } catch (Exception e) {
             throw new InvocationException("Invoke on " + callback.getIdentifier() + " error", e);
         } finally {
-            lock.releaseLock(callback.getIdentifier());
+            if(obtainLock){
+                lock.releaseLock(callback.getIdentifier());
+            }
         }
     }
 }

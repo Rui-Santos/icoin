@@ -10,8 +10,8 @@ import com.homhon.base.domain.ValueObject;
  * To change this template use File | Settings | File Templates.
  */
 public enum TradeType implements ValueObject<TradeType> {
-    Buy,
-    Sell;
+    BUY,
+    SELL;
 
     @Override
     public boolean sameValueAs(TradeType tradeType) {
@@ -27,9 +27,9 @@ public enum TradeType implements ValueObject<TradeType> {
     public static TradeType convert(com.icoin.trading.tradeengine.domain.model.order.TradeType tradeType) {
         switch (tradeType) {
             case BUY:
-                return Buy;
+                return BUY;
             case SELL:
-                return Sell;
+                return SELL;
             default:
                 throw new IllegalArgumentException("Cannot transfer trade type" + tradeType);
         }

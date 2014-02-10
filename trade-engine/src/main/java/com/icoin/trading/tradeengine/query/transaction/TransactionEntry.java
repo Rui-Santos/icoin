@@ -20,6 +20,8 @@ import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySuppor
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -36,6 +38,7 @@ public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, 
     private BigMoney executedMoney;
     private BigMoney commission;
     private TransactionType type;
+    private Date created;
 
     public TransactionEntry addCommission(BigMoney commission) {
         if (this.commission == null) {
@@ -153,5 +156,13 @@ public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, 
 
     public void setType(TransactionType type) {
         this.type = type;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }

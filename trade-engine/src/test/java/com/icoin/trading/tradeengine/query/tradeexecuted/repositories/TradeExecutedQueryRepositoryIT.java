@@ -47,98 +47,98 @@ public class TradeExecutedQueryRepositoryIT {
                         date.minusYears(1).minusDays(12).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry year2 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusYears(2).minusDays(30).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry year3 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusYears(2).minusDays(20).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry month1 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusMonths(3).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry month2 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusMonths(5).minusDays(3).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry month3 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusMonths(5).minusDays(1).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry day1 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusDays(1).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry day2 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusDays(1).minusHours(2).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry day3 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusDays(2).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry day4 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusDays(2).minusHours(3).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry hour1 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusHours(1).minusMinutes(1).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry hour2 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusHours(1).minusMinutes(2).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry hour3 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusHours(2).minusMinutes(2).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         final TradeExecutedEntry hour4 =
                 createTradeExecutedEntry(orderBookIdentifier,
                         date.minusHours(2).minusMinutes(4).toDate(),
                         BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10.5),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.5),
-                        TradeType.Buy);
+                        TradeType.BUY);
 
         repository.save(Arrays.asList(year1, year2, year3, month1, month2, month3,
                 day1, day2, day3, day4, hour1, hour2, hour3, hour4));

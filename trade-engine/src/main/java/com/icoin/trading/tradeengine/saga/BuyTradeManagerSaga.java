@@ -84,7 +84,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 getTransactionIdentifier(),
                 event.getTotalMoney(),
                 event.getTotalCommission());
-        getCommandBus().dispatch(new GenericCommandMessage<ReserveCashCommand>(command));
+        getCommandGateway().send(command);
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -92,7 +92,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         final Date confirmDate = new Date();
         logger.debug("Money for transaction with identifier {} is reserved, confirm date {}", getTransactionIdentifier(), confirmDate);
         ConfirmTransactionCommand command = new ConfirmTransactionCommand(getTransactionIdentifier(), confirmDate);
-        getCommandBus().dispatch(new GenericCommandMessage<ConfirmTransactionCommand>(command),
+        getCommandGateway().send(command,
                 new CommandCallback<Object>() {
                     @Override
                     public void onSuccess(Object result) {
@@ -132,7 +132,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 getPricePerItem(),
                 getTotalCommission(),
                 event.getConfirmedDate());
-        getCommandBus().dispatch(new GenericCommandMessage<CreateBuyOrderCommand>(command));
+        getCommandGateway().send(command);
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -143,7 +143,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 leftTotalMoney,
                 getLeftCommission());
         logger.info("transaction {} is to cancel, left money {} , left commission {}.", getTransactionIdentifier(), leftTotalMoney, getLeftCommission());
-        getCommandBus().dispatch(new GenericCommandMessage<CancelCashReservationCommand>(command));
+        getCommandGateway().send(command);
         logger.info("transaction {} was cancelled, left money {} , left commission {}.", getTransactionIdentifier(), leftTotalMoney, getLeftCommission());
     }
 
@@ -159,7 +159,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                         event.getTradedPrice(),
                         event.getExecutedMoney(),
                         event.getBuyCommission());
-        getCommandBus().dispatch(new GenericCommandMessage<ExecutedTransactionCommand>(command));
+        getCommandGateway().send(command);
     }
 
     @SagaEventHandler(associationProperty = "transactionIdentifier")
@@ -176,12 +176,13 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                         getTransactionIdentifier(),
                         event.getExecutedMoney(),
                         commission);
-        getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
+        getCommandGateway().sendAndWait(confirmCommand);
+
         AddAmountToPortfolioCommand addItemsCommand =
                 new AddAmountToPortfolioCommand(getPortfolioIdentifier(),
                         getCoinId(),
                         event.getAmountOfItem());
-        getCommandBus().dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(addItemsCommand));
+        getCommandGateway().sendAndWait(addItemsCommand);
 
         //calc left commission and left reserved
 
@@ -194,7 +195,7 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                             getOrderBookIdentifier(),
                             leftTotalMoney,
                             getLeftCommission());
-            getCommandBus().dispatch(new GenericCommandMessage<ClearReservedCashCommand>(clearReservedCashCommand));
+            getCommandGateway().send(clearReservedCashCommand);
         }
     }
 
@@ -213,12 +214,13 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                         getTransactionIdentifier(),
                         event.getExecutedMoney(),
                         commission);
-        getCommandBus().dispatch(new GenericCommandMessage<ConfirmCashReservationCommand>(confirmCommand));
+        getCommandGateway().sendAndWait(confirmCommand);
+
         AddAmountToPortfolioCommand addItemsCommand =
                 new AddAmountToPortfolioCommand(getPortfolioIdentifier(),
                         getCoinId(),
                         event.getAmountOfExecutedItem());
-        getCommandBus().dispatch(new GenericCommandMessage<AddAmountToPortfolioCommand>(addItemsCommand));
+        getCommandGateway().send(addItemsCommand);
     }
 
     private void adjustAmount(BigMoney executedMoney) {

@@ -16,6 +16,7 @@
 
 package com.icoin.trading.users.domain.event;
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
 
@@ -24,7 +25,7 @@ import com.icoin.trading.users.domain.model.user.UserId;
  *
  * @author Jettro Coenradie
  */
-public class UserCreatedEvent {
+public class UserCreatedEvent extends EventSupport<UserCreatedEvent> {
     private UserId userId;
     private String username;
     private String firstName;

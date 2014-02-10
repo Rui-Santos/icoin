@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.domain.events.order;
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
@@ -30,7 +31,7 @@ import java.util.Date;
  *
  * @author Allard Buijze
  */
-public abstract class AbstractOrderPlacedEvent {
+public abstract class AbstractOrderPlacedEvent<T extends AbstractOrderPlacedEvent> extends EventSupport<T> {
 
     private final OrderBookId orderBookId;
     private final OrderId orderId;

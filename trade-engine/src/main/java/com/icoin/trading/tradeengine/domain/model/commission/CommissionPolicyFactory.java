@@ -17,6 +17,7 @@ package com.icoin.trading.tradeengine.domain.model.commission;
 
 
 import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 
 /**
  * Sample Policy
@@ -31,5 +32,5 @@ public interface CommissionPolicyFactory {
      * @param order
      * @return
      */
-    public CommissionPolicy createCommissionPolicy(AbstractOrder order);
+    public CommissionPolicy createCommissionPolicy(Order order);
 }

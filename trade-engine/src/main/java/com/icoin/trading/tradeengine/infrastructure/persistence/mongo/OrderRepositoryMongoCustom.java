@@ -16,10 +16,10 @@ import java.util.List;
  */
 public interface OrderRepositoryMongoCustom {
     //when the price&time are equal, should put biggest amount first 
-    List<Order> findAscPendingSellOrdersByPriceTime(Date toTime,
-                                                    BigMoney price,
-                                                    OrderBookId orderBookId,
-                                                    int size);
+    List<Order> findPendingSellOrdersByPriceTime(Date toTime,
+                                                 BigMoney price,
+                                                 OrderBookId orderBookId,
+                                                 int size);
 
     List<Order> findPlacedPendingOrdersAfter(Date toTime,
                                              OrderBookId orderBookId,
@@ -30,10 +30,10 @@ public interface OrderRepositoryMongoCustom {
     Order findLowestPricePendingSellOrder(OrderBookId orderBookId);
 
 
-    List<Order> findDescPendingBuyOrdersByPriceTime(Date toTime,
-                                                    BigMoney price,
-                                                    OrderBookId orderBookId,
-                                                    int size);
+    List<Order> findPendingBuyOrdersByPriceTime(Date toTime,
+                                                BigMoney price,
+                                                OrderBookId orderBookId,
+                                                int size);
 
     Order findHighestPricePendingBuyOrder(OrderBookId orderBookId);
 } 

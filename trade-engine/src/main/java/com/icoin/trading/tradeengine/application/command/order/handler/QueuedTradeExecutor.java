@@ -51,6 +51,7 @@ public class QueuedTradeExecutor implements TradeExecutor {
 //        this.orderBookPool = ImmutableMap.copyOf(orderBookPool);
 //    }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public QueuedTradeExecutor(OrderBookQueryRepository orderBookRepository,
                                CommandGateway commandGateway,
@@ -71,7 +72,7 @@ public class QueuedTradeExecutor implements TradeExecutor {
         logger.info("Shutting down thread executor pool.");
         stop();
         logger.info("Stopped thread executor pool first.");
-        if(executor !=null){
+        if (executor != null) {
             executor.shutdown();
             logger.info("Shut down thread executor pool already.");
         }
@@ -126,6 +127,11 @@ public class QueuedTradeExecutor implements TradeExecutor {
                     execute(order);
                 }
 
+                orderBook = orderBookRepository.findOne(orderBookId.toString());
+                lastTradedTime = orderBook.getLastTradedTime();
+                if (lastTradedTime == null) {
+                    break;
+                }
                 orders = orderRepository.findPlacedPendingOrdersAfter(lastTradedTime, orderBookId, 100);
             }
         }
@@ -184,7 +190,7 @@ public class QueuedTradeExecutor implements TradeExecutor {
         }
 
         void consume(Order order) {
-            logger.info("Excuting order {}:{}", order.getOrderType(), order);
+            logger.info("Executing order {}:{}", order.getOrderType(), order);
             switch (order.getOrderType()) {
                 case BUY:
                     final ExecuteBuyOrderCommand executeBuyOrderCommand =

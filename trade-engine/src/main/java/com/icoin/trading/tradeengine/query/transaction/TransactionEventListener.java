@@ -40,6 +40,8 @@ import org.springframework.stereotype.Component;
 
 import java.math.RoundingMode;
 
+import static com.homhon.util.TimeUtils.currentTime;
+
 /**
  * @author Jettro Coenradie
  */
@@ -139,6 +141,7 @@ public class TransactionEventListener {
         entry.setPortfolioIdentifier(event.getPortfolioIdentifier().toString());
         entry.setState(TransactionState.STARTED);
         entry.setType(type);
+        entry.setCreated(currentTime());
 //        entry.setCoinName(orderBookEntry.getCoinName());
 
         transactionQueryRepository.save(entry);

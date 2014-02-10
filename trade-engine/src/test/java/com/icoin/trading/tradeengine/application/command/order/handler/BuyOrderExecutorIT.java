@@ -12,15 +12,13 @@ import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.commission.Commission;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
-import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
+import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrderRepository;
+import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import com.icoin.trading.tradeengine.domain.model.order.TradeType;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -71,11 +69,10 @@ public class BuyOrderExecutorIT {
     private LocalDate placeDate = LocalDate.now();
     private PortfolioId portfolioId = new PortfolioId();
     private TransactionId transactionId = new TransactionId();
-    private BuyOrder buyOrder;
+    private Order buyOrder;
 
     private FixtureConfiguration fixture;
-    private SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
-    private BuyOrderRepository buyOrderRepository = mock(BuyOrderRepository.class);
+    private OrderRepository orderRepository = mock(OrderRepository.class);
     private CommissionPolicyFactory commissionPolicyFactory = mock(CommissionPolicyFactory.class);
     private OrderExecutorHelper helper = new OrderExecutorHelper();
     private BuyOrderExecutor commandHandler;
@@ -88,19 +85,17 @@ public class BuyOrderExecutorIT {
         commandHandler.setOrderBookRepository(fixture.getRepository());
 
         OrderExecutorHelper orderExecutorHelper = new OrderExecutorHelper();
-        orderExecutorHelper.setBuyOrderRepository(buyOrderRepository);
-        orderExecutorHelper.setSellOrderRepository(sellOrderRepository);
+        orderExecutorHelper.setOrderRepository(orderRepository);
         commandHandler.setOrderExecutorHelper(orderExecutorHelper);
 
-        buyOrder = new BuyOrder();
+        buyOrder = new Order(OrderType.BUY);
         buyOrder.setOrderBookId(orderBookId);
         buyOrder.setTransactionId(transactionId);
         buyOrder.setPrimaryKey(orderId.toString());
         buyOrder.setPortfolioId(portfolioId);
         buyOrder.setPlaceDate(placeDate.toDate());
 
-        helper.setBuyOrderRepository(buyOrderRepository);
-        helper.setSellOrderRepository(sellOrderRepository);
+        helper.setOrderRepository(orderRepository);
         helper.setCommissionPolicyFactory(commissionPolicyFactory);
 
         commandHandler.setOrderExecutorHelper(helper);
@@ -176,7 +171,7 @@ public class BuyOrderExecutorIT {
         BigMoney buyPrice = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.04));
         buyOrder.setItemPrice(buyPrice);
 
-        when(sellOrderRepository.findAscPendingOrdersByPriceTime(
+        when(orderRepository.findPendingSellOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(buyPrice),
                 eq(orderBookId),
@@ -223,11 +218,11 @@ public class BuyOrderExecutorIT {
 
     }
 
-    private List<SellOrder> createSellOrders(BigMoney... prices) {
-        ArrayList<SellOrder> list = Lists.newArrayList();
+    private List<Order> createSellOrders(BigMoney... prices) {
+        ArrayList<Order> list = Lists.newArrayList();
 
         for (int i = 0; i < prices.length; i++) {
-            SellOrder sellOrder = new SellOrder();
+            Order sellOrder = new Order(OrderType.SELL);
             sellOrder.setPrimaryKey(new OrderId().toString());
             sellOrder.setItemPrice(prices[i]);
             list.add(sellOrder);
@@ -242,18 +237,18 @@ public class BuyOrderExecutorIT {
         buyOrder.setItemPrice(buyPrice);
         buyOrder.setItemRemaining(itemRemaining);
         buyOrder.setLeftCommission(BigMoney.of(lowestSellPrice.getCurrencyUnit(), 16));
-        when(buyOrderRepository.findOne(eq(orderId.toString()))).thenReturn(buyOrder);
+        when(orderRepository.findOne(eq(orderId.toString()))).thenReturn(buyOrder);
 
 
         BigMoney highestBuyPrice = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.23)).minus(1);
-        BuyOrder highestBuy = new BuyOrder();
+        Order highestBuy = new Order(OrderType.BUY);
         highestBuy.setItemPrice(highestBuyPrice);
         highestBuy.setPrimaryKey(new OrderId().toString());
-        when(buyOrderRepository.findHighestPricePendingOrder(eq(orderBookId))).thenReturn(highestBuy);
+        when(orderRepository.findHighestPricePendingBuyOrder(eq(orderBookId))).thenReturn(highestBuy);
 
-        SellOrder sellOrder1 = createSellOrder(highestBuyPrice, itemRemaining.minus(BigDecimal.TEN), BigMoney.of(tradeAmount.getCurrencyUnit(), 1.85));
-        SellOrder sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)), BigMoney.of(tradeAmount.getCurrencyUnit(), 12.5));
-        when(sellOrderRepository.findAscPendingOrdersByPriceTime(
+        Order sellOrder1 = createSellOrder(highestBuyPrice, itemRemaining.minus(BigDecimal.TEN), BigMoney.of(tradeAmount.getCurrencyUnit(), 1.85));
+        Order sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)), BigMoney.of(tradeAmount.getCurrencyUnit(), 12.5));
+        when(orderRepository.findPendingSellOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(buyPrice),
                 eq(orderBookId),
@@ -261,10 +256,10 @@ public class BuyOrderExecutorIT {
         )).thenReturn(Arrays.asList(sellOrder1, sellOrder2));
 
         BigMoney lowestSellPrice = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.23));
-        SellOrder lowestSell = new SellOrder();
+        Order lowestSell = new Order(OrderType.SELL);
         lowestSell.setItemPrice(lowestSellPrice);
         lowestSell.setPrimaryKey(new OrderId().toString());
-        when(sellOrderRepository.findLowestPricePendingOrder(eq(orderBookId))).thenReturn(lowestSell);
+        when(orderRepository.findLowestPricePendingSellOrder(eq(orderBookId))).thenReturn(lowestSell);
 
         Commission buyCommission1 = new Commission(BigMoney.of(buyPrice.getCurrencyUnit(), 12.89), "buyCommission1");
         Commission sellCommission1 = new Commission(BigMoney.of(itemRemaining.getCurrencyUnit(), 1.85), "sellCommission1");
@@ -272,7 +267,7 @@ public class BuyOrderExecutorIT {
         Commission sellCommission2 = new Commission(BigMoney.of(itemRemaining.getCurrencyUnit(), 1.5), "sellCommission2");
 
         CommissionPolicy policy = mock(CommissionPolicy.class);
-        when(commissionPolicyFactory.createCommissionPolicy(any(AbstractOrder.class))).thenReturn(policy);
+        when(commissionPolicyFactory.createCommissionPolicy(any(Order.class))).thenReturn(policy);
         when(policy.calculateBuyCommission(eq(buyOrder), eq(itemRemaining.minus(BigDecimal.TEN)), eq(highestBuyPrice)))
                 .thenReturn(buyCommission1);
         when(policy.calculateBuyCommission(eq(buyOrder), eq(BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.TEN)), eq(buyPrice)))
@@ -363,18 +358,19 @@ public class BuyOrderExecutorIT {
         assertThat(sellOrder2.getLeftCommission().isEqual(BigMoney.of(itemRemaining.getCurrencyUnit(), 11)), is(true));
 
         //verify
-        verify(sellOrderRepository).findAscPendingOrdersByPriceTime(eq(placeDate.toDate()),
+        verify(orderRepository).findPendingSellOrdersByPriceTime(eq(placeDate.toDate()),
                 eq(buyPrice),
                 eq(orderBookId),
                 eq(100));
 
-        verify(buyOrderRepository, times(2)).save(eq(buyOrder));
-        verify(sellOrderRepository, times(2)).save(any(SellOrder.class));
+        verify(orderRepository, times(2)).save(eq(buyOrder));
+        verify(orderRepository).save(eq(sellOrder1));
+        verify(orderRepository).save(eq(sellOrder2));
 
-        verify(sellOrderRepository).findLowestPricePendingOrder(eq(orderBookId));
-        verify(buyOrderRepository).findHighestPricePendingOrder(eq(orderBookId));
+        verify(orderRepository).findLowestPricePendingSellOrder(eq(orderBookId));
+        verify(orderRepository).findHighestPricePendingBuyOrder(eq(orderBookId));
 
-        verify(commissionPolicyFactory, times(4)).createCommissionPolicy(any(AbstractOrder.class));
+        verify(commissionPolicyFactory, times(4)).createCommissionPolicy(any(Order.class));
         verify(policy).calculateBuyCommission(eq(buyOrder), eq(itemRemaining.minus(BigDecimal.TEN)), eq(highestBuyPrice));
         verify(policy).calculateBuyCommission(eq(buyOrder), eq(BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.TEN)), eq(buyPrice));
         verify(policy).calculateSellCommission(eq(sellOrder1), eq(itemRemaining.minus(BigDecimal.TEN)), eq(highestBuyPrice));
@@ -388,17 +384,17 @@ public class BuyOrderExecutorIT {
         buyOrder.setItemPrice(buyPrice);
         buyOrder.setItemRemaining(itemRemaining);
         buyOrder.setLeftCommission(BigMoney.of(lowestSellPrice.getCurrencyUnit(), 10.25));
-        when(buyOrderRepository.findOne(eq(orderId.toString()))).thenReturn(buyOrder);
+        when(orderRepository.findOne(eq(orderId.toString()))).thenReturn(buyOrder);
 
         BigMoney highestBuyPrice = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.23)).minus(1);
-        BuyOrder highestBuy = new BuyOrder();
+        Order highestBuy = new Order(OrderType.BUY);
         highestBuy.setItemPrice(highestBuyPrice);
         highestBuy.setPrimaryKey(new OrderId().toString());
-        when(buyOrderRepository.findHighestPricePendingOrder(eq(orderBookId))).thenReturn(highestBuy);
+        when(orderRepository.findHighestPricePendingBuyOrder(eq(orderBookId))).thenReturn(highestBuy);
 
-        SellOrder sellOrder1 = createSellOrder(highestBuyPrice, itemRemaining, BigMoney.of(tradeAmount.getCurrencyUnit(), 1.98));
-        SellOrder sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)), BigMoney.of(tradeAmount.getCurrencyUnit(), 12.5));
-        when(sellOrderRepository.findAscPendingOrdersByPriceTime(
+        Order sellOrder1 = createSellOrder(highestBuyPrice, itemRemaining, BigMoney.of(tradeAmount.getCurrencyUnit(), 1.98));
+        Order sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)), BigMoney.of(tradeAmount.getCurrencyUnit(), 12.5));
+        when(orderRepository.findPendingSellOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(buyPrice),
                 eq(orderBookId),
@@ -406,16 +402,16 @@ public class BuyOrderExecutorIT {
         )).thenReturn(Arrays.asList(sellOrder1, sellOrder2));
 
         BigMoney lowestSellPrice = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.23));
-        SellOrder lowestSell = new SellOrder();
+        Order lowestSell = new Order(OrderType.SELL);
         lowestSell.setItemPrice(lowestSellPrice);
         lowestSell.setPrimaryKey(new OrderId().toString());
-        when(sellOrderRepository.findLowestPricePendingOrder(eq(orderBookId))).thenReturn(lowestSell);
+        when(orderRepository.findLowestPricePendingSellOrder(eq(orderBookId))).thenReturn(lowestSell);
 
         Commission buyCommission = new Commission(BigMoney.of(buyPrice.getCurrencyUnit(), 1), "buyCommission");
         Commission sellCommission = new Commission(BigMoney.of(itemRemaining.getCurrencyUnit(), 1.98), "sellCommission");
 
         CommissionPolicy policy = mock(CommissionPolicy.class);
-        when(commissionPolicyFactory.createCommissionPolicy(any(AbstractOrder.class))).thenReturn(policy);
+        when(commissionPolicyFactory.createCommissionPolicy(any(Order.class))).thenReturn(policy);
         when(policy.calculateBuyCommission(eq(buyOrder), eq(itemRemaining), eq(highestBuyPrice)))
                 .thenReturn(buyCommission);
         when(policy.calculateSellCommission(eq(sellOrder1), eq(itemRemaining), eq(highestBuyPrice)))
@@ -483,18 +479,18 @@ public class BuyOrderExecutorIT {
         assertThat(sellOrder1.getLeftCommission().isEqual(BigMoney.zero(CurrencyUnit.of("BTC"))), is(true));
 
         //verify
-        verify(sellOrderRepository).findAscPendingOrdersByPriceTime(eq(placeDate.toDate()),
+        verify(orderRepository).findPendingSellOrdersByPriceTime(eq(placeDate.toDate()),
                 eq(buyPrice),
                 eq(orderBookId),
                 eq(100));
 
-        verify(buyOrderRepository).save(eq(buyOrder));
-        verify(sellOrderRepository).save(any(SellOrder.class));
+        verify(orderRepository).save(eq(buyOrder));
+        verify(orderRepository, times(2)).save(any(Order.class));
 
-        verify(sellOrderRepository).findLowestPricePendingOrder(eq(orderBookId));
-        verify(buyOrderRepository).findHighestPricePendingOrder(eq(orderBookId));
+        verify(orderRepository).findLowestPricePendingSellOrder(eq(orderBookId));
+        verify(orderRepository).findHighestPricePendingBuyOrder(eq(orderBookId));
 
-        verify(commissionPolicyFactory, times(2)).createCommissionPolicy(any(AbstractOrder.class));
+        verify(commissionPolicyFactory, times(2)).createCommissionPolicy(any(Order.class));
         verify(policy).calculateBuyCommission(eq(buyOrder), eq(itemRemaining), eq(highestBuyPrice));
         verify(policy).calculateSellCommission(eq(sellOrder1), eq(itemRemaining), eq(highestBuyPrice));
     }
@@ -506,11 +502,11 @@ public class BuyOrderExecutorIT {
         buyOrder.setItemPrice(buyPrice);
         buyOrder.setItemRemaining(itemRemaining);
         buyOrder.setLeftCommission(BigMoney.of(lowestSellPrice.getCurrencyUnit(), 1.23));
-        when(buyOrderRepository.findOne(eq(orderId.toString()))).thenReturn(buyOrder);
+        when(orderRepository.findOne(eq(orderId.toString()))).thenReturn(buyOrder);
 
-        SellOrder sellOrder1 = createSellOrder(buyPrice, itemRemaining.plus(1), BigMoney.of(tradeAmount.getCurrencyUnit(), 1.25));
-        SellOrder sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)), BigMoney.of(tradeAmount.getCurrencyUnit(), 1.25));
-        when(sellOrderRepository.findAscPendingOrdersByPriceTime(
+        Order sellOrder1 = createSellOrder(buyPrice, itemRemaining.plus(1), BigMoney.of(tradeAmount.getCurrencyUnit(), 1.25));
+        Order sellOrder2 = createSellOrder(buyPrice, itemRemaining.plus(BigDecimal.valueOf(100)), BigMoney.of(tradeAmount.getCurrencyUnit(), 1.25));
+        when(orderRepository.findPendingSellOrdersByPriceTime(
                 eq(placeDate.toDate()),
                 eq(buyPrice),
                 eq(orderBookId),
@@ -521,7 +517,7 @@ public class BuyOrderExecutorIT {
         Commission sellCommission = new Commission(BigMoney.of(itemRemaining.getCurrencyUnit(), 0.9898), "sellCommission");
 
         CommissionPolicy policy = mock(CommissionPolicy.class);
-        when(commissionPolicyFactory.createCommissionPolicy(any(AbstractOrder.class))).thenReturn(policy);
+        when(commissionPolicyFactory.createCommissionPolicy(any(Order.class))).thenReturn(policy);
         when(policy.calculateBuyCommission(eq(buyOrder), eq(itemRemaining), eq(lowestSellPrice)))
                 .thenReturn(buyCommission);
         when(policy.calculateSellCommission(eq(sellOrder1), eq(itemRemaining), eq(lowestSellPrice)))
@@ -588,15 +584,15 @@ public class BuyOrderExecutorIT {
         assertThat(sellOrder1.getLeftCommission().isEqual(BigMoney.of(CurrencyUnit.of("BTC"), 0.2602)), is(true));
 
         //verify
-        verify(sellOrderRepository).findAscPendingOrdersByPriceTime(eq(placeDate.toDate()),
+        verify(orderRepository).findPendingSellOrdersByPriceTime(eq(placeDate.toDate()),
                 eq(buyPrice),
                 eq(orderBookId),
                 eq(100));
 
-        verify(buyOrderRepository).save(eq(buyOrder));
-        verify(sellOrderRepository).save(any(SellOrder.class));
+        verify(orderRepository).save(eq(buyOrder));
+        verify(orderRepository, times(2)).save(any(Order.class));
 
-        verify(commissionPolicyFactory, times(2)).createCommissionPolicy(any(AbstractOrder.class));
+        verify(commissionPolicyFactory, times(2)).createCommissionPolicy(any(Order.class));
         verify(policy).calculateBuyCommission(eq(buyOrder), eq(itemRemaining), eq(lowestSellPrice));
         verify(policy).calculateSellCommission(eq(sellOrder1), eq(itemRemaining), eq(lowestSellPrice));
     }
@@ -611,8 +607,8 @@ public class BuyOrderExecutorIT {
                 RoundingMode.HALF_EVEN).toBigMoney();
     }
 
-    private SellOrder createSellOrder(BigMoney price, BigMoney itemRemaining) {
-        SellOrder sellOrder = new SellOrder();
+    private Order createSellOrder(BigMoney price, BigMoney itemRemaining) {
+        Order sellOrder = new Order(OrderType.SELL);
         sellOrder.setItemPrice(price);
         sellOrder.setItemRemaining(itemRemaining);
         sellOrder.setTransactionId(new TransactionId());
@@ -621,8 +617,8 @@ public class BuyOrderExecutorIT {
         return sellOrder;
     }
 
-    private SellOrder createSellOrder(BigMoney price, BigMoney itemRemaining, BigMoney commission) {
-        SellOrder sellOrder = new SellOrder();
+    private Order createSellOrder(BigMoney price, BigMoney itemRemaining, BigMoney commission) {
+        Order sellOrder = new Order(OrderType.SELL);
         sellOrder.setItemPrice(price);
         sellOrder.setItemRemaining(itemRemaining);
         sellOrder.setLeftCommission(commission);

@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.domain.events.portfolio.coin;
 
 
+import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -25,7 +26,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public class ItemReservationCancelledForPortfolioEvent {
+public class ItemReservationCancelledForPortfolioEvent extends EventSupport<ItemReservationCancelledForPortfolioEvent> {
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
     private TransactionId transactionIdentifier;

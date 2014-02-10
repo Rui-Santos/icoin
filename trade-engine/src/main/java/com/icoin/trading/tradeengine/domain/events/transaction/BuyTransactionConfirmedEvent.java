@@ -24,7 +24,7 @@ import java.util.Date;
 /**
  * @author Jettro Coenradie
  */
-public class BuyTransactionConfirmedEvent extends AbstractTransactionConfirmedEvent {
+public class BuyTransactionConfirmedEvent extends AbstractTransactionConfirmedEvent<BuyTransactionConfirmedEvent> {
 
     public BuyTransactionConfirmedEvent(TransactionId transactionIdentifier, Date confirmedDate) {
         super(transactionIdentifier, confirmedDate);

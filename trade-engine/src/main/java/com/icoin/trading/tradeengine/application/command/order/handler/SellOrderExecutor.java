@@ -2,6 +2,7 @@ package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.icoin.trading.tradeengine.application.command.order.ExecuteSellOrderCommand;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import org.axonframework.commandhandling.annotation.CommandHandler;
@@ -65,7 +66,7 @@ public class SellOrderExecutor {
 
         boolean done = true;
         do {
-            final List<BuyOrder> buyOrders =
+            final List<Order> buyOrders =
                     orderExecutorHelper.findDescPendingOrdersByPriceTime(
                             sellCommand.getPlaceDate(),
                             sellCommand.getItemPrice(),
@@ -80,14 +81,14 @@ public class SellOrderExecutor {
                 return;
             }
 
-            for (BuyOrder buyOrder : buyOrders) {
+            for (Order buyOrder : buyOrders) {
                 //should not happen here, coz the repo does not return the right result
                 if (buyOrder.getItemPrice().isLessThan(sellCommand.getItemPrice())) {
                     logger.warn("Strange here, why buy orders from repo have price less than current selling price!");
                     break;
                 }
 
-                final SellOrder sellOrder = orderExecutorHelper.findSellOrder(sellCommand.getOrderId());
+                final Order sellOrder = orderExecutorHelper.findSellOrder(sellCommand.getOrderId());
 
                 BigMoney matchedTradePrice = buyOrder.getItemPrice();
                 BigMoney matchedTradeAmount = min(buyOrder.getItemRemaining(), sellOrder.getItemRemaining());

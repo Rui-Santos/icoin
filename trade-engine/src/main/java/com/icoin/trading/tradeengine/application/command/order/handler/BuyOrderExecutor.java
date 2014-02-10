@@ -5,6 +5,7 @@ import com.icoin.trading.tradeengine.domain.model.commission.Commission;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import org.axonframework.commandhandling.annotation.CommandHandler;
@@ -63,7 +64,7 @@ public class BuyOrderExecutor {
 
         boolean done = true;
         do {
-            final List<SellOrder> sellOrders =
+            final List<Order> sellOrders =
                     orderExecutorHelper.findAscPendingOrdersByPriceTime(
                             buyCommand.getPlaceDate(),
                             buyCommand.getItemPrice(),
@@ -75,14 +76,14 @@ public class BuyOrderExecutor {
                 return;
             }
 
-            for (SellOrder sellOrder : sellOrders) {
+            for (Order sellOrder : sellOrders) {
                 //should not happen here, coz the repo does not return the right result
                 if (sellOrder.getItemPrice().compareTo(buyCommand.getItemPrice()) > 0) {
                     logger.warn("Strange here, why sell orders from repo have price greater than current buy price!");
                     break;
                 }
 
-                final BuyOrder buyOrder = orderExecutorHelper.findBuyOrder(buyCommand.getOrderId());
+                final Order buyOrder = orderExecutorHelper.findBuyOrder(buyCommand.getOrderId());
 
                 BigMoney matchedTradePrice = sellOrder.getItemPrice();
                 BigMoney matchedTradeAmount = min(sellOrder.getItemRemaining(), buyOrder.getItemRemaining());

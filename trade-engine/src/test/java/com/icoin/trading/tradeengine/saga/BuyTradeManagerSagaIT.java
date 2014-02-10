@@ -22,6 +22,7 @@ import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.commission.FixedRateCommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.order.TradeType;
@@ -72,7 +73,7 @@ public class BuyTradeManagerSagaIT {
     @Before
     public void setUp() throws Exception {
         fixture = new AnnotatedSagaTestFixture(BuyTradeManagerSaga.class);
-        when(commissionPolicyFactory.createCommissionPolicy(any(AbstractOrder.class)))
+        when(commissionPolicyFactory.createCommissionPolicy(any(Order.class)))
                 .thenReturn(new FixedRateCommissionPolicy());
 
         fixture.registerResource(commissionPolicyFactory);

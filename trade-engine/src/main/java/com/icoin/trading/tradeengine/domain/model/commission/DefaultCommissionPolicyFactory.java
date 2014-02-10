@@ -1,7 +1,7 @@
 package com.icoin.trading.tradeengine.domain.model.commission;
 
 
-import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +12,7 @@ import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
  */
 public class DefaultCommissionPolicyFactory implements CommissionPolicyFactory {
     @Override
-    public CommissionPolicy createCommissionPolicy(AbstractOrder order) {
+    public CommissionPolicy createCommissionPolicy(Order order) {
         return new FixedRateCommissionPolicy();
     }
 }

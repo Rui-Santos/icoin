@@ -29,6 +29,8 @@ import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
+import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import com.icoin.trading.tradeengine.domain.model.transaction.Transaction;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
@@ -63,7 +65,7 @@ public class TransactionCommandHandler {
         notNull(command.getPortfolioIdentifier());
         notNull(command.getTransactionIdentifier());
 
-        final BuyOrder order = toOrder(command);
+        final Order order = toOrder(command);
 
         CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(order);
         Commission commission = commissionPolicy.calculateBuyCommission(order);
@@ -97,7 +99,7 @@ public class TransactionCommandHandler {
         notNull(command.getPortfolioIdentifier());
         notNull(command.getTransactionIdentifier());
 
-        final SellOrder order = toOrder(command);
+        final Order order = toOrder(command);
 
         CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(order);
         Commission commission = commissionPolicy.calculateSellCommission(order);
@@ -120,26 +122,26 @@ public class TransactionCommandHandler {
         repository.add(transaction);
     }
 
-    private BuyOrder toOrder(StartBuyTransactionCommand command) {
-        final BuyOrder order = new BuyOrder();
+    private Order toOrder(StartBuyTransactionCommand command) {
+        final Order order = new Order(OrderType.BUY);
         fillOrder(command, order);
         return order;
     }
 
-    private SellOrder toOrder(StartSellTransactionCommand command) {
-        final SellOrder order = new SellOrder();
+    private Order toOrder(StartSellTransactionCommand command) {
+        final Order order = new Order(OrderType.SELL);
         fillOrder(command, order);
         return order;
     }
 
-    private void fillOrder(AbstractStartTransactionCommand command, AbstractOrder order) {
+    private void fillOrder(AbstractStartTransactionCommand command, Order order) {
         order.setItemRemaining(command.getTradeAmount());
         order.setTradeAmount(command.getTradeAmount());
         order.setItemPrice(command.getItemPrice());
         order.setPortfolioId(command.getPortfolioIdentifier());
         order.setOrderBookId(command.getOrderBookIdentifier());
         order.setCurrencyPair(command.getCurrencyPair());
-        order.setCoinId(command.getCoinId());
+//        order.setCoinId(command.getCoinId());
     }
 
     @SuppressWarnings("unused")
