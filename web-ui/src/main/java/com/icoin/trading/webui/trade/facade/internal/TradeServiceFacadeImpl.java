@@ -9,6 +9,7 @@ import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.commission.Commission;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
@@ -27,10 +28,9 @@ import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecu
 import com.icoin.trading.webui.order.AbstractOrder;
 import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
-import com.icoin.trading.webui.user.UserServiceFacade;
 import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
-import com.icoin.trading.webui.trade.facade.internal.assembler.BuyOrderAssembler;
-import com.icoin.trading.webui.trade.facade.internal.assembler.SellOrderAssembler;
+import com.icoin.trading.webui.trade.facade.internal.assembler.OrderAssembler;
+import com.icoin.trading.webui.user.UserServiceFacade;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
@@ -96,9 +96,9 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     public BigMoney calculateSellOrderEffectiveAmount(SellOrder order) {
         notNull(order);
         notNull(order.getTradeAmount());
-        SellOrderAssembler assembler = new SellOrderAssembler();
+        OrderAssembler assembler = new OrderAssembler();
 
-        com.icoin.trading.tradeengine.domain.model.order.SellOrder sellOrder = assembler.toDomain(order);
+        Order sellOrder = assembler.toSellOrder(order);
         CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(sellOrder);
         Commission commission = commissionPolicy.calculateSellCommission(sellOrder);
 
@@ -115,9 +115,9 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
         notNull(order.getAmountCcy());
         notNull(order.getPriceCcy());
 
-        BuyOrderAssembler assembler = new BuyOrderAssembler();
+        OrderAssembler assembler = new OrderAssembler();
 
-        com.icoin.trading.tradeengine.domain.model.order.BuyOrder buyOrder = assembler.toDomain(order);
+        Order buyOrder = assembler.toBuyOrder(order);
         CommissionPolicy commissionPolicy = commissionPolicyFactory.createCommissionPolicy(buyOrder);
         Commission commission = commissionPolicy.calculateBuyCommission(buyOrder);
 
@@ -300,21 +300,25 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
         }
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setUserServiceFacade(UserServiceFacade userServiceFacade) {
         this.userServiceFacade = userServiceFacade;
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setCoinRepository(CoinQueryRepository coinRepository) {
         this.coinRepository = coinRepository;
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setOrderBookRepository(OrderBookQueryRepository orderBookRepository) {
         this.orderBookRepository = orderBookRepository;
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setTradeExecutedRepository(TradeExecutedQueryRepository tradeExecutedRepository) {
         this.tradeExecutedRepository = tradeExecutedRepository;
@@ -325,6 +329,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
         this.commandGateway = commandGateway;
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setOrderQueryRepository(OrderQueryRepository orderQueryRepository) {
         this.orderQueryRepository = orderQueryRepository;

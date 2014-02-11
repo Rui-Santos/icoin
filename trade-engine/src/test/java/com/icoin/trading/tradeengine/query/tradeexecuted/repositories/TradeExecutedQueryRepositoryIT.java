@@ -5,17 +5,27 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.query.tradeexecuted.OpenHighLowCloseVolume;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeType;
+import com.mongodb.DBObject;
 import org.joda.money.BigMoney;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
+import org.junit.Ignore;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +46,10 @@ public class TradeExecutedQueryRepositoryIT {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private TradeExecutedQueryRepository repository;
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     private final LocalDateTime date = LocalDateTime.parse("2012-12-12T12:12:12.12");
     final String orderBookIdentifier = new OrderBookId().toString();
@@ -154,13 +168,70 @@ public class TradeExecutedQueryRepositoryIT {
         return year1;
     }
 
+//    @Ignore
     @Test
     public void testOhlc() throws Exception {
+
+        System.err.println("-------------------------------");
         final List<OpenHighLowCloseVolume> all = repository.ohlc(orderBookIdentifier,
                 date.minusYears(5).toDate(),
                 date.minusSeconds(8).toDate(),
                 new PageRequest(0, 100));
 
+
+        System.out.println(all);
 //        assertThat();
+    }
+
+
+    @Test
+    public void testDate() throws Exception {
+        Data data = new Data();
+        data.dateValue = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ").parse("29.08.1983 12:34:56.789+0000");
+        mongoTemplate.insert(data);
+
+        TypedAggregation<Data> agg = newAggregation(Data.class, project() //
+                .andExpression("dayOfYear(dateValue)").as("dayOfYear") //
+                .andExpression("dayOfMonth(dateValue)").as("dayOfMonth") //
+                .andExpression("dayOfWeek(dateValue)").as("dayOfWeek") //
+                .andExpression("year(dateValue)").as("year") //
+                .andExpression("month(dateValue)").as("month") //
+                .andExpression("week(dateValue)").as("week") //
+                .andExpression("hour(dateValue)").as("hour") //
+                .andExpression("minute(dateValue)").as("minute") //
+                .andExpression("second(dateValue)").as("second") //
+                .andExpression("millisecond(dateValue)").as("millisecond") //
+                ,
+                group("dayOfYear")
+        );
+
+        AggregationResults<DBObject> results = mongoTemplate.aggregate(agg, DBObject.class);
+        DBObject dbo = results.getUniqueMappedResult();
+
+        assertThat(dbo, is(notNullValue()));
+        assertThat((Integer) dbo.get("dayOfYear"), is(241));
+        assertThat((Integer) dbo.get("dayOfMonth"), is(29));
+        assertThat((Integer) dbo.get("dayOfWeek"), is(2));
+        assertThat((Integer) dbo.get("year"), is(1983));
+        assertThat((Integer) dbo.get("month"), is(8));
+        assertThat((Integer) dbo.get("week"), is(35));
+        assertThat((Integer) dbo.get("hour"), is(12));
+        assertThat((Integer) dbo.get("minute"), is(34));
+        assertThat((Integer) dbo.get("second"), is(56));
+        assertThat((Integer) dbo.get("millisecond"), is(789));
+    }
+
+    private static class Data {
+        public long primitiveLongValue;
+        public double primitiveDoubleValue;
+        public Double doubleValue;
+        public Date dateValue;
+        public String stringValue;
+
+        public DataItem item;
+    }
+
+    private static class DataItem {
+        int primitiveIntValue;
     }
 }

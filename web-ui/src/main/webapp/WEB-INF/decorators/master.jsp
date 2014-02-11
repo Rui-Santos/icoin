@@ -85,7 +85,7 @@
             <sec:authorize access="isAuthenticated()">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active">
-                        <a href="/dashboard"><sec:authentication property="principal.fullName"/></a>
+                        <a href="/dashboard"><sec:authentication property="principal.username"/></a>
                     </li>
                     <li>
                         <a href="${ctx}/j_spring_security_logout">logout</a>

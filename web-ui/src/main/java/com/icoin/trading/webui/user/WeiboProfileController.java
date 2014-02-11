@@ -35,6 +35,7 @@ import java.security.Principal;
 public class WeiboProfileController {
     private static Logger logger = LoggerFactory.getLogger(WeiboProfileController.class);
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Inject
     private ConnectionRepository connectionRepository;
 
@@ -47,8 +48,8 @@ public class WeiboProfileController {
         logger.warn("weibo currentUser: {}", ToStringBuilder.reflectionToString(currentUser, ToStringStyle.MULTI_LINE_STYLE));
         logger.warn("weibo connection: {}", ToStringBuilder.reflectionToString(connection, ToStringStyle.MULTI_LINE_STYLE));
 
-        final WeiboProfile profile = connection.getApi().userOperations().getUserProfileByScreenName("co0der");
-//        final WeiboProfile profile = connection.getApi().userOperations().getUserProfile();
+//        final WeiboProfile profile = connection.getApi().userOperations().getUserProfileByScreenName("co0der");
+        final WeiboProfile profile = connection.getApi().userOperations().getUserProfile();
 
 
         model.addAttribute("profile", profile);

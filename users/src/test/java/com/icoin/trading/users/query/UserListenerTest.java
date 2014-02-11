@@ -45,7 +45,7 @@ public class UserListenerTest {
 
         assertThat(userEntry, notNullValue());
         assertThat(userEntry.getPrimaryKey(), equalTo(userId.toString()));
-        assertThat(userEntry.getName(), equalTo(lastName + " " + firstName));
+        assertThat(userEntry.getName(), equalTo(username));
         assertThat(userEntry.getFullName(), equalTo(lastName + " " + firstName));
         assertThat(userEntry.getUsername(), equalTo(username));
         assertThat(userEntry.getPassword(), equalTo(password));

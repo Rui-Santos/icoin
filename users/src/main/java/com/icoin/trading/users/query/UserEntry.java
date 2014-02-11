@@ -41,7 +41,7 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
 
     @Override
     public String getName() {
-        return getFullName();
+        return username;
     }
 
     public String getUsername() {

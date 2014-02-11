@@ -3,7 +3,7 @@
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>iCoin.log</file>
+        <file>test.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
             <fileNamePattern>iCoin.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
@@ -23,6 +23,7 @@
     </appender>
 
     <logger name="com.icoin.trading"  level="DEBUG" />
+    <logger name="org.springframework.data.mongodb"  level="DEBUG" />
 
     <root level="WARN">
         <appender-ref ref="STDOUT" />

@@ -1,5 +1,6 @@
 package com.icoin.trading.tradeengine.query.tradeexecuted;
 
+import com.homhon.base.domain.model.ValueObjectSupport;
 import com.icoin.trading.tradeengine.MoneyUtils;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
@@ -14,10 +15,11 @@ import java.util.Date;
  * Time: AM10:47
  * To change this template use File | Settings | File Templates.
  */
-public class OpenHighLowCloseVolume {
+public class OpenHighLowCloseVolume extends ValueObjectSupport<OpenHighLowCloseVolume>{
     private String priceCurrency;
     private String amountCurrency;
     private Date date;
+    private String year;
     private Long open;
     private Long high;
     private Long low;
@@ -77,6 +79,14 @@ public class OpenHighLowCloseVolume {
 //        this.volume = volume;
 //    }
 
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     public Date getDate() {
         return date;
