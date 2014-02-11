@@ -184,42 +184,42 @@ public class TradeExecutedQueryRepositoryIT {
     }
 
 
-    @Test
-    public void testDate() throws Exception {
-        Data data = new Data();
-        data.dateValue = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ").parse("29.08.1983 12:34:56.789+0000");
-        mongoTemplate.insert(data);
-
-        TypedAggregation<Data> agg = newAggregation(Data.class, project() //
-                .andExpression("dayOfYear(dateValue)").as("dayOfYear") //
-                .andExpression("dayOfMonth(dateValue)").as("dayOfMonth") //
-                .andExpression("dayOfWeek(dateValue)").as("dayOfWeek") //
-                .andExpression("year(dateValue)").as("year") //
-                .andExpression("month(dateValue)").as("month") //
-                .andExpression("week(dateValue)").as("week") //
-                .andExpression("hour(dateValue)").as("hour") //
-                .andExpression("minute(dateValue)").as("minute") //
-                .andExpression("second(dateValue)").as("second") //
-                .andExpression("millisecond(dateValue)").as("millisecond") //
-                ,
-                group("dayOfYear")
-        );
-
-        AggregationResults<DBObject> results = mongoTemplate.aggregate(agg, DBObject.class);
-        DBObject dbo = results.getUniqueMappedResult();
-
-        assertThat(dbo, is(notNullValue()));
-        assertThat((Integer) dbo.get("dayOfYear"), is(241));
-        assertThat((Integer) dbo.get("dayOfMonth"), is(29));
-        assertThat((Integer) dbo.get("dayOfWeek"), is(2));
-        assertThat((Integer) dbo.get("year"), is(1983));
-        assertThat((Integer) dbo.get("month"), is(8));
-        assertThat((Integer) dbo.get("week"), is(35));
-        assertThat((Integer) dbo.get("hour"), is(12));
-        assertThat((Integer) dbo.get("minute"), is(34));
-        assertThat((Integer) dbo.get("second"), is(56));
-        assertThat((Integer) dbo.get("millisecond"), is(789));
-    }
+//    @Test
+//    public void testDate() throws Exception {
+//        Data data = new Data();
+//        data.dateValue = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSSZ").parse("29.08.1983 12:34:56.789+0000");
+//        mongoTemplate.insert(data);
+//
+//        TypedAggregation<Data> agg = newAggregation(Data.class, project() //
+//                .andExpression("dayOfYear(dateValue)").as("dayOfYear") //
+//                .andExpression("dayOfMonth(dateValue)").as("dayOfMonth") //
+//                .andExpression("dayOfWeek(dateValue)").as("dayOfWeek") //
+//                .andExpression("year(dateValue)").as("year") //
+//                .andExpression("month(dateValue)").as("month") //
+//                .andExpression("week(dateValue)").as("week") //
+//                .andExpression("hour(dateValue)").as("hour") //
+//                .andExpression("minute(dateValue)").as("minute") //
+//                .andExpression("second(dateValue)").as("second") //
+//                .andExpression("millisecond(dateValue)").as("millisecond") //
+//                ,
+//                group("dayOfYear")
+//        );
+//
+//        AggregationResults<DBObject> results = mongoTemplate.aggregate(agg, DBObject.class);
+//        DBObject dbo = results.getUniqueMappedResult();
+//
+//        assertThat(dbo, is(notNullValue()));
+//        assertThat((Integer) dbo.get("dayOfYear"), is(241));
+//        assertThat((Integer) dbo.get("dayOfMonth"), is(29));
+//        assertThat((Integer) dbo.get("dayOfWeek"), is(2));
+//        assertThat((Integer) dbo.get("year"), is(1983));
+//        assertThat((Integer) dbo.get("month"), is(8));
+//        assertThat((Integer) dbo.get("week"), is(35));
+//        assertThat((Integer) dbo.get("hour"), is(12));
+//        assertThat((Integer) dbo.get("minute"), is(34));
+//        assertThat((Integer) dbo.get("second"), is(56));
+//        assertThat((Integer) dbo.get("millisecond"), is(789));
+//    }
 
     private static class Data {
         public long primitiveLongValue;

@@ -126,6 +126,7 @@ public class TradeExecutedQueryRepositoryImpl implements TradeExecutedQueryRepos
 //            "close": {"$last": "$p"} }} ] )
 
 //        02:41:22.649 [main] DEBUG c.i.t.t.q.t.r.TradeExecutedQueryRepositoryImpl - aggregation { "aggregate" : "tradeExecutedEntry" , "pipeline" : [ { "$match" : { "orderBookIdentifier" : "c623022b-9baa-437a-a70f-b59adead3ecf" , "tradeTime" : { "$gte" : { "$date" : "2007-12-12T04:12:12.120Z"} , "$lt" : { "$date" : "2012-12-12T04:12:04.120Z"}}}} , { "$project" : { "year" : { "$year" : "$tradeTime"} , "month" : { "$month" : "$tradeTime"} , "day" : { "$dayOfMonth" : "$tradeTime"} , "hour" : { "$hour" : "$tradeTime"} , "minute" : { "$minute" : "$tradeTime"} , "tradedPrice" : 1 , "tradedAmount" : 1 , "_id" : 0}} , { "$group" : { "_id" : { "year" : "$year" , "priceCcy" : "$tradedPrice.currency" , "amountCcy" : "$tradedAmount.currency"} , "open" : { "$first" : "$tradedPrice.amount"} , "high" : { "$max" : "$tradedPrice.amount"} , "low" : { "$min" : "$tradedPrice.amount"} , "close" : { "$last" : "$tradedPrice.amount"} , "volume" : { "$sum" : "$tradedAmount.amount"}}}]} found :[ { "_id" : { "year" : 2012 , "priceCcy" : "CNY" , "amountCcy" : "BTC"} , "open" : 10500 , "high" : 10500 , "low" : 10500 , "close" : 10500 , "volume" : 11550000000} , { "_id" : { "year" : 2010 , "priceCcy" : "CNY" , "amountCcy" : "BTC"} , "open" : 10500 , "high" : 10500 , "low" : 10500 , "close" : 10500 , "volume" : 2100000000} , { "_id" : { "year" : 2011 , "priceCcy" : "CNY" , "amountCcy" : "BTC"} , "open" : 10500 , "high" : 10500 , "low" : 10500 , "close" : 10500 , "volume" : 1050000000}]
+//        02:46:45.023 [main] DEBUG c.i.t.t.q.t.r.TradeExecutedQueryRepositoryImpl - aggregation { "aggregate" : "tradeExecutedEntry" , "pipeline" : [ { "$match" : { "orderBookIdentifier" : "04527652-b53b-47bf-967d-2001fbe18c13" , "tradeTime" : { "$gte" : { "$date" : "2007-12-12T04:12:12.120Z"} , "$lt" : { "$date" : "2012-12-12T04:12:04.120Z"}}}} , { "$project" : { "year" : { "$year" : "$tradeTime"} , "month" : { "$month" : "$tradeTime"} , "day" : { "$dayOfMonth" : "$tradeTime"} , "hour" : { "$hour" : "$tradeTime"} , "minute" : { "$minute" : "$tradeTime"} , "tradedPrice" : 1 , "tradedAmount" : 1 , "_id" : 0}} , { "$group" : { "_id" : { "year" : "$year" , "priceCcy" : "$tradedPrice.currency" , "amountCcy" : "$tradedAmount.currency"} , "open" : { "$first" : "$tradedPrice.amount"} , "high" : { "$max" : "$tradedPrice.amount"} , "low" : { "$min" : "$tradedPrice.amount"} , "close" : { "$last" : "$tradedPrice.amount"} , "volume" : { "$sum" : "$tradedAmount.amount"}}}]} found :[ { "_id" : { "year" : 2012 , "priceCcy" : "CNY" , "amountCcy" : "BTC"} , "open" : 10500 , "high" : 10500 , "low" : 10500 , "close" : 10500 , "volume" : 11550000000} , { "_id" : { "year" : 2010 , "priceCcy" : "CNY" , "amountCcy" : "BTC"} , "open" : 10500 , "high" : 10500 , "low" : 10500 , "close" : 10500 , "volume" : 2100000000} , { "_id" : { "year" : 2011 , "priceCcy" : "CNY" , "amountCcy" : "BTC"} , "open" : 10500 , "high" : 10500 , "low" : 10500 , "close" : 10500 , "volume" : 1050000000}]
 
 
         final DBObject groupId = BasicDBObjectBuilder.start("year", "$year")
@@ -193,109 +194,109 @@ public class TradeExecutedQueryRepositoryImpl implements TradeExecutedQueryRepos
         }
     }
 
-    //    @Override
-    public List<OpenHighLowCloseVolume> ohlc0(String orderBookIdentifier, Date start, Date end, Pageable pageable) {
-        hasLength(orderBookIdentifier);
-        notNull(pageable);
-
-//        db.mycollection.aggregate([
-//                {"$match": {"dt": {"$lt" : end_dt, "$gte" : start_dt  }}},
-//        {"$project": {
-//            "year":       {"$year": "$dt"},
-//            "month":      {"$month": "$dt"},
-//            "day":        {"$dayOfMonth": "$dt"},
-//            "hour":       {"$hour": "$dt"},
-//            "minute":     {"$minute": "$dt"},
-//            "second":     {"$second": "$dt"},
-//            "dt": 1,
-//                    "p": 1 }},
-//        {"$sort": {"dt": 1}},
-//        {"$group":
-//            {"_id" : {"year": "$year", "month": "$month", "day": "$day", "hour": "$hour", "minute": "$minute" },
-//                "open":  {"$first": "$p"},
-//                "high":  {"$max": "$p"},
-//                "low":   {"$min": "$p"},
-//                "close": {"$last": "$p"} }} ] )
-
-        //order is: match, order, sort, limit
-        final ProjectionOperation project = project(
-                Fields.from(Fields.field("tradeTime"),
-                        Fields.field("tradedPrice.amount", "tradedPrice"),
-                        Fields.field("tradedAmount.amount", "tradeAmount")
-//                        Fields.field("priceCurrency", "tradedPrice.currency"),
-//                Fields.field("tradeCurrency", "tradedAmount.currency"))
-                ));
-
-        //{ "aggregate" : "tradeExecutedEntry" ,
-        // "pipeline" : [ { "$match" : { "orderBookIdentifier" : "f830f7e3-9f99-4688-92e7-6dbafc7220a8" ,
-        // "tradeTime" : { "$gte" : { "$date" : "2007-12-12T04:12:12.120Z"} ,
-        // "$lt" : { "$date" : "2012-12-12T04:12:04.120Z"}}}} ,
-        // { "$project" : { "tradeTime" : 1 , "tradedPrice.amount" : 1 , "tradedAmount.amount" : 1 , "year" :
-        // { "$year" : [ "$tradeTime"]} , "month" : { "$month" : [ "$tradeTime"]} , "week" : { "$week" : [ "$tradeTime"]}}} ,
-        // { "$group" : { "_id" : "$year" , "open" : { "$first" : "$tradedPrice"} , "high" : { "$max" : "$tradedPrice"} ,
-        // "low" : { "$min" : "$tradedPrice"} , "close" : { "$last" : "$tradedPrice"} , "volume" : { "$sum" : "$tradedAmount"}}} ,
-        // { "$skip" : 0} , { "$limit" : 100}]}
-
-        //        { "aggregate" : "tradeExecutedEntry" ,
-        // "pipeline" : [ { "$match" : { "orderBookIdentifier" : "4ed97c9a-d391-477a-bbdc-cbe4c41865d9" ,
-        // "tradeTime" : { "$gte" : { "$date" : "2007-12-12T04:12:12.120Z"} ,
-        // "$lt" : { "$date" : "2012-12-12T04:12:04.120Z"}}}} ,
-        // { "$project" : { "tradeTime" : 1 , "tradedPrice.amount" : "$tradedPrice" , "tradedAmount.amount" : "$tradeAmount" , "year" : { "$year" : [ "$tradeTime"]} , "month" : { "$month" : [ "$tradeTime"]} , "week" : { "$week" : [ "$tradeTime"]}}} , { "$group" : { "_id" : "$year" , "open" : { "$first" : "$tradedPrice"} , "high" : { "$max" : "$tradedPrice"} , "low" : { "$min" : "$tradedPrice"} , "close" : { "$last" : "$tradedPrice"} , "volume" : { "$sum" : "$tradeAmount"}}} , { "$skip" : 0} , { "$limit" : 100}]}
-
-        System.out.println(project.getFields());
-        Aggregation aggregation = newAggregation(TradeExecutedEntry.class,
-                match(where("orderBookIdentifier").is(orderBookIdentifier)
-                        .and("tradeTime").gte(start).lt(end)),
-//                project("tradeTime", "tradedPrice.amount", "tradedPrice.currency","tradedAmount.amount","tradedAmount.currency")
-                project
-//                        .and("tradedAmount.amount").as("tradedAmount")
-//                        .and("tradedPrice.amount").as("tradedPrice")
-//                        .and("tradedAmount").nested(bind("amount", "tradedAmount"))
-//                        .and("tradedAmount.amount").as("tradedA")
-                        .andExpression("year(tradeTime)").as("year") //
-                        .andExpression("month(tradeTime)").as("month") //
-                        .andExpression("week(tradeTime)").as("week") //
-//                        .and("tradeTime").project("hour").as("hour")
-//                .and("tradeTime").project("minute").as("minute")
-//                .and("tradeTime").project("second").as("second")
-                ,
-//                group(Fields.from(Fields.field("year", "year"))),
-//                sort(DESC, "tradeTime", "tradedAmount.amount"),
-//                project()
-//                .and("year").as("year")
-//                        ,
-                group("year")
-                        .first("tradedPrice").as("open")
-                        .max("tradedPrice").as("high")
-                        .min("tradedPrice").as("low")
-                        .last("tradedPrice").as("close")
-                        .sum("tradeAmount").as("volume"),
-//                group(Fields.fields("year"))
-//                        /*.and(Fields.field("amountCurrency")*///)
-////                        .and(Fields.field("year", "year"))
-////                        .and(Fields.field("month", "month"))
-////                        .and(Fields.field("day", "day"))
-////                        .and(Fields.field("hour", "hour"))
-////                )
+//    //    @Override
+//    public List<OpenHighLowCloseVolume> ohlc0(String orderBookIdentifier, Date start, Date end, Pageable pageable) {
+//        hasLength(orderBookIdentifier);
+//        notNull(pageable);
+//
+////        db.mycollection.aggregate([
+////                {"$match": {"dt": {"$lt" : end_dt, "$gte" : start_dt  }}},
+////        {"$project": {
+////            "year":       {"$year": "$dt"},
+////            "month":      {"$month": "$dt"},
+////            "day":        {"$dayOfMonth": "$dt"},
+////            "hour":       {"$hour": "$dt"},
+////            "minute":     {"$minute": "$dt"},
+////            "second":     {"$second": "$dt"},
+////            "dt": 1,
+////                    "p": 1 }},
+////        {"$sort": {"dt": 1}},
+////        {"$group":
+////            {"_id" : {"year": "$year", "month": "$month", "day": "$day", "hour": "$hour", "minute": "$minute" },
+////                "open":  {"$first": "$p"},
+////                "high":  {"$max": "$p"},
+////                "low":   {"$min": "$p"},
+////                "close": {"$last": "$p"} }} ] )
+//
+//        //order is: match, order, sort, limit
+//        final ProjectionOperation project = project(
+//                Fields.from(Fields.field("tradeTime"),
+//                        Fields.field("tradedPrice.amount", "tradedPrice"),
+//                        Fields.field("tradedAmount.amount", "tradeAmount")
+////                        Fields.field("priceCurrency", "tradedPrice.currency"),
+////                Fields.field("tradeCurrency", "tradedAmount.currency"))
+//                ));
+//
+//        //{ "aggregate" : "tradeExecutedEntry" ,
+//        // "pipeline" : [ { "$match" : { "orderBookIdentifier" : "f830f7e3-9f99-4688-92e7-6dbafc7220a8" ,
+//        // "tradeTime" : { "$gte" : { "$date" : "2007-12-12T04:12:12.120Z"} ,
+//        // "$lt" : { "$date" : "2012-12-12T04:12:04.120Z"}}}} ,
+//        // { "$project" : { "tradeTime" : 1 , "tradedPrice.amount" : 1 , "tradedAmount.amount" : 1 , "year" :
+//        // { "$year" : [ "$tradeTime"]} , "month" : { "$month" : [ "$tradeTime"]} , "week" : { "$week" : [ "$tradeTime"]}}} ,
+//        // { "$group" : { "_id" : "$year" , "open" : { "$first" : "$tradedPrice"} , "high" : { "$max" : "$tradedPrice"} ,
+//        // "low" : { "$min" : "$tradedPrice"} , "close" : { "$last" : "$tradedPrice"} , "volume" : { "$sum" : "$tradedAmount"}}} ,
+//        // { "$skip" : 0} , { "$limit" : 100}]}
+//
+//        //        { "aggregate" : "tradeExecutedEntry" ,
+//        // "pipeline" : [ { "$match" : { "orderBookIdentifier" : "4ed97c9a-d391-477a-bbdc-cbe4c41865d9" ,
+//        // "tradeTime" : { "$gte" : { "$date" : "2007-12-12T04:12:12.120Z"} ,
+//        // "$lt" : { "$date" : "2012-12-12T04:12:04.120Z"}}}} ,
+//        // { "$project" : { "tradeTime" : 1 , "tradedPrice.amount" : "$tradedPrice" , "tradedAmount.amount" : "$tradeAmount" , "year" : { "$year" : [ "$tradeTime"]} , "month" : { "$month" : [ "$tradeTime"]} , "week" : { "$week" : [ "$tradeTime"]}}} , { "$group" : { "_id" : "$year" , "open" : { "$first" : "$tradedPrice"} , "high" : { "$max" : "$tradedPrice"} , "low" : { "$min" : "$tradedPrice"} , "close" : { "$last" : "$tradedPrice"} , "volume" : { "$sum" : "$tradeAmount"}}} , { "$skip" : 0} , { "$limit" : 100}]}
+//
+//        System.out.println(project.getFields());
+//        Aggregation aggregation = newAggregation(TradeExecutedEntry.class,
+//                match(where("orderBookIdentifier").is(orderBookIdentifier)
+//                        .and("tradeTime").gte(start).lt(end)),
+////                project("tradeTime", "tradedPrice.amount", "tradedPrice.currency","tradedAmount.amount","tradedAmount.currency")
+//                project
+////                        .and("tradedAmount.amount").as("tradedAmount")
+////                        .and("tradedPrice.amount").as("tradedPrice")
+////                        .and("tradedAmount").nested(bind("amount", "tradedAmount"))
+////                        .and("tradedAmount.amount").as("tradedA")
+//                        .andExpression("year(tradeTime)").as("year") //
+//                        .andExpression("month(tradeTime)").as("month") //
+//                        .andExpression("week(tradeTime)").as("week") //
+////                        .and("tradeTime").project("hour").as("hour")
+////                .and("tradeTime").project("minute").as("minute")
+////                .and("tradeTime").project("second").as("second")
+//                ,
+////                group(Fields.from(Fields.field("year", "year"))),
+////                sort(DESC, "tradeTime", "tradedAmount.amount"),
+////                project()
+////                .and("year").as("year")
+////                        ,
+//                group("year")
 //                        .first("tradedPrice").as("open")
 //                        .max("tradedPrice").as("high")
 //                        .min("tradedPrice").as("low")
 //                        .last("tradedPrice").as("close")
-//                        .sum("tradedAmount.amount").as("volume"),
-                skip(pageable.getOffset()),
-                limit(pageable.getPageSize())
-        );
-
-
-        AggregationResults<DBObject> result = mongoTemplate.aggregate(aggregation, "tradeExecutedEntry", DBObject.class);
-
-        List<DBObject> openHighLowCloseVolumes = result.getMappedResults();
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("aggregation {} found :{}", aggregation, openHighLowCloseVolumes);
-        }
-        return null;
-    }
+//                        .sum("tradeAmount").as("volume"),
+////                group(Fields.fields("year"))
+////                        /*.and(Fields.field("amountCurrency")*///)
+//////                        .and(Fields.field("year", "year"))
+//////                        .and(Fields.field("month", "month"))
+//////                        .and(Fields.field("day", "day"))
+//////                        .and(Fields.field("hour", "hour"))
+//////                )
+////                        .first("tradedPrice").as("open")
+////                        .max("tradedPrice").as("high")
+////                        .min("tradedPrice").as("low")
+////                        .last("tradedPrice").as("close")
+////                        .sum("tradedAmount.amount").as("volume"),
+//                skip(pageable.getOffset()),
+//                limit(pageable.getPageSize())
+//        );
+//
+//
+//        AggregationResults<DBObject> result = mongoTemplate.aggregate(aggregation, "tradeExecutedEntry", DBObject.class);
+//
+//        List<DBObject> openHighLowCloseVolumes = result.getMappedResults();
+//
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("aggregation {} found :{}", aggregation, openHighLowCloseVolumes);
+//        }
+//        return null;
+//    }
 
 //    /**
 //     * Applies the given {@link Pageable} to the given {@link MongodbQuery}.
