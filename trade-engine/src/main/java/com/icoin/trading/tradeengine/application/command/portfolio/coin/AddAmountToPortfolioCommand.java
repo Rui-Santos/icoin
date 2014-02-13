@@ -17,8 +17,8 @@
 package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
 
@@ -27,7 +27,7 @@ import org.joda.money.BigMoney;
  *
  * @author Jettro Coenradie
  */
-public class AddAmountToPortfolioCommand {
+public class AddAmountToPortfolioCommand extends CommandSupport<AddAmountToPortfolioCommand> {
 
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
@@ -38,7 +38,7 @@ public class AddAmountToPortfolioCommand {
      * Create a new command.
      *
      * @param portfolioIdentifier Identifier of the Portfolio to add items to
-     * @param coinId Identifier of the CoinId to add items for
+     * @param coinId              Identifier of the CoinId to add items for
      * @param amountOfItemToAdd   AMount of items to add
      */
     public AddAmountToPortfolioCommand(PortfolioId portfolioIdentifier,

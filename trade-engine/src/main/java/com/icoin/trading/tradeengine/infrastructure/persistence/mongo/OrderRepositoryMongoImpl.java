@@ -100,7 +100,7 @@ public class OrderRepositoryMongoImpl implements OrderRepositoryMongoCustom {
                 .with(new Sort(Sort.Direction.ASC, "placeDate"))
                 .limit(size);
 
-        if(toTime!= null){
+        if (toTime != null) {
             query.addCriteria(Criteria.where("placeDate").lte(toTime));
         }
 
@@ -188,7 +188,7 @@ public class OrderRepositoryMongoImpl implements OrderRepositoryMongoCustom {
                 .addCriteria(Criteria.where("placeDate").lte(toTime))
                 .addCriteria(Criteria.where("orderStatus").is(OrderStatus.PENDING))
                 .addCriteria(Criteria.where("orderType").is(OrderType.BUY))
-                .with(new Sort(Sort.Direction.ASC, "itemPrice.amount","placeDate")
+                .with(new Sort(Sort.Direction.ASC, "itemPrice.amount", "placeDate")
                         .and(new Sort(Sort.Direction.DESC, "itemRemaining.amount")))
                 .limit(size);
 

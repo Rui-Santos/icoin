@@ -16,17 +16,20 @@
 
 package com.icoin.trading.users.application.command;
 
+import com.homhon.base.command.CommandSupport;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
  * @author Jettro Coenradie
  */
-public class AuthenticateUserCommand {
-
-    private final String userName;
+public class AuthenticateUserCommand extends CommandSupport<AuthenticateUserCommand> {
     @NotNull
     @Size(min = 3)
+    private final String userName;
+    @NotNull
+    @Size(min = 6)
     private final String password;
 
     private final String operatingIp;

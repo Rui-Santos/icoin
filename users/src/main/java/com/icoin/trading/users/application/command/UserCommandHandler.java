@@ -17,24 +17,22 @@
 package com.icoin.trading.users.application.command;
 
 import com.homhon.core.exception.IZookeyException;
-import com.homhon.util.Strings;
 import com.icoin.trading.users.domain.PasswordResetTokenGenerator;
 import com.icoin.trading.users.domain.model.function.TooManyResetsException;
 import com.icoin.trading.users.domain.model.function.UserPasswordReset;
 import com.icoin.trading.users.domain.model.function.UserPasswordResetRepository;
-import com.icoin.trading.users.domain.model.user.User;
-
 import com.icoin.trading.users.domain.model.user.InvalidIdentityException;
+import com.icoin.trading.users.domain.model.user.User;
+import com.icoin.trading.users.domain.model.user.UserAccount;
 import com.icoin.trading.users.domain.model.user.UserId;
-import com.icoin.trading.users.query.UserEntry;
-import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.icoin.trading.users.domain.model.user.UsernameAlreadyInUseException;
+import com.icoin.trading.users.query.UserEntry;
+import com.icoin.trading.users.query.repositories.UserQueryRepository;
+import org.apache.commons.lang3.time.DateUtils;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
-import com.icoin.trading.users.query.repositories.UserQueryRepository;
-import com.icoin.trading.users.domain.model.user.UserAccount;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -71,8 +69,9 @@ public class UserCommandHandler {
     public UserId handleCreateUser(CreateUserCommand command) {
         hasLength(command.getUsername());
         notNull(command.getIdentifier());
+        isTrue(command.isValid());
 
-        if(!command.getIdentifier().isValid()){
+        if (!command.getIdentifier().isValid()) {
             throw new InvalidIdentityException(command.getIdentifier());
         }
 
@@ -125,7 +124,7 @@ public class UserCommandHandler {
 
         Date startDate = DateUtils.addDays(date, -1);
 
-        List<UserPasswordReset> resets = userPasswordResetRepository.findNotExpiredByUsername(user.getUsername(), command.getOperatingIp(), startDate, date);
+        List<UserPasswordReset> resets = userPasswordResetRepository.findNotExpiredByEmail(command.getEmail(), command.getOperatingIp(), startDate, date);
 
         if (!isEmpty(resets) && resets.size() >= 3) {
             throw new TooManyResetsException(command.getOperatingIp());
@@ -137,13 +136,25 @@ public class UserCommandHandler {
         return userPasswordReset.getToken();
     }
 
+    private UserPasswordReset createPasswordReset(ForgetPasswordCommand command, UserEntry user) {
+        UserPasswordReset reset = new UserPasswordReset();
+
+        reset.setToken(getToken(command, user.getUsername()));
+        reset.setUsername(user.getUsername());
+        reset.setUserId(user.getPrimaryKey());
+        reset.setEmail(command.getEmail());
+        reset.setIp(command.getOperatingIp());
+        reset.setExpirationDate(futureMinute(currentTime(), 30));
+
+        return reset;
+    }
 
     @CommandHandler
     public void handlePasswordReset(ResetPasswordCommand command) {
         hasLength(command.getToken());
         hasLength(command.getPassword());
         hasLength(command.getConfirmedPassword());
-        isTrue(command.getConfirmedPassword().equals(command.getPassword()), "The password and confirmed password should be the same.");
+        isTrue(command.isValid(),"The password and confirmed password should be the same!");
 
         UserPasswordReset token = userPasswordResetRepository.findByToken(command.getToken());
 
@@ -164,7 +175,7 @@ public class UserCommandHandler {
         notNull(command.getUserId());
         hasLength(command.getConfirmPassword());
         hasLength(command.getPassword());
-        isTrue(command.getConfirmPassword().equals(command.getPassword()), "The password and confirmed password should be the same.");
+        isTrue(command.isValid(),"The password and confirmed password should be the same, but password should be different from previous one!");
 
         User user = repository.load(command.getUserId());
 
@@ -180,6 +191,25 @@ public class UserCommandHandler {
         clearPasswordResetTokens(command.getUserId().toString(), command.getUsername());
     }
 
+    @CommandHandler
+    public void handleChangeWithdrawPasswordCommand(ChangeWithdrawPasswordCommand command) {
+        notNull(command.getUserId());
+        hasLength(command.getConfirmedWithdrawPassword());
+        hasLength(command.getWithdrawPassword());
+        isTrue(command.isValid(),"The password and confirmed password should be the same, but password should be different from previous one!");
+
+        User user = repository.load(command.getUserId());
+
+        if (user == null) {
+            logger.warn("cannot find user {}", command.getUserId());
+            return;
+        }
+
+        user.changeWithdrawPassword(passwordEncoder.encode(command.getWithdrawPassword()), passwordEncoder.encode(command.getConfirmedWithdrawPassword()), command.getOperatingIp());
+
+        logger.info("userid {}, username {} has changed withdraw password!", command.getUserId(), command.getUsername());
+    }
+
     private void clearPasswordResetTokens(String userId, String userName) {
         List<UserPasswordReset> resets = userPasswordResetRepository.findByUsername(userName);
         if (isEmpty(resets)) {
@@ -189,19 +219,6 @@ public class UserCommandHandler {
 
         userPasswordResetRepository.delete(resets);
         logger.info("userid {}, username {} deleted the password reset token!", userId, userName);
-    }
-
-    private UserPasswordReset createPasswordReset(ForgetPasswordCommand command, UserEntry user) {
-        UserPasswordReset reset = new UserPasswordReset();
-
-        reset.setToken(getToken(command, user.getUsername()));
-        reset.setUsername(user.getUsername());
-        reset.setUserId(user.getPrimaryKey());
-        reset.setEmail(command.getEmail());
-        reset.setIp(command.getOperatingIp());
-        reset.setExpirationDate(futureMinute(currentTime(), 30));
-
-        return reset;
     }
 
     private String getToken(ForgetPasswordCommand command, String username) {

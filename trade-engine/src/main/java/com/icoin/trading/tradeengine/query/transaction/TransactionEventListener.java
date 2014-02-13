@@ -30,15 +30,11 @@ import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionEx
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionPartiallyExecutedEvent;
 import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
-import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.transaction.repositories.TransactionQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.joda.money.BigMoney;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.math.RoundingMode;
 
 import static com.homhon.util.TimeUtils.currentTime;
 

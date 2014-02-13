@@ -9,7 +9,6 @@ package com.icoin.trading.tradeengine.query.coin;
  */
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie

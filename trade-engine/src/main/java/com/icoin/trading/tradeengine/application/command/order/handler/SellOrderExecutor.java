@@ -4,7 +4,6 @@ import com.icoin.trading.tradeengine.application.command.order.ExecuteSellOrderC
 import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.joda.money.BigMoney;

@@ -15,9 +15,7 @@
  */
 package com.icoin.trading.tradeengine.domain.model.commission;
 
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import org.joda.money.BigMoney;
 
 /**

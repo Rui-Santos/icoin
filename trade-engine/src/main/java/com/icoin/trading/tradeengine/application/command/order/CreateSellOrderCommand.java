@@ -30,7 +30,7 @@ import java.util.Date;
  *
  * @author Allard Buijze
  */
-public class CreateSellOrderCommand extends CreateOrderCommand {
+public class CreateSellOrderCommand extends CreateOrderCommand<CreateSellOrderCommand> {
 
     public CreateSellOrderCommand(OrderId orderId,
                                   PortfolioId portfolioId,

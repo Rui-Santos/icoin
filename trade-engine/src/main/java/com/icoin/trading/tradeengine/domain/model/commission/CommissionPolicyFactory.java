@@ -16,7 +16,6 @@
 package com.icoin.trading.tradeengine.domain.model.commission;
 
 
-import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
 
 /**

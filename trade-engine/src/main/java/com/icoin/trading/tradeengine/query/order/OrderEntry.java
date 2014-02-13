@@ -165,7 +165,7 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
         this.orderStatus = OrderStatus.DONE;
     }
 
-    public void recordTraded(BigMoney tradeAmount,BigMoney commission, Date lastTradedTime) {
+    public void recordTraded(BigMoney tradeAmount, BigMoney commission, Date lastTradedTime) {
         this.itemRemaining = itemRemaining.minus(tradeAmount);
         this.lastTradedTime = lastTradedTime;
 

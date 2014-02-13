@@ -32,6 +32,6 @@ public class SellTransactionExecutedEvent extends AbstractTransactionExecutedEve
                                         BigMoney itemPrice,
                                         BigMoney executedMoney,
                                         BigMoney commission) {
-        super(transactionIdentifier,coinId, amountOfItem, itemPrice, executedMoney, commission);
+        super(transactionIdentifier, coinId, amountOfItem, itemPrice, executedMoney, commission);
     }
 }

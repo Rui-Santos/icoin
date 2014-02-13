@@ -1,7 +1,5 @@
 package com.icoin.trading.users.domain;
 
-import com.icoin.trading.users.domain.model.user.UserAccount;
-
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -10,5 +8,5 @@ import com.icoin.trading.users.domain.model.user.UserAccount;
  * To change this template use File | Settings | File Templates.
  */
 public interface ForgetPasswordEmailSender {
-    void sendEmail(final UserAccount userAccount, final String token, final String email);
+    void sendEmail(final String token);
 }

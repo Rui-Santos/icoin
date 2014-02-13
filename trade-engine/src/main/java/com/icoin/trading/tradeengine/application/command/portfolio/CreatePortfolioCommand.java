@@ -17,13 +17,14 @@
 package com.icoin.trading.tradeengine.application.command.portfolio;
 
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.users.domain.model.user.UserId;
 
 /**
  * @author Jettro Coenradie
  */
-public class CreatePortfolioCommand {
+public class CreatePortfolioCommand extends CommandSupport<CreatePortfolioCommand> {
 
     private PortfolioId portfolioId;
     private UserId userId;

@@ -20,7 +20,6 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
-import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie

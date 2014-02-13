@@ -27,7 +27,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
  *
  * @author Jettro Coenradie
  */
-public class OrderBookAddedToCoinEvent extends EventSupport<OrderBookAddedToCoinEvent>{
+public class OrderBookAddedToCoinEvent extends EventSupport<OrderBookAddedToCoinEvent> {
     private CoinId coinId;
     private OrderBookId orderBookId;
     private CurrencyPair currencyPair;

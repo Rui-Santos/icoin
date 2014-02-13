@@ -38,7 +38,7 @@ public class FakeUserService implements UserService {
         }
 
         @Override
-        public String getUserName() {
+        public String getUsername() {
             return getId();
         }
 

@@ -1,8 +1,6 @@
 package com.icoin.trading.tradeengine.query.tradeexecuted;
 
 
-import com.icoin.trading.tradeengine.MoneyUtils;
-import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 
 import java.util.Date;

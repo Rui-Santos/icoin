@@ -19,7 +19,7 @@ public class InvocationException extends IZookeyException {
 
     /**
      * Get the thrown target exception.
-     *
+     * <p/>
      * <p>This method predates the general-purpose exception chaining facility.
      * The {@link Throwable#getCause()} method is now the preferred means of
      * obtaining this information.
@@ -34,8 +34,8 @@ public class InvocationException extends IZookeyException {
      * Returns the cause of this exception (the thrown target exception,
      * which may be {@code null}).
      *
-     * @return  the cause of this exception.
-     * @since   1.4
+     * @return the cause of this exception.
+     * @since 1.4
      */
     public Exception getCause() {
         return target;

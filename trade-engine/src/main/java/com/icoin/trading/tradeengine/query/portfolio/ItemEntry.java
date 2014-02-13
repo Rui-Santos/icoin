@@ -84,7 +84,7 @@ public class ItemEntry extends ValueObjectSupport<ItemEntry> {
             reservedAmount = BigMoney.zero(currencyUnit);
         }
 
-        isTrue(reservedAmount.minus(amount).isPositiveOrZero(), "reserved amount " + reservedAmount + " cannot be less than "+ amount +"!");
+        isTrue(reservedAmount.minus(amount).isPositiveOrZero(), "reserved amount " + reservedAmount + " cannot be less than " + amount + "!");
 
         this.reservedAmount = reservedAmount.minus(amount);
     }
@@ -97,8 +97,8 @@ public class ItemEntry extends ValueObjectSupport<ItemEntry> {
             amountInPossession = BigMoney.zero(currencyUnit);
         }
 
-        isTrue(reservedAmount.minus(amount).isPositiveOrZero(), "reserved amount " + reservedAmount + " cannot be less than "+ amount +"!");
-        isTrue(amountInPossession.minus(amount).isPositiveOrZero(), "amount in possession " + amountInPossession + " cannot be less than "+ amount +"!");
+        isTrue(reservedAmount.minus(amount).isPositiveOrZero(), "reserved amount " + reservedAmount + " cannot be less than " + amount + "!");
+        isTrue(amountInPossession.minus(amount).isPositiveOrZero(), "amount in possession " + amountInPossession + " cannot be less than " + amount + "!");
 
         this.amountInPossession = amountInPossession.minus(amount);
         this.reservedAmount = reservedAmount.minus(amount);

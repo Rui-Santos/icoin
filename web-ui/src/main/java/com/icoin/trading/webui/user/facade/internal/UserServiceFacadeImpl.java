@@ -1,7 +1,6 @@
 package com.icoin.trading.webui.user.facade.internal;
 
 import com.homhon.base.domain.service.UserService;
-import com.homhon.util.Asserts;
 import com.homhon.util.Strings;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
@@ -10,7 +9,6 @@ import com.icoin.trading.users.application.command.ChangeWithdrawPasswordCommand
 import com.icoin.trading.users.application.command.ForgetPasswordCommand;
 import com.icoin.trading.users.application.command.ResetPasswordCommand;
 import com.icoin.trading.users.domain.ForgetPasswordEmailSender;
-import com.icoin.trading.users.domain.model.function.TooManyResetsException;
 import com.icoin.trading.users.domain.model.function.UserPasswordReset;
 import com.icoin.trading.users.domain.model.function.UserPasswordResetRepository;
 import com.icoin.trading.users.domain.model.user.UserAccount;
@@ -52,8 +50,6 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
     private ForgetPasswordEmailSender emailSender;
 
-    private UserQueryRepository userQueryRepository;
-
     private UserPasswordResetRepository userPasswordResetRepository;
 
     @Override
@@ -74,8 +70,8 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return null;
         }
 
-        UserEntry username = userRepository.findByUsername(userAccount.getPrimaryKey());
-        return portfolioQueryRepository.findByUserIdentifier(username.getPrimaryKey());
+        UserEntry user = userRepository.findByUsername(userAccount.getUsername());
+        return portfolioQueryRepository.findByUserIdentifier(user.getPrimaryKey());
     }
 
     @Override
@@ -86,7 +82,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return;
         }
         commandGateway.send(new ChangePasswordCommand(new UserId(userAccount.getPrimaryKey()),
-                userAccount.getUserName(), previousPassword, newPassword, confirmedNewPassword,
+                userAccount.getUsername(), previousPassword, newPassword, confirmedNewPassword,
                 operatingIp));
     }
 
@@ -99,13 +95,13 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
         ForgetPasswordCommand command = new ForgetPasswordCommand(email, operatingIp, currentTime);
 
-        String token = commandGateway.sendAndWait(command, 10, TimeUnit.SECONDS);
+        String token = commandGateway.sendAndWait(command, 5, TimeUnit.SECONDS);
 
         if (!Strings.hasLength(token)) {
             return false;
         }
 
-        emailSender.sendEmail(userAccount, token, email);
+        emailSender.sendEmail(token);
 
         return true;
     }
@@ -114,16 +110,14 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     @Override
     public void resetPasswordWithToken(String token, String password, String confirmedPassword, String operatingIp) {
         UserAccount userAccount = currentUser();
-        if (userAccount == null) {
-            logger.warn("user not logged on");
+        if (userAccount != null) {
+            logger.warn("user has already logged on");
             return;
         }
         ResetPasswordCommand command = new ResetPasswordCommand(token, password, confirmedPassword, operatingIp);
 
         commandGateway.send(command);
     }
-
-
 
     @Override
     public void changeWithdrawPassword(String previousPassword, String withdrawPassword, String confirmedWithdrawPassword, String operatingIp) {
@@ -133,7 +127,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return;
         }
         commandGateway.send(new ChangeWithdrawPasswordCommand(new UserId(userAccount.getPrimaryKey()),
-                userAccount.getUserName(), previousPassword, withdrawPassword, confirmedWithdrawPassword, operatingIp));
+                userAccount.getUsername(), previousPassword, withdrawPassword, confirmedWithdrawPassword, operatingIp));
     }
 
     @Override
@@ -141,7 +135,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if(!Strings.hasText(email)){
             return null;
         }
-        UserEntry user = userQueryRepository.findByEmail(email);
+        UserEntry user = userRepository.findByEmail(email);
 
         if (user == null) {
             logger.warn("can not find user by email!", email);
@@ -152,14 +146,14 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     }
 
     @Override
-    public int findPasswordResetCount(String username, String ip, Date currentDate) {
-        hasLength(username);
+    public int findPasswordResetCount(String email, String ip, Date currentDate) {
+        hasLength(email);
         hasLength(ip);
         notNull(currentDate);
 
         Date startDate = DateUtils.addDays(currentDate, -1);
 
-        List<UserPasswordReset> resets = userPasswordResetRepository.findNotExpiredByUsername(username, ip, startDate, currentDate);
+        List<UserPasswordReset> resets = userPasswordResetRepository.findNotExpiredByEmail(email, ip, startDate, currentDate);
 
         if (isEmpty(resets)) {
             return 0;
@@ -189,12 +183,6 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     @Autowired
     public void setPortfolioQueryRepository(PortfolioQueryRepository portfolioQueryRepository) {
         this.portfolioQueryRepository = portfolioQueryRepository;
-    }
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setUserQueryRepository(UserQueryRepository userQueryRepository) {
-        this.userQueryRepository = userQueryRepository;
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")

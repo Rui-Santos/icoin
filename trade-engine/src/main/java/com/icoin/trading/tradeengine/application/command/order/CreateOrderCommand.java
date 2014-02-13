@@ -29,8 +29,9 @@ import java.util.Date;
  *
  * @author Allard Buijze
  */
-public abstract class CreateOrderCommand extends AbstractOrderCommand {
+public abstract class CreateOrderCommand<T extends CreateOrderCommand> extends AbstractOrderCommand<T> {
     private final BigMoney totalCommission;
+
     public CreateOrderCommand(OrderId orderId,
                               PortfolioId portfolioId,
                               OrderBookId orderBookId,

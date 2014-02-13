@@ -9,5 +9,6 @@ package com.icoin.trading.tradeengine.application;
  */
 public interface Callback<V> {
     String getIdentifier();
+
     V execute() throws Exception;
 }

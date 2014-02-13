@@ -26,7 +26,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
  *
  * @author Jettro Coenradie
  */
-public class CreateOrderBookCommand extends CommandSupport<CreateOrderBookCommand>{
+public class CreateOrderBookCommand extends CommandSupport<CreateOrderBookCommand> {
     private OrderBookId orderBookId;
     private CurrencyPair currencyPair;
 

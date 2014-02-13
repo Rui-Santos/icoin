@@ -100,7 +100,7 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
         this.counterCurrency = counterCurrency;
     }
 
-    public CurrencyPair(CurrencyUnit baseCurrency, CurrencyUnit counterCurrency){
+    public CurrencyPair(CurrencyUnit baseCurrency, CurrencyUnit counterCurrency) {
         notNull(baseCurrency);
         notNull(counterCurrency);
         this.baseCurrency = baseCurrency.getCurrencyCode();
@@ -117,7 +117,7 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
         return baseCurrency;
     }
 
-    public CurrencyUnit getBaseCurrencyUnit(){
+    public CurrencyUnit getBaseCurrencyUnit() {
         return CurrencyUnit.of(baseCurrency);
     }
 
@@ -125,7 +125,7 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
         return counterCurrency;
     }
 
-    public CurrencyUnit getCounterCurrencyUnit(){
+    public CurrencyUnit getCounterCurrencyUnit() {
         return CurrencyUnit.of(counterCurrency);
     }
 

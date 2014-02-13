@@ -34,15 +34,15 @@ import static com.homhon.util.Asserts.notNull;
 @Component
 public class OrderExecutorHelper {
     private OrderRepository orderRepository;
-//    private BuyOrderRepository buyOrderRepository;
+    //    private BuyOrderRepository buyOrderRepository;
     private CommissionPolicyFactory commissionPolicyFactory;
 
     private static Logger logger = LoggerFactory.getLogger(OrderExecutorHelper.class);
 
     public List<Order> findAscPendingOrdersByPriceTime(Date toTime,
-                                                           BigMoney price,
-                                                           OrderBookId orderBookId,
-                                                           int size) {
+                                                       BigMoney price,
+                                                       OrderBookId orderBookId,
+                                                       int size) {
         notNull(toTime);
         notNull(price);
         isTrue(price.isPositive(), "Price should be greater than 0!");
@@ -64,9 +64,9 @@ public class OrderExecutorHelper {
 
 
     public List<Order> findDescPendingOrdersByPriceTime(Date toTime,
-                                                           BigMoney price,
-                                                           OrderBookId orderBookId,
-                                                           int size) {
+                                                        BigMoney price,
+                                                        OrderBookId orderBookId,
+                                                        int size) {
         notNull(toTime);
         notNull(price);
         isTrue(price.isPositive(), "Price should be greater than 0!");

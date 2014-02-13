@@ -26,7 +26,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public abstract class AbstractTransactionStartedEvent <T extends AbstractTransactionStartedEvent> extends EventSupport<T> {
+public abstract class AbstractTransactionStartedEvent<T extends AbstractTransactionStartedEvent> extends EventSupport<T> {
     private TransactionId transactionIdentifier;
     private CoinId coinId;
     private OrderBookId orderBookIdentifier;

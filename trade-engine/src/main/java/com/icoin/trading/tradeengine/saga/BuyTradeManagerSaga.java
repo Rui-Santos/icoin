@@ -34,7 +34,6 @@ import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionPar
 import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import org.axonframework.commandhandling.CommandCallback;
-import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.saga.annotation.EndSaga;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;

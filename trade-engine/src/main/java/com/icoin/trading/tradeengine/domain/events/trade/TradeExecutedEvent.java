@@ -26,7 +26,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.money.BigMoney;
 
-import java.io.Serializable;
 import java.math.RoundingMode;
 import java.util.Date;
 
@@ -36,7 +35,7 @@ import java.util.Date;
  *
  * @author Allard Buijze
  */
-public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent>{
+public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
     private static final long serialVersionUID = 6292249351659536792L;
 
     private final BigMoney tradeAmount;

@@ -26,7 +26,7 @@ import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
  *
  * @author Jettro Coenradie
  */
-public class AddOrderBookToCoinCommand extends CommandSupport<AddOrderBookToCoinCommand>{
+public class AddOrderBookToCoinCommand extends CommandSupport<AddOrderBookToCoinCommand> {
     private CoinId coinId;
     private OrderBookId orderBookId;
     private CurrencyPair currencyPair;

@@ -17,8 +17,8 @@
 package com.icoin.trading.tradeengine.application.command.portfolio.coin;
 
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
@@ -26,7 +26,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public class ReserveAmountCommand {
+public class ReserveAmountCommand extends CommandSupport<ReserveAmountCommand> {
 
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;

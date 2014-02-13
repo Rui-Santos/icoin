@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.application.command.coin;
 
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import org.joda.money.BigMoney;
 
@@ -26,7 +27,7 @@ import org.joda.money.BigMoney;
  *
  * @author Jettro Coenradie
  */
-public class CreateCoinCommand {
+public class CreateCoinCommand extends CommandSupport<CreateCoinCommand> {
     private CoinId coinId;
     private String coinName;
     private BigMoney coinInitialPrice;

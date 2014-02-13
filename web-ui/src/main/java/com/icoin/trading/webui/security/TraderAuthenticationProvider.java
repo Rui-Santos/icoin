@@ -16,12 +16,12 @@
 
 package com.icoin.trading.webui.security;
 
+import com.icoin.trading.users.application.command.AuthenticateUserCommand;
+import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
-import com.icoin.trading.users.application.command.AuthenticateUserCommand;
-import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -31,6 +31,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -65,11 +66,17 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
         if (!supports(authentication.getClass())) {
             return null;
         }
+
+        String ip = null;
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
+        if (token.getDetails() != null && WebAuthenticationDetails.class.isAssignableFrom(token.getDetails().getClass())) {
+            ip = ((WebAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        }
+
         String username = token.getName();
         String password = String.valueOf(token.getCredentials());
         FutureCallback<UserAccount> accountCallback = new FutureCallback<UserAccount>();
-        AuthenticateUserCommand command = new AuthenticateUserCommand(username, password.toCharArray());
+        AuthenticateUserCommand command = new AuthenticateUserCommand(username, password, ip);
         try {
             commandBus.dispatch(new GenericCommandMessage<AuthenticateUserCommand>(command), accountCallback);
             // the bean validating interceptor is defined as a dispatch interceptor, meaning it is executed before

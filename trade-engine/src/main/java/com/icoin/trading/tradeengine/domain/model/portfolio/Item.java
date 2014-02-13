@@ -16,7 +16,7 @@ import static com.homhon.util.Asserts.notNull;
  * Time: AM11:38
  * To change this template use File | Settings | File Templates.
  */
-public class Item extends ValueObjectSupport<Item>{
+public class Item extends ValueObjectSupport<Item> {
     private CoinId coinId;
     private BigMoney totalAmount;
     private BigMoney reservedAmount;

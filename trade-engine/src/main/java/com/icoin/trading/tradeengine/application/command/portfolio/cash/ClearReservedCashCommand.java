@@ -1,5 +1,6 @@
 package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
@@ -12,7 +13,7 @@ import org.joda.money.BigMoney;
  * Time: AM11:39
  * To change this template use File | Settings | File Templates.
  */
-public class ClearReservedCashCommand {
+public class ClearReservedCashCommand extends CommandSupport<ClearReservedCashCommand> {
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
     private OrderBookId orderBookIdentifier;

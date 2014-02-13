@@ -18,8 +18,8 @@ package com.icoin.trading.tradeengine.application.command.portfolio;
 
 import com.icoin.trading.tradeengine.application.Callback;
 import com.icoin.trading.tradeengine.application.SynchronizedOnIdentifierHandler;
-import com.icoin.trading.tradeengine.application.command.portfolio.cash.ClearReservedCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.CancelCashReservationCommand;
+import com.icoin.trading.tradeengine.application.command.portfolio.cash.ClearReservedCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ConfirmCashReservationCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.tradeengine.application.command.portfolio.cash.ReserveCashCommand;
@@ -190,7 +190,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.reserveMoney(command.getTransactionIdentifier(), command.getTotalMoney() ,command.getTotalCommission());
+                        portfolio.reserveMoney(command.getTransactionIdentifier(), command.getTotalMoney(), command.getTotalCommission());
                         return null;
                     }
                 }

@@ -29,7 +29,7 @@ import org.joda.money.BigMoney;
  *
  * @author Jettro Coenradie
  */
-public class ConfirmAmountReservationForPortfolioCommand extends CommandSupport<ConfirmAmountReservationForPortfolioCommand>{
+public class ConfirmAmountReservationForPortfolioCommand extends CommandSupport<ConfirmAmountReservationForPortfolioCommand> {
 
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;

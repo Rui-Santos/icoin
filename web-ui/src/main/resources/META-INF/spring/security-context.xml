@@ -57,6 +57,7 @@
         <intercept-url pattern="/data/**" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/auth/**" access="permitAll" />
         <intercept-url pattern="/signin/**" access="permitAll" />
+        <!--<intercept-url pattern="/admin*" access="hasRole('admin') and hasIpAddress('192.168.1.0/24')"/>-->
         <intercept-url pattern="/signup/**" access="permitAll" />
         <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
         <form-login login-page="/signin" login-processing-url="/signin/authenticate"

@@ -16,9 +16,8 @@
 
 package com.icoin.trading.tradeengine.application.command.order;
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 /**
@@ -26,7 +25,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
  *
  * @author Allard Buijze
  */
-public class RefreshOrderBookPriceCommand {
+public class RefreshOrderBookPriceCommand extends CommandSupport<RefreshOrderBookPriceCommand> {
 
     @TargetAggregateIdentifier
     private OrderBookId orderBookId;

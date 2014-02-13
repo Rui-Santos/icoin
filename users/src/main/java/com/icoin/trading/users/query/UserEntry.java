@@ -47,10 +47,6 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
         return username;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -61,7 +57,7 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
     }
 
     @Override
-    public String getUserName() {
+    public String getUsername() {
         return this.username;
     }
 

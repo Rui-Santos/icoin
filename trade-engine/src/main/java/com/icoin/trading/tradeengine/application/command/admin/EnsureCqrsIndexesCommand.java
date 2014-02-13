@@ -9,5 +9,5 @@ import com.homhon.base.command.CommandSupport;
  * Time: PM10:05
  * To change this template use File | Settings | File Templates.
  */
-public class EnsureCqrsIndexesCommand extends CommandSupport<EnsureCqrsIndexesCommand>{
+public class EnsureCqrsIndexesCommand extends CommandSupport<EnsureCqrsIndexesCommand> {
 }

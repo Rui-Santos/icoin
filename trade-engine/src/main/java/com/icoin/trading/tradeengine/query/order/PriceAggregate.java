@@ -31,10 +31,10 @@ public class PriceAggregate extends ValueObjectSupport<PriceAggregate> {
         this.sumUpAmountPerPrice = sumUpAmountPerPrice;
         this.priceCurrency = priceCurrency;
         this.amountCurrency = amountCurrency;
-        double d = ((double)price)/MoneyUtils.getMultiplier(priceCurrency);
+        double d = ((double) price) / MoneyUtils.getMultiplier(priceCurrency);
 
         this.total = MoneyUtils.convertToBigMoney(amountCurrency, sumUpAmountPerPrice)
-        .convertedTo(CurrencyUnit.of(priceCurrency), BigDecimal.valueOf(d));
+                .convertedTo(CurrencyUnit.of(priceCurrency), BigDecimal.valueOf(d));
     }
 
     public BigMoney getPrice() {

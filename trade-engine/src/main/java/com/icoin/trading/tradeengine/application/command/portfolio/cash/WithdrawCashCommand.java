@@ -17,13 +17,14 @@
 package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
  */
-public class WithdrawCashCommand {
+public class WithdrawCashCommand extends CommandSupport<WithdrawCashCommand> {
 
     private PortfolioId portfolioIdentifier;
     //    @Min(0)

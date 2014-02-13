@@ -3,9 +3,7 @@ package com.icoin.trading.tradeengine.query.tradeexecuted;
 import com.homhon.base.domain.model.ValueObjectSupport;
 import com.icoin.trading.tradeengine.MoneyUtils;
 import org.joda.money.BigMoney;
-import org.joda.money.CurrencyUnit;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -15,7 +13,7 @@ import java.util.Date;
  * Time: AM10:47
  * To change this template use File | Settings | File Templates.
  */
-public class OpenHighLowCloseVolume extends ValueObjectSupport<OpenHighLowCloseVolume>{
+public class OpenHighLowCloseVolume extends ValueObjectSupport<OpenHighLowCloseVolume> {
     private String priceCurrency;
     private String amountCurrency;
     private Date date;
@@ -49,12 +47,12 @@ public class OpenHighLowCloseVolume extends ValueObjectSupport<OpenHighLowCloseV
 //            limit(pageable.getPageSize())
 
     public OpenHighLowCloseVolume(String priceCurrency, String amountCurrency,
-                              Date date,
-                              Long open,
-                              Long high,
-                              Long low,
-                              Long close,
-                              Long volume) {
+                                  Date date,
+                                  Long open,
+                                  Long high,
+                                  Long low,
+                                  Long close,
+                                  Long volume) {
         this.priceCurrency = priceCurrency;
         this.amountCurrency = amountCurrency;
         this.date = date;
@@ -93,7 +91,7 @@ public class OpenHighLowCloseVolume extends ValueObjectSupport<OpenHighLowCloseV
     }
 
     public BigMoney getOpen() {
-       return MoneyUtils.convertToBigMoney(priceCurrency, open);
+        return MoneyUtils.convertToBigMoney(priceCurrency, open);
     }
 
     public BigMoney getHigh() {

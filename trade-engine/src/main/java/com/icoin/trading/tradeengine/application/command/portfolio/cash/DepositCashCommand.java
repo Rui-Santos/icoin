@@ -17,10 +17,10 @@
 package com.icoin.trading.tradeengine.application.command.portfolio.cash;
 
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
 
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author Jettro Coenradie
  */
-public class DepositCashCommand {
+public class DepositCashCommand extends CommandSupport<DepositCashCommand> {
 
     private PortfolioId portfolioIdentifier;
 

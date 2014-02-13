@@ -4,13 +4,7 @@ import com.icoin.trading.tradeengine.MoneyUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.joda.money.BigMoney;
-import org.joda.money.CurrencyUnit;
 import org.springframework.core.convert.converter.Converter;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-import static com.homhon.util.Asserts.notNull;
 
 /**
  * Created with IntelliJ IDEA.

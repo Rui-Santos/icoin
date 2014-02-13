@@ -28,7 +28,7 @@ public class SecurityUtil {
     public static String obtainLoggedinUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserAccount) {
-            return ((UserAccount) principal).getUserName();
+            return ((UserAccount) principal).getUsername();
         } else {
             throw new IllegalStateException("Wrong security implementation, expecting a UserAccount as principal");
         }

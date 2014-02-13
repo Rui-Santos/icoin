@@ -25,7 +25,7 @@ public interface UserAccount<T extends UserAccount> extends com.homhon.base.doma
 
     String getPrimaryKey();
 
-    String getUserName();
+    String getUsername();
 
     String getFullName();
 }

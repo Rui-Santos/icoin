@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.application.command.transaction.command;
 
+import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
 import java.util.Date;
@@ -23,7 +24,7 @@ import java.util.Date;
 /**
  * @author Jettro Coenradie
  */
-public class ConfirmTransactionCommand {
+public class ConfirmTransactionCommand extends CommandSupport<ConfirmTransactionCommand> {
 
     private TransactionId transactionIdentifier;
     private Date confirmDate;

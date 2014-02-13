@@ -102,4 +102,45 @@ public class UserCommandHandlerTest {
                 .when(new AuthenticateUserCommand("buyer1", "buyer1", "localhost"))
                 .expectEvents(new UserAuthenticatedEvent(aggregateIdentifier, "localhost"));
     }
+
+    @Test
+    public void testHandleForgetPassword() throws Exception {
+        final String email = "buyer1@167.hk";
+        UserId aggregateIdentifier = new UserId();
+        final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
+
+        UserEntry userEntry = new UserEntry();
+        userEntry.setUsername("buyer1");
+        userEntry.setPrimaryKey(aggregateIdentifier.toString());
+        userEntry.setLastName("Buyer One");
+        userEntry.setFirstName("Mr");
+        userEntry.setIdentifier(identifier);
+        userEntry.setEmail(email);
+        Mockito.when(userQueryRepository.findByEmail(email)).thenReturn(userEntry);
+
+        fixture.given(new UserCreatedEvent(aggregateIdentifier,
+                "Buyer 1",
+                "Mr",
+                "Buyer One",
+                identifier,
+                "buyer1@163.com",
+                DigestUtils.sha1("buyer1")))
+                .when(new AuthenticateUserCommand("buyer1", "buyer1", "localhost"))
+                .expectEvents(new UserAuthenticatedEvent(aggregateIdentifier, "localhost"));
+    }
+
+    @Test
+    public void testHandlePasswordReset() throws Exception {
+
+    }
+
+    @Test
+    public void testHandleChangePassword() throws Exception {
+
+    }
+
+    @Test
+    public void testHandleChangeWithdrawPasswordCommand() throws Exception {
+
+    }
 }

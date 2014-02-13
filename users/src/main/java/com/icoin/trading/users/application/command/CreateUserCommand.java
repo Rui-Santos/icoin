@@ -16,21 +16,25 @@
 
 package com.icoin.trading.users.application.command;
 
+import com.homhon.base.command.CommandSupport;
+import com.homhon.util.Strings;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
+import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.Email;
 
 import static com.homhon.util.Asserts.hasLength;
+import static com.homhon.util.Asserts.hasText;
 import static com.homhon.util.Asserts.notNull;
+
 /**
  * Command to create a new user.
  *
  * @author Jettro Coenradie
  */
-public class CreateUserCommand {
+public class CreateUserCommand extends CommandSupport<CreateUserCommand> {
     @NotNull(message = "The provided userId cannot be null")
     private UserId userId;
 
@@ -64,6 +68,8 @@ public class CreateUserCommand {
                              String confirmedPassword) {
         notNull(userId, "The provided userId cannot be null");
         hasLength(username, "The provided username cannot be null");
+        hasText(password, "The provided password cannot be null");
+        hasText(confirmedPassword, "The provided confirmedPassword cannot be null");
 //        Asserts.notNull(identifier, "The provided name cannot be null");
 //        Asserts.notNull(password, "The provided password cannot be null");
 //        Asserts.notNull(firstName, "The provided first name cannot be null");
@@ -77,6 +83,10 @@ public class CreateUserCommand {
         this.email = email;
         this.password = password;
         this.confirmedPassword = confirmedPassword;
+    }
+
+    public boolean isValid() {
+        return Strings.hasText(password) && password.equals(confirmedPassword);
     }
 
     public UserId getUserId() {

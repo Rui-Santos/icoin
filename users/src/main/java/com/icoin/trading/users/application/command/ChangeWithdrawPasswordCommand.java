@@ -1,5 +1,7 @@
 package com.icoin.trading.users.application.command;
 
+import com.homhon.base.command.CommandSupport;
+import com.homhon.util.Strings;
 import com.icoin.trading.users.domain.model.user.UserId;
 
 import javax.validation.constraints.NotNull;
@@ -15,7 +17,7 @@ import static com.homhon.util.Asserts.notNull;
  * Time: 1:08 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ChangeWithdrawPasswordCommand {
+public class ChangeWithdrawPasswordCommand extends CommandSupport<ChangeWithdrawPasswordCommand> {
     private UserId userId;
     @NotNull
     @Size(min = 6, message = "The provided username cannot be null", max = 16)
@@ -32,7 +34,7 @@ public class ChangeWithdrawPasswordCommand {
 
     private String operatingIp;
 
-    public ChangeWithdrawPasswordCommand(UserId userId, String username, String previousPassword, String withdrawPassword, String confirmedWithdrawPassword,String operatingIp) {
+    public ChangeWithdrawPasswordCommand(UserId userId, String username, String previousPassword, String withdrawPassword, String confirmedWithdrawPassword, String operatingIp) {
         notNull(userId, "The provided userId cannot be null");
 
         isTrue(withdrawPassword.equals(confirmedWithdrawPassword), "The withdraw password and confirmed withdraw password should be the same.");
@@ -43,6 +45,12 @@ public class ChangeWithdrawPasswordCommand {
         this.withdrawPassword = withdrawPassword;
         this.confirmedWithdrawPassword = confirmedWithdrawPassword;
         this.operatingIp = operatingIp;
+    }
+
+    public boolean isValid() {
+        return Strings.hasText(withdrawPassword) && Strings.hasText(previousWithdrawPassword) &&
+                !previousWithdrawPassword.equals(withdrawPassword)
+                && withdrawPassword.equals(confirmedWithdrawPassword);
     }
 
     public UserId getUserId() {

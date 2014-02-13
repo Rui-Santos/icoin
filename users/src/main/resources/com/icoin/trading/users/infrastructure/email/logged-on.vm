@@ -1,0 +1,16 @@
+<html>
+<body>
+
+Hi ${user.username},
+<p/>
+You have recently logged on iCoin with following info:
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip: <b>${ip}</b>
+<br/>
+Datetime: <b>${time}</b>
+<p/>
+Regards,
+<br/>
+The iCoin Team.
+</body>
+</html> 

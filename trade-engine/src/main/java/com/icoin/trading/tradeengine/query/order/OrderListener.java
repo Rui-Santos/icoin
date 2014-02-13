@@ -55,7 +55,7 @@ public class OrderListener {
         orderRepository.save(buyOrder);
 
         final OrderEntry sellOrder = orderRepository.findOne(sellOrderId);
-        sellOrder.recordTraded(event.getTradeAmount(), event.getSellCommission(),event.getTradeTime());
+        sellOrder.recordTraded(event.getTradeAmount(), event.getSellCommission(), event.getTradeTime());
         orderRepository.save(sellOrder);
     }
 

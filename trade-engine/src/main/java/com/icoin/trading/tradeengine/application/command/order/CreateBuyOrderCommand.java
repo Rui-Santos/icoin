@@ -29,7 +29,7 @@ import java.util.Date;
  *
  * @author Allard Buijze
  */
-public class CreateBuyOrderCommand extends CreateOrderCommand {
+public class CreateBuyOrderCommand extends CreateOrderCommand<CreateBuyOrderCommand> {
 
     public CreateBuyOrderCommand(OrderId orderId,
                                  PortfolioId portfolioId,

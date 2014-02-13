@@ -1,17 +1,11 @@
 package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.icoin.trading.tradeengine.application.command.order.ExecuteBuyOrderCommand;
-import com.icoin.trading.tradeengine.domain.model.commission.Commission;
-import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
-import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
-import com.icoin.trading.tradeengine.domain.model.order.SellOrder;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.joda.money.BigMoney;
-import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +120,6 @@ public class BuyOrderExecutor {
 
         orderExecutorHelper.refresh(orderBook);
     }
-
 
 
     @Autowired

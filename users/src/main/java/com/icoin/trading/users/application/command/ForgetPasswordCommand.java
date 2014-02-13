@@ -1,9 +1,9 @@
 package com.icoin.trading.users.application.command;
 
+import com.homhon.base.command.CommandSupport;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author Jettro Coenradie
  */
-public class ForgetPasswordCommand {
+public class ForgetPasswordCommand extends CommandSupport<ForgetPasswordCommand> {
     @NotNull
     @Email
     private String email;

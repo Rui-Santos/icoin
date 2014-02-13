@@ -25,7 +25,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public class CashReservationCancelledEvent extends EventSupport<CashReservationCancelledEvent>{
+public class CashReservationCancelledEvent extends EventSupport<CashReservationCancelledEvent> {
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
     private BigMoney leftTotalMoney;

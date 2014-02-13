@@ -23,7 +23,7 @@ public class MongoEventStoreBean {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @Bean(name="eventStore")
+    @Bean(name = "eventStore")
     public MongoEventStore eventStore() {
         XStreamSerializer eventSerializer = new XStreamSerializer();
         XStream xStream = eventSerializer.getXStream();

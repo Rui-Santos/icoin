@@ -7,6 +7,9 @@ package com.icoin.trading.users.application.command;
  * Time: PM9:55
  * To change this template use File | Settings | File Templates.
  */
+
+import com.homhon.base.command.CommandSupport;
+import com.homhon.util.Strings;
 import com.icoin.trading.users.domain.model.user.UserId;
 
 import javax.validation.constraints.NotNull;
@@ -20,7 +23,7 @@ import static com.homhon.util.Asserts.notNull;
  *
  * @author Jettro Coenradie
  */
-public class ChangePasswordCommand {
+public class ChangePasswordCommand extends CommandSupport<ChangePasswordCommand> {
     private UserId userId;
     @NotNull
     @Size(min = 6, message = "The provided username cannot be null", max = 16)
@@ -37,7 +40,7 @@ public class ChangePasswordCommand {
 
     private String operatingIp;
 
-    public ChangePasswordCommand(UserId userId, String username,String previousPassword, String password, String confirmPassword, String operatingIp) {
+    public ChangePasswordCommand(UserId userId, String username, String previousPassword, String password, String confirmPassword, String operatingIp) {
         notNull(userId, "The provided userId cannot be null");
 
         isTrue(confirmPassword.equals(password), "The password and confirmed password should be the same.");
@@ -48,6 +51,12 @@ public class ChangePasswordCommand {
         this.password = password;
         this.confirmPassword = confirmPassword;
         this.operatingIp = operatingIp;
+    }
+
+    public boolean isValid() {
+        return Strings.hasText(password) && Strings.hasText(previousPassword) &&
+                !previousPassword.equals(password)
+                && password.equals(confirmPassword);
     }
 
     public String getPreviousPassword() {

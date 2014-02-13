@@ -19,7 +19,7 @@ public class SynchronizedOnIdentifierHandler {
         notNull(callback);
         notNull(callback.getIdentifier());
 
-        if(obtainLock){
+        if (obtainLock) {
             lock.obtainLock(callback.getIdentifier());
         }
         try {
@@ -27,7 +27,7 @@ public class SynchronizedOnIdentifierHandler {
         } catch (Exception e) {
             throw new InvocationException("Invoke on " + callback.getIdentifier() + " error", e);
         } finally {
-            if(obtainLock){
+            if (obtainLock) {
                 lock.releaseLock(callback.getIdentifier());
             }
         }

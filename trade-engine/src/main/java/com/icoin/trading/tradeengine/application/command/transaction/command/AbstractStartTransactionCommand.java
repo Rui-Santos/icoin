@@ -27,7 +27,7 @@ import org.joda.money.BigMoney;
 /**
  * @author Jettro Coenradie
  */
-public abstract class AbstractStartTransactionCommand<T extends AbstractStartTransactionCommand> extends CommandSupport<T>{
+public abstract class AbstractStartTransactionCommand<T extends AbstractStartTransactionCommand> extends CommandSupport<T> {
 
     private TransactionId transactionId;
     private CoinId coinId;
