@@ -19,6 +19,7 @@ package com.icoin.trading.users.query;
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserAccount;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 
 /**
@@ -26,11 +27,13 @@ import com.icoin.trading.users.domain.model.user.UserAccount;
  */
 public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> implements UserAccount<UserEntry> {
 
+    @Indexed(unique = true)
     private String username;
     private String password;
     private String firstName;
     private String lastName;
     private String realName;
+    @Indexed(unique = true)
     private String email;
     private Identifier identifier;
 

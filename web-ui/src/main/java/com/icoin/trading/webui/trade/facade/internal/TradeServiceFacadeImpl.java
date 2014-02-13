@@ -30,7 +30,7 @@ import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
 import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
 import com.icoin.trading.webui.trade.facade.internal.assembler.OrderAssembler;
-import com.icoin.trading.webui.user.UserServiceFacade;
+import com.icoin.trading.webui.user.facade.UserServiceFacade;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;

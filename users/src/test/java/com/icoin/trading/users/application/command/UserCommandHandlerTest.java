@@ -16,22 +16,20 @@
 
 package com.icoin.trading.users.application.command;
 
-import com.icoin.trading.users.domain.model.user.Identifier;
-import com.icoin.trading.users.domain.model.user.UserId;
-import com.icoin.trading.users.query.repositories.UserQueryRepository;
-import com.icoin.trading.users.application.command.UserCommandHandler;
-import com.icoin.trading.users.application.command.AuthenticateUserCommand;
-import com.icoin.trading.users.application.command.CreateUserCommand;
 import com.icoin.trading.users.domain.event.UserAuthenticatedEvent;
 import com.icoin.trading.users.domain.event.UserCreatedEvent;
-import com.icoin.trading.users.query.UserEntry;
+import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.User;
+import com.icoin.trading.users.domain.model.user.UserId;
+import com.icoin.trading.users.query.UserEntry;
+import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import com.icoin.trading.users.util.DigestUtils;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author Jettro Coenradie
@@ -42,14 +40,18 @@ public class UserCommandHandlerTest {
 
     private UserQueryRepository userQueryRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Before
     public void setUp() {
         userQueryRepository = Mockito.mock(UserQueryRepository.class);
+        passwordEncoder = Mockito.mock(PasswordEncoder.class);
 
         fixture = Fixtures.newGivenWhenThenFixture(User.class);
         UserCommandHandler commandHandler = new UserCommandHandler();
         commandHandler.setRepository(fixture.getRepository());
         commandHandler.setUserRepository(userQueryRepository);
+        commandHandler.setPasswordEncoder(passwordEncoder);
         fixture.registerAnnotatedCommandHandler(commandHandler);
     }
 
@@ -97,7 +99,7 @@ public class UserCommandHandlerTest {
                 identifier,
                 "buyer1@163.com",
                 DigestUtils.sha1("buyer1")))
-                .when(new AuthenticateUserCommand("buyer1", "buyer1".toCharArray()))
-                .expectEvents(new UserAuthenticatedEvent(aggregateIdentifier));
+                .when(new AuthenticateUserCommand("buyer1", "buyer1", "localhost"))
+                .expectEvents(new UserAuthenticatedEvent(aggregateIdentifier, "localhost"));
     }
 }

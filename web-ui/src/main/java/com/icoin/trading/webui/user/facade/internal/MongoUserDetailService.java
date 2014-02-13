@@ -1,4 +1,4 @@
-package com.icoin.trading.webui.user;
+package com.icoin.trading.webui.user.facade.internal;
 
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;

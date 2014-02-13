@@ -27,18 +27,26 @@ public class AuthenticateUserCommand {
     private final String userName;
     @NotNull
     @Size(min = 3)
-    private final char[] password;
+    private final String password;
 
-    public AuthenticateUserCommand(String userName, char[] password) {
+    private final String operatingIp;
+
+
+    public AuthenticateUserCommand(String userName, String password, String operatingIp) {
         this.userName = userName;
         this.password = password;
+        this.operatingIp = operatingIp;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public char[] getPassword() {
+    public String getPassword() {
         return password;
+    }
+
+    public String getOperatingIp() {
+        return operatingIp;
     }
 }

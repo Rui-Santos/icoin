@@ -26,12 +26,18 @@ import com.icoin.trading.users.domain.model.user.UserId;
  */
 public class UserAuthenticatedEvent extends EventSupport<UserAuthenticatedEvent> {
     private final UserId userId;
+    private final String  operatingIp;
 
-    public UserAuthenticatedEvent(UserId userId) {
+    public UserAuthenticatedEvent(UserId userId,String operatingIp) {
         this.userId = userId;
+        this.operatingIp = operatingIp;
     }
 
     public UserId getUserId() {
         return this.userId;
+    }
+
+    public String getOperatingIp() {
+        return operatingIp;
     }
 }

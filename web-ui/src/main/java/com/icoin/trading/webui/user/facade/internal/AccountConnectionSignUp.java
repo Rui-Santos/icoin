@@ -1,4 +1,4 @@
-package com.icoin.trading.webui.user;
+package com.icoin.trading.webui.user.facade.internal;
 
 import com.icoin.trading.users.application.command.CreateUserCommand;
 import com.icoin.trading.users.domain.model.user.Identifier;

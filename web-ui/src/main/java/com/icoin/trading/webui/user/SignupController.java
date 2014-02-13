@@ -21,6 +21,7 @@ import com.icoin.trading.users.domain.model.user.UserId;
 import com.icoin.trading.users.domain.model.user.UsernameAlreadyInUseException;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
+import com.icoin.trading.webui.user.form.SignupForm;
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;

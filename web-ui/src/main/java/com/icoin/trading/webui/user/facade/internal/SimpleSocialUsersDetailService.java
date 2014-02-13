@@ -1,4 +1,4 @@
-package com.icoin.trading.webui.user;
+package com.icoin.trading.webui.user.facade.internal;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;

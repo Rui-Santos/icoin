@@ -33,6 +33,7 @@
         <slf4j.version>1.7.5</slf4j.version>
         <spring.version>3.2.6.RELEASE</spring.version>
         <spring.security.version>3.2.0.RELEASE</spring.security.version>
+        <spring.integration.email.version>3.0.0.RELEASE</spring.integration.email.version>
         <junit.version>4.11</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <hamcrest.version>1.3</hamcrest.version>

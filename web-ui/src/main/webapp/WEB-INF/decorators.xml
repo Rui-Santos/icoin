@@ -21,6 +21,10 @@
         <pattern>/dashboard*</pattern>
     </decorator>
 
+    <decorator name="user" page="admin_decorator.jsp">
+        <pattern>/user*</pattern>
+    </decorator>
+
     <decorator name="master" page="master.jsp">
         <pattern>/*</pattern>
     </decorator>

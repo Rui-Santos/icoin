@@ -16,9 +16,20 @@
 
 package com.icoin.trading.users.application.command;
 
+import com.homhon.core.exception.IZookeyException;
+import com.homhon.util.Strings;
+import com.icoin.trading.users.domain.PasswordResetTokenGenerator;
+import com.icoin.trading.users.domain.model.function.TooManyResetsException;
+import com.icoin.trading.users.domain.model.function.UserPasswordReset;
+import com.icoin.trading.users.domain.model.function.UserPasswordResetRepository;
+import com.icoin.trading.users.domain.model.user.User;
+
 import com.icoin.trading.users.domain.model.user.InvalidIdentityException;
 import com.icoin.trading.users.domain.model.user.UserId;
-import com.icoin.trading.users.domain.model.user.User;
+import com.icoin.trading.users.query.UserEntry;
+import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.icoin.trading.users.domain.model.user.UsernameAlreadyInUseException;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
@@ -26,20 +37,35 @@ import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+import java.util.List;
+
+import static com.homhon.mongo.TimeUtils.currentTime;
+import static com.homhon.mongo.TimeUtils.futureMinute;
 import static com.homhon.util.Asserts.hasLength;
+import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
+import static com.homhon.util.Collections.isEmpty;
 
 /**
  * @author Jettro Coenradie
  */
 @Component
 public class UserCommandHandler {
+    private static Logger logger = LoggerFactory.getLogger(UserCommandHandler.class);
 
     private Repository<User> repository;
 
     private UserQueryRepository userQueryRepository;
+
+    private UserPasswordResetRepository userPasswordResetRepository;
+
+    private PasswordResetTokenGenerator passwordResetTokenGenerator;
+
+    private PasswordEncoder passwordEncoder;
 
     @CommandHandler
     public UserId handleCreateUser(CreateUserCommand command) {
@@ -62,7 +88,7 @@ public class UserCommandHandler {
                 command.getLastName(),
                 command.getIdentifier(),
                 command.getEmail(),
-                command.getPassword());
+                passwordEncoder.encode(command.getPassword()));
         repository.add(user);
         return identifier;
     }
@@ -74,12 +100,120 @@ public class UserCommandHandler {
         if (account == null) {
             return null;
         }
-        boolean success = onUser(account.getPrimaryKey()).authenticate(command.getPassword());
+        boolean success = onUser(account.getPrimaryKey())
+                .authenticate(passwordEncoder.encode(command.getPassword()), command.getOperatingIp());
         return success ? account : null;
     }
 
     private User onUser(String userId) {
         return repository.load(new UserId(userId), null);
+    }
+
+    @CommandHandler
+    public String handleForgetPassword(ForgetPasswordCommand command) {
+        hasLength(command.getEmail());
+        notNull(command.getCurrentTime());
+
+        UserEntry user = userQueryRepository.findByEmail(command.getEmail());
+
+        if (user == null) {
+            logger.warn("can not find user by email!", command.getEmail());
+            return "";
+        }
+
+        Date date = command.getCurrentTime();
+
+        Date startDate = DateUtils.addDays(date, -1);
+
+        List<UserPasswordReset> resets = userPasswordResetRepository.findNotExpiredByUsername(user.getUsername(), command.getOperatingIp(), startDate, date);
+
+        if (!isEmpty(resets) && resets.size() >= 3) {
+            throw new TooManyResetsException(command.getOperatingIp());
+        }
+
+        UserPasswordReset userPasswordReset = createPasswordReset(command, user);
+        userPasswordResetRepository.save(userPasswordReset);
+
+        return userPasswordReset.getToken();
+    }
+
+
+    @CommandHandler
+    public void handlePasswordReset(ResetPasswordCommand command) {
+        hasLength(command.getToken());
+        hasLength(command.getPassword());
+        hasLength(command.getConfirmedPassword());
+        isTrue(command.getConfirmedPassword().equals(command.getPassword()), "The password and confirmed password should be the same.");
+
+        UserPasswordReset token = userPasswordResetRepository.findByToken(command.getToken());
+
+        if (token == null) {
+            logger.warn("cannot find password token {}", command.getToken());
+            return;
+        }
+
+        User user = repository.load(new UserId(token.getUserId()));
+
+        user.changePassword(passwordEncoder.encode(command.getPassword()), passwordEncoder.encode(command.getConfirmedPassword()), command.getOperatingIp());
+
+        clearPasswordResetTokens(token.getUserId(), token.getUsername());
+    }
+
+    @CommandHandler
+    public void handleChangePassword(ChangePasswordCommand command) {
+        notNull(command.getUserId());
+        hasLength(command.getConfirmPassword());
+        hasLength(command.getPassword());
+        isTrue(command.getConfirmPassword().equals(command.getPassword()), "The password and confirmed password should be the same.");
+
+        User user = repository.load(command.getUserId());
+
+        if (user == null) {
+            logger.warn("cannot find user {}", command.getUserId());
+            return;
+        }
+
+        user.changePassword(passwordEncoder.encode(command.getPassword()), passwordEncoder.encode(command.getConfirmPassword()), command.getOperatingIp());
+
+        logger.info("userid {}, username {} has changed password!", command.getUserId(), command.getUsername());
+
+        clearPasswordResetTokens(command.getUserId().toString(), command.getUsername());
+    }
+
+    private void clearPasswordResetTokens(String userId, String userName) {
+        List<UserPasswordReset> resets = userPasswordResetRepository.findByUsername(userName);
+        if (isEmpty(resets)) {
+            logger.info("userid {}, username {}, has no password reset tokens!", userId, userName);
+            return;
+        }
+
+        userPasswordResetRepository.delete(resets);
+        logger.info("userid {}, username {} deleted the password reset token!", userId, userName);
+    }
+
+    private UserPasswordReset createPasswordReset(ForgetPasswordCommand command, UserEntry user) {
+        UserPasswordReset reset = new UserPasswordReset();
+
+        reset.setToken(getToken(command, user.getUsername()));
+        reset.setUsername(user.getUsername());
+        reset.setUserId(user.getPrimaryKey());
+        reset.setEmail(command.getEmail());
+        reset.setIp(command.getOperatingIp());
+        reset.setExpirationDate(futureMinute(currentTime(), 30));
+
+        return reset;
+    }
+
+    private String getToken(ForgetPasswordCommand command, String username) {
+        for (int i = 0; i < 5; i++) {
+            String token = passwordResetTokenGenerator.generate(username, command.getOperatingIp(), command.getCurrentTime());
+            UserPasswordReset byToken = userPasswordResetRepository.findByToken(token);
+
+            if (byToken == null) {
+                return token;
+            }
+        }
+        throw new IZookeyException("Cannot generate password token!");
     }
 
 
@@ -89,8 +223,27 @@ public class UserCommandHandler {
         this.repository = userRepository;
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    public void setUserPasswordResetRepository(UserPasswordResetRepository userPasswordResetRepository) {
+        this.userPasswordResetRepository = userPasswordResetRepository;
+    }
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setUserRepository(UserQueryRepository userRepository) {
         this.userQueryRepository = userRepository;
+    }
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    public void setPasswordResetTokenGenerator(PasswordResetTokenGenerator passwordResetTokenGenerator) {
+        this.passwordResetTokenGenerator = passwordResetTokenGenerator;
     }
 }

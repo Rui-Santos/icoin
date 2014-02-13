@@ -16,9 +16,10 @@
 
 package com.icoin.trading.users.domain.model.user;
 
+import com.icoin.trading.users.domain.event.PasswordChangedEvent;
 import com.icoin.trading.users.domain.event.UserAuthenticatedEvent;
 import com.icoin.trading.users.domain.event.UserCreatedEvent;
-import com.icoin.trading.users.util.DigestUtils;
+import com.icoin.trading.users.domain.event.WithdrawPasswordChangedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
@@ -30,31 +31,60 @@ public class User extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 3291411359839192350L;
     @AggregateIdentifier
     private UserId userId;
-    private String passwordHash;
+    private String password;
+    private String withdrawPassword;
+    private String email;
 
     protected User() {
     }
 
-    public User(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email,String password) {
-        apply(new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, hashOf(password.toCharArray())));
+    public User(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email, String password) {
+        apply(new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password));
     }
 
-    public boolean authenticate(char[] password) {
-        boolean success = this.passwordHash.equals(hashOf(password));
+    public boolean authenticate(String encodedPassword, String operatingIp) {
+        boolean success = this.password.equals(encodedPassword);
         if (success) {
-            apply(new UserAuthenticatedEvent(userId));
+            apply(new UserAuthenticatedEvent(userId, operatingIp));
         }
         return success;
+    }
+
+    public void changePassword(String encodedPassword, String encodedConfirmedPassword, String operatingIp) {
+        apply(new PasswordChangedEvent(userId, encodedPassword, encodedConfirmedPassword, operatingIp));
+    }
+
+    public void changeWithdrawPassword(String encodedPassword, String encodedConfirmedPassword, String operatingIp) {
+        apply(new WithdrawPasswordChangedEvent(userId, encodedPassword, encodedConfirmedPassword, operatingIp));
     }
 
     @EventHandler
     public void onUserCreated(UserCreatedEvent event) {
         this.userId = event.getUserIdentifier();
-        this.passwordHash = event.getPassword();
+        this.password = event.getPassword();
+        this.email = event.getEmail();
     }
 
-    private String hashOf(char[] password) {
-        return DigestUtils.sha1(String.valueOf(password));
+    @EventHandler
+    public void onPasswordChanged(PasswordChangedEvent event) {
+        this.password = event.getEncodedPassword();
+    }
+
+    @EventHandler
+    public void onWithdrawPasswordChangedEvent(WithdrawPasswordChangedEvent event) {
+        this.withdrawPassword = event.getEncodedPassword();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getWithdrawPassword() {
+        return withdrawPassword;
     }
 
     @Override

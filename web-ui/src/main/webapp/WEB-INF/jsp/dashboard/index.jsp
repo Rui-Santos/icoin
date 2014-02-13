@@ -290,7 +290,7 @@
                     <dd>
                         <input type="checkbox" checked="" data-toggle="switch" />
                     </dd>
-                    <dt>Logon notification</dt>
+                    <dt>Withdraw Money Notification</dt>
                     <dd>
                         <input type="checkbox" checked="" data-toggle="switch" />
                     </dd>

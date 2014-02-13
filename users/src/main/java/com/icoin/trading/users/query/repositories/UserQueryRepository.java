@@ -27,5 +27,5 @@ public interface UserQueryRepository extends PagingAndSortingRepository<UserEntr
 
     UserEntry findByUsername(String username);
 
-//    UserEntry findByUserId(String identifier);
+    UserEntry findByEmail(String identifier);
 }

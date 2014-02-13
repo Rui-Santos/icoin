@@ -12,7 +12,7 @@ import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
-import com.icoin.trading.webui.user.UserServiceFacade;
+import com.icoin.trading.webui.user.facade.UserServiceFacade;
 import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
