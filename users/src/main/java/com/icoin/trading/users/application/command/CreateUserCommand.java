@@ -86,7 +86,8 @@ public class CreateUserCommand extends CommandSupport<CreateUserCommand> {
     }
 
     public boolean isValid() {
-        return Strings.hasText(password) && password.equals(confirmedPassword);
+        return Strings.hasText(password) && password.equals(confirmedPassword)
+                && identifier != null && identifier.isValid();
     }
 
     public UserId getUserId() {
