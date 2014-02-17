@@ -2,6 +2,7 @@ package com.icoin.trading.users.application;
 
 import com.icoin.trading.users.domain.PasswordResetTokenGenerator;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -18,6 +19,7 @@ import static com.homhon.util.Asserts.notNull;
  * Time: PM10:09
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class SimplePasswordResetTokenGenerator implements PasswordResetTokenGenerator {
 
     private final MessageDigest digest;

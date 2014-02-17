@@ -68,14 +68,15 @@ import static org.hamcrest.Matchers.nullValue;
  * Time: 1:12 PM
  * To change this template use File | Settings | File Templates.
  */
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("dev")
 @ContextConfiguration({"classpath:com/icoin/trading/tradeengine/infrastructure/persistence/mongo/tradeengine-persistence-mongo.xml",
         "classpath:META-INF/spring/cqrs-infrastructure-context.xml",
         "classpath:META-INF/spring/order-context.xml",
         "classpath:META-INF/spring/trade-engine-context.xml",
+        "classpath:META-INF/spring/users-axon.xml",
         "classpath:META-INF/spring/users-context.xml",
+        "classpath:META-INF/spring/users-external.xml",
         "classpath:META-INF/spring/users-persistence-mongo.xml",
         "classpath:META-INF/spring/coin-context.xml",
         "classpath:META-INF/spring/configuration-context.xml",

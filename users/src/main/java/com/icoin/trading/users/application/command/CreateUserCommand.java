@@ -25,6 +25,8 @@ import org.hibernate.validator.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.List;
+
 import static com.homhon.util.Asserts.hasLength;
 import static com.homhon.util.Asserts.hasText;
 import static com.homhon.util.Asserts.notNull;
@@ -58,6 +60,8 @@ public class CreateUserCommand extends CommandSupport<CreateUserCommand> {
 
     private Identifier identifier;
 
+    private List<String> roles;
+
     public CreateUserCommand(UserId userId,
                              String username,
                              String firstName,
@@ -65,7 +69,8 @@ public class CreateUserCommand extends CommandSupport<CreateUserCommand> {
                              Identifier identifier,
                              String email,
                              String password,
-                             String confirmedPassword) {
+                             String confirmedPassword,
+                             List<String> roles) {
         notNull(userId, "The provided userId cannot be null");
         hasLength(username, "The provided username cannot be null");
         hasText(password, "The provided password cannot be null");
@@ -83,6 +88,7 @@ public class CreateUserCommand extends CommandSupport<CreateUserCommand> {
         this.email = email;
         this.password = password;
         this.confirmedPassword = confirmedPassword;
+        this.roles = roles;
     }
 
     public boolean isValid() {
@@ -122,5 +128,9 @@ public class CreateUserCommand extends CommandSupport<CreateUserCommand> {
 
     public String getConfirmedPassword() {
         return confirmedPassword;
+    }
+
+    public List<String> getRoles() {
+        return roles;
     }
 }

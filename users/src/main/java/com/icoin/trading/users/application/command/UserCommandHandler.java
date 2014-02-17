@@ -16,6 +16,7 @@
 
 package com.icoin.trading.users.application.command;
 
+import com.google.common.collect.ImmutableList;
 import com.homhon.core.exception.IZookeyException;
 import com.icoin.trading.users.domain.PasswordResetTokenGenerator;
 import com.icoin.trading.users.domain.model.function.TooManyResetsException;
@@ -47,6 +48,7 @@ import static com.homhon.util.Asserts.hasLength;
 import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
 import static com.homhon.util.Collections.isEmpty;
+import static com.homhon.util.Objects.nullSafe;
 
 /**
  * @author Jettro Coenradie
@@ -54,7 +56,7 @@ import static com.homhon.util.Collections.isEmpty;
 @Component
 public class UserCommandHandler {
     private static Logger logger = LoggerFactory.getLogger(UserCommandHandler.class);
-
+    public static List<String> DEFAULT_ROLES = ImmutableList.of("ROLE_USER");
     private Repository<User> repository;
 
     private UserQueryRepository userQueryRepository;
@@ -87,7 +89,8 @@ public class UserCommandHandler {
                 command.getLastName(),
                 command.getIdentifier(),
                 command.getEmail(),
-                passwordEncoder.encode(command.getPassword()));
+                passwordEncoder.encode(command.getPassword()),
+                DEFAULT_ROLES);
         repository.add(user);
         return identifier;
     }
@@ -99,8 +102,9 @@ public class UserCommandHandler {
         if (account == null) {
             return null;
         }
+        final Date authTime = nullSafe(command.getAuthTime(), currentTime());
         boolean success = onUser(account.getPrimaryKey())
-                .authenticate(passwordEncoder.encode(command.getPassword()), command.getOperatingIp());
+                .authenticate(passwordEncoder.encode(command.getPassword()), command.getOperatingIp(), authTime);
         return success ? account : null;
     }
 
@@ -154,7 +158,7 @@ public class UserCommandHandler {
         hasLength(command.getToken());
         hasLength(command.getPassword());
         hasLength(command.getConfirmedPassword());
-        isTrue(command.isValid(),"The password and confirmed password should be the same!");
+        isTrue(command.isValid(), "The password and confirmed password should be the same!");
 
         UserPasswordReset token = userPasswordResetRepository.findByToken(command.getToken());
 
@@ -165,7 +169,8 @@ public class UserCommandHandler {
 
         User user = repository.load(new UserId(token.getUserId()));
 
-        user.changePassword(passwordEncoder.encode(command.getPassword()), passwordEncoder.encode(command.getConfirmedPassword()), command.getOperatingIp());
+        final Date changedTime = nullSafe(command.getChangedTime(), currentTime());
+        user.changePassword(passwordEncoder.encode(command.getPassword()), passwordEncoder.encode(command.getConfirmedPassword()), command.getOperatingIp(), changedTime);
 
         clearPasswordResetTokens(token.getUserId(), token.getUsername());
     }
@@ -175,7 +180,7 @@ public class UserCommandHandler {
         notNull(command.getUserId());
         hasLength(command.getConfirmPassword());
         hasLength(command.getPassword());
-        isTrue(command.isValid(),"The password and confirmed password should be the same, but password should be different from previous one!");
+        isTrue(command.isValid(), "The password and confirmed password should be the same, but password should be different from previous one!");
 
         User user = repository.load(command.getUserId());
 
@@ -184,7 +189,9 @@ public class UserCommandHandler {
             return;
         }
 
-        user.changePassword(passwordEncoder.encode(command.getPassword()), passwordEncoder.encode(command.getConfirmPassword()), command.getOperatingIp());
+        final Date changedTime = nullSafe(command.getChangedTime(), currentTime());
+
+        user.changePassword(passwordEncoder.encode(command.getPassword()), passwordEncoder.encode(command.getConfirmPassword()), command.getOperatingIp(), changedTime);
 
         logger.info("userid {}, username {} has changed password!", command.getUserId(), command.getUsername());
 
@@ -196,7 +203,7 @@ public class UserCommandHandler {
         notNull(command.getUserId());
         hasLength(command.getConfirmedWithdrawPassword());
         hasLength(command.getWithdrawPassword());
-        isTrue(command.isValid(),"The password and confirmed password should be the same, but password should be different from previous one!");
+        isTrue(command.isValid(), "The password and confirmed password should be the same, but password should be different from previous one!");
 
         User user = repository.load(command.getUserId());
 
@@ -205,7 +212,11 @@ public class UserCommandHandler {
             return;
         }
 
-        user.changeWithdrawPassword(passwordEncoder.encode(command.getWithdrawPassword()), passwordEncoder.encode(command.getConfirmedWithdrawPassword()), command.getOperatingIp());
+        final Date changedTime = nullSafe(command.getChangedTime(), currentTime());
+        user.changeWithdrawPassword(passwordEncoder.encode(command.getWithdrawPassword()),
+                passwordEncoder.encode(command.getConfirmedWithdrawPassword()),
+                command.getOperatingIp(),
+                changedTime);
 
         logger.info("userid {}, username {} has changed withdraw password!", command.getUserId(), command.getUsername());
     }

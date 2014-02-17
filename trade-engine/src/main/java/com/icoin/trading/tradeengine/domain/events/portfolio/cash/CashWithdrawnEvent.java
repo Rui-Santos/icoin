@@ -21,16 +21,26 @@ import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
 public class CashWithdrawnEvent extends EventSupport<CashWithdrawnEvent> {
     private PortfolioId portfolioIdentifier;
     private BigMoney amountPaid;
+    private Date withdrawnTime;
 
-    public CashWithdrawnEvent(PortfolioId portfolioIdentifier, BigMoney amountPaid) {
+    public CashWithdrawnEvent(PortfolioId portfolioIdentifier,
+                              BigMoney amountPaid,
+                              Date withdrawnTime) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountPaid = amountPaid;
+        this.withdrawnTime = withdrawnTime;
+    }
+
+    public Date getWithdrawnTime() {
+        return withdrawnTime;
     }
 
     public PortfolioId getPortfolioIdentifier() {

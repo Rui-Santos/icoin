@@ -16,6 +16,8 @@
 
 package com.icoin.trading.users.domain.model.user;
 
+import java.util.List;
+
 /**
  * Object used to obtain information about an available UserAccount
  *
@@ -28,4 +30,6 @@ public interface UserAccount<T extends UserAccount> extends com.homhon.base.doma
     String getUsername();
 
     String getFullName();
+
+    List<String> getRoles();
 }

@@ -30,7 +30,6 @@
     <axon:annotation-config/>
     <context:annotation-config/>
     <context:component-scan base-package="com.icoin.trading.tradeengine"/>
-    <context:component-scan base-package="com.icoin.trading.users"/>
 
     <!--<context:property-placeholder-->
     <!--location="classpath:com/icoin/trading/tradeengine/infrastructure/persistence/mongo/mongo-db.dev.properties"/>-->

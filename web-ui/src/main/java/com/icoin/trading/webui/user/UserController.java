@@ -21,6 +21,7 @@ import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import com.icoin.trading.webui.user.facade.UserServiceFacade;
 import com.icoin.trading.webui.user.form.ChangePasswordForm;
 import com.icoin.trading.webui.user.form.ChangeWithdrawPasswordForm;
+import com.icoin.trading.webui.user.form.CreateWithdrawPasswordForm;
 import com.icoin.trading.webui.user.form.ForgetPasswordForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,8 +49,9 @@ public class UserController {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public UserController(UserQueryRepository userRepository) {
+    public UserController(UserQueryRepository userRepository, UserServiceFacade userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -67,8 +69,40 @@ public class UserController {
     @RequestMapping(value = "/changePassword", method = RequestMethod.GET)
     public String changePassword(Model model) {
         model.addAttribute("changePassword", new ChangePasswordForm());
-        model.addAttribute("changeWithdrawPasswordForm", new ChangeWithdrawPasswordForm());
+
+        if (userService.isWithdrawPasswordSet()) {
+            model.addAttribute("changeWithdrawPasswordForm", new ChangeWithdrawPasswordForm());
+            return "user/changePassword";
+        }
+
+        model.addAttribute("createWithdrawPasswordForm", new CreateWithdrawPasswordForm());
         return "user/changePassword";
+    }
+
+    @RequestMapping(value = "/createPassword", method = RequestMethod.POST)
+    public String changePassword(@ModelAttribute("changePassword") @Valid CreateWithdrawPasswordForm createWithdrawPasswordForm,
+                                 BindingResult bindingResult,
+                                 HttpServletRequest request) {
+        if (!bindingResult.hasErrors()) {
+            if (createWithdrawPasswordForm.getWithdrawPassword().equals(createWithdrawPasswordForm.getConfirmedWithdrawPassword())) {
+                bindingResult.rejectValue("password", "error.user.changepassword.differentcomfirmedpassword", "The password is not the same as the confirmed password");
+                return "changePassword";
+            }
+
+            userService.changePassword(createWithdrawPasswordForm.getPreviousPassword(),
+                    createWithdrawPasswordForm.getNewPassword(),
+                    createWithdrawPasswordForm.getConfirmedNewPassword(),
+                    request.getRemoteAddr(),
+                    currentTime());
+
+            return "dashboard/index";
+        }
+
+        createWithdrawPasswordForm.setPreviousPassword(null);
+        createWithdrawPasswordForm.setNewPassword(null);
+        createWithdrawPasswordForm.setConfirmedNewPassword(null);
+
+        return "changePassword";
     }
 
     @RequestMapping(value = "/changeWithdrawPassword", method = RequestMethod.POST)
@@ -86,7 +120,11 @@ public class UserController {
                 return "changePassword";
             }
 
-            userService.changeWithdrawPassword(changeWithdrawPasswordForm.getPreviousWithdrawPassword(), changeWithdrawPasswordForm.getWithdrawPassword(), changeWithdrawPasswordForm.getConfirmedWithdrawPassword(), request.getRemoteAddr());
+            userService.changeWithdrawPassword(changeWithdrawPasswordForm.getPreviousWithdrawPassword(),
+                    changeWithdrawPasswordForm.getWithdrawPassword(),
+                    changeWithdrawPasswordForm.getConfirmedWithdrawPassword(),
+                    request.getRemoteAddr(),
+                    currentTime());
 
             return "dashboard/index";
 //
@@ -118,7 +156,11 @@ public class UserController {
                 return "changePassword";
             }
 
-            userService.changePassword(changePasswordForm.getPreviousPassword(), changePasswordForm.getNewPassword(), changePasswordForm.getConfirmedNewPassword(), request.getRemoteAddr());
+            userService.changePassword(changePasswordForm.getPreviousPassword(),
+                    changePasswordForm.getNewPassword(),
+                    changePasswordForm.getConfirmedNewPassword(),
+                    request.getRemoteAddr(),
+                    currentTime());
 
             return "dashboard/index";
         }
@@ -144,19 +186,19 @@ public class UserController {
         if (!bindingResult.hasErrors()) {
             final UserEntry user = userService.findByEmail(forgetPasswordForm.getEmail());
 
-            if(user==null){
+            if (user == null) {
                 bindingResult.rejectValue("email", "error.user.forgetpassword.emailnotexist", "Cannot find the email");
                 return "forgetPassword";
             }
 
             final int resetCount = userService.findPasswordResetCount(user.getUsername(), request.getRemoteAddr(), currentTime());
-            if(resetCount>=3){
+            if (resetCount >= 3) {
                 bindingResult.rejectValue("email", "error.user.forgetpassword.toomanyreset", "Too many reset within 24 hours");
                 return "forgetPassword";
             }
 
             final boolean generated = userService.generateForgetPasswordToken(forgetPasswordForm.getEmail(), request.getRemoteAddr(), currentTime());
-            if(!generated){
+            if (!generated) {
                 bindingResult.rejectValue("email", "error.user.forgetpassword.cannotgenerate", "Cannot generate the email!");
                 return "forgetPassword";
             }
@@ -168,8 +210,8 @@ public class UserController {
 
     @RequestMapping(value = "/passwordReset", method = RequestMethod.POST)
     public String passwordReset(@ModelAttribute("changePassword") @Valid ChangePasswordForm changePasswordForm,
-                                 BindingResult bindingResult,
-                                 HttpServletRequest request) {
+                                BindingResult bindingResult,
+                                HttpServletRequest request) {
         if (!bindingResult.hasErrors()) {
             if (changePasswordForm.getPreviousPassword().equals(changePasswordForm.getNewPassword())) {
                 bindingResult.rejectValue("previousPassword", "error.user.changepassword.samepassword", "The previous password equals to new password");
@@ -179,7 +221,10 @@ public class UserController {
                 bindingResult.rejectValue("password", "error.user.changepassword.differentcomfirmedpassword", "The password is not the same as the confirmed password");
             }
 
-            userService.changePassword(changePasswordForm.getPreviousPassword(), changePasswordForm.getNewPassword(), changePasswordForm.getConfirmedNewPassword(), request.getRemoteAddr());
+            userService.changePassword(changePasswordForm.getPreviousPassword(),
+                    changePasswordForm.getNewPassword(), changePasswordForm.getConfirmedNewPassword(),
+                    request.getRemoteAddr(),
+                    currentTime());
 
             return "dashboard/index";
         }

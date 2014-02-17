@@ -42,7 +42,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
+import static com.homhon.util.TimeUtils.currentTime;
 import static org.axonframework.test.matchers.Matchers.sequenceOf;
 
 /**
@@ -220,9 +222,11 @@ public class PortfolioCommandHandlerTest {
 
     @Test
     public void testWithdrawingMoneyFromPortfolio() {
+        Date current = currentTime();
         WithdrawCashCommand command = new WithdrawCashCommand(
                 portfolioIdentifier,
-                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(300)));
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(300)),
+                current);
         fixture.given(new PortfolioCreatedEvent(
                 portfolioIdentifier,
                 userIdentifier),
@@ -231,21 +235,24 @@ public class PortfolioCommandHandlerTest {
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 400)))
                 .when(command)
                 .expectEventsMatching(sequenceOf(
-                        new EqualsWithMoneyFieldMatcher<CashWithdrawnEvent>(new CashWithdrawnEvent(portfolioIdentifier,
-                                BigMoney.ofScale(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(300), 1)))
+                        new EqualsWithMoneyFieldMatcher<CashWithdrawnEvent>(
+                                new CashWithdrawnEvent(portfolioIdentifier,
+                                        BigMoney.ofScale(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(300), 1),
+                                        current))
                 ));
     }
 
     @Test
     public void testWithdrawingMoneyFromPortfolio_withoutEnoughMoney() {
+        Date current = currentTime();
         WithdrawCashCommand command = new WithdrawCashCommand(portfolioIdentifier,
-                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 300L));
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 300L), current);
         fixture.given(new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier),
                 new CashDepositedEvent(portfolioIdentifier,
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 200)))
                 .when(command)
                 .expectEvents(new CashWithdrawnEvent(portfolioIdentifier,
-                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 300L)));
+                        BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 300L), current));
     }
 
     @Test

@@ -40,6 +40,7 @@ public class UserListener {
         userEntry.setUsername(event.getUsername());
         userEntry.setEmail(event.getEmail());
         userEntry.setPassword(event.getPassword());
+        userEntry.setRoles(event.getRoles());
 
         userRepository.save(userEntry);
     }

@@ -53,7 +53,8 @@ public abstract class TradingTests {
                         new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252"),
                         userName + "@163.com",
                         userName,
-                        userName);
+                        userName,
+                        Constants.DEFAULT_ROLES);
         commandGateway.send(createUser);
         return userId;
     }

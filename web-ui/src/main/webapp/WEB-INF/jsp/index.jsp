@@ -46,7 +46,9 @@
             <div class="jumbotron">
                 <h2>Trade with confidence on Bitcoin exchange!</h2>
                 <p class="lead">iCoin is the world's most established Bitcoin exchange. You can quickly and securely trade bitcoins with other people around the world!</p>
+                <sec:authorize access="isAnonymous()">
                 <p><a class="btn btn-success btn-wide" href="/signup" role="button">Sign up today</a></p>
+                </sec:authorize>
             </div>
         </div>
         <div class="col-lg-6" id="sidebar" role="navigation">
@@ -459,7 +461,7 @@
 
             <c:forEach items="${executedTrades}" var="trade">
                 <c:choose>
-                    <c:when test="${trade.tradeType == 'Buy'}">
+                    <c:when test="${trade.tradeType == 'BUY'}">
                         <tr class="success">
                     </c:when>
                     <c:otherwise>
@@ -561,4 +563,9 @@
     <%--</div>--%>
 <%--</div>--%>
 </body>
+<content tag="additionalJs">
+    <script src="${ctx}/js/highstock.js"></script>
+    <script src="${ctx}/js/exporting.js"></script>
+    <script src="${ctx}/js/icoin-charts.js"></script>
+</content>
 </html>

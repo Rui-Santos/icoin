@@ -20,6 +20,8 @@ import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
 
+import java.util.List;
+
 /**
  * Event to indicate a new user has been created.
  *
@@ -33,8 +35,16 @@ public class UserCreatedEvent extends EventSupport<UserCreatedEvent> {
     private Identifier identifier;
     private String email;
     private String password;
+   private List<String> roles;
 
-    public UserCreatedEvent(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email,String password) {
+    public UserCreatedEvent(UserId userId,
+                            String username,
+                            String firstName,
+                            String lastName,
+                            Identifier identifier,
+                            String email,
+                            String password,
+                            List<String> roles) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -42,6 +52,7 @@ public class UserCreatedEvent extends EventSupport<UserCreatedEvent> {
         this.identifier = identifier;
         this.email = email;
         this.password = password;
+        this.roles = roles;
     }
 
     public String getEmail() {
@@ -72,6 +83,10 @@ public class UserCreatedEvent extends EventSupport<UserCreatedEvent> {
         return password;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
     @Override
     public String toString() {
         return "UserCreatedEvent{" +
@@ -80,7 +95,9 @@ public class UserCreatedEvent extends EventSupport<UserCreatedEvent> {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", identifier=" + identifier +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }

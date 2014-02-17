@@ -21,6 +21,8 @@ import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.util.List;
+
 
 /**
  * @author Jettro Coenradie
@@ -30,12 +32,21 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
     @Indexed(unique = true)
     private String username;
     private String password;
+    private String withdrawPassword;
     private String firstName;
     private String lastName;
     private String realName;
     @Indexed(unique = true)
     private String email;
     private Identifier identifier;
+
+    private boolean logonAlert = true;
+    private boolean changePasswordAlert = true;
+    private boolean withdrawPasswordAlert = true;
+    private boolean withdrawMoneyAlert = true;
+    private boolean withdrawItemAlert = true;
+    private boolean executedAlert;
+    private List<String> roles;
 
     @Override
     public String getId() {
@@ -114,6 +125,62 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
         this.email = email;
     }
 
+    public String getWithdrawPassword() {
+        return withdrawPassword;
+    }
+
+    public void setWithdrawPassword(String withdrawPassword) {
+        this.withdrawPassword = withdrawPassword;
+    }
+
+    public boolean isLogonAlert() {
+        return logonAlert;
+    }
+
+    public void setLogonAlert(boolean logonAlert) {
+        this.logonAlert = logonAlert;
+    }
+
+    public boolean isChangePasswordAlert() {
+        return changePasswordAlert;
+    }
+
+    public void setChangePasswordAlert(boolean changePasswordAlert) {
+        this.changePasswordAlert = changePasswordAlert;
+    }
+
+    public boolean isWithdrawPasswordAlert() {
+        return withdrawPasswordAlert;
+    }
+
+    public void setWithdrawPasswordAlert(boolean withdrawPasswordAlert) {
+        this.withdrawPasswordAlert = withdrawPasswordAlert;
+    }
+
+    public boolean isWithdrawMoneyAlert() {
+        return withdrawMoneyAlert;
+    }
+
+    public boolean isExecutedAlert() {
+        return executedAlert;
+    }
+
+    public void setExecutedAlert(boolean executedAlert) {
+        this.executedAlert = executedAlert;
+    }
+
+    public void setWithdrawMoneyAlert(boolean withdrawMoneyAlert) {
+        this.withdrawMoneyAlert = withdrawMoneyAlert;
+    }
+
+    public boolean isWithdrawItemAlert() {
+        return withdrawItemAlert;
+    }
+
+    public void setWithdrawItemAlert(boolean withdrawItemAlert) {
+        this.withdrawItemAlert = withdrawItemAlert;
+    }
+
     @Override
     public String toString() {
         return "UserEntry{" +
@@ -121,8 +188,16 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", realName='" + realName + '\'' +
                 ", email='" + email + '\'' +
                 ", identifier=" + identifier +
+                ", logonAlert=" + logonAlert +
+                ", changePasswordAlert=" + changePasswordAlert +
+                ", withdrawPasswordAlert=" + withdrawPasswordAlert +
+                ", withdrawMoneyAlert=" + withdrawMoneyAlert +
+                ", withdrawItemAlert=" + withdrawItemAlert +
+                ", executedAlert=" + executedAlert +
+                ", roles=" + roles +
                 '}';
     }
 
@@ -135,13 +210,21 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
     public UserEntry copy() {
         final UserEntry userEntry = new UserEntry();
 
-        userEntry.setPassword(password);
         userEntry.setUsername(username);
         userEntry.setPrimaryKey(primaryKey);
         userEntry.setLastName(lastName);
         userEntry.setFirstName(firstName);
-        userEntry.setIdentifier(identifier);
+//        userEntry.setIdentifier(identifier);
+//        userEntry.setPassword(password);
 
         return userEntry;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }

@@ -20,6 +20,7 @@ import com.homhon.base.command.CommandSupport;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 /**
  * @author Jettro Coenradie
@@ -34,11 +35,14 @@ public class AuthenticateUserCommand extends CommandSupport<AuthenticateUserComm
 
     private final String operatingIp;
 
+    private final Date authTime;
 
-    public AuthenticateUserCommand(String userName, String password, String operatingIp) {
+
+    public AuthenticateUserCommand(String userName, String password, String operatingIp, Date authTime) {
         this.userName = userName;
         this.password = password;
         this.operatingIp = operatingIp;
+        this.authTime = authTime;
     }
 
     public String getUserName() {
@@ -51,5 +55,9 @@ public class AuthenticateUserCommand extends CommandSupport<AuthenticateUserComm
 
     public String getOperatingIp() {
         return operatingIp;
+    }
+
+    public Date getAuthTime() {
+        return authTime;
     }
 }

@@ -1,5 +1,8 @@
 package com.icoin.trading.webui.user.form;
 
+import com.homhon.util.Strings;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.constraints.Size;
 
 /**
@@ -10,11 +13,14 @@ import javax.validation.constraints.Size;
  * To change this template use File | Settings | File Templates.
  */
 public class ChangePasswordForm {
-    @Size(min = 6, max = 16)
+    @NotEmpty
+    @Size(min = 6, max = 16, message = "Previous password length error.")
     private String previousPassword;
-    @Size(min = 6, max = 16)
+    @NotEmpty
+    @Size(min = 6, max = 16, message = "Password length must be between 6 and 16")
     private String newPassword;
-    @Size(min = 6, max = 16)
+    @NotEmpty
+    @Size(min = 6, max = 16, message = "Confirmed new password length must be between 6 and 16")
     private String confirmedNewPassword;
 
     public String getPreviousPassword() {
@@ -39,5 +45,11 @@ public class ChangePasswordForm {
 
     public void setConfirmedNewPassword(String confirmedNewPassword) {
         this.confirmedNewPassword = confirmedNewPassword;
+    }
+
+    public boolean isValid() {
+        return Strings.hasText(newPassword) && Strings.hasText(previousPassword) &&
+                !previousPassword.equals(newPassword)
+                && newPassword.equals(confirmedNewPassword);
     }
 }

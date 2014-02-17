@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import static com.homhon.util.TimeUtils.currentTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -94,6 +95,7 @@ public class UserServiceFacadeImplTest {
 
     @Test
     public void testChangePassword() throws Exception {
+        final Date date = currentTime();
         final String previousPassword = "previousPassword";
         final String newPassword = "newPassword";
         final String confirmedNewPassword = "newPassword";
@@ -107,7 +109,8 @@ public class UserServiceFacadeImplTest {
                         previousPassword,
                         newPassword,
                         confirmedNewPassword,
-                        operatingIp);
+                        operatingIp,
+                        date);
 
         CommandGateway gateway = mock(CommandGateway.class);
         doNothing().when(gateway).send(eq(command));
@@ -116,7 +119,7 @@ public class UserServiceFacadeImplTest {
         service.setUserService(userService);
         service.setCommandGateway(gateway);
 
-        service.changePassword(previousPassword, newPassword, confirmedNewPassword, operatingIp);
+        service.changePassword(previousPassword, newPassword, confirmedNewPassword, operatingIp, date);
 
         verify(userService).getCurrentUser();
         verify(gateway).send(eq(command));
@@ -167,12 +170,13 @@ public class UserServiceFacadeImplTest {
         final String ip = "ip";
         final String password = "password";
         final String confirmedPassword = "password";
+        final Date date = currentTime();
 
         UserService userService = mockUserService();
         UserService userService2 = mock(UserService.class);
 
         CommandGateway gateway = mock(CommandGateway.class);
-        ResetPasswordCommand command = new ResetPasswordCommand(token, password, confirmedPassword, ip);
+        ResetPasswordCommand command = new ResetPasswordCommand(token, password, confirmedPassword, ip, date);
         doNothing().when(gateway).send(eq(command));
 
 
@@ -180,10 +184,10 @@ public class UserServiceFacadeImplTest {
         service.setUserService(userService);
         service.setCommandGateway(gateway);
 
-        service.resetPasswordWithToken(token, password, confirmedPassword, ip);
+        service.resetPasswordWithToken(token, password, confirmedPassword, ip, date);
 
         service.setUserService(userService2);
-        service.resetPasswordWithToken(token, password, confirmedPassword, ip);
+        service.resetPasswordWithToken(token, password, confirmedPassword, ip, date);
 
         verify(userService).getCurrentUser();
         verify(userService2).getCurrentUser();
@@ -196,6 +200,7 @@ public class UserServiceFacadeImplTest {
         final String newWithdrawPassword = "newWithdrawPassword";
         final String confirmedNewWithdrawPassword = "newWithdrawPassword";
         final String operatingIp = "operatingIp";
+        final Date date = currentTime();
 
         UserService userService = mockUserService();
         final ChangePasswordCommand command =
@@ -205,7 +210,8 @@ public class UserServiceFacadeImplTest {
                         previousWithdrawPassword,
                         newWithdrawPassword,
                         confirmedNewWithdrawPassword,
-                        operatingIp);
+                        operatingIp,
+                        date);
 
         CommandGateway gateway = mock(CommandGateway.class);
         doNothing().when(gateway).send(eq(command));
@@ -214,7 +220,11 @@ public class UserServiceFacadeImplTest {
         service.setUserService(userService);
         service.setCommandGateway(gateway);
 
-        service.changePassword(previousWithdrawPassword, newWithdrawPassword, confirmedNewWithdrawPassword, operatingIp);
+        service.changePassword(previousWithdrawPassword,
+                newWithdrawPassword,
+                confirmedNewWithdrawPassword,
+                operatingIp,
+                date);
 
         verify(userService).getCurrentUser();
         verify(gateway).send(eq(command));
@@ -245,7 +255,7 @@ public class UserServiceFacadeImplTest {
 
         UserPasswordResetRepository userPasswordResetRepository = mock(UserPasswordResetRepository.class);
         when(userPasswordResetRepository.findNotExpiredByEmail(eq(email), eq(operatingIp), eq(startDate), eq(currentTime)))
-        .thenReturn(null, Arrays.asList(new UserPasswordReset(), new UserPasswordReset()));
+                .thenReturn(null, Arrays.asList(new UserPasswordReset(), new UserPasswordReset()));
 
         UserServiceFacadeImpl service = new UserServiceFacadeImpl();
         service.setUserPasswordResetRepository(userPasswordResetRepository);

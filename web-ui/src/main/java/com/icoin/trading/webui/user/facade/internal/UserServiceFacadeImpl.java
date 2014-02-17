@@ -27,9 +27,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.homhon.util.Collections.isEmpty;
-import static com.homhon.util.Asserts.notNull;
 import static com.homhon.util.Asserts.hasLength;
+import static com.homhon.util.Asserts.notNull;
+import static com.homhon.util.Collections.isEmpty;
 
 /**
  * Created with IntelliJ IDEA.
@@ -57,12 +57,8 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return (UserAccount) userService.getCurrentUser();
     }
 
-    /**
-     * For now we work with only one portfolio per user. This might change in the future.
-     *
-     * @return The found portfolio for the logged in user.
-     */
-    public PortfolioEntry obtainPortfolioForUser() {
+    @Override
+    public UserEntry currentDetailUser() {
         UserAccount userAccount = currentUser();
 
         if (userAccount == null) {
@@ -71,19 +67,56 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         }
 
         UserEntry user = userRepository.findByUsername(userAccount.getUsername());
+        if (user == null) {
+            logger.warn("user {} cannot be found", userAccount.getUsername());
+            return null;
+        }
+        return user;
+    }
+
+    @Override
+    public boolean isWithdrawPasswordSet() {
+        final UserEntry user = currentDetailUser();
+
+        if (user != null && Strings.hasLength(user.getWithdrawPassword())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * For now we work with only one portfolio per user. This might change in the future.
+     *
+     * @return The found portfolio for the logged in user.
+     */
+    public PortfolioEntry obtainPortfolioForUser() {
+        final UserEntry user = currentDetailUser();
+        if (user == null) {
+            return null;
+        }
         return portfolioQueryRepository.findByUserIdentifier(user.getPrimaryKey());
     }
 
     @Override
-    public void changePassword(String previousPassword, String newPassword, String confirmedNewPassword, String operatingIp) {
+    public void changePassword(String previousPassword,
+                               String newPassword,
+                               String confirmedNewPassword,
+                               String operatingIp,
+                               Date changedTime) {
         UserAccount userAccount = currentUser();
         if (userAccount == null) {
             logger.warn("user not logged on");
             return;
         }
-        commandGateway.send(new ChangePasswordCommand(new UserId(userAccount.getPrimaryKey()),
-                userAccount.getUsername(), previousPassword, newPassword, confirmedNewPassword,
-                operatingIp));
+        commandGateway.send(new ChangePasswordCommand(
+                new UserId(userAccount.getPrimaryKey()),
+                userAccount.getUsername(),
+                previousPassword,
+                newPassword,
+                confirmedNewPassword,
+                operatingIp,
+                changedTime));
     }
 
     public boolean generateForgetPasswordToken(String email, String operatingIp, Date currentTime) {
@@ -108,31 +141,46 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
 
     @Override
-    public void resetPasswordWithToken(String token, String password, String confirmedPassword, String operatingIp) {
+    public void resetPasswordWithToken(String token,
+                                       String password,
+                                       String confirmedPassword,
+                                       String operatingIp,
+                                       Date resetTime) {
         UserAccount userAccount = currentUser();
         if (userAccount != null) {
             logger.warn("user has already logged on");
             return;
         }
-        ResetPasswordCommand command = new ResetPasswordCommand(token, password, confirmedPassword, operatingIp);
+        ResetPasswordCommand command = new ResetPasswordCommand(token, password, confirmedPassword, operatingIp, resetTime);
 
         commandGateway.send(command);
     }
 
     @Override
-    public void changeWithdrawPassword(String previousPassword, String withdrawPassword, String confirmedWithdrawPassword, String operatingIp) {
+    public void changeWithdrawPassword(String previousPassword,
+                                       String withdrawPassword,
+                                       String confirmedWithdrawPassword,
+                                       String operatingIp,
+                                       Date changedTime) {
         UserAccount userAccount = currentUser();
         if (userAccount == null) {
             logger.warn("user not logged on");
             return;
         }
-        commandGateway.send(new ChangeWithdrawPasswordCommand(new UserId(userAccount.getPrimaryKey()),
-                userAccount.getUsername(), previousPassword, withdrawPassword, confirmedWithdrawPassword, operatingIp));
+
+        commandGateway.send(new ChangeWithdrawPasswordCommand(
+                new UserId(userAccount.getPrimaryKey()),
+                userAccount.getUsername(),
+                previousPassword,
+                withdrawPassword,
+                confirmedWithdrawPassword,
+                operatingIp,
+                changedTime));
     }
 
     @Override
     public UserEntry findByEmail(String email) {
-        if(!Strings.hasText(email)){
+        if (!Strings.hasText(email)) {
             return null;
         }
         UserEntry user = userRepository.findByEmail(email);

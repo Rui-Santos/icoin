@@ -5,6 +5,8 @@ import com.homhon.base.command.CommandSupport;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.Date;
+
 import static com.homhon.util.Strings.hasText;
 
 /**
@@ -21,12 +23,18 @@ public class ResetPasswordCommand extends CommandSupport<ResetPasswordCommand> {
     private String confirmedPassword;
 
     private String operatingIp;
+    private Date changedTime;
 
-    public ResetPasswordCommand(String token, String password, String confirmedPassword, String operatingIp) {
+    public ResetPasswordCommand(String token,
+                                String password,
+                                String confirmedPassword,
+                                String operatingIp,
+                                Date changedTime) {
         this.token = token;
         this.password = password;
         this.confirmedPassword = confirmedPassword;
         this.operatingIp = operatingIp;
+        this.changedTime = changedTime;
     }
 
     public String getToken() {
@@ -47,5 +55,9 @@ public class ResetPasswordCommand extends CommandSupport<ResetPasswordCommand> {
 
     public String getOperatingIp() {
         return operatingIp;
+    }
+
+    public Date getChangedTime() {
+        return changedTime;
     }
 }

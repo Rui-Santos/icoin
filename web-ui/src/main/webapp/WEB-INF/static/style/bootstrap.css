@@ -462,6 +462,43 @@ cite {
     text-align: center;
 }
 
+.bg-primary {
+    color: #fff;
+    background-color: #428bca;
+}
+a.bg-primary:hover {
+    background-color: #3071a9;
+}
+.bg-success {
+    background-color: #dff0d8;
+}
+a.bg-success:hover {
+    background-color: #c1e2b3;
+}
+.bg-info {
+    background-color: #d9edf7;
+}
+a.bg-info:hover {
+    background-color: #afd9ee;
+}
+.bg-warning {
+    background-color: #fcf8e3;
+}
+a.bg-warning:hover {
+    background-color: #f7ecb5;
+}
+.bg-danger {
+    background-color: #f2dede;
+}
+a.bg-danger:hover {
+    background-color: #e4b9b9;
+}
+.page-header {
+    padding-bottom: 9px;
+    margin: 40px 0 20px;
+    border-bottom: 1px solid #eee;
+}
+
 h1,
 h2,
 h3,
@@ -5804,17 +5841,17 @@ a.list-group-item.active:focus .list-group-item-text {
 }
 
 .panel-primary {
-    border-color: #428bca;
+    border-color: #56c8c0;
 }
 
 .panel-primary > .panel-heading {
     color: #ffffff;
-    background-color: #428bca;
-    border-color: #428bca;
+    background-color: #56c8c0;
+    border-color: #56c8c0;
 }
 
 .panel-primary > .panel-heading + .panel-collapse .panel-body {
-    border-top-color: #428bca;
+    border-top-color: #56c8c0;
 }
 
 .panel-primary > .panel-heading > .dropdown .caret {
@@ -5822,7 +5859,7 @@ a.list-group-item.active:focus .list-group-item-text {
 }
 
 .panel-primary > .panel-footer + .panel-collapse .panel-body {
-    border-bottom-color: #428bca;
+    border-bottom-color: #56c8c0;
 }
 
 .panel-success {

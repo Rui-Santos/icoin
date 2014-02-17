@@ -21,6 +21,8 @@ import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -30,10 +32,13 @@ public class WithdrawCashCommand extends CommandSupport<WithdrawCashCommand> {
     //    @Min(0)
     private BigMoney amountToPay;
 
-    public WithdrawCashCommand(PortfolioId portfolioIdentifier, BigMoney amountToPay) {
+    private Date withdrawnTime;
+
+    public WithdrawCashCommand(PortfolioId portfolioIdentifier, BigMoney amountToPay, Date withdrawnTime) {
 
         this.portfolioIdentifier = portfolioIdentifier;
         this.amountToPay = amountToPay;
+        this.withdrawnTime = withdrawnTime;
     }
 
     public BigMoney getAmountToPay() {
@@ -42,5 +47,9 @@ public class WithdrawCashCommand extends CommandSupport<WithdrawCashCommand> {
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public Date getWithdrawnTime() {
+        return withdrawnTime;
     }
 }

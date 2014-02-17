@@ -22,14 +22,14 @@
 
 <%--<content tag="title">Dashboard</content>--%>
 <%--<content tag="tagline">--%>
-    <%--Your overview of everything you have and want to know--%>
+<%--Your overview of everything you have and want to know--%>
 <%--</content>--%>
-<content tag="breadcrumb">
-    <ol class="breadcrumb">
-        <li><a href="${ctx}/">Home</a></li>
-        <li class="active"><a href="${ctx}/dashboard">Dashboard</a></li>
-    </ol>
-</content>
+<%--<content tag="breadcrumb">--%>
+<%--<ol class="breadcrumb">--%>
+<%--<li><a href="${ctx}/">Home</a></li>--%>
+<%--<li class="active"><a href="${ctx}/dashboard">Dashboard</a></li>--%>
+<%--</ol>--%>
+<%--</content>--%>
 
 <div class="container bs-docs-container">
 <div class="row">
@@ -180,48 +180,48 @@
     </div>
 
     <%--<div class="panel panel-primary">--%>
-        <%--<div class="panel-heading">--%>
-            <%--<h3 class="panel-title" id="trade_history">Trade History</h3>--%>
-        <%--</div>--%>
+    <%--<div class="panel-heading">--%>
+    <%--<h3 class="panel-title" id="trade_history">Trade History</h3>--%>
+    <%--</div>--%>
 
-        <%--<div class="panel-body">--%>
-            <%--<table class="table table-condensed table-hover">--%>
-                <%--<thead>--%>
-                <%--<tr>--%>
-                    <%--<th class="text-center">Buy/Sell</th>--%>
-                    <%--<th class="text-center">Price</th>--%>
-                    <%--<th class="text-center">Amount</th>--%>
-                    <%--<th class="text-center">CNY</th>--%>
-                    <%--<th class="text-center">Date</th>--%>
-                <%--</tr>--%>
-                <%--</thead>--%>
-                <%--<tbody>--%>
-                <%--<tr>--%>
-                    <%--<td class="text-center">Buy</td>--%>
-                    <%--<td class="text-center">593.998</td>--%>
-                    <%--<td class="text-center">0.01</td>--%>
-                    <%--<td class="text-center">5.93998</td>--%>
-                    <%--<td class="text-center">21.11.13 15:35</td>--%>
-                <%--</tr>--%>
-                <%--<tr>--%>
-                    <%--<td class="text-center">Buy</td>--%>
-                    <%--<td class="text-center">593.998</td>--%>
-                    <%--<td class="text-center">0.01</td>--%>
-                    <%--<td class="text-center">5.93998</td>--%>
-                    <%--<td class="text-center">21.11.13 15:35</td>--%>
-                <%--</tr>--%>
-                <%--</tbody>--%>
-            <%--</table>--%>
-            <%--<ul class="pagination pull-right">--%>
-                <%--<li class="disabled"><a href="#">&laquo;</a></li>--%>
-                <%--<li class="active"><a href="#">1</a></li>--%>
-                <%--<li><a href="#">2</a></li>--%>
-                <%--<li><a href="#">3</a></li>--%>
-                <%--<li><a href="#">4</a></li>--%>
-                <%--<li><a href="#">5</a></li>--%>
-                <%--<li><a href="#">&raquo;</a></li>--%>
-            <%--</ul>--%>
-        <%--</div>--%>
+    <%--<div class="panel-body">--%>
+    <%--<table class="table table-condensed table-hover">--%>
+    <%--<thead>--%>
+    <%--<tr>--%>
+    <%--<th class="text-center">Buy/Sell</th>--%>
+    <%--<th class="text-center">Price</th>--%>
+    <%--<th class="text-center">Amount</th>--%>
+    <%--<th class="text-center">CNY</th>--%>
+    <%--<th class="text-center">Date</th>--%>
+    <%--</tr>--%>
+    <%--</thead>--%>
+    <%--<tbody>--%>
+    <%--<tr>--%>
+    <%--<td class="text-center">Buy</td>--%>
+    <%--<td class="text-center">593.998</td>--%>
+    <%--<td class="text-center">0.01</td>--%>
+    <%--<td class="text-center">5.93998</td>--%>
+    <%--<td class="text-center">21.11.13 15:35</td>--%>
+    <%--</tr>--%>
+    <%--<tr>--%>
+    <%--<td class="text-center">Buy</td>--%>
+    <%--<td class="text-center">593.998</td>--%>
+    <%--<td class="text-center">0.01</td>--%>
+    <%--<td class="text-center">5.93998</td>--%>
+    <%--<td class="text-center">21.11.13 15:35</td>--%>
+    <%--</tr>--%>
+    <%--</tbody>--%>
+    <%--</table>--%>
+    <%--<ul class="pagination pull-right">--%>
+    <%--<li class="disabled"><a href="#">&laquo;</a></li>--%>
+    <%--<li class="active"><a href="#">1</a></li>--%>
+    <%--<li><a href="#">2</a></li>--%>
+    <%--<li><a href="#">3</a></li>--%>
+    <%--<li><a href="#">4</a></li>--%>
+    <%--<li><a href="#">5</a></li>--%>
+    <%--<li><a href="#">&raquo;</a></li>--%>
+    <%--</ul>--%>
+    <%--</div>--%>
     <%--</div>--%>
 </div>
 
@@ -238,15 +238,20 @@
         </div>
 
         <div class="panel-body">
+            <div class="row pi-nav">
+
+                <div class="col-xs-2 col-md-1">
+                    <a href="${ctx}/user/changePassword"
+                       class="icn_pen"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+                </div>
+                <div class="col-xs-2 col-md-1">
+                    <a href="${ctx}/user/changePassword"
+                       class="icn_pen"><span class="glyphicon glyphicon-lock pull-right"></span></a>
+                </div>
+            </div>
+            <div class="row">
+            </div>
             <div class="admin-information">
-                <ul class="pi-nav">
-                    <li class="edit-information">
-                        <a href="https://designmodo.com/my-account/edit-address/?address=billing"
-                           class="icn_pen"><span class="glyphicon glyphicon-lock pull-right"></span></a></li>
-                    <a href="https://designmodo.com/my-account/edit-address/?address=billing"
-                       class="icn_pen"><span class="glyphicon glyphicon-edit pull-right"></span></a></li>
-                </ul>
-                <p/>
                 <dl class="myacc-col1">
                     <dt>Username</dt>
                     <dd><c:out value="${userInfo.username}"/></dd>
@@ -268,10 +273,10 @@
                     <dd><c:out value="${userInfo.realName}"/></dd>
                 </dl>
                 <%--<dl class="myacc-col3">--%>
-                    <%--<dt>Add BTC</dt>--%>
-                    <%--<dd>--%>
+                <%--<dt>Add BTC</dt>--%>
+                <%--<dd>--%>
 
-                    <%--</dd>--%>
+                <%--</dd>--%>
                 <%--</dl>--%>
             </div>
 
@@ -288,11 +293,19 @@
                 <dl class="dl-horizontal">
                     <dt>Logon notification</dt>
                     <dd>
-                        <input type="checkbox" checked="" data-toggle="switch" />
+                        <input type="checkbox" checked="" data-toggle="switch"/>
+                    </dd>
+                    <dt>Change password notification</dt>
+                    <dd>
+                        <input type="checkbox" checked="" data-toggle="switch"/>
+                    </dd>
+                    <dt>Change withdraw password notification</dt>
+                    <dd>
+                        <input type="checkbox" checked="" data-toggle="switch"/>
                     </dd>
                     <dt>Withdraw Money Notification</dt>
                     <dd>
-                        <input type="checkbox" checked="" data-toggle="switch" />
+                        <input type="checkbox" checked="" data-toggle="switch"/>
                     </dd>
                 </dl>
             </div>
@@ -304,12 +317,9 @@
 </div>
 </div>
 </div>
-
 <content tag="additionalJs">
     <script src="${ctx}/js/bootstrap-switch.js"></script>
     <script src="${ctx}/js/icoin.js"></script>
 </content>
-
-
 </body>
 </html>

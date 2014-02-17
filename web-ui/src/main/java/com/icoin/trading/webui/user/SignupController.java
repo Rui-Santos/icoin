@@ -15,6 +15,7 @@
  */
 package com.icoin.trading.webui.user;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.users.application.command.CreateUserCommand;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
@@ -26,8 +27,9 @@ import org.axonframework.commandhandling.CommandExecutionException;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.stereotype.Controller;
@@ -39,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.concurrent.TimeUnit;
 
@@ -72,11 +75,29 @@ public class SignupController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String signup(@Valid SignupForm form, BindingResult formBinding, WebRequest request) {
+    public String signup(@Valid SignupForm form,
+                         BindingResult formBinding,
+                         WebRequest request,
+                         HttpServletRequest httpRequest) {
         if (formBinding.hasErrors()) {
             return "signup/signup";
         }
 
+        if(!form.isAgreed()){
+            formBinding.rejectValue("agreed", "error.signup.agreed.notchecked","You must agree with the terms.");
+            return "signup/signup";
+        }
+
+        final UserEntry byEmail = userQueryRepository.findByEmail(form.getEmail());
+        if (byEmail != null) {
+            formBinding.rejectValue("email", "error.signup.email.duplicated","Email has already been used.");
+            return "signup/signup";
+        }
+        final UserEntry byUsername = userQueryRepository.findByUsername(form.getUsername());
+        if (byUsername != null) {
+            formBinding.rejectValue("email", "error.signup.username.duplicated","Username has already been used.");
+            return "signup/signup";
+        }
         UserId userId = createAccount(form, formBinding);
         if (userId != null) {
             final UserEntry created = userQueryRepository.findOne(userId.toString());
@@ -87,7 +108,8 @@ public class SignupController {
 
             //todo add credential
             //new SimpleGrantedAuthority("ROLE_USER")
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(created, null, null));
+            final Authentication authentication = AuthUtils.getAuthentication(created, new WebAuthenticationDetails(httpRequest), null);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             ProviderSignInUtils.handlePostSignUp(created.getUsername(), request);
             return "redirect:/";
         }
@@ -107,14 +129,16 @@ public class SignupController {
                             new Identifier(Identifier.Type.IDENTITY_CARD, form.getIdentifier()),
                             form.getEmail(),
                             form.getPassword(),
-                            form.getConfirmedPassword());
+                            form.getConfirmedPassword(),
+                            Constants.DEFAULT_ROLES);
 
             gateway.sendAndWait(createUser, 60, TimeUnit.SECONDS);
             return userId;
-        } catch (UsernameAlreadyInUseException e) {
-            formBinding.rejectValue("username", "user.duplicateUsername", "already in use");
-            return null;
         } catch (CommandExecutionException e) {
+            if (e.getCause() instanceof UsernameAlreadyInUseException) {
+                formBinding.rejectValue("username", "user.duplicateUsername", "already in use");
+                return null;
+            }
             formBinding.rejectValue("username", "user.notcreated", "cannot create username");
             return null;
         }

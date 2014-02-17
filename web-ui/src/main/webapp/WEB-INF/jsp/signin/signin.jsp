@@ -21,19 +21,21 @@
 <%--<p>You need to login to access this part of the site. Please provided your username and password</p>--%>
 
 <c:if test="${not empty param.login_error}">
-    <div class="alert-message error">
+    <div class="alert alert-danger text-center">
         <p>
-            <strong>Your login attempt was not successful, try again.</strong>
+            <strong>Your login attempt was not successful, please try again.</strong>
         </p>
 
-        <p>
-            Reason: <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>.
-        </p>
+        <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
+                <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>.
+        </c:if>
+
     </div>
 </c:if>
 
 <form:form id="signin" action="/signin/authenticate" class="form-signin" role="form">
     <h2 class="form-signin-heading">Please sign in</h2>
+
     <div class="input-group input-group-lg">
         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
         <input type="text" class="form-control"

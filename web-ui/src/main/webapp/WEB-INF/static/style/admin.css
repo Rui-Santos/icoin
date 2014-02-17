@@ -35,7 +35,7 @@
 .bs-sidenav {
     height: 100%;
     z-index: -1;
-    margin-top: 30px;
+    margin-top: 5px;
     margin-bottom: 30px;
     padding-top:    10px;
     padding-bottom: 10px;
@@ -123,7 +123,7 @@
 /* Janky fix for preventing navbar from overlapping */
 h1[id] {
     padding-top: 80px;
-    margin-top: -45px;
+    margin-top: -65px;
 }
 
 /* Janky fix for preventing navbar from overlapping */
@@ -133,7 +133,10 @@ h3[id] {
 }
 
 .admin-information {
-    overflow: auto; position: relative; padding-bottom: 10px;
+    overflow: auto;
+    position: relative;
+    padding-bottom: 5px;
+    word-wrap:break-word;
 }
 .admin-information dl {
     -webkit-box-sizing: border-box;
@@ -149,6 +152,7 @@ h3[id] {
 }
 .admin-information dl.myacc-col2 {
     width: 32%;
+    text-wrap: none;
 }
 .admin-information dl.myacc-col3 {
     width: 36%;
@@ -181,19 +185,15 @@ h3[id] {
 
 .pi-nav {
     float: right;
-    right: 0px;
-    margin-top: 0px;
-    line-height: 1;
-    padding-top: 2px;
-}
-.pi-nav li {
-    display: block; float: left;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
 }
 .pi-nav a {
-    color: #e1455e; margin-right: 35px;
+    color: #e1455e;
 }
 .pi-nav a:hover {
-    color: #446DB2;
+    color: #c8100C;
 }
 
 .error{

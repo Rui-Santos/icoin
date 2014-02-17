@@ -65,7 +65,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">iCoin another</a>
+            <a class="navbar-brand" href="/">iCoin</a>
         </div>
 
         <div class="navbar-collapse collapse">

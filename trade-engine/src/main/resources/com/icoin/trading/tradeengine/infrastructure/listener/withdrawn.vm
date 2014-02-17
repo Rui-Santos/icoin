@@ -1,0 +1,12 @@
+<html>
+<body>
+
+Hi ${username},
+<p/>
+A request to withdraw ${money} has been executed from your account at ${time}.
+<p/>
+Regards,
+<br/>
+The iCoin Team.
+</body>
+</html> 

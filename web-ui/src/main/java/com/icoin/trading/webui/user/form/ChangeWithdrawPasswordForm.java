@@ -1,5 +1,8 @@
 package com.icoin.trading.webui.user.form;
 
+import com.homhon.util.Strings;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.constraints.Size;
 
 /**
@@ -10,11 +13,14 @@ import javax.validation.constraints.Size;
  * To change this template use File | Settings | File Templates.
  */
 public class ChangeWithdrawPasswordForm {
-    @Size(min = 6, max = 16)
+    @NotEmpty
+    @Size(min = 6, max = 16, message = "Previous withdraw password length error")
     private String previousWithdrawPassword;
-    @Size(min = 6, max = 16)
+    @NotEmpty
+    @Size(min = 6, max = 16, message = "Withdraw password length must be between 6 and 16")
     private String withdrawPassword;
-    @Size(min = 6, max = 16)
+    @NotEmpty
+    @Size(min = 6, max = 16, message = "Confirmed new password length must be between 6 and 16")
     private String confirmedWithdrawPassword;
 
     public String getPreviousWithdrawPassword() {
@@ -39,5 +45,11 @@ public class ChangeWithdrawPasswordForm {
 
     public void setConfirmedWithdrawPassword(String confirmedWithdrawPassword) {
         this.confirmedWithdrawPassword = confirmedWithdrawPassword;
+    }
+
+    public boolean isValid() {
+        return Strings.hasText(withdrawPassword) && Strings.hasText(previousWithdrawPassword) &&
+                !previousWithdrawPassword.equals(withdrawPassword)
+                && withdrawPassword.equals(confirmedWithdrawPassword);
     }
 }

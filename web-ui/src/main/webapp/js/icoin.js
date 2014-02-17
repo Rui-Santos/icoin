@@ -61,7 +61,7 @@ $(document).ready(function () {
                 offset: {
                     top: function () {
                         var offsetTop      = $sideBar.offset().top
-                        var sideBarMargin  = parseInt($sideBar.children(0).css('margin-top'), 10)
+                        var sideBarMargin  = parseInt($sideBar.children(0).css('margin-top'), 5)
                         var navOuterHeight = $('#header').height()
 
                         return (this.top = offsetTop - navOuterHeight - sideBarMargin)

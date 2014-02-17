@@ -16,6 +16,7 @@
 
 package com.icoin.trading.webui.init;
 
+import com.google.common.collect.ImmutableList;
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.application.command.admin.EnsureCqrsIndexesCommand;
 import com.icoin.trading.tradeengine.application.command.admin.ReinitializeOrderBookTradingExecutorsCommand;
@@ -182,7 +183,16 @@ public class SystemInit {
     private UserId createuser(String longName, String username) {
         UserId userId = new UserId();
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
-        CreateUserCommand command = new CreateUserCommand(userId, username, longName, longName, identifier, username + "@163.com", username, username);
+        CreateUserCommand command =
+                new CreateUserCommand(userId,
+                        username,
+                        longName,
+                        longName,
+                        identifier,
+                        username + "@163.com",
+                        username,
+                        username,
+                        ImmutableList.of("ROLE_USER", "ROLE_ADMIN"));
         commandGateway.send(command);
         return userId;
     }

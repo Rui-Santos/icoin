@@ -14,6 +14,7 @@ import com.icoin.trading.users.domain.model.user.UserId;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
@@ -39,8 +40,15 @@ public class ChangePasswordCommand extends CommandSupport<ChangePasswordCommand>
     private String confirmPassword;
 
     private String operatingIp;
+    private Date changedTime;
 
-    public ChangePasswordCommand(UserId userId, String username, String previousPassword, String password, String confirmPassword, String operatingIp) {
+    public ChangePasswordCommand(UserId userId,
+                                 String username,
+                                 String previousPassword,
+                                 String password,
+                                 String confirmPassword,
+                                 String operatingIp,
+                                 Date changedTime) {
         notNull(userId, "The provided userId cannot be null");
 
         isTrue(confirmPassword.equals(password), "The password and confirmed password should be the same.");
@@ -51,6 +59,7 @@ public class ChangePasswordCommand extends CommandSupport<ChangePasswordCommand>
         this.password = password;
         this.confirmPassword = confirmPassword;
         this.operatingIp = operatingIp;
+        this.changedTime = changedTime;
     }
 
     public boolean isValid() {
@@ -81,5 +90,9 @@ public class ChangePasswordCommand extends CommandSupport<ChangePasswordCommand>
 
     public String getOperatingIp() {
         return operatingIp;
+    }
+
+    public Date getChangedTime() {
+        return changedTime;
     }
 }

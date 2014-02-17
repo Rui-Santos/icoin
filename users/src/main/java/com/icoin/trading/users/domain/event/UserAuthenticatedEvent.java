@@ -19,6 +19,8 @@ package com.icoin.trading.users.domain.event;
 import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.users.domain.model.user.UserId;
 
+import java.util.Date;
+
 /**
  * Event to indicate that the user with the specified userId has been authenticated.
  *
@@ -26,18 +28,51 @@ import com.icoin.trading.users.domain.model.user.UserId;
  */
 public class UserAuthenticatedEvent extends EventSupport<UserAuthenticatedEvent> {
     private final UserId userId;
-    private final String  operatingIp;
+    private final String username;
+    private final String email;
+    private final String operatingIp;
+    private Date authTime;
 
-    public UserAuthenticatedEvent(UserId userId,String operatingIp) {
+    public UserAuthenticatedEvent(UserId userId,
+                                  String username,
+                                  String email,
+                                  String operatingIp,
+                                  Date authTime) {
         this.userId = userId;
+        this.username = username;
+        this.email = email;
         this.operatingIp = operatingIp;
+        this.authTime = authTime;
     }
 
     public UserId getUserId() {
         return this.userId;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
     public String getOperatingIp() {
         return operatingIp;
+    }
+
+    public Date getAuthTime() {
+        return authTime;
+    }
+
+    @Override
+    public String toString() {
+        return "UserAuthenticatedEvent{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", operatingIp='" + operatingIp + '\'' +
+                ", authTime=" + authTime +
+                '}';
     }
 }

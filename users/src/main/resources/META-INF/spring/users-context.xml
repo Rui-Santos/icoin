@@ -17,21 +17,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:axon="http://www.axonframework.org/schema/core"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.axonframework.org/schema/core
+           http://www.axonframework.org/schema/axon-core.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean class="com.icoin.trading.users.application.command.UserCommandHandler">
-        <property name="repository" ref="userRepository"/>
-    </bean>
+    <context:component-scan base-package="com.icoin.trading.users"/>
 
-    <axon:event-sourcing-repository id="userRepository"
-                                    aggregate-type="com.icoin.trading.users.domain.model.user.User"
-                                    cache-ref="ehcache"
-                                    event-bus="eventBus"
-                                    event-store="eventStore">
-        <axon:snapshotter-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
-    </axon:event-sourcing-repository>
-    
     <beans profile="dev">
         <bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors"
                     factory-method="noOpText" />

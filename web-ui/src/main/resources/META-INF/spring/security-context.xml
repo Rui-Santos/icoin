@@ -19,12 +19,15 @@
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:context="http://www.springframework.org/schema/context"
-             xsi:schemaLocation="
-             http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+             xsi:schemaLocation="http://www.springframework.org/schema/security
+             http://www.springframework.org/schema/security/spring-security.xsd
+             http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/context
+             http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.icoin.trading.webui"/>
+    <context:component-scan base-package="com.icoin.trading.webui.security">
+    </context:component-scan>
 
     <http pattern="/js/**" security="none"/>
     <http pattern="/favicon.ico" security="none"/>
@@ -55,18 +58,18 @@
         <intercept-url pattern="/index.html" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/data/**" access="isAnonymous() or isAuthenticated()"/>
-        <intercept-url pattern="/auth/**" access="permitAll" />
-        <intercept-url pattern="/signin/**" access="permitAll" />
+        <intercept-url pattern="/auth/**" access="permitAll"/>
+        <intercept-url pattern="/signin/**" access="permitAll"/>
         <!--<intercept-url pattern="/admin*" access="hasRole('admin') and hasIpAddress('192.168.1.0/24')"/>-->
-        <intercept-url pattern="/signup/**" access="permitAll" />
+        <intercept-url pattern="/signup/**" access="permitAll"/>
         <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
         <form-login login-page="/signin" login-processing-url="/signin/authenticate"
-                    authentication-failure-url="/signin/signin?param.error=bad_credentials"
-                    />
+                    authentication-failure-url="/signin?login_error=bad_credentials"
+                />
 
         <!--login-processing-url="/signin/authenticate"-->
         <!--  Spring Social Security authentication filter -->
-        <custom-filter ref="socialAuthenticationFilter" before="PRE_AUTH_FILTER" />
+        <custom-filter ref="socialAuthenticationFilter" before="PRE_AUTH_FILTER"/>
         <!--<form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1"/>-->
         <logout logout-success-url="/"/>
     </http>
@@ -86,5 +89,10 @@
     <authentication-manager alias="authenticationManager">
         <authentication-provider ref="traderAuthenticationProvider"/>
     </authentication-manager>
+
+    <!--<beans:bean id="traderAuthenticationProvider"-->
+                <!--class="com.icoin.trading.webui.security.TraderAuthenticationProvider">-->
+        <!--<beans:property name="commandGateway" ref="commandGateway"/>-->
+    <!--</beans:bean>-->
 
 </beans:beans>

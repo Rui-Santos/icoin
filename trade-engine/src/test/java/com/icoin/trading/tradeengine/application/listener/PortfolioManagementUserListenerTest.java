@@ -1,5 +1,6 @@
 package com.icoin.trading.tradeengine.application.listener;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.application.command.portfolio.CreatePortfolioCommand;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
@@ -35,7 +36,8 @@ public class PortfolioManagementUserListenerTest {
                         "User",
                          identifier,
                         "email@163.com",
-                        "testpassword");
+                        "testpassword",
+                        Constants.DEFAULT_ROLES);
 
         listener.createNewPortfolioWhenUserIsCreated(event);
 

@@ -20,6 +20,9 @@ import org.joda.money.BigMoney;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.util.Date;
+
+import static com.homhon.util.TimeUtils.currentTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -73,7 +76,7 @@ public class PortfolioMoneyEventListenerTest {
 
         assertThat(saved, notNullValue());
         assertThat(saved.getPrimaryKey(), equalTo(portfolioIdentifier.toString()));
-        assertThat(saved.getFullName(), equalTo(lastName +" " +firstName));
+        assertThat(saved.getFullName(), equalTo(lastName + " " + firstName));
         assertThat(saved.getUserName(), equalTo(username));
         assertThat(saved.getUserIdentifier(), equalTo(userIdentifier.toString()));
         assertThat(saved.getAmountOfMoney(), equalTo(BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT)));
@@ -108,6 +111,7 @@ public class PortfolioMoneyEventListenerTest {
 
     @Test
     public void testHandleCashWithdrawn() throws Exception {
+        final Date current = currentTime();
         final PortfolioId portfolioIdentifier = new PortfolioId();
         final BigMoney availableMoney = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 11);
         final BigMoney moneyWithdrawn = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.091);
@@ -121,7 +125,7 @@ public class PortfolioMoneyEventListenerTest {
         final PortfolioMoneyEventListener listener = new PortfolioMoneyEventListener();
         listener.setPortfolioRepository(portfolioQueryRepository);
 
-        final CashWithdrawnEvent event = new CashWithdrawnEvent(portfolioIdentifier, moneyWithdrawn);
+        final CashWithdrawnEvent event = new CashWithdrawnEvent(portfolioIdentifier, moneyWithdrawn, current);
         listener.handleEvent(event);
 
         ArgumentCaptor<PortfolioEntry> captor = ArgumentCaptor.forClass(PortfolioEntry.class);

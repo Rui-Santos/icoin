@@ -1,5 +1,6 @@
 package com.icoin.trading.users.query;
 
+import com.icoin.trading.users.application.command.UserCommandHandler;
 import com.icoin.trading.users.domain.event.UserCreatedEvent;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
@@ -33,7 +34,7 @@ public class UserListenerTest {
 
         final UserQueryRepository repository = mock(UserQueryRepository.class);
 
-        final UserCreatedEvent event = new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password);
+        final UserCreatedEvent event = new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password, UserCommandHandler.DEFAULT_ROLES);
         final UserListener listener = new UserListener();
         listener.setUserRepository(repository);
 

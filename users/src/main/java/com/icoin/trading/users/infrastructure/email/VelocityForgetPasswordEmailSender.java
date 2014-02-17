@@ -1,24 +1,18 @@
 package com.icoin.trading.users.infrastructure.email;
 
-import com.homhon.core.operation.RetryExecutor;
-import com.homhon.core.operation.RetryingCallback;
+import com.google.common.collect.ImmutableMap;
 import com.homhon.util.Strings;
+import com.icoin.trading.infrastructure.mail.VelocityEmailSender;
 import com.icoin.trading.users.domain.ForgetPasswordEmailSender;
 import com.icoin.trading.users.domain.model.function.UserPasswordReset;
 import com.icoin.trading.users.domain.model.function.UserPasswordResetRepository;
-import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import javax.mail.internet.MimeMessage;
-import java.util.HashMap;
+import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -31,13 +25,13 @@ import java.util.Map;
 @Service
 public class VelocityForgetPasswordEmailSender implements ForgetPasswordEmailSender {
     private static Logger logger = LoggerFactory.getLogger(VelocityForgetPasswordEmailSender.class);
-    private JavaMailSender mailSender;
-    private VelocityEngine velocityEngine;
+    private VelocityEmailSender sender;
     private String from = "admin@icoin.com";
     private UserPasswordResetRepository userPasswordResetRepository;
     private String templateLocation;
-    private String  subject = "User Password Reset";
+    private String subject = "User Password Reset";
 
+    @Value("${forgetPasswordTemplate}")
     public void setTemplateLocation(String templateLocation) {
         this.templateLocation = templateLocation;
     }
@@ -47,15 +41,9 @@ public class VelocityForgetPasswordEmailSender implements ForgetPasswordEmailSen
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setMailSender(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setVelocityEngine(VelocityEngine velocityEngine) {
-        this.velocityEngine = velocityEngine;
+    @Resource(name = "users.velocityEmailSender")
+    public void setSender(VelocityEmailSender sender) {
+        this.sender = sender;
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -64,11 +52,10 @@ public class VelocityForgetPasswordEmailSender implements ForgetPasswordEmailSen
         this.userPasswordResetRepository = userPasswordResetRepository;
     }
 
+    @Value("${email.username}")
     public void setFrom(String from) {
         this.from = from;
     }
-
-    //http://javopedia.com/spring/sending-email-using-velocity-spring-and-java/
 
     //todo change the active link
     public void sendEmail(final String token) {
@@ -83,34 +70,15 @@ public class VelocityForgetPasswordEmailSender implements ForgetPasswordEmailSen
             return;
         }
 
-        final MimeMessagePreparator preparator = new MimeMessagePreparator() {
-            public void prepare(MimeMessage mimeMessage) throws Exception {
-                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                message.setTo(userPasswordReset.getEmail());
-                message.setFrom(from); // could be parameterized...
-                message.setSubject(subject);
-                Map model = new HashMap();
-                model.put("user", userPasswordReset);
-                model.put("token", token);
-                String text = VelocityEngineUtils.mergeTemplateIntoString(
-                        velocityEngine, templateLocation, "utf-8", model);
-                message.setText(text, true);
-            }
-        };
-        new RetryExecutor<Void>() {
-            @Override
-            protected Void perform() {
-                logger.info("forget password email being sent to {}", userPasswordReset.getEmail() );
-                mailSender.send(preparator);
-                return null;
-            }
-        }.execute(3, 500, new RetryingCallback<Void>() {
+        final Map<String, Object> model = ImmutableMap.of("user", (Object) userPasswordReset, "token", token);
 
-            @Override
-            public Void onFailure(Throwable cause) {
-                logger.error("cannot send msg to", userPasswordReset.getEmail(), cause);
-                return null;
-            }
-        });
+        sender.sendEmail(
+                subject,
+                userPasswordReset.getEmail(),
+                from,
+                templateLocation,
+                "utf-8",
+                model,
+                true);
     }
 }

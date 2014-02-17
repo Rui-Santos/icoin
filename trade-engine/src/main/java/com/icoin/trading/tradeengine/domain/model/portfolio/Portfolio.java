@@ -41,6 +41,7 @@ import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -115,8 +116,8 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
         apply(new CashDepositedEvent(portfolioId, money));
     }
 
-    public void makePayment(BigMoney amountToPayInCents) {
-        apply(new CashWithdrawnEvent(portfolioId, amountToPayInCents));
+    public void makePayment(BigMoney amount, Date withdrawnTime) {
+        apply(new CashWithdrawnEvent(portfolioId, amount, withdrawnTime));
     }
 
     public void reserveMoney(TransactionId transactionIdentifier, BigMoney totalMoney, BigMoney totalCommission) {

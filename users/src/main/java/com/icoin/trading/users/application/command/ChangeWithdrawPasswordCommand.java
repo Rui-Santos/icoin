@@ -6,6 +6,7 @@ import com.icoin.trading.users.domain.model.user.UserId;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
@@ -33,8 +34,15 @@ public class ChangeWithdrawPasswordCommand extends CommandSupport<ChangeWithdraw
     private String confirmedWithdrawPassword;
 
     private String operatingIp;
+    private Date ChangedTime;
 
-    public ChangeWithdrawPasswordCommand(UserId userId, String username, String previousPassword, String withdrawPassword, String confirmedWithdrawPassword, String operatingIp) {
+    public ChangeWithdrawPasswordCommand(UserId userId,
+                                         String username,
+                                         String previousPassword,
+                                         String withdrawPassword,
+                                         String confirmedWithdrawPassword,
+                                         String operatingIp,
+                                         Date ChangedTime) {
         notNull(userId, "The provided userId cannot be null");
 
         isTrue(withdrawPassword.equals(confirmedWithdrawPassword), "The withdraw password and confirmed withdraw password should be the same.");
@@ -45,6 +53,7 @@ public class ChangeWithdrawPasswordCommand extends CommandSupport<ChangeWithdraw
         this.withdrawPassword = withdrawPassword;
         this.confirmedWithdrawPassword = confirmedWithdrawPassword;
         this.operatingIp = operatingIp;
+        this.ChangedTime = ChangedTime;
     }
 
     public boolean isValid() {
@@ -75,5 +84,9 @@ public class ChangeWithdrawPasswordCommand extends CommandSupport<ChangeWithdraw
 
     public String getOperatingIp() {
         return operatingIp;
+    }
+
+    public Date getChangedTime() {
+        return ChangedTime;
     }
 }

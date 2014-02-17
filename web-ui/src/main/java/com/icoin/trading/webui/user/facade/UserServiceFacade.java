@@ -16,28 +16,40 @@ import java.util.Date;
 public interface UserServiceFacade {
     UserAccount currentUser();
 
+    UserEntry currentDetailUser();
+
+    boolean isWithdrawPasswordSet();
+
     PortfolioEntry obtainPortfolioForUser();
 
-    void changePassword(String previousPassword,
-                        String newPassword,
-                        String confirmedNewPassword,
-                        String operatingIp);
+    UserEntry findByEmail(String email);
+
+    int findPasswordResetCount(String username, String ip, Date currentDate);
 
     void resetPasswordWithToken(String token,
                                 String password,
                                 String confirmedPassword,
-                                String operatingIp);
+                                String operatingIp,
+                                Date resetTime);
 
     boolean generateForgetPasswordToken(String email,
                                        String operatingIp,
                                        Date currentTime);
 
+    void changePassword(String previousPassword,
+                        String newPassword,
+                        String confirmedNewPassword,
+                        String operatingIp,
+                        Date changedTime);
+
+    void createWithdrawPassword(String withdrawPassword,
+                                String confirmedWithdrawPassword,
+                                String operatingIp,
+                                Date changedTime);
+
     void changeWithdrawPassword(String previousPassword,
                                 String withdrawPassword,
                                 String confirmedWithdrawPassword,
-                                String operatingIp);
-
-    UserEntry findByEmail(String email);
-
-    int findPasswordResetCount(String username, String ip, Date currentDate);
+                                String operatingIp,
+                                Date changedTime);
 }

@@ -19,36 +19,42 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.2.xsd
        ">
 
-    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
-        <property name="resourceLoaderPath" value="classpath:/com/icoin/trading/users/infrastructure/email"/>
+    <context:annotation-config/>
+    <!--<context:component-scan base-package="com.icoin.trading.users.infrastructure.email"/>-->
+    <!--<context:component-scan base-package="com.icoin.trading.users.infrastructure.listener"/>-->
+    <!--<context:component-scan base-package="com.icoin.trading.users.infrastructure.social"/>-->
+
+    <bean id="users.velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="resourceLoaderPath" value="classpath:/com/icoin/trading/users/infrastructure"/>
         <property name="preferFileSystemAccess" value="false"/>
     </bean>
 
-    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <bean id="users.mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="${email.host}"/>
         <property name="username" value="${email.username}"/>
         <property name="password" value="${email.password}"/>
     </bean>
 
-    <bean id="velocityForgetPasswordEmailSender" class="com.icoin.trading.users.infrastructure.email.VelocityForgetPasswordEmailSender">
-          <property name="from" value="${email.username}"/>
-          <property name="subject" value="User Password Reset"/>
-          <property name="templateLocation" value="forgot-password.vm"/>
+    <bean id="users.velocityEmailSender"
+          class="com.icoin.trading.infrastructure.mail.SimpleSpringVelocityEmailSender">
+        <property name="mailSender" ref="users.mailSender"/>
+        <property name="velocityEngine" ref="users.velocityEngine"/>
     </bean>
 
     <beans profile="dev">
         <context:property-placeholder
+                order="2" ignore-unresolvable="true"
                 location="classpath:META-INF/spring/email.dev.properties"/>
         <!--<bean id="trade.userService" class="com.icoin.trading.tradeengine.application.FakeUserService"/>-->
 
     </beans>
     <beans profile="prod">
-        <context:property-placeholder
-                location="classpath:META-INF/spring/email.prod.properties"/>
+        <context:property-placeholder order="2" ignore-unresolvable="true"
+                                      location="classpath:META-INF/spring/email.prod.properties"/>
 
     </beans>
 

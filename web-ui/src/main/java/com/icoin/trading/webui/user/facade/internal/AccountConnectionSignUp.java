@@ -1,5 +1,6 @@
 package com.icoin.trading.webui.user.facade.internal;
 
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.users.application.command.CreateUserCommand;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
@@ -41,6 +42,7 @@ public class AccountConnectionSignUp implements ConnectionSignUp {
 
         if (created != null) {
             logger.warn("user {} is already there with id: {}.", profile.getUsername(), created.getPrimaryKey());
+            return created.getUsername();
         }
 
         UserId userId = new UserId();
@@ -52,7 +54,8 @@ public class AccountConnectionSignUp implements ConnectionSignUp {
                         new Identifier(Identifier.Type.IDENTITY_CARD,""),
                         profile.getEmail(),
                         null,
-                        null);
+                        null,
+                        Constants.DEFAULT_ROLES);
 
         gateway.sendAndWait(createUser, 60, TimeUnit.SECONDS);
         return profile.getUsername();

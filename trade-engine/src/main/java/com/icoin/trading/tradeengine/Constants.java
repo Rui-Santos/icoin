@@ -1,7 +1,10 @@
 package com.icoin.trading.tradeengine;
 
+import com.google.common.collect.ImmutableList;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import org.joda.money.CurrencyUnit;
+
+import java.util.List;
 
 
 /**
@@ -18,4 +21,5 @@ public abstract class Constants {
     public static CurrencyUnit CURRENCY_UNIT_PPC = CurrencyUnit.of(Currencies.PPC);
     public static CurrencyUnit CURRENCY_UNIT_XPM = CurrencyUnit.of(Currencies.XPM);
     public static final double INIT_SELL_PRICE = 100000000000D;
+    public static List<String> DEFAULT_ROLES = ImmutableList.of("ROLE_USER");
 }

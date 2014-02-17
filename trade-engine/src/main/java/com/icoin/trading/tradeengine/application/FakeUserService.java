@@ -5,6 +5,9 @@ import com.homhon.base.domain.model.user.User;
 import com.homhon.base.domain.service.UserService;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -45,6 +48,11 @@ public class FakeUserService implements UserService {
         @Override
         public String getFullName() {
             return getName();
+        }
+
+        @Override
+        public List<String> getRoles() {
+            return Collections.EMPTY_LIST;
         }
     }
 }

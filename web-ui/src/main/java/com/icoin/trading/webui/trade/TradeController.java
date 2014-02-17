@@ -118,7 +118,9 @@ public class TradeController {
     }
 
     @RequestMapping(value = "/sell/{coinId}", method = RequestMethod.POST)
-    public String sell(@PathVariable String coinId, @ModelAttribute("sellOrder") @Valid SellOrder order, BindingResult bindingResult, Model model) {
+    public String sell(@PathVariable String coinId,
+                       @ModelAttribute("sellOrder") @Valid SellOrder order,
+                       BindingResult bindingResult, Model model) {
         CurrencyPair currencyPair = new CurrencyPair(coinId);
         CurrencyUnit priceCcy = currencyPair.getCounterCurrencyUnit();
         CurrencyUnit coinCcy = currencyPair.getBaseCurrencyUnit();
@@ -159,7 +161,9 @@ public class TradeController {
     }
 
     @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.POST)
-    public String buy(@PathVariable String coinId, @ModelAttribute("buyOrder") @Valid BuyOrder order, BindingResult bindingResult, Model model) {
+    public String buy(@PathVariable String coinId,
+                      @ModelAttribute("buyOrder") @Valid BuyOrder order,
+                      BindingResult bindingResult, Model model) {
         CurrencyPair currencyPair = new CurrencyPair(coinId);
 
         OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(currencyPair);
@@ -208,7 +212,10 @@ public class TradeController {
     }
 
 
-    private void initPage(String coinId, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry, Model model) {
+    private void initPage(String coinId,
+                          OrderBookEntry orderBookEntry,
+                          PortfolioEntry portfolioEntry,
+                          Model model) {
         CoinEntry coin = tradeServiceFacade.loadCoin(coinId);
         model.addAttribute("coin", coin);
 

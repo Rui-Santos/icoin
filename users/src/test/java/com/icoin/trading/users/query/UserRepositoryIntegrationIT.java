@@ -3,6 +3,7 @@ package com.icoin.trading.users.query;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,12 @@ public class UserRepositoryIntegrationIT {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    private UserQueryRepository userQueryRepository;
+    private UserQueryRepository repository;
+
+    @Before
+    public void setUp() throws Exception {
+        repository.deleteAll();
+    }
 
     @Test
     public void storeUserInRepository() {
@@ -32,8 +38,8 @@ public class UserRepositoryIntegrationIT {
         userEntry.setIdentifier(new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252"));
         userEntry.setPassword("abc");
 
-        userQueryRepository.save(userEntry);
+        repository.save(userEntry);
 
-        final UserEntry one = userQueryRepository.findOne(userEntry.getPrimaryKey());
+        final UserEntry one = repository.findOne(userEntry.getPrimaryKey());
     }
 }

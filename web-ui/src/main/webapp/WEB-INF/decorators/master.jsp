@@ -49,8 +49,7 @@
     <link href="${ctx}/style/footer.css" rel="stylesheet">
     <link href="${ctx}/style/flat-ui.css" rel="stylesheet">
 
-    <script src="js/html5shiv.js"></script>
-    <script src="js/respond.min.js"></script>
+    <script src="${ctx}/js/respond.min.js"></script>
 
     <decorator:head/>
 </head>
@@ -147,8 +146,9 @@
 <!-- /container -->
 <script src="${ctx}/js/jquery-1.10.2.min.js"></script>
 <script src="${ctx}/js/bootstrap.min.js"></script>
-<script src="${ctx}/js/highstock.js"></script>
-<script src="${ctx}/js/exporting.js"></script>
-<script src="${ctx}/js/icoin-charts.js"></script>
+<%--<script src="${ctx}/js/highstock.js"></script>--%>
+<%--<script src="${ctx}/js/exporting.js"></script>--%>
+<%--<script src="${ctx}/js/icoin-charts.js"></script>--%>
+<decorator:getProperty property="page.additionalJs"/>
 </body>
 </html>

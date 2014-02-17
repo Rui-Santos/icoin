@@ -18,16 +18,16 @@
     <![endif]-->
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="style/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/jumbotron.css" rel="stylesheet">
-    <link href="css/offcanvas.css" rel="stylesheet">
-    <link href="css/justified-nav.css" rel="stylesheet">
-    <link href="css/btn.css" rel="stylesheet">
-    <link href="css/footer.css" rel="stylesheet">
-    <link href="css/flat-ui.css" rel="stylesheet">
-    <link href="css/sign.css" rel="stylesheet">
+    <link href="style/jumbotron.css" rel="stylesheet">
+    <link href="style/offcanvas.css" rel="stylesheet">
+    <link href="style/justified-nav.css" rel="stylesheet">
+    <link href="style/btn.css" rel="stylesheet">
+    <link href="style/footer.css" rel="stylesheet">
+    <link href="style/flat-ui.css" rel="stylesheet">
+    <link href="style/sign.css" rel="stylesheet">
 
 
 
@@ -82,7 +82,7 @@
     </div>
 </div>
 
-<form id="signup" class="form-signup" action="/signup" method="post">
+<form id="signup" class="form-edit" action="/signup" method="post">
     <h2 class="form-signup-heading">Please sign up</h2>
     <fieldset>
 
@@ -107,10 +107,10 @@
         <input data-placement="left" title="Tooltip on left" id="identifier" name="identifier" title="15 or 18 characters" data-placement="top" placeholder="ID Card Number" class="form-control" type="text" value=""/>
 
     <!--</div>-->
-    <!--<div class="input-group">-->
+    <div class="input-group">
         <input id="firstName" name="firstName" title="At least 3 characters" data-placement="top" placeholder="First Name" class="form-control" type="text" value=""/>
-
-    <!--</div>-->
+        <span id="username.errors" class="alert-danger">cannot create username</span>
+    </div>
     <!--<div class="input-group">-->
         <input id="lastName" title="Your last name" data-placement="right" name="lastName" placeholder="Last Name" class="form-control" type="text" value=""/>
 
@@ -133,7 +133,7 @@
 <!-- FACEBOOK SIGNIN -->
 
 <!-- weibo SIGNIN -->
-<form id="wb_signin" name="wb_signin" class="form-signup" action="&lt;c:url value=&#39;/signin/weibo&#39;/&gt;" method="POST">
+<form id="wb_signin" name="wb_signin" class="form-edit" action="&lt;c:url value=&#39;/signin/weibo&#39;/&gt;" method="POST">
     <input type="hidden" name="scope" value="publish_stream,user_photos,offline_access" />
     <button type="submit"><img src="/image/w_logo.jpg" /></button>
 </form>

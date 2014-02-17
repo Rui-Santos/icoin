@@ -170,7 +170,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.makePayment(command.getAmountToPay());
+                        portfolio.makePayment(command.getAmountToPay(), command.getWithdrawnTime());
                         return null;
                     }
                 }

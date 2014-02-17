@@ -16,12 +16,15 @@
 
 package com.icoin.trading.webui.security;
 
+import com.google.common.collect.Sets;
 import com.icoin.trading.users.application.command.AuthenticateUserCommand;
 import com.icoin.trading.users.domain.model.user.UserAccount;
+import com.icoin.trading.webui.user.AuthUtils;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -35,8 +38,12 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import static com.homhon.util.TimeUtils.currentTime;
 
 /**
  * A custom spring security authentication provider that only supports {@link org.springframework.security.authentication.UsernamePasswordAuthenticationToken}
@@ -51,15 +58,14 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class TraderAuthenticationProvider implements AuthenticationProvider {
 
-    private final static Collection<GrantedAuthority> userAuthorities;
+//    private final static Collection<GrantedAuthority> userAuthorities;
 
-    static {
-        userAuthorities = new HashSet<GrantedAuthority>();
-        userAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-    }
+//    static {
+//        userAuthorities = new HashSet<GrantedAuthority>();
+//        userAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+//    }
 
-    @Autowired
-    private CommandBus commandBus;
+    private CommandGateway commandGateway;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -73,12 +79,13 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
             ip = ((WebAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }
 
+        Date authTime = currentTime();
         String username = token.getName();
         String password = String.valueOf(token.getCredentials());
         FutureCallback<UserAccount> accountCallback = new FutureCallback<UserAccount>();
-        AuthenticateUserCommand command = new AuthenticateUserCommand(username, password, ip);
+        AuthenticateUserCommand command = new AuthenticateUserCommand(username, password, ip, authTime);
         try {
-            commandBus.dispatch(new GenericCommandMessage<AuthenticateUserCommand>(command), accountCallback);
+            commandGateway.send(command, accountCallback);
             // the bean validating interceptor is defined as a dispatch interceptor, meaning it is executed before
             // the command is dispatched.
         } catch (StructuralCommandValidationFailedException e) {
@@ -96,10 +103,13 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
             throw new AuthenticationServiceException("Credentials could not be verified", e);
         }
 
-        UsernamePasswordAuthenticationToken result =
-                new UsernamePasswordAuthenticationToken(account, authentication.getCredentials(), userAuthorities);
-        result.setDetails(authentication.getDetails());
-        return result;
+        return AuthUtils.getAuthentication(account, authentication.getCredentials(), authentication.getDetails());
+    }
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    public void setCommandGateway(CommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
     }
 
     @Override

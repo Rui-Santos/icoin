@@ -16,6 +16,7 @@
 package com.icoin.trading.webui.user.form;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.social.connect.UserProfile;
 
@@ -25,32 +26,35 @@ import javax.validation.constraints.Size;
 
 public class SignupForm {
 
-    @Size(min = 6, message = "must be at least 6 characters")
+    @NotEmpty
+    @Length(min = 6, message = "must be at least 6 characters")
     private String username;
 
-    @Size(min = 6, message = "must be at least 6 characters")
+    @NotEmpty
+    @Length(min = 6, message = "must be at least 6 characters")
     private String password;
 
-    @Size(min = 6, message = "must be at least 6 characters")
+    @NotEmpty
+    @Length(min = 6, message = "must be at least 6 characters")
     private String confirmedPassword;
-
-    @Size(min = 6, message = "must be at least 6 characters")
-    private String confirmPassword;
 
     @Size(min = 3, message = "must be at least 3 characters")
     private String firstName;
 
     @NotEmpty
+    @Length(min = 1, message = "must be at least 6 characters")
     private String lastName;
 
     private String mobile;
 
-    @AssertTrue
+//    @AssertTrue
     private boolean agreed;
 
+    @NotEmpty
     @Email
     private String email;
 
+    @NotEmpty
     @Pattern(regexp = "(^\\d{15}$)|(\\d{17}(?:\\d|x|X)$)", message = "must be valid 15 or 18 characters")
     private String identifier;
 
@@ -68,14 +72,6 @@ public class SignupForm {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 
     public String getFirstName() {

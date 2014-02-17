@@ -24,6 +24,9 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author Jettro Coenradie
  */
@@ -31,6 +34,7 @@ public class User extends AbstractAnnotatedAggregateRoot {
     private static final long serialVersionUID = 3291411359839192350L;
     @AggregateIdentifier
     private UserId userId;
+    private String username;
     private String password;
     private String withdrawPassword;
     private String email;
@@ -38,29 +42,34 @@ public class User extends AbstractAnnotatedAggregateRoot {
     protected User() {
     }
 
-    public User(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email, String password) {
-        apply(new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password));
+    public User(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email, String password, List<String> roles) {
+        apply(new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password, roles));
     }
 
-    public boolean authenticate(String encodedPassword, String operatingIp) {
+    public boolean authenticate(String encodedPassword, String operatingIp, Date authTime) {
         boolean success = this.password.equals(encodedPassword);
         if (success) {
-            apply(new UserAuthenticatedEvent(userId, operatingIp));
+            apply(new UserAuthenticatedEvent(userId, username, email, operatingIp, authTime));
         }
         return success;
     }
 
-    public void changePassword(String encodedPassword, String encodedConfirmedPassword, String operatingIp) {
-        apply(new PasswordChangedEvent(userId, encodedPassword, encodedConfirmedPassword, operatingIp));
+    public void changePassword(String encodedPassword, String encodedConfirmedPassword, String operatingIp, Date changedTime) {
+        apply(new PasswordChangedEvent(userId, username, email, encodedPassword, encodedConfirmedPassword, operatingIp, changedTime));
     }
 
-    public void changeWithdrawPassword(String encodedPassword, String encodedConfirmedPassword, String operatingIp) {
-        apply(new WithdrawPasswordChangedEvent(userId, encodedPassword, encodedConfirmedPassword, operatingIp));
+    public void changeWithdrawPassword(String encodedPassword, String encodedConfirmedPassword, String operatingIp, Date changedTime) {
+        apply(new WithdrawPasswordChangedEvent(userId, username, email, encodedPassword, encodedConfirmedPassword, operatingIp, changedTime));
+    }
+
+    public void createWithdrawPassword(String encodedPassword, String encodedConfirmedPassword, String operatingIp, Date changedTime) {
+        apply(new WithdrawPasswordChangedEvent(userId, username, email, encodedPassword, encodedConfirmedPassword, operatingIp, changedTime));
     }
 
     @EventHandler
     public void onUserCreated(UserCreatedEvent event) {
         this.userId = event.getUserIdentifier();
+        this.username = event.getUsername();
         this.password = event.getPassword();
         this.email = event.getEmail();
     }

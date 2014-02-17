@@ -1,8 +1,7 @@
-package com.icoin.trading.webui.user;
+package com.icoin.trading.webui.security;
 
 import com.icoin.trading.users.infrastructure.persistence.mongo.SocialConnectionRepositoryMongo;
 import com.icoin.trading.users.infrastructure.social.SocialUsersConnectionRepository;
-import com.icoin.trading.webui.security.SimpleSignInAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
