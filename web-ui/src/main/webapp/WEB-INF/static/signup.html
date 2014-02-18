@@ -82,60 +82,155 @@
     </div>
 </div>
 
+
+<link href="/style/sign.css" rel="stylesheet">
+
+
+
+
+
+
+
 <form id="signup" class="form-edit" action="/signup" method="post">
-    <h2 class="form-signup-heading">Please sign up</h2>
+    <h2 class="form-signip-heading">Please sign up</h2>
+
+    <div class="formInfo">
+
+
+
+
+
+    </div>
+
     <fieldset>
+        <div class="from-group">
+            <label class="sr-only" for="username">Username</label>
+            <input type="text" id="username" name="username" type="text" class="form-control" placeholder="Username"
+                   data-placement="right" title="At least 6 characters" required autofocus/>
 
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-        <input type="text" name="username"  type="text" class="form-control" placeholder="Username" data-placement="top"
-               title="At least 6 characters" required autofocus/>
-    </div>
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-        <input type="password" name="password" class="form-control" placeholder="Password" data-placement="top"
-               title="At least 6 characters" required />
+        </div>
+        <div class="from-group">
+            <label class="sr-only" for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+                   data-placement="right" title="At least 6 characters" required/>
 
-    </div>
-    <!--<div class="input-group">-->
-        <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm Password" data-placement="top"
-               title="At least 6 characters" required/>
+        </div>
+        <div class="from-group">
+            <label class="sr-only" for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmedPassword" class="form-control" placeholder="Confirm Password"
+                   data-placement="right" title="At least 6 characters" required/>
 
-    <!--</div>-->
+        </div>
 
-    <!--<div class="input-group">-->
-        <input data-placement="left" title="Tooltip on left" id="identifier" name="identifier" title="15 or 18 characters" data-placement="top" placeholder="ID Card Number" class="form-control" type="text" value=""/>
+        <div class="from-group">
+            <label class="sr-only" for="identifier">Identifier</label>
+            <input id="identifier" name="identifier" title="15 or 18 characters" data-placement="right" placeholder="ID Card Number" class="form-control" type="text" value=""/>
 
-    <!--</div>-->
-    <div class="input-group">
-        <input id="firstName" name="firstName" title="At least 3 characters" data-placement="top" placeholder="First Name" class="form-control" type="text" value=""/>
-        <span id="username.errors" class="alert-danger">cannot create username</span>
-    </div>
-    <!--<div class="input-group">-->
-        <input id="lastName" title="Your last name" data-placement="right" name="lastName" placeholder="Last Name" class="form-control" type="text" value=""/>
+        </div>
+        <div class="from-group">
+            <label class="sr-only" for="email">Email</label>
+            <input id="email" name="email" title="15 or 18 characters" data-placement="right" placeholder="Email" class="form-control" type="email" value=""/>
 
-    <!--</div>-->
+        </div>
+        <div class="from-group">
+            <label class="sr-only" for="firstName">First Name</label>
+            <input id="firstName" name="firstName" title="At least 3 characters" data-placement="right" placeholder="First Name" class="form-control" type="text" value=""/>
 
-    <!--<a href="#" data-toggle="tooltip" class="tooltip-test" data-placement="left" title="first tooltip">Hover over me</a>-->
+        </div>
+        <div class="from-group">
+            <label class="sr-only" for="lastName">Last Name</label>
+            <input id="lastName" name="lastName" title="Your last name" data-placement="right" placeholder="Last Name" class="form-control" type="text" value=""/>
 
-    <label class="checkbox">
-        <input type="checkbox" value="aggreed"> I agree with <a data-toggle="modal" data-target="#signupTerms">terms</a>
-    </label>
+        </div>
+
+        <img id="captchaImage" src="http://localhost:8080/simpleCaptcha.png" alt="captcha image" width="200" height="30"/>
+
+
+        <div id="signupTerms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Terms</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Overflowing text to show scroll behavior</h4>
+
+                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
+                            egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+
+                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus
+                            vel augue laoreet rutrum faucibus dolor auctor.</p>
+
+                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque
+                            nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor
+                            fringilla.</p>
+
+                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
+                            egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+
+                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus
+                            vel augue laoreet rutrum faucibus dolor auctor.</p>
+
+                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque
+                            nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor
+                            fringilla.</p>
+
+                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
+                            egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+
+                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus
+                            vel augue laoreet rutrum faucibus dolor auctor.</p>
+
+                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque
+                            nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor
+                            fringilla.</p>
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Confirm</button>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+        <div class="checkbox">
+            <label class="checkbox">
+                <input type="checkbox" name="agreed"> I agree with <a data-toggle="modal" data-target="#signupTerms">terms</a>
+
+            </label>
+        </div>
+
 
     </fieldset>
-
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
 </form>
 
-<p>Or you can Login with one of the following</p>
+
+<hr/>
+<p class="text-center">Or you can Login with one of the following</p>
 <!-- TWITTER SIGNIN -->
+
+
+
 
 <!-- FACEBOOK SIGNIN -->
 
+
+
+
+
 <!-- weibo SIGNIN -->
-<form id="wb_signin" name="wb_signin" class="form-edit" action="&lt;c:url value=&#39;/signin/weibo&#39;/&gt;" method="POST">
-    <input type="hidden" name="scope" value="publish_stream,user_photos,offline_access" />
-    <button type="submit"><img src="/image/w_logo.jpg" /></button>
+
+
+<form id="wb_signin" name="wb_signin" class="form-edit" action="/signin/weibo" method="POST">
+    <input type="hidden" name="scope" value="publish_stream,user_photos,offline_access"/>
+    <button type="submit"><img src="/image/w_logo.jpg"/></button>
 </form>
 
 
@@ -174,7 +269,9 @@
 <script src="js/jquery-1.10.2.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/highstock.js"></script>
-<script src="js/exporting.js"></script>
+<script src="../../js/exporting.js"></script>
+<script src="../../js/jquery.validate.min.js"></script>
+<script src="../../js/signup.js"></script>
 </body>
 <script type='text/javascript'>
     $(document).ready(function () {

@@ -23,6 +23,7 @@ import com.icoin.trading.users.domain.model.user.UsernameAlreadyInUseException;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import com.icoin.trading.webui.user.form.SignupForm;
+import nl.captcha.Captcha;
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
@@ -38,10 +39,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.concurrent.TimeUnit;
 
@@ -83,19 +86,19 @@ public class SignupController {
             return "signup/signup";
         }
 
-        if(!form.isAgreed()){
-            formBinding.rejectValue("agreed", "error.signup.agreed.notchecked","You must agree with the terms.");
+        if (!form.isAgreed()) {
+            formBinding.rejectValue("agreed", "error.signup.agreed.notchecked", "You must agree with the terms.");
             return "signup/signup";
         }
 
         final UserEntry byEmail = userQueryRepository.findByEmail(form.getEmail());
         if (byEmail != null) {
-            formBinding.rejectValue("email", "error.signup.email.duplicated","Email has already been used.");
+            formBinding.rejectValue("email", "error.signup.email.duplicated", "Email has already been used.");
             return "signup/signup";
         }
         final UserEntry byUsername = userQueryRepository.findByUsername(form.getUsername());
         if (byUsername != null) {
-            formBinding.rejectValue("email", "error.signup.username.duplicated","Username has already been used.");
+            formBinding.rejectValue("email", "error.signup.username.duplicated", "Username has already been used.");
             return "signup/signup";
         }
         UserId userId = createAccount(form, formBinding);
@@ -143,5 +146,55 @@ public class SignupController {
             return null;
         }
     }
+
+    /*<servlet>
+    <servlet-name>SimpleCaptcha</servlet-name>
+    <servlet-class>nl.captcha.servlet.SimpleCaptchaServlet</servlet-class>
+<init-param>
+    <param-name>captcha-width</param-name>
+    <param-value>250</param-value>
+</init-param>
+<init-param>
+    <param-name>captcha-height</param-name>
+    <param-value>75</param-value>
+</init-param>
+</servlet>
+<servlet-mapping>
+    <servlet-name>SimpleCaptcha</servlet-name>
+    <url-pattern>/simpleCaptcha.png</url-pattern>
+</servlet-mapping>*/
+
+//    <img id="captcha_image" src="/captcha_generator.jsp" alt="captcha image" width="200" height="50"/>
+//    <img src="reload.jpg" onclick="reloadCaptcha()" alt="reload"width="40" height="40"/>
+
+//    <script type="text/javascript">
+//    function reloadCaptcha(){
+//        var d = new Date();
+//        $("#captcha_image").attr("src", "/captcha?"+d.getTime());
+//    }
+//    </script>
+
+//    <script>
+//    $( "#captcha_image" ).click(function() {
+//        var d = new Date();
+//        $("#captcha_image").attr("src", "/captcha?"+d.getTime());
+//    });
+//    </script>
+
+    //http://stackoverflow.com/questions/20957657/use-jquery-validate-with-php-captcha-code
+    //view-source:http://jquery.bassistance.de/validate/demo/
+
+    public String validateCaptcha(HttpServletRequest request,
+                                  @RequestParam("value") String value)
+
+    {
+        HttpSession session = request.getSession();
+        Captcha secretcaptcha = (Captcha) session.getAttribute(Captcha.NAME);
+        if (secretcaptcha.isCorrect(value))
+            return "";
+
+        return "";
+    }
+
 
 }

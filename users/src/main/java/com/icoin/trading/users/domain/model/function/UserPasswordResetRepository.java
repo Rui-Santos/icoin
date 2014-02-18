@@ -15,6 +15,8 @@ import java.util.List;
 public interface UserPasswordResetRepository extends GenericCrudRepository<UserPasswordReset, String> {
     List<UserPasswordReset> findNotExpiredByEmail(String email, String ip, Date fromDate, Date currentDate);
 
+    List<UserPasswordReset> findNotExpiredByEmail(String email, Date fromDate, Date currentDate);
+
     List<UserPasswordReset> findByUsername(String username);
 
     UserPasswordReset findByToken(String token);

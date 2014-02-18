@@ -30,6 +30,13 @@
     <name>iCoin Trader - Web ui</name>
     <packaging>war</packaging>
 
+    <repositories>
+        <repository>
+            <id>SimpleCaptchaRepository</id>
+            <url>https://raw.github.com/0x0000-dot-ru/simplecaptcha/master/repository/releases</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
@@ -179,6 +186,17 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${apache.httpcomponents.httpclient.version}</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.code.maven-play-plugin.org.playframework</groupId>-->
+            <!--<artifactId>jj-simplecaptcha</artifactId>-->
+            <!--<version>1.1</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>nl.captcha</groupId>
+            <artifactId>simplecaptcha</artifactId>
+            <version>1.2.1-mvn</version>
         </dependency>
 
         <!-- test dependencies -->

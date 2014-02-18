@@ -42,7 +42,7 @@ public interface UserServiceFacade {
                         String operatingIp,
                         Date changedTime);
 
-    void createWithdrawPassword(String withdrawPassword,
+    boolean createWithdrawPassword(String withdrawPassword,
                                 String confirmedWithdrawPassword,
                                 String operatingIp,
                                 Date changedTime);

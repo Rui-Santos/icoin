@@ -6,6 +6,7 @@ import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.users.application.command.ChangePasswordCommand;
 import com.icoin.trading.users.application.command.ChangeWithdrawPasswordCommand;
+import com.icoin.trading.users.application.command.CreateWithdrawPasswordCommand;
 import com.icoin.trading.users.application.command.ForgetPasswordCommand;
 import com.icoin.trading.users.application.command.ResetPasswordCommand;
 import com.icoin.trading.users.domain.ForgetPasswordEmailSender;
@@ -117,6 +118,24 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                 confirmedNewPassword,
                 operatingIp,
                 changedTime));
+    }
+
+    @Override
+    public boolean createWithdrawPassword(String withdrawPassword, String confirmedWithdrawPassword, String operatingIp, Date changedTime) {
+        UserAccount userAccount = currentUser();
+        if (userAccount == null) {
+            logger.warn("user not logged on");
+            return false;
+        }
+
+        commandGateway.send(new CreateWithdrawPasswordCommand(
+                new UserId(userAccount.getPrimaryKey()),
+                userAccount.getUsername(),
+                withdrawPassword,
+                confirmedWithdrawPassword,
+                operatingIp,
+                changedTime));
+        return true;
     }
 
     public boolean generateForgetPasswordToken(String email, String operatingIp, Date currentTime) {

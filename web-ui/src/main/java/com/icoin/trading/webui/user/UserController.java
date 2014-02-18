@@ -79,8 +79,8 @@ public class UserController {
         return "user/changePassword";
     }
 
-    @RequestMapping(value = "/createPassword", method = RequestMethod.POST)
-    public String changePassword(@ModelAttribute("changePassword") @Valid CreateWithdrawPasswordForm createWithdrawPasswordForm,
+    @RequestMapping(value = "/createWithdrawPassword", method = RequestMethod.POST)
+    public String createWithdrawPassword(@ModelAttribute("changePassword") @Valid CreateWithdrawPasswordForm createWithdrawPasswordForm,
                                  BindingResult bindingResult,
                                  HttpServletRequest request) {
         if (!bindingResult.hasErrors()) {
@@ -89,18 +89,20 @@ public class UserController {
                 return "changePassword";
             }
 
-            userService.changePassword(createWithdrawPasswordForm.getPreviousPassword(),
-                    createWithdrawPasswordForm.getNewPassword(),
-                    createWithdrawPasswordForm.getConfirmedNewPassword(),
+            boolean created = userService.createWithdrawPassword(createWithdrawPasswordForm.getWithdrawPassword(),
+                    createWithdrawPasswordForm.getWithdrawPassword(),
                     request.getRemoteAddr(),
                     currentTime());
 
-            return "dashboard/index";
+            if(created){
+                return "dashboard/index";
+            }
+
+
         }
 
-        createWithdrawPasswordForm.setPreviousPassword(null);
-        createWithdrawPasswordForm.setNewPassword(null);
-        createWithdrawPasswordForm.setConfirmedNewPassword(null);
+        createWithdrawPasswordForm.setConfirmedWithdrawPassword(null);
+        createWithdrawPasswordForm.setWithdrawPassword(null);
 
         return "changePassword";
     }

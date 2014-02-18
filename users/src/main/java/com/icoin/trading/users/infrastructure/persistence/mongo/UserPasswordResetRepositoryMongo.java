@@ -27,6 +27,11 @@ public interface UserPasswordResetRepositoryMongo extends
             "Sort: { 'expirationDate' : -1 }")
     List<UserPasswordReset> findNotExpiredByEmail(String email, String ip, Date fromDate, Date currentDate);
 
+    @Query(value = "{ 'email' : ?0 , " +
+            "'expirationDate' : {'$gte': ?1, '$lt': ?2} }, " +
+            "Sort: { 'expirationDate' : -1 }")
+    List<UserPasswordReset> findNotExpiredByEmail(String email, Date fromDate, Date currentDate);
+
     List<UserPasswordReset> findByUsername(String username);
 
     UserPasswordReset findByToken(String token);

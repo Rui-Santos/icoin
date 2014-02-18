@@ -134,6 +134,11 @@ public class UserCommandHandler {
             throw new TooManyResetsException(command.getOperatingIp());
         }
 
+        List<UserPasswordReset> totalResets = userPasswordResetRepository.findNotExpiredByEmail(command.getEmail(), startDate, date);
+
+        if (!isEmpty(totalResets) && totalResets.size() >= 5) {
+            throw new TooManyResetsException(command.getOperatingIp());
+        }
         UserPasswordReset userPasswordReset = createPasswordReset(command, user);
         userPasswordResetRepository.save(userPasswordReset);
 
