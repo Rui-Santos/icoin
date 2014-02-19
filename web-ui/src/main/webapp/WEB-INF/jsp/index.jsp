@@ -1,3 +1,4 @@
+<%@ page import="org.springframework.context.i18n.LocaleContextHolder" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -83,117 +84,21 @@
     </ul>
 </div>
 <div class="well-new">
-    <p>
-        <button type="button" class="btn btn-lg btn-danger">BTC/CNY</button>
-        <button type="button" class="btn btn-lg btn-primary">LTC/BTC</button>
-        <button type="button" class="btn btn-lg btn-primary">LTC/CNY</button>
-        <button type="button" class="btn btn-lg btn-primary">XPM/CNY</button>
-        <button type="button" class="btn btn-lg btn-primary">XPM/BTC</button>
-    </p>
-    <p>
-        <button type="button" class="btn btn-lg btn-primary">FTC/CNY</button>
-        <button type="button" class="btn btn-lg btn-primary">FTC/BTC</button>
-        <button type="button" class="btn btn-lg btn-primary">PPC/CNY</button>
-        <button type="button" class="btn btn-lg btn-primary">PPC/CNY</button>
-    </p>
+    <%--<p>--%>
+        <%--<button type="button" class="btn btn-lg btn-danger">BTC/CNY</button>--%>
+        <%--<button type="button" class="btn btn-lg btn-primary">LTC/BTC</button>--%>
+        <%--<button type="button" class="btn btn-lg btn-primary">LTC/CNY</button>--%>
+        <%--<button type="button" class="btn btn-lg btn-primary">XPM/CNY</button>--%>
+        <%--<button type="button" class="btn btn-lg btn-primary">XPM/BTC</button>--%>
+    <%--</p>--%>
+    <%--<p>--%>
+        <%--<button type="button" class="btn btn-lg btn-primary">FTC/CNY</button>--%>
+        <%--<button type="button" class="btn btn-lg btn-primary">FTC/BTC</button>--%>
+        <%--<button type="button" class="btn btn-lg btn-primary">PPC/CNY</button>--%>
+        <%--<button type="button" class="btn btn-lg btn-primary">PPC/CNY</button>--%>
+    <%--</p>--%>
 
     <div id="charts" style="height: 400px; min-width: 350px"></div>
-    <script type="text/javascript">
-        $(function () {
-            $.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename=aapl-ohlcv.json&callback=?', function (data) {
-
-                // split the data set into ohlc and volume
-                var ohlc = [],
-                        volume = [],
-                        dataLength = data.length;
-
-                for (i = 0; i < dataLength; i++) {
-                    ohlc.push([
-                        data[i][0], // the date
-                        data[i][1], // open
-                        data[i][2], // high
-                        data[i][3], // low
-                        data[i][4] // close
-                    ]);
-
-                    volume.push([
-                        data[i][0], // the date
-                        data[i][5] // the volume
-                    ])
-                }
-
-                // set the allowed units for data grouping
-                var groupingUnits = [
-                    [
-                        'week',                         // unit name
-                        [1]                             // allowed multiples
-                    ],
-                    [
-                        'month',
-                        [1, 2, 3, 4, 6]
-                    ]
-                ];
-
-                // create the chart
-                $('#charts').highcharts('StockChart', {
-
-                    rangeSelector: {
-                        selected: 1
-                    },
-
-                    title: {
-                        text: 'AAPL Historical'
-                    },
-
-                    yAxis: [
-                        {
-                            title: {
-                                text: 'OHLC'
-                            },
-                            height: 200,
-                            lineWidth: 2
-                        },
-                        {
-                            title: {
-                                text: 'Volume'
-                            },
-                            top: 300,
-                            height: 100,
-                            offset: 0,
-                            lineWidth: 2
-                        }
-                    ],
-
-                    plotOptions: {
-                        candlestick: {
-                            color: '#FF0000',
-                            upColor: '#00FF00'
-                        }
-                    },
-
-                    series: [
-                        {
-                            type: 'candlestick',
-                            name: 'AAPL',
-                            data: ohlc,
-                            dataGrouping: {
-                                units: groupingUnits
-                            }
-                        },
-                        {
-                            type: 'column',
-                            name: 'Volume',
-                            data: volume,
-                            yAxis: 1,
-                            dataGrouping: {
-                                units: groupingUnits
-                            }
-                        }
-                    ]
-                });
-            });
-        });
-    </script>
 </div>
 
 <!-- Example row of columns -->
@@ -202,7 +107,7 @@
     <div class="col-md-6">
         <div class="panel panel-sell">
             <div class="panel-body">
-                <form:form commandName="sellOrder" action="/sell/BTC" class="form-horizontal" role="form">
+                <form:form commandName="sellOrder" id="sellOrder" action="/sell/BTC" class="form-horizontal" role="form">
                     <form:hidden path="coinId"/>
                     <form:hidden path="coinName"/>
 
@@ -221,16 +126,16 @@
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
                     <div class="form-group">
-                        <label for="amountToSell" class="col-sm-5 control-label"><spring:message code="order.tradeAmount"/></label>
+                        <label for="amountToSell" class="col-sm-5 control-label"><spring:message code="order.sellAmount"/></label>
                         <div class="input-group col-sm-7">
-                            <form:input path="tradeAmount" class="form-control" placeholder="Sell Amount" id="amountToSell"/>
+                            <form:input path="tradeAmount" class="form-control" placeholder="Sell Amount" id="amountToSell" name="amountToSell"/>
                             <span class="input-group-addon alert-warning">BTC</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="priceToSell" class="col-sm-5 control-label"><spring:message code="order.price"/></label>
+                        <label for="priceToSell" class="col-sm-5 control-label"><spring:message code="order.sellPrice"/></label>
                         <div class="input-group col-sm-7">
-                            <form:input path="itemPrice" type="text" class="form-control" placeholder="Price" id="priceToSell"/>
+                            <form:input path="itemPrice" type="text" class="form-control" placeholder="Price" id="priceToSell" name="priceToSell"/>
                             <span class="input-group-addon alert-warning">CNY</span>
                         </div>
                     </div>
@@ -261,7 +166,7 @@
     <div class="col-md-6">
         <div class="panel panel-buy">
             <div class="panel-body">
-                <form:form commandName="buyOrder" action="/buy/BTC" class="form-horizontal" role="form">
+                <form:form commandName="buyOrder" id="buyOrder" action="/buy/BTC" class="form-horizontal" role="form">
                 <form:hidden path="coinId"/>
                 <form:hidden path="coinName"/>
 
@@ -280,14 +185,14 @@
                     <label class="col-sm-1  form-control-static text-info">BTC</label>
                 </div>
                 <div class="form-group">
-                    <label for="amountToBuy" class="col-sm-5 control-label"><spring:message code="order.tradeAmount"/></label>
+                    <label for="amountToBuy" class="col-sm-5 control-label"><spring:message code="order.buyAmount"/></label>
                     <div class="input-group col-sm-7">
-                        <form:input path="tradeAmount" class="form-control" placeholder="Buy Amount" id="amountToBuy"/>
+                        <form:input path="tradeAmount" class="form-control" placeholder="Buy Amount" id="amountToBuy" />
                         <span class="input-group-addon alert-warning">CNY</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="priceToBuy" class="col-sm-5 control-label"><spring:message code="order.price"/></label>
+                    <label for="priceToBuy" class="col-sm-5 control-label"><spring:message code="order.buyPrice"/></label>
                     <div class="input-group col-sm-7">
                         <form:input path="itemPrice" type="text" class="form-control" placeholder="Price" id="priceToBuy"/>
                         <span class="input-group-addon alert-warning">BTC</span>
@@ -563,9 +468,12 @@
     <%--</div>--%>
 <%--</div>--%>
 </body>
+<c:set var="lang" value="<%= LocaleContextHolder.getLocale().getLanguage()%>"/>
 <content tag="additionalJs">
+    <script type="text/javascript" src="${ctx}/js/localization/messages_${lang}.js"></script>
     <script src="${ctx}/js/highstock.js"></script>
     <script src="${ctx}/js/exporting.js"></script>
     <script src="${ctx}/js/icoin-charts.js"></script>
+    <script src="${ctx}/js/trading.js"></script>
 </content>
 </html>

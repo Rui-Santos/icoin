@@ -1,3 +1,4 @@
+<%@ page import="org.springframework.context.i18n.LocaleContextHolder" %>
 <%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -17,8 +18,8 @@
   ~ limitations under the License.
   --%>
 
+<%@ page pageEncoding="UTF-8" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-
 <%--merge the sitemesh decorators, at least use include to change the admin decorator--%>
 <!DOCTYPE html>
 <html lang="en">
@@ -123,10 +124,6 @@
 
                 <p class="pvl">
                     <a href="#" class="twitter-share-button" data-url="http://designmodo.com/flat-free/" data-text="Flat UI Free - PSD&amp;amp;HTML User Interface Kit" data-via="designmodo">Tweet</a>
-                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-                    <%--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=watch&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>--%>
-                    <%--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=fork&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>--%>
-                    <%--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&type=follow&count=true" height="20" width="195" frameborder="0" scrolling="0" style="width:195px; height: 20px;" allowTransparency="true"></iframe>--%>
                 </p>
             </div> <!-- /col-md-7 -->
 
@@ -144,8 +141,10 @@
     </div>
 </footer>
 <!-- /container -->
-<script src="${ctx}/js/jquery-1.10.2.min.js"></script>
-<script src="${ctx}/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/jquery.validate.min.js"> </script>
+
 <%--<script src="${ctx}/js/highstock.js"></script>--%>
 <%--<script src="${ctx}/js/exporting.js"></script>--%>
 <%--<script src="${ctx}/js/icoin-charts.js"></script>--%>

@@ -12,15 +12,15 @@
     <title>iCoin Exchange</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="../../style/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/jumbotron.css" rel="stylesheet">
-    <link href="css/offcanvas.css" rel="stylesheet">
-    <link href="css/justified-nav.css" rel="stylesheet">
-    <link href="css/btn.css" rel="stylesheet">
-    <link href="css/footer.css" rel="stylesheet">
-    <link href="css/flat-ui.css" rel="stylesheet">
+    <link href="../../style/jumbotron.css" rel="stylesheet">
+    <link href="../../style/offcanvas.css" rel="stylesheet">
+    <link href="../../style/justified-nav.css" rel="stylesheet">
+    <link href="../../style/btn.css" rel="stylesheet">
+    <link href="../../style/footer.css" rel="stylesheet">
+    <link href="../../style/flat-ui.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]>
@@ -34,8 +34,7 @@
 </head>
 
 <body>
-
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="header">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -44,7 +43,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">iCoin</a>
+            <a class="navbar-brand" href="/">iCoin</a>
         </div>
 
         <div class="navbar-collapse collapse">
@@ -62,19 +61,28 @@
                     <a href="#">Volume:61645 BTC</a>
                 </li>
             </ul>
-            <form class="navbar-form navbar-right">
+
+
+            <form action="/signin/authenticate" class="navbar-form navbar-right"  method="POST">
                 <div class="form-group">
-                    <input type="text" placeholder="Username" class="form-control">
+                    <input type="text" placeholder="Username" name='j_username' class="form-control"
+                           value=''/>
                 </div>
                 <div class="form-group">
-                    <input type="password" placeholder="Password" class="form-control">
+                    <input type="password" placeholder="Password" class="form-control" name='j_password'/>
                 </div>
                 <button type="submit" class="btn btn-success">Sign in</button>
             </form>
+
         </div>
         <!--/.navbar-collapse -->
     </div>
 </div>
+
+
+
+
+
 
 
 <div class="container">
@@ -82,8 +90,10 @@
         <div class="col-lg-6">
             <div class="jumbotron">
                 <h2>Trade with confidence on Bitcoin exchange!</h2>
-                <p class="lead">iCoin is the world's most established Bitcoin exchange. You can quickly and securely trade bitcoins with other people around the world with your local currency!.</p>
-                <p><a class="btn btn-success btn-wide" href="#" role="button">Sign up today</a></p>
+                <p class="lead">iCoin is the world's most established Bitcoin exchange. You can quickly and securely trade bitcoins with other people around the world!</p>
+
+                <p><a class="btn btn-success btn-wide" href="/signup" role="button">Sign up today</a></p>
+
             </div>
         </div>
         <div class="col-lg-6" id="sidebar" role="navigation">
@@ -91,16 +101,17 @@
             <div class="right carousel-control" data-slide="next"></div>
             <h4 class="text-center">News Feed</h4>
             <ul class="list-group">
-                <li class="list-group-item"><span class="fui-eye"></span> <a> <strong>BTC goes up like a rockit</strong></a></li>
-                <li class="list-group-item"><span class="fui-eye"></span> <a><strong>LTC is So HOT</strong></a> </li>
-                <li class="list-group-item"><span class="fui-eye"></span> <a><strong>XPM is rising crazily</strong></a></li>
-                <li class="list-group-item"><span class="fui-eye"></span> <a><strong>Risk of the Coin Trading</strong></a></li>
-                <li class="list-group-item"><span class="fui-eye"></span> <a><strong>Risk of the Coin Trading</strong></a></li>
+                <li class="list-group-item"><span class="fui-eye"></span> <a href="#"> <strong>BTC goes up like a rockit</strong></a></li>
+                <li class="list-group-item"><span class="fui-eye"></span> <a href="#"><strong>LTC is So HOT</strong></a> </li>
+                <li class="list-group-item"><span class="fui-eye"></span> <a href="#"><strong>XPM is rising crazily</strong></a></li>
+                <li class="list-group-item"><span class="fui-eye"></span> <a href="#"><strong>Risk of the Coin Trading</strong></a></li>
+                <li class="list-group-item"><span class="fui-eye"></span> <a href="#"><strong>Risk of the Coin Trading</strong></a></li>
             </ul>
 
         </div>
     </div>
 </div>
+
 
 <div class="container">
 
@@ -117,21 +128,21 @@
     </ul>
 </div>
 <div class="well-new">
-    <p>
-        <button type="button" class="btn btn-lg btn-danger">BTC/CNY</button>
-        <button type="button" class="btn btn-lg btn-primary">LTC/BTC</button>
-        <button type="button" class="btn btn-lg btn-primary">LTC/CNY</button>
-        <button type="button" class="btn btn-lg btn-primary">XPM/CNY</button>
-        <button type="button" class="btn btn-lg btn-primary">XPM/BTC</button>
-    </p>
-    <p>
-        <button type="button" class="btn btn-lg btn-primary">FTC/CNY</button>
-        <button type="button" class="btn btn-lg btn-primary">FTC/BTC</button>
-        <button type="button" class="btn btn-lg btn-primary">PPC/CNY</button>
-        <button type="button" class="btn btn-lg btn-primary">PPC/CNY</button>
-    </p>
 
-    <div id="charts" style="height: 500px; min-width: 350px"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="charts" style="height: 400px; min-width: 350px"></div>
 </div>
 
 <!-- Example row of columns -->
@@ -139,106 +150,112 @@
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-sell">
-            <!--<div class="panel-heading text-center">-->
-                <!--<h3 class="panel-title">Sell BTC</h3>-->
-            <!--</div>-->
             <div class="panel-body">
-                <form class="form-horizontal" role="form">
+                <form id="sellOrder" role="form" class="form-horizontal" action="/sell/BTC" method="post">
+                    <input id="coinId" name="coinId" type="hidden" value="BTC"/>
+                    <input id="coinName" name="coinName" type="hidden" value="Bitcoin"/>
+
                     <div class="form-group">
-                        <label for="highestAsk" class="col-sm-5 control-label">Highest Ask Price</label>
-                        <label id="highestAsk" class="col-sm-2  form-control-static text-success">5.0098</label>
+                        <label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>
+                        <label id="highestBid" class="col-sm-5  form-control-static text-success">
+                            0
+                        </label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
                     <div class="form-group">
                         <label for="balanceToSell" class="col-sm-5 control-label">Balance</label>
-                        <label id="balanceToSell" class="col-sm-2  form-control-static text-success">50.098</label>
+                        <label id="balanceToSell" class="col-sm-5  form-control-static text-success">
+                            0
+                        </label>
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
                     <div class="form-group">
-                        <label for="amountToSell" class="col-sm-5 control-label">Amount</label>
+                        <label for="amountToSell" class="col-sm-5 control-label">卖出量</label>
                         <div class="input-group col-sm-7">
-                            <input type="text" class="form-control" placeholder="Sell Amount" id="amountToSell">
+                            <input id="amountToSell" name="tradeAmount" placeholder="Sell Amount" name="amountToSell" class="form-control" type="text" value=""/>
                             <span class="input-group-addon alert-warning">BTC</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="priceToSell" class="col-sm-5 control-label">Price per BTC</label>
+                        <label for="priceToSell" class="col-sm-5 control-label">卖出价</label>
                         <div class="input-group col-sm-7">
-                            <input type="text" class="form-control" placeholder="Price" id="priceToSell">
+                            <input id="priceToSell" name="itemPrice" placeholder="Price" name="priceToSell" class="form-control" type="text" value=""/>
                             <span class="input-group-addon alert-warning">CNY</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="totalToSell" class="col-sm-5 control-label">Total</label>
-                        <label id="totalToSell" class="col-sm-2  form-control-static text-danger">50.098</label>
+                        <label id="totalToSell" class="col-sm-5  form-control-static text-danger">0</label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
                     <div class="form-group">
                         <label for="feeToSell" class="col-sm-5 control-label">Fee</label>
-                        <label id="feeToSell" class="col-sm-2  form-control-static text-danger">1</label>
+                        <label id="feeToSell" class="col-sm-5  form-control-static text-danger">0</label>
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
-                    <div class="alert alert-warning alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <span></span>
-                        <!--<form:errors path="*" element="div"/>-->
-                    </div>
-                    <!--<button type="submit" class="btn btn-danger col-lg-offset-5 col-sm-3">Sell</button>-->
+
+
+
                     <button type="submit" class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
                 </form>
             </div>
         </div>
     </div>
+
     <div class="col-md-6">
         <div class="panel panel-buy">
             <div class="panel-body">
-                <form class="form-horizontal" role="form">
+                <form id="buyOrder" role="form" class="form-horizontal" action="/buy/BTC" method="post">
+                    <input id="coinId" name="coinId" type="hidden" value="BTC"/>
+                    <input id="coinName" name="coinName" type="hidden" value="Bitcoin"/>
+
                     <div class="form-group">
-                        <label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>
-                        <label id="highestBid" class="col-sm-2  form-control-static text-success">5.0098</label>
-                        <label class="col-sm-1  form-control-static text-info">BTC</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>
-                        <label id="balanceToBuy" class="col-sm-2  form-control-static text-success">50.098</label>
+                        <label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>
+                        <label id="lowestAsk" class="col-sm-5  form-control-static text-success">
+                            100000000000
+                        </label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
                     <div class="form-group">
-                        <label for="amountToBuy" class="col-sm-5 control-label">Amount</label>
-                        <div class="input-group col-sm-7">
-                            <input type="text" class="form-control" placeholder="Buy Amount" id="amountToBuy">
-                            <span class="input-group-addon alert-warning">CNY</span>
-                        </div>
+                        <label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>
+                        <label id="balanceToBuy" class="col-sm-5  form-control-static text-success">
+                            0
+                        </label>
+                        <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
                     <div class="form-group">
-                        <label for="priceToBuy" class="col-sm-5 control-label">Price per BTC</label>
+                        <label for="amountToBuy" class="col-sm-5 control-label">买入量</label>
                         <div class="input-group col-sm-7">
-                            <input type="text" class="form-control" placeholder="Price" id="priceToBuy">
-                            <span class="input-group-addon alert-warning">BTC</span>
+                            <input id="amountToBuy" name="tradeAmount" placeholder="Buy Amount" class="form-control" type="text" value=""/>
                         </div>
+                        <span class="input-group-addon alert-warning">CNY</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="priceToBuy" class="col-sm-5 control-label">买入价</label>
+                        <div class="input-group col-sm-7">
+                            <input id="priceToBuy" name="itemPrice" placeholder="Price" class="form-control" type="text" value=""/>
+                        </div>
+                        <span class="input-group-addon alert-warning">BTC</span>
                     </div>
                     <div class="form-group">
                         <label for="totalToBuy" class="col-sm-5 control-label">Total</label>
-                        <label id="totalToBuy" class="col-sm-2  form-control-static text-danger">50.098</label>
+                        <label id="totalToBuy" class="col-sm-5  form-control-static text-danger">0</label>
                         <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
                     <div class="form-group">
                         <label for="feeToBuy" class="col-sm-5 control-label">Fee</label>
-                        <label id="feeToBuy" class="col-sm-2  form-control-static text-danger">1</label>
+                        <label id="feeToBuy" class="col-sm-5  form-control-static text-danger">0</label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
 
-                    <!--<div class="span7 center"> box </div>-->
+
                     <button type="submit" class="btn btn-success col-lg-offset-5 col-lg-3">Buy</button>
                 </form>
             </div>
-
-            <!--<div class="panel-heading text-center">-->
-                <!--<h3 class="panel-footer">Buy BTC</h3>-->
-            <!--</div>-->
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-sell">
@@ -249,32 +266,13 @@
                 <table class="table table-condensed table-hover">
                     <thead>
                     <tr>
-                        <th>Price</th>
-                        <th>Volume</th>
-                        <th>CNY</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Amount</th>
+                        <th class="text-center">CNY</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="table">
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -289,32 +287,13 @@
                 <table class="table table-condensed table-hover">
                     <thead>
                     <tr>
-                        <th>Price</th>
-                        <th>Volume</th>
-                        <th>CNY</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Amount</th>
+                        <th class="text-center">CNY</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
-                    <tr>
-                        <td>593.998</td>
-                        <td>0.01</td>
-                        <td>5.93998</td>
-                    </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -322,59 +301,9 @@
     </div>
 </div>
 
-<div class="panel panel-trading">
-    <div class="panel-heading text-center">
-        <h3 class="panel-title">Your current active orders</h3>
-    </div>
-    <div class="panel-body">
-        <table class="table table-condensed table-hover">
-            <thead>
-            <tr>
-                <th>Buy/Sell</th>
-                <th>Price</th>
-                <th>Amount</th>
-                <th>CNY</th>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="success">
-                <td>Buy</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-                <td>21.11.13 15:35</td>
-                <td><a href="#">Undo</a></td>
-            </tr>
-            <tr class="success">
-                <td>Buy</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-                <td>21.11.13 15:35</td>
-                <td><a href="#">Undo</a></td>
-            </tr>
-            <tr class="danger">
-                <td>Sell</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-                <td>21.11.13 15:35</td>
-                <td><a href="#">Undo</a></td>
-            </tr>
-            <tr class="danger">
-                <td>Sell</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-                <td>21.11.13 15:35</td>
-                <td><a href="#">Undo</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+
+
+
 
 <div class="panel panel-history">
     <div class="panel-heading text-center">
@@ -393,41 +322,31 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="success">
-                <td>21.11.13 15:35</td>
-                <td>Buy</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-            </tr>
+
+
+
+
+
+
             <tr class="danger">
-                <td>21.11.13 15:35</td>
-                <td>Sell</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
+
+
+
+                <td class="text-center">
+                    02-16 11:36:04
+                </td>
+                <td class="text-center">SELL</td>
+                <td class="text-center">
+                    8
+                </td>
+                <td class="text-center">
+                    12.12
+                </td>
+                <td class="text-center">
+                    97
+                </td>
             </tr>
-            <tr class="success">
-                <td>21.11.13 15:35</td>
-                <td>Buy</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-            </tr>
-            <tr class="success">
-                <td>21.11.13 15:35</td>
-                <td>Buy</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-            </tr>
-            <tr class="danger">
-                <td>21.11.13 15:35</td>
-                <td>Sell</td>
-                <td>593.998</td>
-                <td>0.01</td>
-                <td>5.93998</td>
-            </tr>
+
             </tbody>
         </table>
     </div>
@@ -454,12 +373,59 @@
             <li class="list-group-item palette-green-sea text-inverse"><span class="glyphicon glyphicon-earphone"></span> 021 3456789</li>
             <li class="list-group-item palette-amethyst text-inverse"> <span class="fui-user"> QQ<sup>1</sup></span> 232845696</li>
             <li class="list-group-item palette-wisteria text-inverse"> <span class="fui-user"> QQ<sup>2</sup></span> 232845696</li>
-            <li class="list-group-item palette-turquoise text-inverse"> <span class="fui-user"> Technic<sup></sup></span> 232845696</li>
+            <li class="list-group-item palette-turquoise text-inverse"> <span class="fui-user"> Tech<sup></sup></span> 232845696</li>
         </ul>
     </div>
 </div>
 </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <footer>
     <div class="container">
@@ -468,15 +434,11 @@
                 <h3 class="footer-title">Subscribe</h3>
                 <p>Do you like this freebie? Want to get more stuff like this?<br/>
                     Subscribe to designmodo news and updates to stay tuned on great designs.<br/>
-                    Go to: <a href="http://designmodo.com/flat-free" target="_blank">designmodo.com/flat-free</a>
+                    Go to: <a href="#" target="_blank">designmodo.com/flat-free</a>
                 </p>
 
                 <p class="pvl">
-                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://designmodo.com/flat-free/" data-text="Flat UI Free - PSD&amp;amp;HTML User Interface Kit" data-via="designmodo">Tweet</a>
-                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-                    <!--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=watch&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>-->
-                    <!--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&repo=Flat-UI&type=fork&count=true" height="20" width="107" frameborder="0" scrolling="0" style="width:105px; height: 20px;" allowTransparency="true"></iframe>-->
-                    <!--<iframe src="http://ghbtns.com/github-btn.html?user=designmodo&type=follow&count=true" height="20" width="195" frameborder="0" scrolling="0" style="width:195px; height: 20px;" allowTransparency="true"></iframe>-->
+                    <a href="#" class="twitter-share-button" data-url="http://designmodo.com/flat-free/" data-text="Flat UI Free - PSD&amp;amp;HTML User Interface Kit" data-via="designmodo">Tweet</a>
                 </p>
             </div> <!-- /col-md-7 -->
 
@@ -485,122 +447,28 @@
                     <h3 class="footer-title">Get Flat UI Pro</h3>
                     <ul>
                         <li>Tons of Basic and Custom UI Elements</li>
-                        <!--<li>A Lot of Useful Samples</li>-->
-                        <!--<li>More Vector Icons and Glyphs</li>-->
-                        <!--<li>Pro Color Swatches</li>-->
-                        <li>Bootstrap Based HTML/CSS/JS Layout</li>
+                        <li>A Lot of Useful Samples</li>
                     </ul>
-                    Go to: <a href="http://designmodo.com/flat" target="_blank">designmodo.com/flat</a>
+                    Email : <a href="mailto:icoin@icoin.net" target="_blank">designmodo.com/flat</a>
                 </div>
             </div>
         </div>
     </div>
 </footer>
 <!-- /container -->
+<script type="text/javascript" src="../../js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.validate.min.js"> </script>
 
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="js/jquery-1.10.2.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/highstock.js"></script>
-<script src="js/exporting.js"></script>
+
+
+
+<script type="text/javascript" src="../../js/localization/messages_zh.js"></script>
+<script src="../../js/highstock.js"></script>
+<script src="../../js/exporting.js"></script>
+<script src="../../js/icoin-charts.js"></script>
+<script src="../../js/trading.js"></script>
+
 </body>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename=aapl-ohlcv.json&callback=?', function (data) {
-
-            // split the data set into ohlc and volume
-            var ohlc = [],
-                    volume = [],
-                    dataLength = data.length;
-
-            for (i = 0; i < dataLength; i++) {
-                ohlc.push([
-                    data[i][0], // the date
-                    data[i][1], // open
-                    data[i][2], // high
-                    data[i][3], // low
-                    data[i][4] // close
-                ]);
-
-                volume.push([
-                    data[i][0], // the date
-                    data[i][5] // the volume
-                ])
-            }
-
-            // set the allowed units for data grouping
-            var groupingUnits = [
-                [
-                    'week',                         // unit name
-                    [1]                             // allowed multiples
-                ],
-                [
-                    'month',
-                    [1, 2, 3, 4, 6]
-                ]
-            ];
-
-            // create the chart
-            $('#charts').highcharts('StockChart', {
-
-                rangeSelector: {
-                    selected: 1
-                },
-
-                title: {
-                    text: 'AAPL Historical'
-                },
-
-                yAxis: [
-                    {
-                        title: {
-                            text: 'OHLC'
-                        },
-                        height: 200,
-                        lineWidth: 2
-                    },
-                    {
-                        title: {
-                            text: 'Volume'
-                        },
-                        top: 300,
-                        height: 100,
-                        offset: 0,
-                        lineWidth: 2
-                    }
-                ],
-
-                plotOptions: {
-                    candlestick: {
-                        color: '#FF0000',
-                        upColor: '#00FF00'
-                    }
-                },
-
-                series: [
-                    {
-                        type: 'candlestick',
-                        name: 'AAPL',
-                        data: ohlc,
-                        dataGrouping: {
-                            units: groupingUnits
-                        }
-                    },
-                    {
-                        type: 'column',
-                        name: 'Volume',
-                        data: volume,
-                        yAxis: 1,
-                        dataGrouping: {
-                            units: groupingUnits
-                        }
-                    }
-                ]
-            });
-        });
-    });
-</script>
 </html>

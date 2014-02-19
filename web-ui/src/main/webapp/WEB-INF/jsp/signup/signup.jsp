@@ -1,3 +1,4 @@
+<%@ page import="org.springframework.context.i18n.LocaleContextHolder" %>
 <%@ page session="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
@@ -55,7 +56,7 @@
         <div class="from-group">
         <label class="sr-only" for="email">Email</label>
             <form:input path="email" id="email" type="email" class="form-control" placeholder="Email" data-placement="right"
-                        title="18 characters"/>
+                        title="Your email address"/>
             <form:errors path="email" cssClass="alert-danger"/>
         </div>
         <div class="from-group">
@@ -154,6 +155,9 @@
 <%--<button type="submit"><img src="<c:url value="/image/w_logo.jpg"/>" /></button>--%>
 <%--</form>--%>
 
+
+<%----%>
+
 <!-- weibo SIGNIN -->
 <%--<form name="wb_signin" id="wb_signin" action="<c:url value="/signin/weibo"/>" method="POST">--%>
 <c:url value="/signin/weibo" var="signinWeiboUrl"/>
@@ -161,8 +165,12 @@
     <input type="hidden" name="scope" value="publish_stream,user_photos,offline_access"/>
     <button type="submit"><img src="<c:url value="/image/w_logo.jpg"/>"/></button>
 </form:form>
+<c:set var="lang" value="<%= LocaleContextHolder.getLocale().getLanguage()%>"/>
+
+
 <content tag="additionalJs">
-    <script src="${ctx}/js/jquery.validate.min.js"></script>
+<%--<script src="${ctx}/js/jquery.validate.min.js"></script>--%>
+    <script type="text/javascript" src="${ctx}/js/localization/messages_${lang}.js"></script>
     <script src="${ctx}/js/tooltip.js"></script>
     <script src="${ctx}/js/signup.js"></script>
 </content>

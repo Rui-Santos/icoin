@@ -19,6 +19,7 @@ import static com.homhon.util.Asserts.notNull;
  * To change this template use File | Settings | File Templates.
  */
 public class ChangeWithdrawPasswordCommand extends CommandSupport<ChangeWithdrawPasswordCommand> {
+    @NotNull(message = "The provided userId cannot be null")
     private UserId userId;
     @NotNull
     @Size(min = 6, message = "The provided username cannot be null", max = 16)

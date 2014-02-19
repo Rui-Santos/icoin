@@ -58,6 +58,7 @@
         </property>
         <!--todo add profile for this-->
         <property name="cacheSeconds" value="10"/>
+        <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
 
@@ -65,15 +66,24 @@
         <property name="defaultLocale" value="zh_CN"/>
     </bean>
 
-    <bean id="localeChangeInterceptor"
-          class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-        <property name="paramName" value="lang" />
-    </bean>
+    <!--<bean id="localeChangeInterceptor"-->
+          <!--class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">-->
+        <!--<property name="paramName" value="lang" />-->
+    <!--</bean>-->
 
-    <bean id="handlerMapping"
-          class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-        <property name="interceptors">
-            <ref bean="localeChangeInterceptor" />
-        </property>
-    </bean>
+    <!--<bean id="handlerMapping"-->
+          <!--class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">-->
+        <!--<property name="interceptors">-->
+            <!--<ref bean="localeChangeInterceptor" />-->
+        <!--</property>-->
+    <!--</bean>-->
+
+
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="lang" />
+        </bean>
+    </mvc:interceptors>
+
+
 </beans>

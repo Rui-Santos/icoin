@@ -35,7 +35,7 @@ public class UserCreatedEvent extends EventSupport<UserCreatedEvent> {
     private Identifier identifier;
     private String email;
     private String password;
-   private List<String> roles;
+    private List<String> roles;
 
     public UserCreatedEvent(UserId userId,
                             String username,

@@ -21,10 +21,28 @@ import static com.homhon.util.Asserts.notNull;
  */
 @Service
 public class SimplePasswordResetTokenGenerator implements PasswordResetTokenGenerator {
+    private static final char[] HEX = {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+    };
 
     private final MessageDigest digest;
 
-    private SimplePasswordResetTokenGenerator() {
+    private static char[] hex(byte[] bytes) {
+        final int nBytes = bytes.length;
+        char[] result = new char[2 * nBytes];
+
+        int j = 0;
+        for (int i = 0; i < nBytes; i++) {
+            // Char for top 4 bits
+            result[j++] = HEX[(0xF0 & bytes[i]) >>> 4];
+            // Bottom 4
+            result[j++] = HEX[(0x0F & bytes[i])];
+        }
+
+        return result;
+    }
+
+    public SimplePasswordResetTokenGenerator() {
         try {
             this.digest = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
@@ -43,7 +61,7 @@ public class SimplePasswordResetTokenGenerator implements PasswordResetTokenGene
             String s = randomString + userName + date.getTime() + ip;
             byte[] bytes = s.getBytes("UTF-8");
             byte[] generated = digest.digest(bytes);
-            return new String(generated);
+            return new String(hex(generated));
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("No such encoding", e);
         }

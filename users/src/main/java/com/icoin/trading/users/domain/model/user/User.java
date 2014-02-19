@@ -16,13 +16,16 @@
 
 package com.icoin.trading.users.domain.model.user;
 
+import com.icoin.trading.users.domain.event.NotificationSettingsUpdatedEvent;
 import com.icoin.trading.users.domain.event.PasswordChangedEvent;
 import com.icoin.trading.users.domain.event.UserAuthenticatedEvent;
 import com.icoin.trading.users.domain.event.UserCreatedEvent;
 import com.icoin.trading.users.domain.event.WithdrawPasswordChangedEvent;
+import com.icoin.trading.users.domain.event.WithdrawPasswordCreatedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
 import java.util.List;
@@ -46,8 +49,8 @@ public class User extends AbstractAnnotatedAggregateRoot {
         apply(new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password, roles));
     }
 
-    public boolean authenticate(String encodedPassword, String operatingIp, Date authTime) {
-        boolean success = this.password.equals(encodedPassword);
+    public boolean authenticate(PasswordEncoder passwordEncoder, String rawPassword, String operatingIp, Date authTime) {
+        boolean success = passwordEncoder.matches(rawPassword, password);
         if (success) {
             apply(new UserAuthenticatedEvent(userId, username, email, operatingIp, authTime));
         }
@@ -63,7 +66,14 @@ public class User extends AbstractAnnotatedAggregateRoot {
     }
 
     public void createWithdrawPassword(String encodedPassword, String encodedConfirmedPassword, String operatingIp, Date changedTime) {
-        apply(new WithdrawPasswordChangedEvent(userId, username, email, encodedPassword, encodedConfirmedPassword, operatingIp, changedTime));
+        apply(new WithdrawPasswordCreatedEvent(userId, username, email, encodedPassword, encodedConfirmedPassword, operatingIp, changedTime));
+    }
+
+    public void updateNotificationSettings(boolean logonAlert,
+                                           boolean executedAlert,
+                                           boolean withdrawItemAlert,
+                                           boolean withdrawMoneyAlert) {
+        apply(new NotificationSettingsUpdatedEvent(userId, username, logonAlert, executedAlert, withdrawItemAlert, withdrawMoneyAlert));
     }
 
     @EventHandler
@@ -81,6 +91,11 @@ public class User extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void onWithdrawPasswordChangedEvent(WithdrawPasswordChangedEvent event) {
+        this.withdrawPassword = event.getEncodedPassword();
+    }
+
+    @EventHandler
+    public void onWithdrawPasswordCreatedEvent(WithdrawPasswordCreatedEvent event) {
         this.withdrawPassword = event.getEncodedPassword();
     }
 

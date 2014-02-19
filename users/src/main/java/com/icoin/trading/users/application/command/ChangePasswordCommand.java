@@ -25,6 +25,7 @@ import static com.homhon.util.Asserts.notNull;
  * @author Jettro Coenradie
  */
 public class ChangePasswordCommand extends CommandSupport<ChangePasswordCommand> {
+    @NotNull(message = "The provided userId cannot be null")
     private UserId userId;
     @NotNull
     @Size(min = 6, message = "The provided username cannot be null", max = 16)

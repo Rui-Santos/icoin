@@ -19,6 +19,7 @@ import static com.homhon.util.Asserts.notNull;
  * To change this template use File | Settings | File Templates.
  */
 public class CreateWithdrawPasswordCommand extends CommandSupport<CreateWithdrawPasswordCommand> {
+    @NotNull(message = "The provided userId cannot be null")
     private UserId userId;
     @NotNull
     @Size(min = 6, message = "The provided username cannot be null", max = 16)
@@ -31,14 +32,14 @@ public class CreateWithdrawPasswordCommand extends CommandSupport<CreateWithdraw
     private String confirmedWithdrawPassword;
 
     private String operatingIp;
-    private Date ChangedTime;
+    private Date createdTime;
 
     public CreateWithdrawPasswordCommand(UserId userId,
                                          String username,
                                          String withdrawPassword,
                                          String confirmedWithdrawPassword,
                                          String operatingIp,
-                                         Date ChangedTime) {
+                                         Date createdTime) {
         notNull(userId, "The provided userId cannot be null");
 
         isTrue(withdrawPassword.equals(confirmedWithdrawPassword), "The withdraw password and confirmed withdraw password should be the same.");
@@ -48,7 +49,7 @@ public class CreateWithdrawPasswordCommand extends CommandSupport<CreateWithdraw
         this.withdrawPassword = withdrawPassword;
         this.confirmedWithdrawPassword = confirmedWithdrawPassword;
         this.operatingIp = operatingIp;
-        this.ChangedTime = ChangedTime;
+        this.createdTime = createdTime;
     }
 
     public boolean isValid() {
@@ -76,7 +77,7 @@ public class CreateWithdrawPasswordCommand extends CommandSupport<CreateWithdraw
         return operatingIp;
     }
 
-    public Date getChangedTime() {
-        return ChangedTime;
+    public Date getCreatedTime() {
+        return createdTime;
     }
 }

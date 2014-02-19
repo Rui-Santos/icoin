@@ -1,3 +1,4 @@
+<%@ page import="org.springframework.context.i18n.LocaleContextHolder" %>
 <%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -17,7 +18,9 @@
   ~ limitations under the License.
   --%>
 
+<%@ page pageEncoding="UTF-8" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<c:set var="lang" value="<%= request.getSession().getAttribute("org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE")%>"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -155,6 +158,8 @@
 <!-- /container -->
 <script src="${ctx}/js/jquery-1.10.2.min.js"></script>
 <script src="${ctx}/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/jquery.validate.min.js"> </script>
+<script type="text/javascript" src="${ctx}/js/localization/messages_${lang}.js"></script>
 <decorator:getProperty property="page.additionalJs"/>
 </body>
 </html>

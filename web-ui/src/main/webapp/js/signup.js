@@ -38,8 +38,7 @@ $(document).ready(function () {
                 required: "Please Enter an Email Address"
             },
             password: {
-                required: "Please Enter a Password",
-                rangelength:""
+                required: "Please Enter a Password"
             },
             confirmedPassword: {
                 required: "Please Confirm Your Password",

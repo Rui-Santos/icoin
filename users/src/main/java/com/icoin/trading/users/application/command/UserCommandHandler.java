@@ -104,7 +104,7 @@ public class UserCommandHandler {
         }
         final Date authTime = nullSafe(command.getAuthTime(), currentTime());
         boolean success = onUser(account.getPrimaryKey())
-                .authenticate(passwordEncoder.encode(command.getPassword()), command.getOperatingIp(), authTime);
+                .authenticate(passwordEncoder, command.getPassword(), command.getOperatingIp(), authTime);
         return success ? account : null;
     }
 
@@ -153,7 +153,7 @@ public class UserCommandHandler {
         reset.setUserId(user.getPrimaryKey());
         reset.setEmail(command.getEmail());
         reset.setIp(command.getOperatingIp());
-        reset.setExpirationDate(futureMinute(currentTime(), 30));
+        reset.setExpirationDate(futureMinute(command.getCurrentTime(), 30));
 
         return reset;
     }
@@ -224,6 +224,51 @@ public class UserCommandHandler {
                 changedTime);
 
         logger.info("userid {}, username {} has changed withdraw password!", command.getUserId(), command.getUsername());
+    }
+
+    @CommandHandler
+    public void handleCreateWithdrawPasswordCommand(CreateWithdrawPasswordCommand command) {
+        notNull(command.getUserId());
+        hasLength(command.getConfirmedWithdrawPassword());
+        hasLength(command.getWithdrawPassword());
+        isTrue(command.isValid(), "The password and confirmed password should be the same, but password should be different from previous one!");
+
+        User user = repository.load(command.getUserId());
+
+        if (user == null) {
+            logger.warn("cannot find user {}", command.getUserId());
+            return;
+        }
+
+        final Date changedTime = nullSafe(command.getCreatedTime(), currentTime());
+        user.createWithdrawPassword(passwordEncoder.encode(command.getWithdrawPassword()),
+                passwordEncoder.encode(command.getConfirmedWithdrawPassword()),
+                command.getOperatingIp(),
+                changedTime);
+
+        logger.info("userid {}, username {} has changed withdraw password!", command.getUserId(), command.getUsername());
+    }
+
+    @CommandHandler
+    public void handleUpdateNotificationCommand(UpdateNotificationSettingsCommand command) {
+        notNull(command.getUserId(),"user Id cannot be null");
+        hasLength(command.getUserId().toString(), "user Id cannot be empty");
+        hasLength(command.getUsername(), "username cannot be null");
+
+        User user = repository.load(command.getUserId());
+
+        if (user == null) {
+            logger.warn("cannot find user {}", command.getUserId());
+            return;
+        }
+
+        user.updateNotificationSettings(
+                command.isLogonAlert(),
+                command.isExecutedAlert(),
+                command.isWithdrawItemAlert(),
+                command.isWithdrawMoneyAlert());
+
+        logger.info("userid {}, username {} has updated notification!", command.getUserId(), command.getUsername(), command);
     }
 
     private void clearPasswordResetTokens(String userId, String userName) {
