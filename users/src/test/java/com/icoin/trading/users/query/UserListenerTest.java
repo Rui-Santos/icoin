@@ -1,24 +1,36 @@
 package com.icoin.trading.users.query;
 
 import com.icoin.trading.users.application.command.UserCommandHandler;
+import com.icoin.trading.users.domain.event.NotificationSettingsUpdatedEvent;
+import com.icoin.trading.users.domain.event.PasswordChangedEvent;
 import com.icoin.trading.users.domain.event.UserCreatedEvent;
+import com.icoin.trading.users.domain.event.WithdrawPasswordChangedEvent;
+import com.icoin.trading.users.domain.event.WithdrawPasswordCreatedEvent;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.util.Date;
+
+import static com.homhon.util.TimeUtils.currentTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
- * User: liougehooa
- * Date: 14-1-5
- * Time: AM10:27
+ * User: jihual
+ * Date: 2/19/14
+ * Time: 12:39 PM
  * To change this template use File | Settings | File Templates.
  */
 public class UserListenerTest {
@@ -56,4 +68,174 @@ public class UserListenerTest {
         assertThat(userEntry.getLastName(), equalTo(lastName));
         assertThat(userEntry.getEmail(), equalTo(email));
     }
-}
+
+    @Test
+    public void testHandleUserPasswordChangedWithUserNotFound() throws Exception {
+        final UserId userId = new UserId();
+        final String operatingIp = "207.45.15.2";
+        final String password = "new password";
+        final String username = "buyerAbc";
+        final String email = "buyerAbc@163.com";
+        final Date time = currentTime();
+
+        final UserQueryRepository repository = mock(UserQueryRepository.class);
+
+        final PasswordChangedEvent event = new PasswordChangedEvent(userId,
+                username,
+                email,
+                password,
+                password,
+                operatingIp,
+                time);
+
+        final UserListener listener = new UserListener();
+        listener.setUserRepository(repository);
+
+        listener.handleUserPasswordChanged(event);
+
+        verify(repository).findOne(eq(userId.toString()));
+        verify(repository, never()).save(any(UserEntry.class));
+    }
+
+    @Test
+    public void testHandleUserPasswordChanged() throws Exception {
+        final UserId userId = new UserId();
+        final String operatingIp = "207.45.15.2";
+        final String password = "new password";
+        final String username = "buyerAbc";
+        final String email = "buyerAbc@163.com";
+        final Date time = currentTime();
+
+        final UserQueryRepository repository = mock(UserQueryRepository.class);
+        UserEntry user = new UserEntry();
+        when(repository.findOne(eq(userId.toString()))).thenReturn(user);
+
+        final PasswordChangedEvent event = new PasswordChangedEvent(userId,
+                username,
+                email,
+                password,
+                password,
+                operatingIp,
+                time);
+
+        final UserListener listener = new UserListener();
+        listener.setUserRepository(repository);
+
+        listener.handleUserPasswordChanged(event);
+
+        final ArgumentCaptor<UserEntry> captor = ArgumentCaptor.forClass(UserEntry.class);
+        verify(repository).save(captor.capture());
+        final UserEntry userEntry = captor.getValue();
+
+        assertThat(userEntry, notNullValue());
+        assertThat(userEntry.getPassword(), equalTo(password));
+
+        verify(repository).findOne(eq(userId.toString()));
+    }
+
+    @Test
+    public void testHandleUserWithdrawPasswordCreated() throws Exception {
+        final UserId userId = new UserId();
+        final String operatingIp = "207.45.15.2";
+        final String password = "new withdraw password";
+        final String username = "buyerAbc";
+        final String email = "buyerAbc@163.com";
+        final Date time = currentTime();
+
+        final UserQueryRepository repository = mock(UserQueryRepository.class);
+        UserEntry user = new UserEntry();
+        when(repository.findOne(eq(userId.toString()))).thenReturn(user);
+
+        final WithdrawPasswordCreatedEvent event = new WithdrawPasswordCreatedEvent(userId,
+                username,
+                email,
+                password,
+                password,
+                operatingIp,
+                time);
+
+        final UserListener listener = new UserListener();
+        listener.setUserRepository(repository);
+
+        listener.handleUserWithdrawPasswordCreated(event);
+
+        final ArgumentCaptor<UserEntry> captor = ArgumentCaptor.forClass(UserEntry.class);
+        verify(repository).save(captor.capture());
+        final UserEntry userEntry = captor.getValue();
+
+        assertThat(userEntry, notNullValue());
+        assertThat(userEntry.getWithdrawPassword(), equalTo(password));
+
+        verify(repository).findOne(eq(userId.toString()));
+    }
+
+    @Test
+    public void testHandleUserWithdrawPasswordChanged() throws Exception {
+        final UserId userId = new UserId();
+        final String operatingIp = "207.45.15.2";
+        final String password = "new withdraw password";
+        final String username = "buyerAbc";
+        final String email = "buyerAbc@163.com";
+        final Date time = currentTime();
+
+        final UserQueryRepository repository = mock(UserQueryRepository.class);
+        UserEntry user = new UserEntry();
+        when(repository.findOne(eq(userId.toString()))).thenReturn(user);
+
+        final WithdrawPasswordChangedEvent event = new WithdrawPasswordChangedEvent(userId,
+                username,
+                email,
+                password,
+                password,
+                operatingIp,
+                time);
+
+        final UserListener listener = new UserListener();
+        listener.setUserRepository(repository);
+
+        listener.handleUserWithdrawPasswordChanged(event);
+
+        final ArgumentCaptor<UserEntry> captor = ArgumentCaptor.forClass(UserEntry.class);
+        verify(repository).save(captor.capture());
+        final UserEntry userEntry = captor.getValue();
+
+        assertThat(userEntry, notNullValue());
+        assertThat(userEntry.getWithdrawPassword(), equalTo(password));
+
+        verify(repository).findOne(eq(userId.toString()));
+    }
+
+    @Test
+    public void testHandleUpdateNotification() throws Exception {
+        final UserId userId = new UserId();
+        final String username = "buyerAbc";
+
+        final UserQueryRepository repository = mock(UserQueryRepository.class);
+        UserEntry user = new UserEntry();
+        when(repository.findOne(eq(userId.toString()))).thenReturn(user);
+
+        final NotificationSettingsUpdatedEvent event = new NotificationSettingsUpdatedEvent(userId,
+                username,
+                false,
+                true,
+                true,
+                false);
+
+        final UserListener listener = new UserListener();
+        listener.setUserRepository(repository);
+
+        listener.handleUpdateNotification(event);
+
+        final ArgumentCaptor<UserEntry> captor = ArgumentCaptor.forClass(UserEntry.class);
+        verify(repository).save(captor.capture());
+        final UserEntry userEntry = captor.getValue();
+
+        assertThat(userEntry, notNullValue());
+        assertThat(userEntry.isLogonAlert(), is(false));
+        assertThat(userEntry.isExecutedAlert(), is(true));
+        assertThat(userEntry.isWithdrawMoneyAlert(), is(true));
+        assertThat(userEntry.isWithdrawItemAlert(), is(false));
+
+        verify(repository).findOne(eq(userId.toString()));
+    }
+} 

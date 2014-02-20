@@ -266,7 +266,7 @@
                 </dl>
                 <dl class="myacc-col1">
                     <dt>Cell Phone Number</dt>
-                    <dd><c:out value="${userInfo.email}"/></dd>
+                    <dd><c:out value="${userInfo.cellPhoneNumber}"/></dd>
                 </dl>
                 <dl class="myacc-col2">
                     <dt>Real Name</dt>

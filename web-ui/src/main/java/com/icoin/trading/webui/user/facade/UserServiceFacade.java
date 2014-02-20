@@ -36,6 +36,8 @@ public interface UserServiceFacade {
                                        String operatingIp,
                                        Date currentTime);
 
+    boolean matchPreviousPassword(String previousPassword);
+
     void changePassword(String previousPassword,
                         String newPassword,
                         String confirmedNewPassword,
@@ -46,6 +48,8 @@ public interface UserServiceFacade {
                                 String confirmedWithdrawPassword,
                                 String operatingIp,
                                 Date changedTime);
+
+    boolean matchPreviousWithdrawPassword(String previousPassword);
 
     void changeWithdrawPassword(String previousPassword,
                                 String withdrawPassword,

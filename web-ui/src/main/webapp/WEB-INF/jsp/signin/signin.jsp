@@ -1,3 +1,4 @@
+<%@ page import="org.springframework.context.i18n.LocaleContextHolder" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
@@ -42,7 +43,7 @@
                id="j_username" name='j_username'
                value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'
                placeholder="Username"
-               data-placement="right" title="Your registered username"
+               data-placement="right"
                required autofocus>
     </div>
 
@@ -50,10 +51,17 @@
         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
         <input type="password" id="j_password" name='j_password' class="form-control"
                placeholder="Password"
-               data-placement="right" title="Your password"
+               data-placement="right"
                required>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <p>Or you can <a href="<c:url value="/signup"/>">signup</a> with a new account.</p>
+    <p><a href="/user/forgetPassword">Lost Password</a> Or <a href="/signup">Sign up</a> with a new account</p>
     <%--<a class="login-link" href="#">Lost your password?</a>--%>
 </form:form>
+<c:set var="lang" value="<%= LocaleContextHolder.getLocale().getLanguage()%>"/>
+
+<content tag="additionalJs">
+    <script type="text/javascript" src="${ctx}/js/localization/messages_${lang}.js"></script>
+    <script src="${ctx}/js/tooltip.js"></script>
+    <script src="${ctx}/js/signin.js"></script>
+</content>

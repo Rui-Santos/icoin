@@ -84,8 +84,8 @@ public class UserController {
                                  BindingResult bindingResult,
                                  HttpServletRequest request) {
         if (!bindingResult.hasErrors()) {
-            if (createWithdrawPasswordForm.getWithdrawPassword().equals(createWithdrawPasswordForm.getConfirmedWithdrawPassword())) {
-                bindingResult.rejectValue("password", "error.user.changepassword.differentcomfirmedpassword", "The password is not the same as the confirmed password");
+            if (!createWithdrawPasswordForm.getWithdrawPassword().equals(createWithdrawPasswordForm.getConfirmedWithdrawPassword())) {
+                bindingResult.rejectValue("withdrawPassword", "error.user.changepassword.differentcomfirmedpassword", "The password is not the same as the confirmed password");
                 return "changePassword";
             }
 
@@ -113,12 +113,17 @@ public class UserController {
                                          HttpServletRequest request) {
         if (!bindingResult.hasErrors()) {
             if (changeWithdrawPasswordForm.getPreviousWithdrawPassword().equals(changeWithdrawPasswordForm.getWithdrawPassword())) {
-                bindingResult.rejectValue("previousPassword", "error.user.changepassword.samepassword", "The previous password equals to new password");
+                bindingResult.rejectValue("withdrawPassword", "error.user.changepassword.samepassword", "The previous password equals to new password");
                 return "changePassword";
             }
 
-            if (changeWithdrawPasswordForm.getConfirmedWithdrawPassword().equals(changeWithdrawPasswordForm.getWithdrawPassword())) {
-                bindingResult.rejectValue("password", "error.user.changepassword.differentcomfirmedpassword", "The password is not the same as the confirmed password");
+            if (!changeWithdrawPasswordForm.getConfirmedWithdrawPassword().equals(changeWithdrawPasswordForm.getWithdrawPassword())) {
+                bindingResult.rejectValue("withdrawPassword", "error.user.changepassword.differentcomfirmedpassword", "The password does not match the confirmed password");
+                return "changePassword";
+            }
+
+            if (!userService.matchPreviousWithdrawPassword(changeWithdrawPasswordForm.getPreviousWithdrawPassword())) {
+                bindingResult.rejectValue("withdrawPassword", "error.user.changepassword.previousWithdrawPasswordUnmatched", "The previous withdrawal password is wrong");
                 return "changePassword";
             }
 
@@ -153,8 +158,13 @@ public class UserController {
                 return "changePassword";
             }
 
-            if (changePasswordForm.getConfirmedNewPassword().equals(changePasswordForm.getNewPassword())) {
-                bindingResult.rejectValue("password", "error.user.changepassword.differentcomfirmedpassword", "The password is not the same as the confirmed password");
+            if (!changePasswordForm.getConfirmedNewPassword().equals(changePasswordForm.getNewPassword())) {
+                bindingResult.rejectValue("password", "error.user.changepassword.differentcomfirmedpassword", "The password does not match the confirmed password");
+                return "changePassword";
+            }
+
+            if (!userService.matchPreviousPassword(changePasswordForm.getPreviousPassword())) {
+                bindingResult.rejectValue("withdrawPassword", "error.user.changepassword.previousWithdrawPasswordUnmatched", "The previous withdrawal password is wrong");
                 return "changePassword";
             }
 
@@ -171,14 +181,14 @@ public class UserController {
         changePasswordForm.setNewPassword(null);
         changePasswordForm.setConfirmedNewPassword(null);
 
-        return "changePassword";
+        return "changepassword";
     }
 
     @RequestMapping(value = "/forgetPassword", method = RequestMethod.GET)
     public String forgetPassword(Model model) {
         model.addAttribute("forgetPassword", new ForgetPasswordForm());
 
-        return "forgetPassword";
+        return "forgetpassword";
     }
 
     @RequestMapping(value = "/forgetPassword", method = RequestMethod.POST)
@@ -206,8 +216,7 @@ public class UserController {
             }
         }
 
-
-        return "/forgetPasswordEmail";
+        return "/forgetpasswordsent";
     }
 
     @RequestMapping(value = "/passwordReset", method = RequestMethod.POST)

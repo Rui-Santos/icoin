@@ -108,8 +108,8 @@
         <div class="panel panel-sell">
             <div class="panel-body">
                 <form:form commandName="sellOrder" id="sellOrder" action="/sell/BTC" class="form-horizontal" role="form">
-                    <form:hidden path="coinId"/>
-                    <form:hidden path="coinName"/>
+                    <form:hidden id="sellCoinId" path="coinId"/>
+                    <form:hidden id="sellCoinName" path="coinName"/>
 
                     <div class="form-group">
                         <label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>
@@ -128,7 +128,7 @@
                     <div class="form-group">
                         <label for="amountToSell" class="col-sm-5 control-label"><spring:message code="order.sellAmount"/></label>
                         <div class="input-group col-sm-7">
-                            <form:input path="tradeAmount" class="form-control" placeholder="Sell Amount" id="amountToSell" name="amountToSell"/>
+                            <form:input path="tradeAmount" class="form-control " placeholder="Sell Amount" id="amountToSell" name="amountToSell"/>
                             <span class="input-group-addon alert-warning">BTC</span>
                         </div>
                     </div>
@@ -167,8 +167,8 @@
         <div class="panel panel-buy">
             <div class="panel-body">
                 <form:form commandName="buyOrder" id="buyOrder" action="/buy/BTC" class="form-horizontal" role="form">
-                <form:hidden path="coinId"/>
-                <form:hidden path="coinName"/>
+                <form:hidden id="buyerCoinId" path="coinId"/>
+                <form:hidden id="buyCoinName" path="coinName"/>
 
                 <div class="form-group">
                     <label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>
@@ -187,14 +187,14 @@
                 <div class="form-group">
                     <label for="amountToBuy" class="col-sm-5 control-label"><spring:message code="order.buyAmount"/></label>
                     <div class="input-group col-sm-7">
-                        <form:input path="tradeAmount" class="form-control" placeholder="Buy Amount" id="amountToBuy" />
+                        <form:input path="tradeAmount" class="form-control buyGreaterThan" placeholder="Buy Amount" id="amountToBuy" />
                         <span class="input-group-addon alert-warning">CNY</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="priceToBuy" class="col-sm-5 control-label"><spring:message code="order.buyPrice"/></label>
                     <div class="input-group col-sm-7">
-                        <form:input path="itemPrice" type="text" class="form-control" placeholder="Price" id="priceToBuy"/>
+                        <form:input path="itemPrice" type="text" class="form-control buyGreaterThan" placeholder="Price" id="priceToBuy"/>
                         <span class="input-group-addon alert-warning">BTC</span>
                     </div>
                 </div>
@@ -215,7 +215,7 @@
                     </div>
                 </spring:hasBindErrors>
 
-                    <button type="submit" class="btn btn-success col-lg-offset-5 col-lg-3">Buy</button>
+                    <button type="submit" id="buySubmit" class="btn btn-success col-lg-offset-5 col-lg-3">Buy</button>
                 </form:form>
             </div>
         </div>

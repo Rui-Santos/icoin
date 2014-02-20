@@ -106,45 +106,52 @@
         <div class="from-group">
             <label class="sr-only" for="username">Username</label>
             <input type="text" id="username" name="username" type="text" class="form-control" placeholder="Username"
-                   data-placement="right" title="At least 6 characters" required autofocus/>
+                   data-placement="right" title="Please input a username" required autofocus/>
 
         </div>
         <div class="from-group">
             <label class="sr-only" for="password">Password</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="Password"
-                   data-placement="right" title="At least 6 characters" required/>
+                   data-placement="right" title="Please input your password" required/>
 
         </div>
         <div class="from-group">
-            <label class="sr-only" for="confirmPassword">Confirm Password</label>
-            <input type="password" id="confirmPassword" name="confirmedPassword" class="form-control" placeholder="Confirm Password"
-                   data-placement="right" title="At least 6 characters" required/>
+            <label class="sr-only" for="confirmedPassword">Confirm Password</label>
+            <input type="password" id="confirmedPassword" name="confirmedPassword" class="form-control" placeholder="Confirm Password"
+                   data-placement="right" title="Please input your password again" required/>
 
         </div>
 
-        <div class="from-group">
-            <label class="sr-only" for="identifier">Identifier</label>
-            <input id="identifier" name="identifier" title="15 or 18 characters" data-placement="right" placeholder="ID Card Number" class="form-control" type="text" value=""/>
-
-        </div>
         <div class="from-group">
             <label class="sr-only" for="email">Email</label>
-            <input id="email" name="email" title="15 or 18 characters" data-placement="right" placeholder="Email" class="form-control" type="email" value=""/>
+            <input id="email" name="email" title="Please input your email address" data-placement="right" placeholder="Email" class="form-control" type="email" value=""/>
+
+        </div>
+
+        <div class="from-group">
+            <label class="sr-only" for="cellPhone">Phone</label>
+            <input id="cellPhone" name="cellPhone" title="Please input your email address" data-placement="right" placeholder="Phone" class="form-control"  value=""/>
+
+        </div>
+        <div class="from-group">
+            <label class="sr-only" for="identifier">Identifier</label>
+            <input id="identifier" name="identifier" title="Please input your ID number" data-placement="right" placeholder="ID Card Number" class="form-control" type="text" value=""/>
 
         </div>
         <div class="from-group">
             <label class="sr-only" for="firstName">First Name</label>
-            <input id="firstName" name="firstName" title="At least 3 characters" data-placement="right" placeholder="First Name" class="form-control" type="text" value=""/>
+            <input id="firstName" name="firstName" title="Please input your firstname" data-placement="right" placeholder="First Name" class="form-control" type="text" value=""/>
 
         </div>
         <div class="from-group">
             <label class="sr-only" for="lastName">Last Name</label>
-            <input id="lastName" name="lastName" title="Your last name" data-placement="right" placeholder="Last Name" class="form-control" type="text" value=""/>
+            <input id="lastName" name="lastName" title="Please input your last name" data-placement="right" placeholder="Last Name" class="form-control" type="text" value=""/>
 
         </div>
 
-        <img id="captchaImage" src="http://localhost:8080/simpleCaptcha.png" alt="captcha image" width="200" height="30"/>
+        <img id="captchaImage" src="http://localhost:8080/simpleCaptcha.png" alt="captcha image" class="captchaImage"/>
 
+        <input id="captcha" name="captcha" title="Please input captcha" data-placement="right" placeholder="captcha" class="form-control" type="text" value=""/>
 
         <div id="signupTerms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true">
@@ -205,8 +212,6 @@
 
             </label>
         </div>
-
-
     </fieldset>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
 </form>
@@ -272,6 +277,7 @@
 <script src="../../js/exporting.js"></script>
 <script src="../../js/jquery.validate.min.js"></script>
 <script src="../../js/localization/messages_zh.js"></script>
+<script src="../../js/jquery.maskedinput.js"></script>
 <script src="../../js/signup.js"></script>
 </body>
 <script type='text/javascript'>

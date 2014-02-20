@@ -18,6 +18,8 @@ package com.icoin.trading.webui.user;
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.users.application.command.CreateUserCommand;
 import com.icoin.trading.users.domain.model.user.Identifier;
+import com.icoin.trading.users.domain.model.user.IdentityCard;
+import com.icoin.trading.users.domain.model.user.IdentityCardHelper;
 import com.icoin.trading.users.domain.model.user.UserId;
 import com.icoin.trading.users.domain.model.user.UsernameAlreadyInUseException;
 import com.icoin.trading.users.query.UserEntry;
@@ -40,6 +42,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.inject.Inject;
@@ -81,8 +84,22 @@ public class SignupController {
     public String signup(@Valid SignupForm form,
                          BindingResult formBinding,
                          WebRequest request,
+                         @RequestParam("captcha") String value,
                          HttpServletRequest httpRequest) {
         if (formBinding.hasErrors()) {
+            return "signup/signup";
+        }
+
+        HttpSession session = httpRequest.getSession();
+        Captcha captcha = (Captcha) session.getAttribute(Captcha.NAME);
+        if (!captcha.isCorrect(value)) {
+            formBinding.rejectValue("captcha", "error.signup.captcha.invalid", "You input the correct captcha.");
+            return "signup/signup";
+        }
+
+        final IdentityCard identityCard = IdentityCardHelper.INSTANCE.createIdentityCard(form.getIdentifier());
+        if (!identityCard.isValid()) {
+            formBinding.rejectValue("agreed", "error.signup.identifier.invalid", "You identifier is invalid.");
             return "signup/signup";
         }
 
@@ -147,54 +164,16 @@ public class SignupController {
         }
     }
 
-    /*<servlet>
-    <servlet-name>SimpleCaptcha</servlet-name>
-    <servlet-class>nl.captcha.servlet.SimpleCaptchaServlet</servlet-class>
-<init-param>
-    <param-name>captcha-width</param-name>
-    <param-value>250</param-value>
-</init-param>
-<init-param>
-    <param-name>captcha-height</param-name>
-    <param-value>75</param-value>
-</init-param>
-</servlet>
-<servlet-mapping>
-    <servlet-name>SimpleCaptcha</servlet-name>
-    <url-pattern>/simpleCaptcha.png</url-pattern>
-</servlet-mapping>*/
-
-//    <img id="captcha_image" src="/captcha_generator.jsp" alt="captcha image" width="200" height="50"/>
-//    <img src="reload.jpg" onclick="reloadCaptcha()" alt="reload"width="40" height="40"/>
-
-//    <script type="text/javascript">
-//    function reloadCaptcha(){
-//        var d = new Date();
-//        $("#captcha_image").attr("src", "/captcha?"+d.getTime());
-//    }
-//    </script>
-
-//    <script>
-//    $( "#captcha_image" ).click(function() {
-//        var d = new Date();
-//        $("#captcha_image").attr("src", "/captcha?"+d.getTime());
-//    });
-//    </script>
-
-    //http://stackoverflow.com/questions/20957657/use-jquery-validate-with-php-captcha-code
-    //view-source:http://jquery.bassistance.de/validate/demo/
-
-    public String validateCaptcha(HttpServletRequest request,
-                                  @RequestParam("value") String value)
-
-    {
+    @RequestMapping(value = "/validateCaptcha", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    boolean validateCaptcha(HttpServletRequest request,
+                            @RequestParam("captcha") String value) {
         HttpSession session = request.getSession();
-        Captcha secretcaptcha = (Captcha) session.getAttribute(Captcha.NAME);
-        if (secretcaptcha.isCorrect(value))
-            return "";
+        Captcha captcha = (Captcha) session.getAttribute(Captcha.NAME);
+        if (captcha != null && captcha.isCorrect(value))
+            return true;
 
-        return "";
+        return false;
     }
-
-
 }

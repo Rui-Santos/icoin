@@ -36,6 +36,7 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
     private String firstName;
     private String lastName;
     private String realName;
+    private String cellPhoneNumber;
     @Indexed(unique = true)
     private String email;
     private Identifier identifier;
@@ -226,5 +227,13 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public String getCellPhoneNumber() {
+        return cellPhoneNumber;
+    }
+
+    public void setCellPhoneNumber(String cellPhoneNumber) {
+        this.cellPhoneNumber = cellPhoneNumber;
     }
 }

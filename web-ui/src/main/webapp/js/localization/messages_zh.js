@@ -16,6 +16,8 @@
         rangelength: $.validator.format("请输入长度为 {0} 至 {1} 之間的字串"),
         range: $.validator.format("请输入 {0} 至 {1} 之间的数值"),
         max: $.validator.format("请输入不大于 {0} 的数值"),
-        min: $.validator.format("请输入不小于 {0} 的数值")
+        min: $.validator.format("请输入不小于 {0} 的数值"),
+        buyGreaterThan: "金额不足",
+        sellGreaterThan: "余额不足"
     });
 }(jQuery));

@@ -30,19 +30,19 @@
         <div class="from-group">
           <label class="sr-only" for="username">Username</label>
             <input type="text" id="username" name="username" type="text" class="form-control" placeholder="Username"
-                   data-placement="right" title="At least 6 characters" required autofocus/>
+                   data-placement="right" title="Please input a username" required autofocus/>
             <form:errors path="username" cssClass="alert-danger"/>
         </div>
         <div class="from-group">
         <label class="sr-only" for="password">Password</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="Password"
-                   data-placement="right" title="At least 6 characters" required/>
+                   data-placement="right" title="Please input your password" required/>
             <form:errors path="password" cssClass="alert-danger"/>
         </div>
         <div class="from-group">
             <label class="sr-only" for="confirmedPassword">Confirm Password</label>
             <input type="password" id="confirmedPassword" name="confirmedPassword" class="form-control" placeholder="Confirm Password"
-                   data-placement="right" title="At least 6 characters" required/>
+                   data-placement="right" title="Please input your password again" required/>
             <form:errors path="confirmedPassword" cssClass="alert-danger"/>
         </div>
 
@@ -50,31 +50,33 @@
             <label class="sr-only" for="identifier">Identifier</label>
             <form:input path="identifier" id="identifier" type="text" class="form-control" placeholder="ID Card Number"
                         data-placement="right"
-                        title="15 or 18 characters"/>
+                        title="Please input your ID number"/>
             <form:errors path="identifier" cssClass="alert-danger"/>
         </div>
         <div class="from-group">
         <label class="sr-only" for="email">Email</label>
             <form:input path="email" id="email" type="email" class="form-control" placeholder="Email" data-placement="right"
-                        title="Your email address"/>
+                        title="Please input your email address"/>
             <form:errors path="email" cssClass="alert-danger"/>
         </div>
         <div class="from-group">
             <label class="sr-only" for="firstName">First Name</label>
             <form:input path="firstName" id="firstName" type="text" class="form-control" placeholder="First Name"
                         data-placement="right"
-                        title="At least 3 characters"/>
+                        title="Please input your firstname"/>
             <form:errors path="firstName" cssClass="alert-danger"/>
         </div>
         <div class="from-group">
         <label class="sr-only" for="lastName">Last Name</label>
             <form:input path="lastName" id="lastName" type="text" class="form-control" placeholder="Last Name" data-placement="right"
-                        title="Your last name"/>
+                        title="Please input your last name"/>
             <form:errors path="lastName" cssClass="alert-danger"/>
         </div>
 
-         <img id="captchaImage" src="/simpleCaptcha.png" alt="captcha image" width="200" height="30"/>
+         <img id="captchaImage" src="/simpleCaptcha.png" alt="captcha image" class="captchaImage"/>
           <%--<img src="reload.jpg" onclick="reloadCaptcha()" alt="reload"width="40" height="40"/>--%>
+        <form:input path="captcha" id="captcha" type="text" class="form-control" placeholder="captcha" data-placement="right"
+                    title="Please input captcha"/>
 
         <div id="signupTerms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true">

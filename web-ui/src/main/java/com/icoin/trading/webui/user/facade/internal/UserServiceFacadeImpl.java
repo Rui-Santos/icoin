@@ -22,6 +22,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -43,6 +44,7 @@ import static com.homhon.util.Collections.isEmpty;
 public class UserServiceFacadeImpl implements UserServiceFacade {
     private static Logger logger = LoggerFactory.getLogger(UserServiceFacadeImpl.class);
 
+    private PasswordEncoder passwordEncoder;
     private UserService userService;
     private UserQueryRepository userRepository;
     private PortfolioQueryRepository portfolioQueryRepository;
@@ -100,6 +102,23 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     }
 
     @Override
+    public boolean matchPreviousPassword(String previousPassword) {
+        UserEntry user = currentDetailUser();
+        if (user == null) {
+            logger.warn("user not logged on");
+            return false;
+        }
+
+        final boolean matches = passwordEncoder.matches(previousPassword, user.getPassword());
+        if(!matches){
+            logger.warn("user {}, id {}, password not matched for previous to change.", user.getUsername(), user.getPrimaryKey());
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
     public void changePassword(String previousPassword,
                                String newPassword,
                                String confirmedNewPassword,
@@ -135,6 +154,23 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
                 confirmedWithdrawPassword,
                 operatingIp,
                 changedTime));
+        return true;
+    }
+
+    @Override
+    public boolean matchPreviousWithdrawPassword(String previousPassword) {
+        UserEntry user = currentDetailUser();
+        if (user == null) {
+            logger.warn("user not logged on");
+            return false;
+        }
+
+        final boolean matches = passwordEncoder.matches(previousPassword, user.getWithdrawPassword());
+        if(!matches){
+            logger.warn("user {}, id {}, withdraw password not matched for previous to change.", user.getUsername(), user.getPrimaryKey());
+            return false;
+        }
+
         return true;
     }
 
@@ -226,6 +262,12 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return 0;
         }
         return resets.size();
+    }
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")

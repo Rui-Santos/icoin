@@ -91,39 +91,19 @@
         <input type="text" class="form-control"
                id="j_username" name='j_username'
                value=''
-               data-placement="right" title="Your registered username"
+               data-placement="right"
                placeholder="Username" required autofocus>
     </div>
 
     <div class="input-group">
         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
         <input type="password" id="j_password" name='j_password' class="form-control" placeholder="Password"
-               data-placement="right" title="Your password"
+               data-placement="right"
                required>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <p>Or you can <a href="/signup">signup</a> with a new account.</p>
+    <p><a href="/user/forgetPassword">Lost Password</a> Or <a href="/signup">Sign up</a> with a new account.</p>
 
-</form>
-
-
-<hr />
-<p>Or you can Login with one of the following</p>
-<!-- TWITTER SIGNIN -->
-
-
-
-
-<!-- FACEBOOK SIGNIN -->
-
-
-
-
-
-<!-- weibo SIGNIN -->
-<form id="wb_signin" name="wb_signin" class="form-edit" action="&lt;c:url value=&#39;/signin/weibo&#39;/&gt;" method="POST">
-    <input type="hidden" name="scope" value="publish_stream,user_photos,offline_access" />
-    <button type="submit"><img src="/image/w_logo.jpg" /></button>
 </form>
 
 

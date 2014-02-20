@@ -15,6 +15,8 @@
         rangelength: $.validator.format("Please enter a value between {0} and {1} characters long."),
         range: $.validator.format("Please enter a value between {0} and {1}."),
         max: $.validator.format("Please enter a value less than or equal to {0}."),
-        min: $.validator.format("Please enter a value greater than or equal to {0}.")
+        min: $.validator.format("Please enter a value greater than or equal to {0}."),
+        buyGreaterThan: "Money is not enough",
+        sellGreaterThan: "Coin is not enough"
     });
 }(jQuery));

@@ -42,6 +42,14 @@
     padding: 15px;
     margin: 0 auto;
 }
+.form-edit .captchaImage{
+    max-width: 330px;
+    min-width: 250px;
+    height: 50px;
+    padding: 2px;
+    margin: 0 auto;
+    border-radius: 8px;
+}
 .form-edit .form-signup-heading,
 .form-edit .checkbox {
     margin-bottom: 10px;

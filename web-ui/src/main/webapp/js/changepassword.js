@@ -97,25 +97,4 @@ $(document).ready(function () {
     $("#captchaImage").click(function () {
         $("#captchaImage").attr("src", "http://localhost:8080/simpleCaptcha.png");
     });
-    $("#cellPhone").mask("999-9999-9999");
-    $("#identifier").mask("99-9999-9999-9999-9999");
-//    /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/
-//    var inputVal = $(this).val();
-//    var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
-//    if(!numericReg.test(inputVal)) {
-//        $(this).after('<span class="error error-keyup-1">Numeric characters only.</span>');
-//    }
-
-    isNaN
-//http://stackoverflow.com/questions/280759/jquery-validate-how-to-add-a-rule-for-regular-expression-validation
-    $.validator.addMethod(
-        "regex",
-        function(value, element, regexp) {
-            var re = new RegExp(regexp);
-            return this.optional(element) || re.test(value);
-        },
-        "Please check your input."
-    );
-
-    $("#Textbox").rules("add", { regex: "^[a-zA-Z'.\\s]{1,40}$" })
 });

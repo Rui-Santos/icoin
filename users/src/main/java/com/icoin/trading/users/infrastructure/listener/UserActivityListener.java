@@ -5,6 +5,7 @@ import com.homhon.util.Strings;
 import com.icoin.trading.infrastructure.mail.VelocityEmailSender;
 import com.icoin.trading.users.domain.event.PasswordChangedEvent;
 import com.icoin.trading.users.domain.event.UserAuthenticatedEvent;
+import com.icoin.trading.users.domain.event.UserCreatedEvent;
 import com.icoin.trading.users.domain.event.WithdrawPasswordChangedEvent;
 import com.icoin.trading.users.domain.event.WithdrawPasswordCreatedEvent;
 import com.icoin.trading.users.domain.model.user.UserId;
@@ -34,6 +35,27 @@ public class UserActivityListener {
     private String from = "admin@icoin.com";
 
     private UserQueryRepository userRepository;
+
+    @EventHandler
+    public void handle(final UserCreatedEvent event) {
+        if (!Strings.hasLength(event.getEmail())) {
+            logger.info("email is null or empty for user {}, id {}", event.getUsername(), event.getUserIdentifier());
+            return;
+        }
+
+        final Map<String, Object> model =
+                ImmutableMap.of("username", (Object) event.getUsername());
+
+        sender.sendEmail(
+                "Successful registered",
+                event.getEmail(),
+                from,
+                "listener/user-created.vm",
+                "utf-8",
+                model,
+                true);
+
+    }
 
     @EventHandler
     public void handle(final UserAuthenticatedEvent event) {
@@ -103,39 +125,6 @@ public class UserActivityListener {
     }
 
     @EventHandler
-    public void handle(final WithdrawPasswordChangedEvent event) {
-        UserEntry user = loadUser(event.getUserId(), event.getUsername());
-
-        if (user == null) {
-            return;
-        }
-
-        if (!user.isWithdrawPasswordAlert()) {
-            logger.info("user switched off withdraw password change alert: {}", event);
-            return;
-        }
-
-        if (!Strings.hasLength(user.getEmail())) {
-            logger.info("email is null or empty");
-            return;
-        }
-
-        final Map<String, Object> model =
-                ImmutableMap.of("username", (Object) user.getUsername(),
-                        "ip", event.getOperatingIp(),
-                        "time", event.getChangedTime());
-
-        sender.sendEmail(
-                "Your withdraw password has been changed",
-                user.getEmail(),
-                from,
-                "listener/withdraw-password-changed.vm",
-                "utf-8",
-                model,
-                true);
-    }
-
-    @EventHandler
     public void handle(final WithdrawPasswordCreatedEvent event) {
         UserEntry user = loadUser(event.getUserId(), event.getUsername());
 
@@ -163,6 +152,39 @@ public class UserActivityListener {
                 user.getEmail(),
                 from,
                 "listener/withdraw-password-created.vm",
+                "utf-8",
+                model,
+                true);
+    }
+
+    @EventHandler
+    public void handle(final WithdrawPasswordChangedEvent event) {
+        UserEntry user = loadUser(event.getUserId(), event.getUsername());
+
+        if (user == null) {
+            return;
+        }
+
+        if (!user.isWithdrawPasswordAlert()) {
+            logger.info("user switched off withdraw password change alert: {}", event);
+            return;
+        }
+
+        if (!Strings.hasLength(user.getEmail())) {
+            logger.info("email is null or empty");
+            return;
+        }
+
+        final Map<String, Object> model =
+                ImmutableMap.of("username", (Object) user.getUsername(),
+                        "ip", event.getOperatingIp(),
+                        "time", event.getChangedTime());
+
+        sender.sendEmail(
+                "Your withdraw password has been changed",
+                user.getEmail(),
+                from,
+                "listener/withdraw-password-changed.vm",
                 "utf-8",
                 model,
                 true);

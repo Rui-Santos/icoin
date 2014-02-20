@@ -194,6 +194,14 @@ public class UserCommandHandler {
             return;
         }
 
+        final String password = user.getPassword();
+
+        final boolean matches = passwordEncoder.matches(command.getPreviousPassword(), password);
+        if (matches) {
+            logger.warn("user {}, id {}, password not matched for previous to change.", command.getUsername(), command.getUserId());
+            return;
+        }
+
         final Date changedTime = nullSafe(command.getChangedTime(), currentTime());
 
         user.changePassword(passwordEncoder.encode(command.getPassword()), passwordEncoder.encode(command.getConfirmPassword()), command.getOperatingIp(), changedTime);
@@ -214,6 +222,14 @@ public class UserCommandHandler {
 
         if (user == null) {
             logger.warn("cannot find user {}", command.getUserId());
+            return;
+        }
+
+        final String withdrawPassword = user.getWithdrawPassword();
+
+        final boolean matches = passwordEncoder.matches(command.getPreviousWithdrawPassword(), withdrawPassword);
+        if (matches) {
+            logger.warn("user {}, id {}, withdraw password not matched for previous to change.", command.getUsername(), command.getUserId());
             return;
         }
 
@@ -251,7 +267,7 @@ public class UserCommandHandler {
 
     @CommandHandler
     public void handleUpdateNotificationCommand(UpdateNotificationSettingsCommand command) {
-        notNull(command.getUserId(),"user Id cannot be null");
+        notNull(command.getUserId(), "user Id cannot be null");
         hasLength(command.getUserId().toString(), "user Id cannot be empty");
         hasLength(command.getUsername(), "username cannot be null");
 

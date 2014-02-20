@@ -26,7 +26,7 @@
             <form:errors path="*" element="div"/>
         </div>
     </spring:hasBindErrors>
-    <h5 class="form-signin-heading text-warning">Change your password</h5>
+    <h5 class="form-signin-heading text-primary">Change your password</h5>
 
     <input type="password" id="previousPassword" name='previousPassword' class="form-control"
            placeholder="Previous password"
@@ -57,7 +57,7 @@
                 <form:errors path="*" element="div"/>
             </div>
         </spring:hasBindErrors>
-        <h5 class="form-signin-heading text-warning">Change your Withdraw password</h5>
+        <h5 class="form-signin-heading text-primary">Or Change your Withdraw password</h5>
 
         <input type="password" id="previousWithdrawPassword" name='previousWithdrawPassword' class="form-control"
                placeholder="Previous password"
@@ -81,14 +81,14 @@
 </c:if>
 
 <c:if test="${not empty createWithdrawPasswordForm}">
-    <form:form id="changeWithdrawPassword" action="/user/createWithdrawPassword" class="form-signin" role="form" modelAttribute="createWithdrawPasswordForm">
+    <form:form id="createWithdrawPassword" action="/user/createWithdrawPassword" class="form-signin" role="form" modelAttribute="createWithdrawPasswordForm">
         <spring:hasBindErrors name="changeWithdrawPasswordForm">
             <div class="alert alert-danger alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <form:errors path="*" element="div"/>
             </div>
         </spring:hasBindErrors>
-        <h5 class="form-signin-heading text-warning">Change your Withdraw password</h5>
+        <h5 class="form-signin-heading text-primary">Or Create your Withdraw password</h5>
 
         <input type="password" id="withdrawPassword" name='withdrawPassword' class="form-control"
                placeholder="New withdraw password"
@@ -101,7 +101,7 @@
                data-placement="right" title="Confirm withdraw password"
                required>
         <form:errors path="confirmedWithdrawPassword" cssClass="alert-danger" />
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Change</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
     </form:form>
 </c:if>
 

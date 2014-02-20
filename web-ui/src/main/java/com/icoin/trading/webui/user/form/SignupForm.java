@@ -38,13 +38,19 @@ public class SignupForm {
     @Length(min = 6, message = "must be at least 6 characters")
     private String confirmedPassword;
 
-    @Size(min = 3, message = "must be at least 3 characters")
+    @NotEmpty
+    @Size(min = 1, message = "must be at least 1 characters")
     private String firstName;
 
     @NotEmpty
-    @Length(min = 1, message = "must be at least 6 characters")
+    @Length(min = 1, message = "must be at least 1 characters")
     private String lastName;
 
+    @NotEmpty
+    @Length(min = 1, message = "must be at least 6 characters")
+    private String captcha;
+
+    @
     private String mobile;
 
 //    @AssertTrue
@@ -129,6 +135,14 @@ public class SignupForm {
 
     public void setConfirmedPassword(String confirmedPassword) {
         this.confirmedPassword = confirmedPassword;
+    }
+
+    public String getCaptcha() {
+        return captcha;
+    }
+
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
     }
 
     public static SignupForm fromProviderUser(UserProfile providerUser) {

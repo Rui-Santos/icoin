@@ -115,9 +115,14 @@ public class UserServiceFacadeImplTest {
         CommandGateway gateway = mock(CommandGateway.class);
         doNothing().when(gateway).send(eq(command));
 
+        UserQueryRepository userRepository = mock(UserQueryRepository.class);
+        when(userRepository.findByUsername(eq(username))).thenReturn(user);
+
         UserServiceFacadeImpl service = new UserServiceFacadeImpl();
         service.setUserService(userService);
         service.setCommandGateway(gateway);
+        service.setUserRepository(userRepository);
+//        service.setPasswordEncoder(passwordEncoder);
 
         service.changePassword(previousPassword, newPassword, confirmedNewPassword, operatingIp, date);
 
