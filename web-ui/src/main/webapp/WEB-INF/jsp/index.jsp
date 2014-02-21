@@ -128,7 +128,7 @@
                     <div class="form-group">
                         <label for="amountToSell" class="col-sm-5 control-label"><spring:message code="order.sellAmount"/></label>
                         <div class="input-group col-sm-7">
-                            <form:input path="tradeAmount" class="form-control " placeholder="Sell Amount" id="amountToSell" name="amountToSell"/>
+                            <form:input path="tradeAmount" class="form-control sellGreaterThan" placeholder="Sell Amount" id="amountToSell" name="amountToSell"/>
                             <span class="input-group-addon alert-warning">BTC</span>
                         </div>
                     </div>
@@ -142,7 +142,7 @@
                     <div class="form-group">
                         <label for="totalToSell" class="col-sm-5 control-label">Total</label>
                         <label id="totalToSell" class="col-sm-5  form-control-static text-danger">0</label>
-                        <label class="col-sm-1  form-control-static text-info">CNY</label>
+                        <label class="col-sm-1  form-control-static text-info">BTC</label>
                     </div>
                     <div class="form-group">
                         <label for="feeToSell" class="col-sm-5 control-label">Fee</label>
@@ -157,7 +157,7 @@
                     </spring:hasBindErrors>
 
                     <%--<input class="btn primary" type="submit" name="submit" value="Place Order"/>--%>
-                    <button type="submit" class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
+                    <button type="submit" id="sellSubmit"  class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
                 </form:form>
             </div>
         </div>
@@ -188,20 +188,20 @@
                     <label for="amountToBuy" class="col-sm-5 control-label"><spring:message code="order.buyAmount"/></label>
                     <div class="input-group col-sm-7">
                         <form:input path="tradeAmount" class="form-control buyGreaterThan" placeholder="Buy Amount" id="amountToBuy" />
-                        <span class="input-group-addon alert-warning">CNY</span>
+                        <span class="input-group-addon alert-warning">BTC</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="priceToBuy" class="col-sm-5 control-label"><spring:message code="order.buyPrice"/></label>
                     <div class="input-group col-sm-7">
                         <form:input path="itemPrice" type="text" class="form-control buyGreaterThan" placeholder="Price" id="priceToBuy"/>
-                        <span class="input-group-addon alert-warning">BTC</span>
+                        <span class="input-group-addon alert-warning">CNY</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="totalToBuy" class="col-sm-5 control-label">Total</label>
                     <label id="totalToBuy" class="col-sm-5  form-control-static text-danger">0</label>
-                    <label class="col-sm-1  form-control-static text-info">BTC</label>
+                    <label class="col-sm-1  form-control-static text-info">CNY</label>
                 </div>
                 <div class="form-group">
                     <label for="feeToBuy" class="col-sm-5 control-label">Fee</label>
@@ -474,6 +474,7 @@
     <script src="${ctx}/js/highstock.js"></script>
     <script src="${ctx}/js/exporting.js"></script>
     <script src="${ctx}/js/icoin-charts.js"></script>
+    <script src="${ctx}/js/jquery.number.js"></script>
     <script src="${ctx}/js/trading.js"></script>
 </content>
 </html>

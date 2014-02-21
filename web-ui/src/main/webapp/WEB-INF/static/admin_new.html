@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="image/favicon.ico">
+    <link rel="icon" href="image/favicon.ico">
+    <title></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Website for BTC & Alt-BTC Trading">
+    <meta name="keywords"
+          content="BTC, ???±?????? BTC, ?±???????° BTC, ???±???????????? BTC, Bitcoin, ?±????????????, ???±?????? ?±????????????, ?±???????° ?±????????????, ???±???????????? ?±????????????, ?????????????° BTC, ?????????°???° BTC, ?????????????° bitcoin, ?????????°???° bitcoin, ?±???????° bitcoin, ???±???????????? bitcoin, echange trading">
+    <meta name="author" content="cooder">
+    <meta name="description" content="Website contaning the Axon sample using a trader application">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js" type="text/javascript"></script>
+    <script src="js/ie8-responsive-file-warning.js"></script>
+    <![endif]-->
+
+    <!-- Bootstrap core CSS -->
+    <link href="style/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="style/jumbotron.css" rel="stylesheet">
+    <link href="style/offcanvas.css" rel="stylesheet">
+    <link href="style/justified-nav.css" rel="stylesheet">
+    <link href="style/btn.css" rel="stylesheet">
+    <link href="style/footer.css" rel="stylesheet">
+    <link href="style/flat-ui.css" rel="stylesheet">
+    <link href="style/sign.css" rel="stylesheet">
+    <link href="style/admin.css" rel="stylesheet">
+    <link href="style/switch.css" rel="stylesheet">
+
+
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+
+    <style>
+        .bs-docs-section {
+            margin-bottom: 60px
+        }
+
+        .bs-docs-section:last-child {
+            margin-bottom: 0
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">iCoin</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#" class="active">Last price:$639.00000</a>
+                </li>
+                <li>
+                    <a href="#">High:$650.15316</a>
+                </li>
+                <li>
+                    <a href="#">Low:$453.29000</a>
+                </li>
+                <li>
+                    <a href="#">Volume:61645 BTC</a>
+                </li>
+            </ul>
+
+
+            <form action="/signin/authenticate" class="navbar-form navbar-right" method="POST">
+                <div class="form-group">
+                    <input type="text" placeholder="Username" name='j_username' class="form-control"
+                           value=''/>
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" class="form-control" name='j_password'/>
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+<div class="row">
+<div class="col-md-3">
+    <div class="bs-sidebar hidden-print" role="complementary">
+        <ul class="nav bs-sidenav">
+
+            <li>
+                <a href="#portfolio">Portfolio</a>
+                <ul class="nav">
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#transactions">Transactions</a></li>
+                    <li><a href="#trade_history">Trade History</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#profile">Profile</a>
+                <ul class="nav">
+                    <li><a href="#profile_details">Details</a></li>
+                    <li><a href="#privacy">Privacy</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="col-md-9" role="main">
+<!-- Global Bootstrap settings
+================================================== -->
+<div class="bs-docs-section">
+    <h1 id="portfolio" class="page-header">Portfolio</h1>
+
+    <h3 id="overview">Overview</h3>
+    <!--<p>You account summary</p>-->
+    <div class="well well-lg">
+        <div class="admin-information">
+            <!--<ul class="pi-nav">-->
+            <!--<li class="edit-information">-->
+            <!--<a href="https://designmodo.com/my-account/edit-address/?address=billing"-->
+            <!--class="icn_pen"><span class="glyphicon glyphicon-edit"></span></a></li>-->
+            <!--</ul>-->
+
+            <dl class="myacc-col1">
+                <dt>Available Money</dt>
+                <dd>CNY 100000.000</dd>
+            </dl>
+            <dl class="myacc-col2">
+                <dt>Reserved Money</dt>
+                <dd>CNY 100000.000</dd>
+            </dl>
+            <dl class="myacc-col3">
+                <dt>Money Action</dt>
+                <dd>
+                    <!--<form id="add_money" method="post" action="/admin/portfolio/coin/item/">-->
+                    <!--<div class="input-group input-group-sm">-->
+                    <!--<span class="input-group-addon">CNY</span>-->
+                    <!--<input type="text" class="form-control" name="cny_money" required id="cny_money">-->
+                    <!--<span class="input-group-btn">-->
+                    <!--<input type="submit" class="btn btn-primary" name="add"   value="Add"/>-->
+                    <!--</span>-->
+                    <!--<span class="input-group-btn">-->
+                    <!--<input type="submit" class="btn btn-danger" name="withdraw" value="Withdraw"/>-->
+                    <!--</span>-->
+                    <!--</div>-->
+                    <!--</form>-->
+                    <!--<div class="btn-group-sm">-->
+                    <!--<div class="col-md-6">-->
+                    <!--<a href="#" class="btn btn-primary btn-sm btn-block">Add</a>-->
+                    <!--</div>-->
+                    <!--<div class="col-md-6">-->
+                    <!--<a href="#" class="btn btn-primary btn-sm btn-block">Withdraw</a>-->
+                    <!--</div>-->
+                    <!--</div>-->
+
+                    <div class="btn-group btn-group-sm">
+                        <a href="#" class="btn btn-primary btn-sm">&nbsp;&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        <a href="#" class="btn btn-danger btn-sm">Withdraw</a>
+                    </div>
+
+                </dd>
+            </dl>
+            <dl class="myacc-col1">
+                <dt>Available BTC</dt>
+                <dd>BTC 100000.000
+                </dd>
+            </dl>
+            <dl class="myacc-col2">
+                <dt>Reserved BTC</dt>
+                <dd>BTC 100000.000</dd>
+            </dl>
+            <dl class="myacc-col3">
+                <dt>BTC Action</dt>
+                <dd>
+                    <!--<form method="post" action="/admin/portfolio/coin/item/">-->
+                    <!--<div class="input-group input-group-sm">-->
+                    <!--<span class="input-group-addon">BTC</span>-->
+                    <!--<input type="text" class="form-control input-lg">-->
+                    <!--<span class="input-group-btn">-->
+                    <!--<input type="submit" class="btn btn-primary" name="add" value="Add"/>-->
+                    <!--</span>-->
+                    <!--<span class="input-group-btn">-->
+                    <!--<input type="submit" class="btn btn-danger" name="withdraw" value="Withdraw"/>-->
+                    <!--</span>-->
+                    <!--</div>-->
+                    <!--</form>-->
+                    <div class="btn-group btn-group-sm">
+                        <a href="#" class="btn btn-primary btn-sm">&nbsp;&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        <a href="#" class="btn btn-danger btn-sm">Withdraw</a>
+                    </div>
+                </dd>
+            </dl>
+            <dl class="myacc-col2">
+                <dt>Phone:</dt>
+                <dd>13601884817</dd>
+            </dl>
+        </div>
+    </div>
+
+    <h3 id="transactions">Transactions</h3>
+
+    <div class="well well-lg">
+        <table class="table table-condensed table-hover">
+            <thead>
+            <tr>
+                <th class="text-center">Buy/Sell</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Amount</th>
+                <th class="text-center">CNY</th>
+                <th class="text-center">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text-center">Buy</td>
+                <td class="text-center">593.998</td>
+                <td class="text-center">0.01</td>
+                <td class="text-center">5.93998</td>
+                <td class="text-center">21.11.13 15:35</td>
+            </tr>
+            <tr>
+                <td class="text-center">Buy</td>
+                <td class="text-center">593.998</td>
+                <td class="text-center">0.01</td>
+                <td class="text-center">5.93998</td>
+                <td class="text-center">21.11.13 15:35</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="pager">
+            <li class="next"><a href="#">Newer &rarr;</a></li>
+            <li class="previous disabled"><a href="#">&larr; Older</a></li>
+        </ul>
+    </div>
+
+    <h3 id="trade_history">Trade History</h3>
+
+    <div class="well well-lg">
+        <table class="table table-condensed table-hover">
+            <thead>
+            <tr>
+                <th class="text-center">Buy/Sell</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Amount</th>
+                <th class="text-center">CNY</th>
+                <th class="text-center">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text-center">Buy</td>
+                <td class="text-center">593.998</td>
+                <td class="text-center">0.01</td>
+                <td class="text-center">5.93998</td>
+                <td class="text-center">21.11.13 15:35</td>
+            </tr>
+            <tr>
+                <td class="text-center">Buy</td>
+                <td class="text-center">593.998</td>
+                <td class="text-center">0.01</td>
+                <td class="text-center">5.93998</td>
+                <td class="text-center">21.11.13 15:35</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="pager">
+            <li class="next"><a href="#">Newer &rarr;</a></li>
+            <li class="previous disabled"><a href="#">&larr; Older</a></li>
+        </ul>
+    </div>
+
+
+</div>
+
+
+<!-- Grid system
+================================================== -->
+<div class="bs-docs-section">
+
+    <h1 id="profile" class="page-header">Profile</h1>
+
+    <h3 id="details">Details</h3>
+    <p>Your detail information</p>
+    <div class="well well-lg">
+
+        <div class="row pi-nav">
+
+            <div class="col-xs-2 col-md-1">
+                <a href="https://designmodo.com/my-account/edit-address/?address=billing"
+                   class="icn_pen"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+            </div>
+            <div class="col-xs-2 col-md-1">
+                <a href="https://designmodo.com/my-account/edit-address/?address=billing"
+                   class="icn_pen"><span class="glyphicon glyphicon-lock pull-right"></span></a>
+            </div>
+        </div>
+        <div class="row">
+        </div>
+        <!--<div class="row">-->
+        <div class="admin-information">
+            <dl class="myacc-col1">
+                <dt>Username</dt>
+                <dd>liougehooa</dd>
+            </dl>
+            <dl class="myacc-col2">
+                <dt>Email</dt>
+                <dd>liougehooa@163.com</dd>
+            </dl>
+            <dl class="myacc-col3">
+                <dt>ID Card</dt>
+                <dd>
+                    Identifier: 3101-1023-90212-3901-209
+                </dd>
+            </dl>
+            <dl class="myacc-col1">
+                <dt>Cell Phone Number</dt>
+                <dd>136-0219-8763</dd>
+            </dl>
+            <dl class="myacc-col2">
+                <dt>Real Name</dt>
+                <dd>St. Hual</dd>
+            </dl>
+            <dl class="myacc-col3">
+                <dt>Add BTC</dt>
+                <dd>
+
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <h3 id="privacy">Privacy</h3>
+
+    <div class="well well-lg">
+
+        <div class="row">
+            <div class="col-md-5 col-md-offset-2 text-right"><strong>Logon notification</strong></div>
+            <div class="col-md-2"><input type="checkbox" checked="" disabled data-toggle="switch"/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 col-md-offset-2 text-right"><strong>Change password notification</strong></div>
+            <div class="col-md-2"><input type="checkbox" checked="" disabled data-toggle="switch"/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 col-md-offset-2 text-right"><strong>Change withdraw password notification</strong></div>
+            <div class="col-md-2"><input type="checkbox" checked="" disabled data-toggle="switch"/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 col-md-offset-2 text-right"><strong>Withdraw Money Notification</strong></div>
+            <div class="col-md-2"><input type="checkbox" checked="" disabled data-toggle="switch"/></div>
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+</div>
+</div>
+</div>
+
+
+<!-- /container -->
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-switch.js"></script>
+<script src="js/icoin.js"></script>
+<!--<script src="http://thrilleratplay.github.io/jquery-validation-bootstrap-tooltip/js/jquery-validate.bootstrap-tooltip.js"></script>-->
+
+
+</body>
+
+<script>
+
+</script>
+</html>

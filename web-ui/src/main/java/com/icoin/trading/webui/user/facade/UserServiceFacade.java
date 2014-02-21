@@ -1,6 +1,7 @@
 package com.icoin.trading.webui.user.facade;
 
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
+import com.icoin.trading.users.domain.model.function.UserPasswordReset;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 import com.icoin.trading.users.query.UserEntry;
 
@@ -20,13 +21,17 @@ public interface UserServiceFacade {
 
     boolean isWithdrawPasswordSet();
 
+    boolean canAuthWithNewPassword(String username, String newPassword);
+
+    UserPasswordReset getToken(String token);
+
     PortfolioEntry obtainPortfolioForUser();
 
     UserEntry findByEmail(String email);
 
     int findPasswordResetCount(String username, String ip, Date currentDate);
 
-    void resetPasswordWithToken(String token,
+    UserAccount resetPasswordWithToken(String token,
                                 String password,
                                 String confirmedPassword,
                                 String operatingIp,

@@ -77,11 +77,18 @@ public class UserPasswordReset extends AuditAwareEntitySupport<UserPasswordReset
         this.expirationDate = expirationDate;
     }
 
+    public boolean isValid(Date date) {
+        if (date == null || expirationDate == null) {
+            return false;
+        }
+        return date.getTime() <= expirationDate.getTime();
+    }
+
     public boolean isUsed() {
         return used;
     }
 
-    private void setUsed(boolean used) {
+    public void setUsed(boolean used) {
         this.used = used;
     }
 

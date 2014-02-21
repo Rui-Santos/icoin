@@ -50,7 +50,6 @@ public class SignupForm {
     @Length(min = 1, message = "must be at least 6 characters")
     private String captcha;
 
-    @
     private String mobile;
 
 //    @AssertTrue

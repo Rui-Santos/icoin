@@ -100,7 +100,7 @@ public class UserCommandHandlerTest {
                                         UserCommandHandler.DEFAULT_ROLES),
                                         passwordEncoder,
                                         "buyer1"
-                                        ))));
+                                ))));
     }
 
     @Test
@@ -472,6 +472,7 @@ public class UserCommandHandlerTest {
         UserPasswordReset userPasswordReset = new UserPasswordReset();
         userPasswordReset.setUsername(username);
         userPasswordReset.setUserId(aggregateIdentifier.toString());
+        userPasswordReset.setExpirationDate(futureMinute(currentTime(), 10));
 
         when(passwordResetRepository.findByToken(eq(generatedToken))).thenReturn(userPasswordReset);
         List<UserPasswordReset> listToDelete = ImmutableList.of(new UserPasswordReset(), new UserPasswordReset());

@@ -110,6 +110,7 @@ public class VelocityForgetPasswordEmailSenderIT {
         emailSender.setTemplateLocation("email/forgot-password.vm");
         emailSender.setSubject("forgot password");
         emailSender.setFrom("testplus9@163.com");
+        emailSender.setDomainUrl("http://localhost:8080");
         emailSender.setSender(sender);
 
         emailSender.sendEmail(token);

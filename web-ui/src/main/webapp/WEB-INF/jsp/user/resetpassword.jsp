@@ -19,20 +19,16 @@
 
 <link href="${ctx}/style/sign.css" rel="stylesheet">
 
-<form:form id="changePassword" action="/user/changePassword" class="form-edit" role="form" modelAttribute="changePasswordForm">
+<form:form id="resetPassword" action="/user/resetPassword" class="form-edit" role="form" modelAttribute="resetPasswordForm">
     <spring:hasBindErrors name="changePasswordForm">
         <div class="alert alert-danger alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <form:errors path="*" element="div"/>
         </div>
     </spring:hasBindErrors>
-    <h5 class="form-signin-heading text-primary text-center">Change your password</h5>
+    <h5 class="form-signin-heading text-primary">Change your password</h5>
 
-    <input type="password" id="previousPassword" name='previousPassword' class="form-control"
-           placeholder="Previous password"
-           data-placement="right" title="Your Previous password"
-           required/>
-    <form:errors path="previousPassword" cssClass="alert-danger" />
+    <form:hidden path="token" id="token"/>
 
     <input type="password" id="newPassword" name='newPassword' class="form-control"
            placeholder="New password"
@@ -57,7 +53,7 @@
                 <form:errors path="*" element="div"/>
             </div>
         </spring:hasBindErrors>
-        <h5 class="form-signin-heading text-primary text-center">Or Change your Withdraw password</h5>
+        <h5 class="form-signin-heading text-primary">Or Change your Withdraw password</h5>
 
         <input type="password" id="previousWithdrawPassword" name='previousWithdrawPassword' class="form-control"
                placeholder="Previous password"
@@ -88,7 +84,7 @@
                 <form:errors path="*" element="div"/>
             </div>
         </spring:hasBindErrors>
-        <h5 class="form-signin-heading text-primary text-center">Or Create your Withdraw password</h5>
+        <h5 class="form-signin-heading text-primary">Or Create your Withdraw password</h5>
 
         <input type="password" id="withdrawPassword" name='withdrawPassword' class="form-control"
                placeholder="New withdraw password"

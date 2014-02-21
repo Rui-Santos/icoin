@@ -120,6 +120,16 @@
     padding-top: 40px;
 }
 
+.bs-docs-section {
+    margin-bottom: 60px;
+    max-width: 768px;
+}
+
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+
 /* Janky fix for preventing navbar from overlapping */
 h1[id] {
     padding-top: 80px;
@@ -175,11 +185,18 @@ h3[id] {
     padding-top: 7px;
     font-size: 1.2em;
 }
+
 .privacy-information dd {
     /*color: #383838;*/
     font-size: 1.2em;
     padding-top: 5px;
     line-height: 1.2;
+}
+
+.privacy-information li {
+    /*color: #a9a9a9;*/
+    padding-top: 7px;
+    font-size: 1.1em;
 }
 
 .pi-nav {
@@ -201,5 +218,3 @@ h3[id] {
 .success{
     border-color: #4F8A10;
 }
-
-

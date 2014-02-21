@@ -55,7 +55,8 @@
                required>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <p><a href="/user/forgetPassword">Lost Password</a> Or <a href="/signup">Sign up</a> with a new account</p>
+    <%--<p><a href="/user/forgetPassword">Lost Password</a> Or <a href="/signup">Sign up</a> with a new account</p>--%>
+    <p class="alert"><a href="/user/forgetPassword" class="alert-link">Lost Password</a> Or <a href="/signup" class="alert-link">Sign up</a></p>
     <%--<a class="login-link" href="#">Lost your password?</a>--%>
 </form:form>
 <c:set var="lang" value="<%= LocaleContextHolder.getLocale().getLanguage()%>"/>

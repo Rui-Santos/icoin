@@ -19,6 +19,11 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+
+/*.form-signin a{*/
+    /*text-decoration: underline;*/
+/*}*/
+
 .form-signin .form-control:focus {
     z-index: 2;
 }

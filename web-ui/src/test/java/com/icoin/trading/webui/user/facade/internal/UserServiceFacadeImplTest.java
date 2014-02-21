@@ -4,6 +4,8 @@ import com.homhon.base.domain.service.UserService;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.users.application.command.ChangePasswordCommand;
+import com.icoin.trading.users.application.command.ChangeWithdrawPasswordCommand;
+import com.icoin.trading.users.application.command.CreateWithdrawPasswordCommand;
 import com.icoin.trading.users.application.command.ForgetPasswordCommand;
 import com.icoin.trading.users.application.command.ResetPasswordCommand;
 import com.icoin.trading.users.domain.ForgetPasswordEmailSender;
@@ -16,9 +18,12 @@ import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.hamcrest.Matcher;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.homhon.util.TimeUtils.currentTime;
@@ -42,7 +47,8 @@ import static org.mockito.Mockito.when;
 public class UserServiceFacadeImplTest {
     private String username = "test";
     private UserId userId;
-    UserEntry user;
+    private UserEntry user;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Test
     public void testCurrentUser() throws Exception {
@@ -71,6 +77,47 @@ public class UserServiceFacadeImplTest {
     }
 
     @Test
+    public void testCurrentDetailUser() throws Exception {
+        UserService userService = mockUserService();
+
+        UserQueryRepository userRepository = mock(UserQueryRepository.class);
+        when(userRepository.findByUsername(eq(username))).thenReturn(user);
+
+        UserServiceFacadeImpl service = new UserServiceFacadeImpl();
+        service.setUserService(userService);
+        service.setUserRepository(userRepository);
+
+        service.currentDetailUser();
+
+        verify(userRepository).findByUsername(eq(username));
+        verify(userService).getCurrentUser();
+    }
+
+    @Test
+    public void testIsWithdrawPasswordSet() throws Exception {
+        UserService userService = mockUserService();
+
+        UserQueryRepository userRepository = mock(UserQueryRepository.class);
+        when(userRepository.findByUsername(eq(username))).thenReturn(user);
+
+        UserServiceFacadeImpl service = new UserServiceFacadeImpl();
+        service.setUserService(userService);
+        service.setUserRepository(userRepository);
+
+        user.setWithdrawPassword(null);
+        boolean set1 = service.isWithdrawPasswordSet();
+        user.setWithdrawPassword("withdraw password");
+        boolean set2 = service.isWithdrawPasswordSet();
+
+        assertThat(set1, is(false));
+        assertThat(set2, is(true));
+
+        verify(userRepository, times(2)).findByUsername(eq(username));
+        verify(userService, times(2)).getCurrentUser();
+    }
+
+
+    @Test
     public void testObtainPortfolioForUser() throws Exception {
         UserService userService = mockUserService();
 
@@ -91,6 +138,32 @@ public class UserServiceFacadeImplTest {
         verify(userRepository).findByUsername(eq(username));
         verify(portfolioQueryRepository).findByUserIdentifier(eq(userId.toString()));
         verify(userService).getCurrentUser();
+    }
+
+    @Test
+    public void testMatchPreviousPassword() throws Exception {
+        final String previousPassword = "previousPassword";
+
+        UserService userService = mockUserService();
+
+        UserQueryRepository userRepository = mock(UserQueryRepository.class);
+        when(userRepository.findByUsername(eq(username))).thenReturn(user);
+
+        UserServiceFacadeImpl service = new UserServiceFacadeImpl();
+        service.setUserService(userService);
+        service.setUserRepository(userRepository);
+        service.setPasswordEncoder(passwordEncoder);
+
+        user.setPassword(passwordEncoder.encode(previousPassword));
+
+        boolean matched = service.matchPreviousPassword(previousPassword);
+        boolean unmatched = service.matchPreviousPassword(previousPassword+1);
+
+        assertThat(matched, is(true));
+        assertThat(unmatched, is(false));
+
+        verify(userService, times(2)).getCurrentUser();
+        verify(userRepository, times(2)).findByUsername(eq(username));
     }
 
     @Test
@@ -122,11 +195,16 @@ public class UserServiceFacadeImplTest {
         service.setUserService(userService);
         service.setCommandGateway(gateway);
         service.setUserRepository(userRepository);
-//        service.setPasswordEncoder(passwordEncoder);
+        service.setPasswordEncoder(passwordEncoder);
 
+        user.setPassword(passwordEncoder.encode(previousPassword));
+        service.changePassword(previousPassword, newPassword, confirmedNewPassword, operatingIp, date);
+        user.setPassword(passwordEncoder.encode(previousPassword + 1));
         service.changePassword(previousPassword, newPassword, confirmedNewPassword, operatingIp, date);
 
-        verify(userService).getCurrentUser();
+
+        verify(userService ,times(4)).getCurrentUser();
+        verify(userRepository, times(2)).findByUsername(eq(username));
         verify(gateway).send(eq(command));
     }
 
@@ -182,7 +260,7 @@ public class UserServiceFacadeImplTest {
 
         CommandGateway gateway = mock(CommandGateway.class);
         ResetPasswordCommand command = new ResetPasswordCommand(token, password, confirmedPassword, ip, date);
-        doNothing().when(gateway).send(eq(command));
+//        when(gateway).sendAndWait(eq(command));
 
 
         UserServiceFacadeImpl service = new UserServiceFacadeImpl();
@@ -196,6 +274,82 @@ public class UserServiceFacadeImplTest {
 
         verify(userService).getCurrentUser();
         verify(userService2).getCurrentUser();
+        verify(gateway).sendAndWait(eq(command));
+    }
+
+    @Test
+    public void testMatchPreviousWithdrawPassword() throws Exception {
+        final String previousPassword = "previousPassword";
+
+        UserService userService = mockUserService();
+
+        UserQueryRepository userRepository = mock(UserQueryRepository.class);
+        when(userRepository.findByUsername(eq(username))).thenReturn(user);
+
+        UserServiceFacadeImpl service = new UserServiceFacadeImpl();
+        service.setUserService(userService);
+        service.setUserRepository(userRepository);
+        service.setPasswordEncoder(passwordEncoder);
+
+        user.setWithdrawPassword(passwordEncoder.encode(previousPassword));
+        boolean matched = service.matchPreviousWithdrawPassword(previousPassword);
+        user.setWithdrawPassword(passwordEncoder.encode(previousPassword+12));
+        boolean unmatched = service.matchPreviousWithdrawPassword(previousPassword);
+
+        assertThat(matched, is(true));
+        assertThat(unmatched, is(false));
+
+        verify(userService, times(2)).getCurrentUser();
+        verify(userRepository, times(2)).findByUsername(eq(username));
+    }
+
+    @Test
+    public void testCreateWithdrawPassword() throws Exception {
+        final String previousWithdrawPassword = "previousWithdrawPassword";
+        final String newWithdrawPassword = "newWithdrawPassword";
+        final String confirmedNewWithdrawPassword = "newWithdrawPassword";
+        final String operatingIp = "operatingIp";
+        final Date date = currentTime();
+
+        UserService userService = mockUserService();
+
+        UserQueryRepository userRepository = mock(UserQueryRepository.class);
+        when(userRepository.findByUsername(eq(username))).thenReturn(user);
+
+        final CreateWithdrawPasswordCommand command =
+                new CreateWithdrawPasswordCommand(
+                        userId,
+                        username,
+                        newWithdrawPassword,
+                        confirmedNewWithdrawPassword,
+                        operatingIp,
+                        date);
+
+        CommandGateway gateway = mock(CommandGateway.class);
+        doNothing().when(gateway).send(eq(command));
+
+        UserServiceFacadeImpl service = new UserServiceFacadeImpl();
+        service.setUserService(userService);
+        service.setUserRepository(userRepository);
+        service.setCommandGateway(gateway);
+        service.setPasswordEncoder(passwordEncoder);
+
+
+        service.createWithdrawPassword(
+                newWithdrawPassword,
+                confirmedNewWithdrawPassword,
+                operatingIp,
+                date);
+
+        user.setWithdrawPassword(passwordEncoder.encode(previousWithdrawPassword));
+        service.createWithdrawPassword(
+                newWithdrawPassword,
+                confirmedNewWithdrawPassword,
+                operatingIp,
+                date);
+
+        verify(userService, times(2)).getCurrentUser();
+        verify(userRepository, times(2)).findByUsername(eq(username));
         verify(gateway).send(eq(command));
     }
 
@@ -208,8 +362,12 @@ public class UserServiceFacadeImplTest {
         final Date date = currentTime();
 
         UserService userService = mockUserService();
-        final ChangePasswordCommand command =
-                new ChangePasswordCommand(
+
+        UserQueryRepository userRepository = mock(UserQueryRepository.class);
+        when(userRepository.findByUsername(eq(username))).thenReturn(user);
+
+        final ChangeWithdrawPasswordCommand command =
+                new ChangeWithdrawPasswordCommand(
                         userId,
                         username,
                         previousWithdrawPassword,
@@ -223,15 +381,31 @@ public class UserServiceFacadeImplTest {
 
         UserServiceFacadeImpl service = new UserServiceFacadeImpl();
         service.setUserService(userService);
+        service.setUserRepository(userRepository);
         service.setCommandGateway(gateway);
+        service.setPasswordEncoder(passwordEncoder);
 
-        service.changePassword(previousWithdrawPassword,
+
+        service.changeWithdrawPassword(previousWithdrawPassword,
+                newWithdrawPassword,
+                confirmedNewWithdrawPassword,
+                operatingIp,
+                date);
+        user.setWithdrawPassword(passwordEncoder.encode(previousWithdrawPassword));
+        service.changeWithdrawPassword(previousWithdrawPassword + 1,
                 newWithdrawPassword,
                 confirmedNewWithdrawPassword,
                 operatingIp,
                 date);
 
-        verify(userService).getCurrentUser();
+        service.changeWithdrawPassword(previousWithdrawPassword,
+                newWithdrawPassword,
+                confirmedNewWithdrawPassword,
+                operatingIp,
+                date);
+
+        verify(userService, times(6)).getCurrentUser();
+        verify(userRepository, times(3)).findByUsername(eq(username));
         verify(gateway).send(eq(command));
     }
 
@@ -259,8 +433,9 @@ public class UserServiceFacadeImplTest {
         final Date startDate = new Date(currentTime.getTime() - 24L * 60 * 60 * 1000L);
 
         UserPasswordResetRepository userPasswordResetRepository = mock(UserPasswordResetRepository.class);
-        when(userPasswordResetRepository.findNotExpiredByEmail(eq(email), eq(operatingIp), eq(startDate), eq(currentTime)))
-                .thenReturn(null, Arrays.asList(new UserPasswordReset(), new UserPasswordReset()));
+        when(userPasswordResetRepository
+                .findNotExpiredByEmail(eq(email), eq(operatingIp), eq(startDate), eq(currentTime)))
+                .thenReturn((List<UserPasswordReset>)null, Arrays.asList(new UserPasswordReset(), new UserPasswordReset()));
 
         UserServiceFacadeImpl service = new UserServiceFacadeImpl();
         service.setUserPasswordResetRepository(userPasswordResetRepository);
@@ -271,6 +446,6 @@ public class UserServiceFacadeImplTest {
         count = service.findPasswordResetCount(email, operatingIp, currentTime);
         assertThat(count, equalTo(2));
 
-        when(userPasswordResetRepository.findNotExpiredByEmail(eq(email), eq(operatingIp), eq(startDate), eq(currentTime)));
+        verify(userPasswordResetRepository, times(2)).findNotExpiredByEmail(eq(email), eq(operatingIp), eq(startDate), eq(currentTime));
     }
-}
+} 

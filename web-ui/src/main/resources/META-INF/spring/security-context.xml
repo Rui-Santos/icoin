@@ -64,6 +64,8 @@
         <intercept-url pattern="/signup/**" access="permitAll"/>
         <intercept-url pattern="/simpleCaptcha.png" access="permitAll"/>
         <intercept-url pattern="/validateCaptcha" access="permitAll"/>
+        <intercept-url pattern="/user/forgetPassword" access="permitAll"/>
+        <intercept-url pattern="/user/resetPassword" access="permitAll"/>
         <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
         <form-login login-page="/signin" login-processing-url="/signin/authenticate"
                     authentication-failure-url="/signin?login_error=bad_credentials"

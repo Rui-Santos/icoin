@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--<link rel="shortcut icon" href="image/favicon.ico">-->
+    <link rel="icon" href="image/favicon.ico">
+
+    <title>iCoin Exchange</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="style/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="style/jumbotron.css" rel="stylesheet">
+    <link href="style/offcanvas.css" rel="stylesheet">
+    <link href="style/justified-nav.css" rel="stylesheet">
+    <link href="style/btn.css" rel="stylesheet">
+    <link href="style/footer.css" rel="stylesheet">
+    <link href="style/flat-ui.css" rel="stylesheet">
+    <link href="style/sign.css" rel="stylesheet">
+
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]>
+    <script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">iCoin</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#" class="active">Last price:$639.00000</a>
+                </li>
+                <li>
+                    <a href="#">High:$650.15316</a>
+                </li>
+                <li>
+                    <a href="#">Low:$453.29000</a>
+                </li>
+                <li>
+                    <a href="#">Volume:61645 BTC</a>
+                </li>
+            </ul>
+
+
+            <form action="/signin/authenticate" class="navbar-form navbar-right"  method="POST">
+                <div class="form-group">
+                    <input type="text" placeholder="Username" name='j_username' class="form-control"
+                           value=''/>
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" class="form-control" name='j_password'/>
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="masthead">
+                <ul class="nav nav-justified">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#">Trade</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+
+
+            <!-- Example row of columns -->
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-sell">
+                        <div class="panel-body">
+                            <form id="sellOrder" role="form" class="form-horizontal" action="/sell/BTC" method="post">
+                                <input id="sellCoinId" name="sellCoinId" type="hidden" value="BTC"/>
+                                <input id="sellCoinName" name="sellCoinName" type="hidden" value="Bitcoin"/>
+
+                                <div class="form-group">
+                                    <label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>
+                                    <label id="highestBid" class="col-sm-5  form-control-static text-success">
+                                        0
+                                    </label>
+                                    <label class="col-sm-1  form-control-static text-info">CNY</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="balanceToSell" class="col-sm-5 control-label">Balance</label>
+                                    <label id="balanceToSell" class="col-sm-5  form-control-static text-success">
+                                        2432432
+                                    </label>
+                                    <label class="col-sm-1  form-control-static text-info">BTC</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="amountToSell" class="col-sm-5 control-label">卖出量</label>
+                                    <div class="input-group col-sm-7">
+                                        <input id="amountToSell" name="tradeAmount" placeholder="Sell Amount" name="amountToSell" class="form-control sellGreaterThan" type="text" value=""/>
+                                        <span class="input-group-addon alert-warning">BTC</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="priceToSell" class="col-sm-5 control-label">卖出价</label>
+                                    <div class="input-group col-sm-7">
+                                        <input id="priceToSell" name="itemPrice" placeholder="Price" name="priceToSell" class="form-control" type="text" value=""/>
+                                        <span class="input-group-addon alert-warning">CNY</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="totalToSell" class="col-sm-5 control-label">Total</label>
+                                    <label id="totalToSell" class="col-sm-5  form-control-static text-danger">0</label>
+                                    <label class="col-sm-1  form-control-static text-info">BTC</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="feeToSell" class="col-sm-5 control-label">Fee</label>
+                                    <label id="feeToSell" class="col-sm-5  form-control-static text-danger">0</label>
+                                    <label class="col-sm-1  form-control-static text-info">BTC</label>
+                                </div>
+
+
+
+                                <button type="submit" id="sellSubmit" class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="panel panel-buy">
+                        <div class="panel-body">
+                            <form id="buyOrder" role="form" class="form-horizontal" action="#" method="post">
+                                <input id="buyerCoinId" name="coinId" type="hidden" value="BTC"/>
+                                <input id="buyCoinName" name="coinName" type="hidden" value="Bitcoin"/>
+
+                                <div class="form-group">
+                                    <label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>
+                                    <label id="lowestAsk" class="col-sm-5  form-control-static text-success">
+                                        100000000000
+                                    </label>
+                                    <label class="col-sm-1  form-control-static text-info">CNY</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>
+                                    <label id="balanceToBuy" name="balanceToBuy" class="col-sm-5  form-control-static text-success">
+                                        9999999999999999
+                                    </label>
+                                    <label class="col-sm-1  form-control-static text-info">BTC</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="amountToBuy" class="col-sm-5 control-label">买入量</label>
+                                    <div class="input-group col-sm-7">
+                                        <input id="amountToBuy" name="tradeAmount" placeholder="Buy Amount" class="form-control buyGreaterThan" type="text" value=""/>
+                                        <span class="input-group-addon alert-warning">BTC</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="priceToBuy" class="col-sm-5 control-label">买入价</label>
+                                    <div class="input-group col-sm-7">
+                                        <input id="priceToBuy" name="itemPrice" placeholder="Price" class="form-control buyGreaterThan" type="text" value=""/>
+                                        <span class="input-group-addon alert-warning">CNY</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="totalToBuy" class="col-sm-5 control-label">Total</label>
+                                    <label id="totalToBuy" class="col-sm-5  form-control-static text-danger">0</label>
+                                    <label class="col-sm-1  form-control-static text-info">CNY</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="feeToBuy" class="col-sm-5 control-label">Fee</label>
+                                    <label id="feeToBuy" class="col-sm-5  form-control-static text-danger">0</label>
+                                    <label class="col-sm-1  form-control-static text-info">CNY</label>
+                                </div>
+
+
+                                <button type="submit" id="buySubmit" class="btn btn-success col-lg-offset-5 col-lg-3">Buy</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+            <div class="well-new">
+                <h4 class="text-center text-info">Our advantages</h4>
+                <ul class="list-group">
+                    <li class="list-group-item palette-pumpkin text-inverse"> <span class="fui-lock"></span> Safe</li>
+                    <li class="list-group-item palette-carrot text-inverse"> <span class="glyphicon glyphicon-briefcase"></span> Professional</li>
+                    <li class="list-group-item palette-alizarin text-inverse"> <span class="glyphicon glyphicon-flash"></span> Quick</li>
+                    <li class="list-group-item palette-pomegranate text-inverse"> <span class="fui-heart"></span> Preferential</li>
+                    <li class="list-group-item palette-carrot text-inverse"><span class="glyphicon glyphicon-fire"></span> Hot</li>
+                </ul>
+
+                <hr/>
+
+                <h4 class="text-center text-info">Contact</h4>
+                <ul class="list-group">
+                    <li class="list-group-item palette-peter-river text-inverse"><span class="fui-mail"></span> liougehooa@163.com</li>
+                    <li class="list-group-item palette-green-sea text-inverse"><span class="glyphicon glyphicon-earphone"></span> 021 3456789</li>
+                    <li class="list-group-item palette-amethyst text-inverse"> <span class="fui-user"> QQ<sup>1</sup></span> 232845696</li>
+                    <li class="list-group-item palette-wisteria text-inverse"> <span class="fui-user"> QQ<sup>2</sup></span> 232845696</li>
+                    <li class="list-group-item palette-turquoise text-inverse"> <span class="fui-user"> Tech<sup></sup></span> 232845696</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <h3 class="footer-title">Subscribe</h3>
+                <p>Do you like this freebie? Want to get more stuff like this?<br/>
+                    Subscribe to designmodo news and updates to stay tuned on great designs.<br/>
+                    Go to: <a href="#" target="_blank">designmodo.com/flat-free</a>
+                </p>
+
+                <p class="pvl">
+                    <a href="#" class="twitter-share-button" data-url="http://designmodo.com/flat-free/" data-text="Flat UI Free - PSD&amp;amp;HTML User Interface Kit" data-via="designmodo">Tweet</a>
+                </p>
+            </div> <!-- /col-md-7 -->
+
+            <div class="col-md-5">
+                <div class="footer-banner">
+                    <h3 class="footer-title">Get Flat UI Pro</h3>
+                    <ul>
+                        <li>Tons of Basic and Custom UI Elements</li>
+                        <li>A Lot of Useful Samples</li>
+                    </ul>
+                    Email : <a href="mailto:icoin@icoin.net" target="_blank">designmodo.com/flat</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- /container -->
+<script src="../../js/jquery-1.10.2.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="../../js/jquery.validate.min.js"></script>
+<script src="../../js/jquery.maskedinput.js"></script>
+<script src="../../js/jquery.number.js"></script>
+<script src="../../js/trading.js"></script>
+<script src="../../js/localization/messages_zh.js"></script>
+
+</body>
+</html>

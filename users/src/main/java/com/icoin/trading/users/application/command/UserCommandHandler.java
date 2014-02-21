@@ -159,7 +159,7 @@ public class UserCommandHandler {
     }
 
     @CommandHandler
-    public void handlePasswordReset(ResetPasswordCommand command) {
+    public String handlePasswordReset(ResetPasswordCommand command) {
         hasLength(command.getToken());
         hasLength(command.getPassword());
         hasLength(command.getConfirmedPassword());
@@ -167,10 +167,13 @@ public class UserCommandHandler {
 
         UserPasswordReset token = userPasswordResetRepository.findByToken(command.getToken());
 
-        if (token == null) {
-            logger.warn("cannot find password token {}", command.getToken());
-            return;
+        if (token == null || !token.isValid(command.getChangedTime())) {
+            logger.warn("cannot find password token {} or token {} is invalid", command.getToken(), token);
+            return "";
         }
+
+        token.setUsed(true);
+        userPasswordResetRepository.save(token);
 
         User user = repository.load(new UserId(token.getUserId()));
 
@@ -178,6 +181,8 @@ public class UserCommandHandler {
         user.changePassword(passwordEncoder.encode(command.getPassword()), passwordEncoder.encode(command.getConfirmedPassword()), command.getOperatingIp(), changedTime);
 
         clearPasswordResetTokens(token.getUserId(), token.getUsername());
+
+        return token.getUsername();
     }
 
     @CommandHandler

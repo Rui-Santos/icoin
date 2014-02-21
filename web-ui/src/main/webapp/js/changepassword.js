@@ -95,6 +95,6 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $("#captchaImage").click(function () {
-        $("#captchaImage").attr("src", "http://localhost:8080/simpleCaptcha.png");
+        $("#captchaImage").attr("src", "simpleCaptcha.png");
     });
 });

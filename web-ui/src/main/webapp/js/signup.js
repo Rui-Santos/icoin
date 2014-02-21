@@ -37,37 +37,11 @@ $(document).ready(function () {
 
 
         },
-//        messages: {
-//            email: {
-//                required: "Please Enter an Email Address"
-//            },
-//            password: {
-//                required: "Please Enter a Password"
-//            },
-//            confirmedPassword: {
-//                required: "Please Confirm Your Password",
-//                equalTo: "Password must equal to confirmed password"
-//            },
-//            aggreed: {
-//                required: "Please Accept the terms"
-//            },
-//            identifier: {
-//                required: "Please Enter The Captcha Code",
-//                length: "Captcha Entered Incorrectly"
-//            }
-//
-//        },
         highlight: function (element) {
-//            console.log($(element).prop("tagName"));
-//            console.log($(element).attr("type"));
-//            console.log($(element).closest('.form-group').prop("tagName"));
-//            console.log($("#password").prop("tagName"));
-//            console.log($(element).parent().prop("tagName"));
             $(element).parent().removeClass('has-success');
             $(element).parent().addClass('has-error');
         },
         unhighlight: function (element) {
-//            console.log("unhiglight: " + $(element).parent().prop("tagName"));
             $(element).parent().removeClass('has-error');
             $(element).parent().addClass('has-success');
 
@@ -75,16 +49,6 @@ $(document).ready(function () {
             form.submit();
         }
     });
-
-//    $.validator.addMethod("password", function (value, element) {
-//        return this.optional(element) || /^[A-Za-z0-9!@#$%^&*()_]{6,16}$/i.test(value);
-//    }, "Passwords are 6-16 characters");
-//
-//    $.validator.addMethod("identifier", function(value, element)
-//    {
-//        /^[0-9\s.\-_']{18}$/i.test(value);
-//    }, "Please Only Enter Alpha Numeric Characters and Spaces");
-
 });
 
 //$(document).ready(function () {
@@ -95,27 +59,8 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $("#captchaImage").click(function () {
-        $("#captchaImage").attr("src", "http://localhost:8080/simpleCaptcha.png");
+        $("#captchaImage").attr("src", "simpleCaptcha.png");
     });
     $("#cellPhone").mask("999-9999-9999");
     $("#identifier").mask("99-9999-9999-9999-9999");
-//    /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/
-//    var inputVal = $(this).val();
-//    var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
-//    if(!numericReg.test(inputVal)) {
-//        $(this).after('<span class="error error-keyup-1">Numeric characters only.</span>');
-//    }
-
-    isNaN
-//http://stackoverflow.com/questions/280759/jquery-validate-how-to-add-a-rule-for-regular-expression-validation
-    $.validator.addMethod(
-        "regex",
-        function(value, element, regexp) {
-            var re = new RegExp(regexp);
-            return this.optional(element) || re.test(value);
-        },
-        "Please check your input."
-    );
-
-    $("#Textbox").rules("add", { regex: "^[a-zA-Z'.\\s]{1,40}$" })
 });

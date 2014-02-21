@@ -27,6 +27,7 @@ public class VelocityForgetPasswordEmailSender implements ForgetPasswordEmailSen
     private static Logger logger = LoggerFactory.getLogger(VelocityForgetPasswordEmailSender.class);
     private VelocityEmailSender sender;
     private String from = "admin@icoin.com";
+    private String domainUrl = "http://localhost/";
     private UserPasswordResetRepository userPasswordResetRepository;
     private String templateLocation;
     private String subject = "User Password Reset";
@@ -57,6 +58,11 @@ public class VelocityForgetPasswordEmailSender implements ForgetPasswordEmailSen
         this.from = from;
     }
 
+    @Value("${email.domainUrl}")
+    public void setDomainUrl(String domainUrl) {
+        this.domainUrl = domainUrl;
+    }
+
     //todo change the active link
     public void sendEmail(final String token) {
         if (!Strings.hasLength(token)) {
@@ -70,7 +76,9 @@ public class VelocityForgetPasswordEmailSender implements ForgetPasswordEmailSen
             return;
         }
 
-        final Map<String, Object> model = ImmutableMap.of("user", (Object) userPasswordReset, "token", token);
+        final Map<String, Object> model = ImmutableMap.of("user", (Object) userPasswordReset,
+                "domainUrl", domainUrl, "token", token
+        );
 
         sender.sendEmail(
                 subject,

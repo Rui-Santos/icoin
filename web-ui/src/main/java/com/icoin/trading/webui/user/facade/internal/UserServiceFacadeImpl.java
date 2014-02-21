@@ -4,6 +4,7 @@ import com.homhon.base.domain.service.UserService;
 import com.homhon.util.Strings;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
+import com.icoin.trading.users.application.command.AuthenticateUserCommand;
 import com.icoin.trading.users.application.command.ChangePasswordCommand;
 import com.icoin.trading.users.application.command.ChangeWithdrawPasswordCommand;
 import com.icoin.trading.users.application.command.CreateWithdrawPasswordCommand;
@@ -18,6 +19,7 @@ import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import com.icoin.trading.webui.user.facade.UserServiceFacade;
 import org.apache.commons.lang3.time.DateUtils;
+import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,6 +90,28 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         return false;
     }
 
+    @Override
+    public boolean canAuthWithNewPassword(String username, String newPassword) {
+        notNull(username);
+        UserEntry user = userRepository.findByUsername(username);
+        if (user == null) {
+            logger.error("user {} cannot be found", username);
+            return false;
+        }
+        return passwordEncoder.matches(newPassword, user.getPassword());
+    }
+
+    @Override
+    public UserPasswordReset getToken(String token) {
+        if (!Strings.hasText(token)) {
+            return null;
+        }
+
+        UserPasswordReset reset = userPasswordResetRepository.findByToken(token);
+
+        return reset;
+    }
+
     /**
      * For now we work with only one portfolio per user. This might change in the future.
      *
@@ -109,8 +133,12 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return false;
         }
 
+        if (!Strings.hasLength(user.getPassword())) {
+            return false;
+        }
+
         final boolean matches = passwordEncoder.matches(previousPassword, user.getPassword());
-        if(!matches){
+        if (!matches) {
             logger.warn("user {}, id {}, password not matched for previous to change.", user.getUsername(), user.getPrimaryKey());
             return false;
         }
@@ -129,6 +157,13 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             logger.warn("user not logged on");
             return;
         }
+
+        boolean matched = matchPreviousPassword(previousPassword);
+        if (!matched) {
+            logger.warn("previous password not matched");
+            return;
+        }
+
         commandGateway.send(new ChangePasswordCommand(
                 new UserId(userAccount.getPrimaryKey()),
                 userAccount.getUsername(),
@@ -141,15 +176,20 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
     @Override
     public boolean createWithdrawPassword(String withdrawPassword, String confirmedWithdrawPassword, String operatingIp, Date changedTime) {
-        UserAccount userAccount = currentUser();
-        if (userAccount == null) {
-            logger.warn("user not logged on");
+        UserEntry user = currentDetailUser();
+        if (user == null) {
+            logger.warn("user not logged on or not found");
+            return false;
+        }
+
+        if (Strings.hasLength(user.getWithdrawPassword())) {
+            logger.warn("user {}, id {} has already created withdraw password!", user.getUsername(), user.getPrimaryKey());
             return false;
         }
 
         commandGateway.send(new CreateWithdrawPasswordCommand(
-                new UserId(userAccount.getPrimaryKey()),
-                userAccount.getUsername(),
+                new UserId(user.getPrimaryKey()),
+                user.getUsername(),
                 withdrawPassword,
                 confirmedWithdrawPassword,
                 operatingIp,
@@ -165,8 +205,12 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return false;
         }
 
+        if (!Strings.hasLength(user.getWithdrawPassword())) {
+            return false;
+        }
+
         final boolean matches = passwordEncoder.matches(previousPassword, user.getWithdrawPassword());
-        if(!matches){
+        if (!matches) {
             logger.warn("user {}, id {}, withdraw password not matched for previous to change.", user.getUsername(), user.getPrimaryKey());
             return false;
         }
@@ -196,19 +240,31 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
 
     @Override
-    public void resetPasswordWithToken(String token,
-                                       String password,
-                                       String confirmedPassword,
-                                       String operatingIp,
-                                       Date resetTime) {
+    public UserAccount resetPasswordWithToken(String token,
+                                              String password,
+                                              String confirmedPassword,
+                                              String operatingIp,
+                                              Date resetTime) {
         UserAccount userAccount = currentUser();
         if (userAccount != null) {
             logger.warn("user has already logged on");
-            return;
+            return null;
         }
         ResetPasswordCommand command = new ResetPasswordCommand(token, password, confirmedPassword, operatingIp, resetTime);
 
-        commandGateway.send(command);
+        final String username = commandGateway.sendAndWait(command);
+
+        if (!Strings.hasText(username)) {
+            return null;
+        }
+
+        AuthenticateUserCommand authenticateUserCommand = new AuthenticateUserCommand(username, password, operatingIp, resetTime);
+        try {
+            final UserAccount account = commandGateway.sendAndWait(authenticateUserCommand);
+            return account;
+        } catch (StructuralCommandValidationFailedException e) {
+            return null;
+        }
     }
 
     @Override
@@ -220,6 +276,12 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         UserAccount userAccount = currentUser();
         if (userAccount == null) {
             logger.warn("user not logged on");
+            return;
+        }
+
+        boolean matched = matchPreviousWithdrawPassword(previousPassword);
+        if (!matched) {
+            logger.warn("previous withdraw password not matched");
             return;
         }
 

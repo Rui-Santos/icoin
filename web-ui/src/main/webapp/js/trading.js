@@ -3,13 +3,13 @@ $(document).ready(function () {
         rules: {
             tradeAmount: {
                 required: true,
-                number:true,
-                min:10
+                min: 0.001,
+                max: 999999999
             },
             itemPrice: {
                 required: true,
-                number:true,
-                min:0
+                min: 0.001,
+                max: 999999999
             }
 
         },
@@ -22,8 +22,8 @@ $(document).ready(function () {
             $(element).parent().addClass('has-error');
         },
         unhighlight: function (element) {
-            console.log("success:"+$(element).parent().attr("tagName"));
-            console.log("success:"+$(element).parent().attr("class"));
+            console.log("success:" + $(element).parent().attr("tagName"));
+            console.log("success:" + $(element).parent().attr("class"));
             $(element).parent().removeClass('has-error');
             $(element).parent().addClass('has-success');
 
@@ -31,7 +31,7 @@ $(document).ready(function () {
         submitHandler: function (form) {
             form.submit();
         },
-        showErrors: function(errorMap, errorList) {
+        showErrors: function (errorMap, errorList) {
 
             // Clean up any tooltips for valid elements 
             $.each(this.validElements(), function (index, element) {
@@ -65,13 +65,16 @@ $(document).ready(function () {
         rules: {
             tradeAmount: {
                 required: true,
-                number:true,
-                min:10
+                min: 0.001,
+                max: 999999999
+//                number:true, 
+
             },
             itemPrice: {
                 required: true,
-                number:true,
-                min:0
+                min: 0.001,
+                max: 999999999999
+//                number:true, 
             }
 
         },
@@ -88,7 +91,7 @@ $(document).ready(function () {
         }, submitHandler: function (form) {
             form.submit();
         },
-        showErrors: function(errorMap, errorList) {
+        showErrors: function (errorMap, errorList) {
 
             // Clean up any tooltips for valid elements 
             $.each(this.validElements(), function (index, element) {
@@ -116,40 +119,128 @@ $(document).ready(function () {
             });
         }
     });
-});
 
+    $.validator.addMethod("buyGreaterThan",
 
-$.validator.addMethod("buyGreaterThan",
+        function (value, element) {
+            var balance = $("#balanceToBuy").text().trim();
+            var priceToBuy = $("#priceToBuy").val();
+            var amountToBuy = $("#amountToBuy").val();
+//            console.log("balance:" + balance); 
+//            console.log("priceToBuy:" + priceToBuy); 
+//            console.log("amountToBuy:" + amountToBuy); 
+//            console.log("isNaN(amountToBuy):" + isNaN(amountToBuy)); 
+            if (!$.isNumeric(amountToBuy) || !$.isNumeric(priceToBuy)) {
+                return true;
+            }
+            var balanceMoney = parseFloat(balance);
+            var price = parseFloat(priceToBuy);
+            var amount = parseFloat(amountToBuy);
 
-    function (value, element) {
-        var balance = $("#balanceToBuy").text().trim();
-        var priceToBuy = $("#priceToBuy").val();
-        var amountToBuy = $("#amountToBuy").val();
-//        console.log("balance:"+ balance); 
-//        console.log("priceToBuy:"+ priceToBuy); 
-//        console.log("amountToBuy:"+ amountToBuy); 
-        var balanceMoney = parseFloat(balance);
-        var price = parseFloat(priceToBuy);
-        var amount = parseFloat(amountToBuy);
+//            console.log("balanceMoney:" + balanceMoney); 
+//            console.log("price * amount:" + price * amount); 
+//            console.log("balanceMoney > (price * amount):" + (balanceMoney > (price * amount))); 
+            return balanceMoney >= (price * amount * 1.005);
+        });
 
-        console.log("balanceMoney:"+ balanceMoney);
-        console.log("price * amount:"+ price * amount);
-        console.log("balanceMoney > (price * amount):"+ (balanceMoney > (price * amount)));
-        return balanceMoney > (price * amount);
+    $.validator.addMethod("sellGreaterThan",
+
+        function (value, element) {
+            var balance = $("#balanceToSell").text().trim();
+            var amountToSell = $("#amountToSell").val();
+            if (!$.isNumeric(amountToSell)) {
+                return true;
+            }
+            var balanceMoney = parseFloat(balance);
+            var amount = parseFloat(amountToSell);
+
+            return balanceMoney >= (amount * 1.005);
+        });
+
+    $.validator.addClassRules({
+        buySubmit: {
+            buyGreaterThan: true
+        },
+        sellSubmit: {
+            sellGreaterThan: true
+        }
     });
 
-$.validator.addClassRules({
-    buySubmit: {
-        buyGreaterThan: true
-    }
+    $("#priceToBuy").keyup(function () {
+        var fee = 0.005;
+        var priceToBuy = $("#priceToBuy").val();
+        var amountToBuy = $("#amountToBuy").val();
+        if ($.isNumeric(amountToBuy) && $.isNumeric(priceToBuy)) {
+            var price = parseFloat(priceToBuy);
+            var amount = parseFloat(amountToBuy);
+
+            var total = price * amount;
+            var commission = total * fee;
+            $('#totalToBuy').text(total + commission);
+            $('#feeToBuy').text(commission);
+        } else {
+            $('#totalToBuy').text(0);
+            $('#feeToBuy').text(0);
+        }
+        $('#totalToBuy').number(true, 3);
+        $('#feeToBuy').number(true, 3);
+    });
+
+    $("#amountToBuy").keyup(function () {
+        var fee = 0.005;
+        var priceToBuy = $("#priceToBuy").val();
+        var amountToBuy = $("#amountToBuy").val();
+        if ($.isNumeric(amountToBuy) && $.isNumeric(priceToBuy)) {
+            var price = parseFloat(priceToBuy);
+            var amount = parseFloat(amountToBuy);
+            var total = price * amount;
+            var commission = total * fee;
+            $('#totalToBuy').text(total + commission);
+            $('#feeToBuy').text(commission);
+        } else {
+            $('#totalToBuy').text(0);
+            $('#feeToBuy').text(0);
+        }
+        $('#totalToBuy').number(true, 3);
+        $('#feeToBuy').number(true, 3);
+    });
+
+    $('#amountToBuy').number(true, 6);
+    $('#priceToBuy').number(true, 3);
+    $('#totalToBuy').number(true, 3);
+    $('#feeToBuy').number(true, 3);
+
+    $('#amountToSell').number(true, 6);
+    $('#priceToSell').number(true, 3);
+    $('#totalToSell').number(true, 6);
+    $('#feeToSell').number(true, 6);
 });
 
-//$('#buySubmit').click(function() {
-//    var balance = $("#balanceToBuy").val();
-//    var balancetext = $("#balanceToBuy").text().trim();
-//    var balanceHtml = $("#balanceToBuy").html();
-//    console.log("balance1:"+ balance);
-//    console.log("balancetext:"+ balancetext);
-//    console.log("balanceHtml:"+ balanceHtml);
-//    $('#buyOrder').validate();
-//});
+
+$("#priceToSell").keyup(function () {
+    var amountToSell = $("#amountToSell").val();
+    if ($.isNumeric(amountToSell)) {
+        var amount = parseFloat(amountToSell);
+        $('#totalToSell').text(amount * 1.005);
+        $('#feeToSell').text(amount * 0.005);
+    } else {
+        $('#totalToSell').text(0);
+        $('#feeToSell').text(0);
+    }
+    $('#totalToSell').number(true, 6);
+    $('#feeToSell').number(true, 6);
+});
+
+$("#amountToSell").keyup(function () {
+    var amountToSell = $("#amountToSell").val();
+    if ($.isNumeric(amountToSell)) {
+        var amount = parseFloat(amountToSell);
+        $('#totalToSell').text(amount * 1.005);
+        $('#feeToSell').text(amount * 0.005);
+    } else {
+        $('#totalToSell').text(0);
+        $('#feeToSell').text(0);
+    }
+    $('#totalToSell').number(true, 6);
+    $('#feeToSell').number(true, 6);
+}); 
