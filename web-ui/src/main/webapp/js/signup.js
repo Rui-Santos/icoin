@@ -10,8 +10,7 @@ $(document).ready(function () {
 //                rangelength:[6,16]
             },
             identifier: {
-                required: true,
-                rangelength:[18,18]
+                required: true
             },
             password: {
                 required: true,
@@ -62,5 +61,6 @@ $(document).ready(function () {
         $("#captchaImage").attr("src", "simpleCaptcha.png");
     });
     $("#cellPhone").mask("999-9999-9999");
-    $("#identifier").mask("99-9999-9999-9999-9999");
+    //$("#identifier").mask("99-9999-9999-9999-9999");
+    $("#identifier").mask("99-9999-9999-9999-999X",{translation: {'X': {pattern: /[0-9xX]/, optional: false}}});
 });
