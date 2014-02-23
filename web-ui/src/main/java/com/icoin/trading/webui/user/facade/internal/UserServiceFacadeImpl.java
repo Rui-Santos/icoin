@@ -5,14 +5,18 @@ import com.homhon.util.Strings;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.users.application.command.AuthenticateUserCommand;
+import com.icoin.trading.users.application.command.ChangeAdminInfoCommand;
+import com.icoin.trading.users.application.command.ChangeInfoCommand;
 import com.icoin.trading.users.application.command.ChangePasswordCommand;
 import com.icoin.trading.users.application.command.ChangeWithdrawPasswordCommand;
 import com.icoin.trading.users.application.command.CreateWithdrawPasswordCommand;
 import com.icoin.trading.users.application.command.ForgetPasswordCommand;
 import com.icoin.trading.users.application.command.ResetPasswordCommand;
+import com.icoin.trading.users.application.command.UpdateNotificationSettingsCommand;
 import com.icoin.trading.users.domain.ForgetPasswordEmailSender;
 import com.icoin.trading.users.domain.model.function.UserPasswordReset;
 import com.icoin.trading.users.domain.model.function.UserPasswordResetRepository;
+import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 import com.icoin.trading.users.domain.model.user.UserId;
 import com.icoin.trading.users.query.UserEntry;
@@ -92,7 +96,11 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
 
     @Override
     public boolean canAuthWithNewPassword(String username, String newPassword) {
-        notNull(username);
+        if (!Strings.hasText(username) || !Strings.hasText(newPassword)) {
+            logger.warn("username/password empty: username {}, password {}", username, newPassword);
+            return false;
+        }
+
         UserEntry user = userRepository.findByUsername(username);
         if (user == null) {
             logger.error("user {} cannot be found", username);
@@ -106,10 +114,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         if (!Strings.hasText(token)) {
             return null;
         }
-
-        UserPasswordReset reset = userPasswordResetRepository.findByToken(token);
-
-        return reset;
+        return userPasswordResetRepository.findByToken(token);
     }
 
     /**
@@ -144,6 +149,79 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         }
 
         return true;
+    }
+
+    @Override
+    public void editDetails(String username, String email, String cellPhoneNumber, String firstName, String lastName) {
+        if (!Strings.hasText(username)) {
+            logger.warn("username is null! cannot update {}, {}, {}, {}.", email, cellPhoneNumber, firstName, lastName);
+            return;
+        }
+        UserAccount account = currentUser();
+
+        if (account == null || !username.equalsIgnoreCase(account.getUsername())) {
+            logger.warn("current account not found, or username not matched!, username {}, current one",
+                    username, account == null ? "" : account.getUsername());
+            return;
+        }
+
+        ChangeInfoCommand command = new ChangeInfoCommand(new UserId(account.getPrimaryKey()), username, email, cellPhoneNumber, firstName, lastName);
+        commandGateway.sendAndWait(command);
+        logger.info("user info changed {}", command);
+    }
+
+    @Override
+    public void editAdminDetails(String username,
+                                 String email,
+                                 Identifier identifier,
+                                 String cellPhoneNumber,
+                                 String firstName,
+                                 String lastName,
+                                 List<String> roles) {
+        if (!Strings.hasText(username)) {
+            logger.warn("username is null! cannot update {}, {}, {}, {}, {}.", email, identifier, cellPhoneNumber, firstName, lastName);
+            return;
+        }
+        UserAccount account = currentUser();
+
+        if (account == null || !username.equalsIgnoreCase(account.getUsername())) {
+            logger.warn("current account not found, or username not matched!, username {}, current one",
+                    username, account == null ? "" : account.getUsername());
+            return;
+        }
+
+        ChangeAdminInfoCommand command =
+                new ChangeAdminInfoCommand(
+                        new UserId(account.getPrimaryKey()),
+                        username,
+                        email,
+                        identifier,
+                        cellPhoneNumber,
+                        firstName,
+                        lastName,
+                        roles);
+        commandGateway.sendAndWait(command);
+        logger.info("user admin info changed {}", command);
+    }
+
+    @Override
+    public void updateNotificationSettings(boolean logonAlert, boolean withdrawMoneyAlert, boolean withdrawItemAlert, boolean executedAlert) {
+        UserAccount account = currentUser();
+
+        if (account == null || !Strings.hasText(account.getPrimaryKey()) || !Strings.hasText(account.getUsername())) {
+            logger.warn("current user is null! cannot update {}, {}, {}, {}.", logonAlert, withdrawMoneyAlert, withdrawItemAlert, executedAlert);
+            return;
+        }
+
+        UpdateNotificationSettingsCommand command =
+                new UpdateNotificationSettingsCommand(
+                        new UserId(account.getPrimaryKey()),
+                        account.getUsername(),
+                        logonAlert, withdrawMoneyAlert,
+                        withdrawItemAlert,
+                        executedAlert);
+        commandGateway.sendAndWait(command);
+        logger.info("user notification settings changed {}", command);
     }
 
     @Override

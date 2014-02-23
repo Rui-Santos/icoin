@@ -1,5 +1,7 @@
 package com.icoin.trading.webui.user.form;
 
+import com.icoin.trading.users.query.UserEntry;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -9,9 +11,9 @@ package com.icoin.trading.webui.user.form;
  */
 public class NotificationForm {
     private boolean logonAlert;
-    private boolean changePasswordAlert;
-    private boolean withdrawPasswordAlert;
     private boolean withdrawMoneyAlert;
+    private boolean withdrawItemAlert;
+    private boolean executedAlert;
 
     public boolean isLogonAlert() {
         return logonAlert;
@@ -21,27 +23,36 @@ public class NotificationForm {
         this.logonAlert = logonAlert;
     }
 
-    public boolean isChangePasswordAlert() {
-        return changePasswordAlert;
-    }
-
-    public void setChangePasswordAlert(boolean changePasswordAlert) {
-        this.changePasswordAlert = changePasswordAlert;
-    }
-
-    public boolean isWithdrawPasswordAlert() {
-        return withdrawPasswordAlert;
-    }
-
-    public void setWithdrawPasswordAlert(boolean withdrawPasswordAlert) {
-        this.withdrawPasswordAlert = withdrawPasswordAlert;
-    }
-
     public boolean isWithdrawMoneyAlert() {
         return withdrawMoneyAlert;
     }
 
     public void setWithdrawMoneyAlert(boolean withdrawMoneyAlert) {
         this.withdrawMoneyAlert = withdrawMoneyAlert;
+    }
+
+    public boolean isWithdrawItemAlert() {
+        return withdrawItemAlert;
+    }
+
+    public void setWithdrawItemAlert(boolean withdrawItemAlert) {
+        this.withdrawItemAlert = withdrawItemAlert;
+    }
+
+    public boolean isExecutedAlert() {
+        return executedAlert;
+    }
+
+    public void setExecutedAlert(boolean executedAlert) {
+        this.executedAlert = executedAlert;
+    }
+
+    public static NotificationForm toNotificationForm(UserEntry user) {
+        NotificationForm form = new NotificationForm();
+        form.setLogonAlert(user.isLogonAlert());
+        form.setWithdrawMoneyAlert(user.isWithdrawMoneyAlert());
+        form.setWithdrawItemAlert(user.isWithdrawItemAlert());
+        form.setWithdrawItemAlert(user.isWithdrawItemAlert());
+        return form;
     }
 }

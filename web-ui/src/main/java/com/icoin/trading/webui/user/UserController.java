@@ -23,10 +23,12 @@ import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import com.icoin.trading.webui.global.ResourceNotFoundException;
 import com.icoin.trading.webui.user.facade.UserServiceFacade;
+import com.icoin.trading.webui.user.form.ChangeInfoForm;
 import com.icoin.trading.webui.user.form.ChangePasswordForm;
 import com.icoin.trading.webui.user.form.ChangeWithdrawPasswordForm;
 import com.icoin.trading.webui.user.form.CreateWithdrawPasswordForm;
 import com.icoin.trading.webui.user.form.ForgetPasswordForm;
+import com.icoin.trading.webui.user.form.NotificationForm;
 import com.icoin.trading.webui.user.form.ResetPasswordForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -47,6 +49,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static com.homhon.util.TimeUtils.currentTime;
+import static com.icoin.trading.webui.user.form.ChangeInfoForm.toChangeInfoForm;
+import static com.icoin.trading.webui.user.form.NotificationForm.toNotificationForm;
 
 /**
  * @author Jettro Coenradie
@@ -106,7 +110,7 @@ public class UserController {
                     currentTime());
 
             if (created) {
-                return "dashboard/index";
+                return "redirect:/dashboard";
             }
 
 
@@ -144,7 +148,7 @@ public class UserController {
                     request.getRemoteAddr(),
                     currentTime());
 
-            return "dashboard/index";
+            return "redirect:/dashboard";
 //
 //
 //            if (changeWithdrawPasswordForm.getConfirmedWithdrawPassword().equals(changeWithdrawPasswordForm.getWithdrawPassword())) {
@@ -185,7 +189,7 @@ public class UserController {
                     request.getRemoteAddr(),
                     currentTime());
 
-            return "dashboard/index";
+            return "redirect:/dashboard";
         }
 
         changePasswordForm.setPreviousPassword(null);
@@ -284,10 +288,56 @@ public class UserController {
                 final Authentication authentication = AuthUtils.getAuthentication(userAccount, new WebAuthenticationDetails(httpRequest), null);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 ProviderSignInUtils.handlePostSignUp(userAccount.getUsername(), request);
-                return "dashboard/index";
+                return "redirect:/dashboard";
             }
         }
 
         return "user/resetpassword";
+    }
+
+    @RequestMapping(value = "/changeDetails", method = RequestMethod.GET)
+    public String changeDetails(Model model) {
+        UserEntry user = userService.currentDetailUser();
+        model.addAttribute("changeInfoForm", toChangeInfoForm(user));
+        return "user/adminedit";
+    }
+
+    @RequestMapping(value = "/changeDetails", method = RequestMethod.POST)
+    public String changeDetails(@ModelAttribute("changeInfoForm") @Valid ChangeInfoForm changeInfoForm,
+                                BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+
+            UserAccount user = userService.currentUser();
+
+            userService.editDetails(user.getUsername(), changeInfoForm.getEmail(),
+                    changeInfoForm.getMobile(), changeInfoForm.getFirstName(), changeInfoForm.getLastName());
+
+            return "redirect:/dashboard";
+        }
+
+        return "user/adminedit";
+    }
+
+    @RequestMapping(value = "/changeNotificationSettings", method = RequestMethod.GET)
+    public String changeNotificationSettings(Model model) {
+        UserEntry user = userService.currentDetailUser();
+        model.addAttribute("notificationForm", toNotificationForm(user));
+        return "user/editnotificationsettings";
+    }
+
+    @RequestMapping(value = "/changeNotificationSettings", method = RequestMethod.POST)
+    public String changeNotificationSettings(@ModelAttribute("notificationForm") @Valid NotificationForm notificationForm,
+                                             BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            userService.updateNotificationSettings(
+                    notificationForm.isLogonAlert(),
+                    notificationForm.isWithdrawMoneyAlert(),
+                    notificationForm.isWithdrawItemAlert(),
+                    notificationForm.isExecutedAlert());
+
+            return "redirect:/dashboard";
+        }
+
+        return "user/editnotificationsettings";
     }
 }

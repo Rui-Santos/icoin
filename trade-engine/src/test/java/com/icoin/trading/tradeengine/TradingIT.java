@@ -283,7 +283,7 @@ public class TradingIT {
 
 
         //trade transaction 
-        List<TransactionEntry> sellTransactions = transactionQueryRepository.findByPortfolioIdentifier(sellPortfolio.getIdentifier());
+        List<TransactionEntry> sellTransactions = transactionQueryRepository.findByPortfolioIdentifier(sellPortfolio.getIdentifier(), new PageRequest(0,1000));
         assertThat(sellTransactions, hasSize(1));
         TransactionEntry sellTransactionEntry = sellTransactions.get(0);
         assertThat(sellTransactionEntry.getAmountOfExecutedItem().isEqual(tradeAmount), is(true));
@@ -296,7 +296,7 @@ public class TradingIT {
         assertThat(sellTransactionEntry.getTotalCommission().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 0.02617206)), is(true));
         assertThat(sellTransactionEntry.getTotalMoney().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 65.2)), is(true));
 
-        List<TransactionEntry> buyTransactions = transactionQueryRepository.findByPortfolioIdentifier(buyPortfolio.getIdentifier());
+        List<TransactionEntry> buyTransactions = transactionQueryRepository.findByPortfolioIdentifier(buyPortfolio.getIdentifier(), new PageRequest(0,1000));
         assertThat(buyTransactions, hasSize(1));
         TransactionEntry buyTransactionEntry = buyTransactions.get(0);
         assertThat(buyTransactionEntry.getAmountOfExecutedItem().isEqual(tradeAmount), is(true));
@@ -469,7 +469,7 @@ public class TradingIT {
         assertThat(orderBook.getBuyTransactionId(), equalTo(buyTransactionId.toString()));
 
         //trade transaction 
-        List<TransactionEntry> sellTransactions = transactionQueryRepository.findByPortfolioIdentifier(sellPortfolio.getIdentifier());
+        List<TransactionEntry> sellTransactions = transactionQueryRepository.findByPortfolioIdentifier(sellPortfolio.getIdentifier(), new PageRequest(0,1000));
         assertThat(sellTransactions, hasSize(1));
         TransactionEntry sellTransactionEntry = sellTransactions.get(0);
         assertThat(sellTransactionEntry.getAmountOfExecutedItem().isEqual(tradeAmount), is(true));
@@ -482,7 +482,7 @@ public class TradingIT {
         assertThat(sellTransactionEntry.getTotalCommission().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 0.04)), is(true));
         assertThat(sellTransactionEntry.getTotalMoney().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 97)), is(true));
 
-        List<TransactionEntry> buyTransactions = transactionQueryRepository.findByPortfolioIdentifier(buyPortfolio.getIdentifier());
+        List<TransactionEntry> buyTransactions = transactionQueryRepository.findByPortfolioIdentifier(buyPortfolio.getIdentifier(), new PageRequest(0,1000));
         assertThat(buyTransactions, hasSize(1));
         TransactionEntry buyTransactionEntry = buyTransactions.get(0);
         assertThat(buyTransactionEntry.getAmountOfExecutedItem().isEqual(tradeAmount), is(true));
@@ -737,7 +737,7 @@ public class TradingIT {
         assertThat(orderBook.getBuyTransactionId(), equalTo(buyTransactionId.toString()));
 
         //trade transaction 
-        List<TransactionEntry> sellTransactions = transactionQueryRepository.findByPortfolioIdentifier(sellPortfolio.getIdentifier());
+        List<TransactionEntry> sellTransactions = transactionQueryRepository.findByPortfolioIdentifier(sellPortfolio.getIdentifier(), new PageRequest(0,1000));
 
         Collections.sort(sellTransactions, new Comparator<TransactionEntry>() {
             @Override
@@ -780,7 +780,7 @@ public class TradingIT {
         assertThat(sellTransactionEntry3.getTotalCommission().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 0.03)), is(true));
         assertThat(sellTransactionEntry3.getTotalMoney().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 72.75)), is(true));
 
-        List<TransactionEntry> buyTransactions = transactionQueryRepository.findByPortfolioIdentifier(buyPortfolio.getIdentifier());
+        List<TransactionEntry> buyTransactions = transactionQueryRepository.findByPortfolioIdentifier(buyPortfolio.getIdentifier(), new PageRequest(0,1000));
         assertThat(buyTransactions, hasSize(1));
         TransactionEntry buyTransactionEntry = buyTransactions.get(0);
         assertThat(buyTransactionEntry.getAmountOfExecutedItem().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 8)), is(true));
@@ -836,11 +836,11 @@ public class TradingIT {
     }
 
     private void waitForComplete(PortfolioEntry portfolio) throws InterruptedException {
-        List<TransactionEntry> transactions = transactionQueryRepository.findByPortfolioIdentifier(portfolio.getIdentifier());
+        List<TransactionEntry> transactions = transactionQueryRepository.findByPortfolioIdentifier(portfolio.getIdentifier(), new PageRequest(0,1000));
         TransactionEntry entry = transactions.get(0);
         while (entry.getState() != TransactionState.EXECUTED) {
             TimeUnit.MILLISECONDS.sleep(100);
-            transactions = transactionQueryRepository.findByPortfolioIdentifier(portfolio.getIdentifier());
+            transactions = transactionQueryRepository.findByPortfolioIdentifier(portfolio.getIdentifier(), new PageRequest(0,1000));
             entry = transactions.get(0);
         }
         TimeUnit.MILLISECONDS.sleep(2000);
@@ -1054,7 +1054,7 @@ public class TradingIT {
         assertThat(orderBook.getBuyTransactionId(), equalTo(buyTransactionId1.toString()));
 
         //trade transaction 
-        List<TransactionEntry> buyTransactions = transactionQueryRepository.findByPortfolioIdentifier(buyPortfolio.getIdentifier());
+        List<TransactionEntry> buyTransactions = transactionQueryRepository.findByPortfolioIdentifier(buyPortfolio.getIdentifier(), new PageRequest(0,1000));
         Collections.sort(buyTransactions, new Comparator<TransactionEntry>() {
             @Override
             public int compare(TransactionEntry o1, TransactionEntry o2) {
@@ -1096,7 +1096,7 @@ public class TradingIT {
         assertThat(buyTransactionEntry3.getExecutedMoney().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 48.48)), is(true));
         assertThat(buyTransactionEntry3.getCommission().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 0.242)), is(true));
 
-        List<TransactionEntry> sellTransactions = transactionQueryRepository.findByPortfolioIdentifier(sellPortfolio.getIdentifier());
+        List<TransactionEntry> sellTransactions = transactionQueryRepository.findByPortfolioIdentifier(sellPortfolio.getIdentifier(), new PageRequest(0,1000));
         assertThat(sellTransactions, hasSize(1));
         TransactionEntry sellTransactionEntry = sellTransactions.get(0);
         assertThat(sellTransactionEntry.getOrderBookIdentifier(), equalTo(orderBookIdentifier));

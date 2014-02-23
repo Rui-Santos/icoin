@@ -19,22 +19,20 @@
     <![endif]-->
 
     <!-- Bootstrap core CSS -->
-    <link href="style/bootstrap.css" rel="stylesheet">
+    <link href="../../style/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="style/jumbotron.css" rel="stylesheet">
-    <link href="style/offcanvas.css" rel="stylesheet">
-    <link href="style/justified-nav.css" rel="stylesheet">
-    <link href="style/btn.css" rel="stylesheet">
-    <link href="style/footer.css" rel="stylesheet">
-    <link href="style/flat-ui.css" rel="stylesheet">
-    <link href="style/sign.css" rel="stylesheet">
-    <link href="style/admin.css" rel="stylesheet">
-    <link href="style/switch.css" rel="stylesheet">
+    <link href="../../style/jumbotron.css" rel="stylesheet">
+    <link href="../../style/offcanvas.css" rel="stylesheet">
+    <link href="../../style/justified-nav.css" rel="stylesheet">
+    <link href="../../style/btn.css" rel="stylesheet">
+    <link href="../../style/footer.css" rel="stylesheet">
+    <link href="../../style/flat-ui.css" rel="stylesheet">
+    <link href="../../style/sign.css" rel="stylesheet">
+    <link href="../../style/admin.css" rel="stylesheet">
+    <link href="../../style/switch.css" rel="stylesheet">
 
-
-    <script src="js/html5shiv.js"></script>
-    <script src="js/respond.min.js"></script>
+    <script src="../../js/respond.min.js"></script>
 
     <style>
         .bs-docs-section {
@@ -128,12 +126,6 @@
     <!--<p>You account summary</p>-->
     <div class="well well-lg">
         <div class="admin-information">
-            <!--<ul class="pi-nav">-->
-            <!--<li class="edit-information">-->
-            <!--<a href="https://designmodo.com/my-account/edit-address/?address=billing"-->
-            <!--class="icn_pen"><span class="glyphicon glyphicon-edit"></span></a></li>-->
-            <!--</ul>-->
-
             <dl class="myacc-col1">
                 <dt>Available Money</dt>
                 <dd>CNY 100000.000</dd>
@@ -145,26 +137,6 @@
             <dl class="myacc-col3">
                 <dt>Money Action</dt>
                 <dd>
-                    <!--<form id="add_money" method="post" action="/admin/portfolio/coin/item/">-->
-                    <!--<div class="input-group input-group-sm">-->
-                    <!--<span class="input-group-addon">CNY</span>-->
-                    <!--<input type="text" class="form-control" name="cny_money" required id="cny_money">-->
-                    <!--<span class="input-group-btn">-->
-                    <!--<input type="submit" class="btn btn-primary" name="add"   value="Add"/>-->
-                    <!--</span>-->
-                    <!--<span class="input-group-btn">-->
-                    <!--<input type="submit" class="btn btn-danger" name="withdraw" value="Withdraw"/>-->
-                    <!--</span>-->
-                    <!--</div>-->
-                    <!--</form>-->
-                    <!--<div class="btn-group-sm">-->
-                    <!--<div class="col-md-6">-->
-                    <!--<a href="#" class="btn btn-primary btn-sm btn-block">Add</a>-->
-                    <!--</div>-->
-                    <!--<div class="col-md-6">-->
-                    <!--<a href="#" class="btn btn-primary btn-sm btn-block">Withdraw</a>-->
-                    <!--</div>-->
-                    <!--</div>-->
 
                     <div class="btn-group btn-group-sm">
                         <a href="#" class="btn btn-primary btn-sm">&nbsp;&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
@@ -185,27 +157,11 @@
             <dl class="myacc-col3">
                 <dt>BTC Action</dt>
                 <dd>
-                    <!--<form method="post" action="/admin/portfolio/coin/item/">-->
-                    <!--<div class="input-group input-group-sm">-->
-                    <!--<span class="input-group-addon">BTC</span>-->
-                    <!--<input type="text" class="form-control input-lg">-->
-                    <!--<span class="input-group-btn">-->
-                    <!--<input type="submit" class="btn btn-primary" name="add" value="Add"/>-->
-                    <!--</span>-->
-                    <!--<span class="input-group-btn">-->
-                    <!--<input type="submit" class="btn btn-danger" name="withdraw" value="Withdraw"/>-->
-                    <!--</span>-->
-                    <!--</div>-->
-                    <!--</form>-->
                     <div class="btn-group btn-group-sm">
                         <a href="#" class="btn btn-primary btn-sm">&nbsp;&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
                         <a href="#" class="btn btn-danger btn-sm">Withdraw</a>
                     </div>
                 </dd>
-            </dl>
-            <dl class="myacc-col2">
-                <dt>Phone:</dt>
-                <dd>13601884817</dd>
             </dl>
         </div>
     </div>
@@ -321,13 +277,11 @@
             </dl>
             <dl class="myacc-col3">
                 <dt>ID Card</dt>
-                <dd>
-                    Identifier: 3101-1023-90212-3901-209
-                </dd>
+                <dd id="identifier">110101201101019252</dd>
             </dl>
             <dl class="myacc-col1">
                 <dt>Cell Phone Number</dt>
-                <dd>136-0219-8763</dd>
+                <dd id="cellPhone">13602198763</dd>
             </dl>
             <dl class="myacc-col2">
                 <dt>Real Name</dt>
@@ -346,27 +300,34 @@
 
     <div class="well well-lg">
 
-        <div class="row">
-            <div class="col-md-5 col-md-offset-2 text-right"><strong>Logon notification</strong></div>
-            <div class="col-md-2"><input type="checkbox" checked="" disabled data-toggle="switch"/></div>
+        <div class="row pi-nav">
+
+            <div class="col-xs-2 col-md-1">
+                <a href="https://designmodo.com/my-account/edit-address/?address=billing"
+                   class="icn_pen"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-5 col-md-offset-2 text-right"><strong>Change password notification</strong></div>
-            <div class="col-md-2"><input type="checkbox" checked="" disabled data-toggle="switch"/></div>
         </div>
         <div class="row">
-            <div class="col-md-5 col-md-offset-2 text-right"><strong>Change withdraw password notification</strong></div>
-            <div class="col-md-2"><input type="checkbox" checked="" disabled data-toggle="switch"/></div>
+            <div class="col-md-5 col-md-offset-2 text-right"><strong>Logon Alert</strong></div>
+            <div class="col-md-2"><input type="checkbox"  disabled data-toggle="switch"/></div>
         </div>
         <div class="row">
-            <div class="col-md-5 col-md-offset-2 text-right"><strong>Withdraw Money Notification</strong></div>
-            <div class="col-md-2"><input type="checkbox" checked="" disabled data-toggle="switch"/></div>
+            <div class="col-md-5 col-md-offset-2 text-right"><strong>Withdraw Money Alert</strong></div>
+            <div class="col-md-2"><input type="checkbox" checked disabled data-toggle="switch"/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 col-md-offset-2 text-right"><strong>Withdraw Coin Alert</strong></div>
+            <div class="col-md-2"><input type="checkbox" checked disabled data-toggle="switch"/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 col-md-offset-2 text-right"><strong>Execution Alert</strong></div>
+            <div class="col-md-2"><input type="checkbox" checked disabled data-toggle="switch"/></div>
         </div>
 
 
     </div>
-
-
 
 </div>
 
@@ -377,10 +338,12 @@
 
 
 <!-- /container -->
-<script src="js/jquery-1.10.2.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-switch.js"></script>
-<script src="js/icoin.js"></script>
+<script src="../../js/jquery-1.10.2.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="../../js/bootstrap-switch.js"></script>
+<script src="../../js/icoin.js"></script>
+<script src="../../js/jquery.maskedinput.js"></script>
+<script src="../../js/admin.js"></script>
 <!--<script src="http://thrilleratplay.github.io/jquery-validation-bootstrap-tooltip/js/jquery-validate.bootstrap-tooltip.js"></script>-->
 
 

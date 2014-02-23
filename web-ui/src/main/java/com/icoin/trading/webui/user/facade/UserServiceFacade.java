@@ -2,10 +2,12 @@ package com.icoin.trading.webui.user.facade;
 
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.users.domain.model.function.UserPasswordReset;
+import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 import com.icoin.trading.users.query.UserEntry;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,6 +44,25 @@ public interface UserServiceFacade {
                                        Date currentTime);
 
     boolean matchPreviousPassword(String previousPassword);
+
+    void editDetails(String username,
+                     String email,
+                     String cellPhoneNumber,
+                     String firstName,
+                     String lastName);
+
+    public void editAdminDetails(String username,
+                                 String email,
+                                 Identifier identifier,
+                                 String cellPhoneNumber,
+                                 String firstName,
+                                 String lastName,
+                                 List<String> roles);
+
+    void updateNotificationSettings(boolean logonAlert,
+                                    boolean withdrawMoneyAlert,
+                                    boolean withdrawItemAlert,
+                                    boolean executedAlert);
 
     void changePassword(String previousPassword,
                         String newPassword,

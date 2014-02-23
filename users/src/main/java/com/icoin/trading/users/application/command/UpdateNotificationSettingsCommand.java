@@ -27,9 +27,9 @@ public class UpdateNotificationSettingsCommand extends CommandSupport<UpdateNoti
     public UpdateNotificationSettingsCommand(UserId userId,
                                              String username,
                                              boolean logonAlert,
-                                             boolean executedAlert,
                                              boolean withdrawMoneyAlert,
-                                             boolean withdrawItemAlert) {
+                                             boolean withdrawItemAlert,
+                                             boolean executedAlert) {
         this.userId = userId;
         this.username = username;
         this.logonAlert = logonAlert;

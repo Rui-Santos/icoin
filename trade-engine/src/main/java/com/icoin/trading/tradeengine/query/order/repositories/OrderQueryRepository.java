@@ -53,6 +53,12 @@ public interface OrderQueryRepository extends
             "Sort: { 'placeDate' : -1 }")
     List<OrderEntry> findUserActiveOrders(String userId, String orderBookId);
 
+    List<OrderEntry> findActiveHintSellOrders(String orderBookId, int start, int limit);
+
+    List<OrderEntry> findActiveHintBuyOrders(String orderBookId, int start, int limit);
+
+    List<OrderEntry> findAllUserOrders(String userId, int start, int limit);
+
     @Override
     List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate, int limit);
 }

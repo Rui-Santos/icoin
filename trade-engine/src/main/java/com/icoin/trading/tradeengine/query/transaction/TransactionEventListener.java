@@ -130,6 +130,7 @@ public class TransactionEventListener {
 
         TransactionEntry entry = new TransactionEntry();
         entry.setAmountOfItem(event.getTotalItem());
+        entry.setCoinId(event.getCoinId() == null ? "" : event.getCoinId().toString());
         entry.setTotalCommission(event.getTotalCommission());
         entry.setTotalMoney(event.getTotalMoney());
         entry.setPrimaryKey(event.getTransactionIdentifier().toString());

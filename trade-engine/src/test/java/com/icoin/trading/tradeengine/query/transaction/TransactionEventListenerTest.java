@@ -136,6 +136,7 @@ public class TransactionEventListenerTest {
         assertThat(saved.getPrimaryKey(), equalTo(transactionIdentifier.toString()));
         assertThat(saved.getOrderBookIdentifier(), equalTo(orderBookIdentifier.toString()));
         assertThat(saved.getPortfolioIdentifier(), equalTo(portfolioIdentifier.toString()));
+        assertThat(saved.getCoinId(), equalTo(coinIdentifier.toString()));
         assertThat(saved.getState(), equalTo(TransactionState.STARTED));
         assertThat(saved.getType(), equalTo(TransactionType.SELL));
     }

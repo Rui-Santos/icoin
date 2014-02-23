@@ -26,6 +26,8 @@ import com.icoin.trading.webui.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,12 +55,21 @@ public class DashboardController {
         PortfolioEntry portfolio = portfolioRepository.findByUserIdentifier(identifier);
         if (portfolio == null) {
             throw new RuntimeException("You most certainly changed the id of the current logged in user " +
-                                               "and the user did not logout.");
+                    "and the user did not logout.");
         }
         model.addAttribute("portfolio", portfolio);
 
-        List<TransactionEntry> transactions = transactionRepository.findByPortfolioIdentifier(portfolio.getIdentifier());
+        List<TransactionEntry> transactions = transactionRepository.findByPortfolioIdentifier(
+                portfolio.getIdentifier(),
+                new PageRequest(0, 10));
         model.addAttribute("transactions", transactions);
+
+//        PagedListHolder pagedListHolder = new PagedListHolder(); // set total count, if < paged query, no,
+// if>= paged query, search more;
+
+
+//        List<OrderEntry> orders = orderRepository.findAllUserOrders(identifier, 0, 10);
+//        model.addAttribute("orders", orders);
 
         final UserEntry userInfo = userRepository.findOne(identifier);
         model.addAttribute("userInfo", userInfo);

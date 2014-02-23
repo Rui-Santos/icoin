@@ -1,3 +1,4 @@
+<%@ page import="org.springframework.context.i18n.LocaleContextHolder" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -60,7 +61,7 @@
         <h5 class="form-signin-heading text-primary text-center">Or Change your Withdraw password</h5>
 
         <input type="password" id="previousWithdrawPassword" name='previousWithdrawPassword' class="form-control"
-               placeholder="Previous password"
+               placeholder="Previous withdraw password"
                data-placement="right" title="Your Previous password"
                required>
         <form:errors path="previousWithdrawPassword" cssClass="alert-danger" />
@@ -105,6 +106,8 @@
     </form:form>
 </c:if>
 
+<c:set var="lang" value="<%= LocaleContextHolder.getLocale().getLanguage()%>"/>
 <content tag="additionalJs">
+    <script src="${ctx}/js/localization/messages_${lang}.js"></script>
     <script src="${ctx}/js/tooltip.js"></script>
 </content>

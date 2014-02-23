@@ -22,10 +22,13 @@ import com.icoin.trading.tradeengine.query.order.OrderType;
 import com.icoin.trading.tradeengine.query.order.PriceAggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -83,8 +86,70 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepositoryCustom {
         List<PriceAggregate> priceAggregateList = result.getMappedResults();
 
         if (logger.isDebugEnabled()) {
-            logger.debug("aggregation {} found :{}", aggregation, priceAggregateList);
+            logger.debug("findOrderAggregatedPrice {} found :{}", aggregation, priceAggregateList);
         }
         return priceAggregateList;
+    }
+
+    @Override
+    public List<OrderEntry> findAllUserOrders(String userId, int start, int limit) {
+        notNull(userId);
+        isTrue(start >= 0);
+        isTrue(limit > 0);
+
+        final Query query = new Query()
+                .addCriteria(Criteria.where("userId").is(userId))
+                .with(new Sort(Sort.Direction.DESC, "placedDate"))
+                .skip(start)
+                .limit(limit);
+
+        final List<OrderEntry> orders = mongoTemplate.find(query, OrderEntry.class);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("findAllUserOrders Queried with {} : {}", query, orders);
+        }
+        return orders;
+    }
+
+    @Override
+    public List<OrderEntry> findActiveHintSellOrders(String orderBookId, int start, int limit) {
+        notNull(orderBookId);
+        isTrue(start >= 0);
+        isTrue(limit > 0);
+
+        final Query query = new Query()
+                .addCriteria(Criteria.where("orderBookIdentifier").is(orderBookId))
+                .addCriteria(Criteria.where("type").is(OrderType.SELL))
+                .with(new Sort(Sort.Direction.ASC, "itemPrice.amount"))
+                .skip(start)
+                .limit(limit);
+
+        final List<OrderEntry> orders = mongoTemplate.find(query, OrderEntry.class);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("findActiveHintSellOrders Queried with {} : {}", query, orders);
+        }
+        return orders;
+    }
+
+    @Override
+    public List<OrderEntry> findActiveHintBuyOrders(String orderBookId, int start, int limit) {
+        notNull(orderBookId);
+        isTrue(start >= 0);
+        isTrue(limit > 0);
+
+        final Query query = new Query()
+                .addCriteria(Criteria.where("orderBookIdentifier").is(orderBookId))
+                .addCriteria(Criteria.where("type").is(OrderType.BUY))
+                .with(new Sort(Sort.Direction.DESC, "itemPrice.amount"))
+                .skip(start)
+                .limit(limit);
+
+        final List<OrderEntry> orders = mongoTemplate.find(query, OrderEntry.class);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("findActiveHintBuyOrders Queried with {} : {}", query, orders);
+        }
+        return orders;
     }
 }

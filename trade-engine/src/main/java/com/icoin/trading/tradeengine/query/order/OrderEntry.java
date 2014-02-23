@@ -114,7 +114,7 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
         return userId;
     }
 
-    void setUserId(String userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

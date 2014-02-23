@@ -232,9 +232,9 @@ public class UserListenerTest {
 
         assertThat(userEntry, notNullValue());
         assertThat(userEntry.isLogonAlert(), is(false));
-        assertThat(userEntry.isExecutedAlert(), is(true));
         assertThat(userEntry.isWithdrawMoneyAlert(), is(true));
-        assertThat(userEntry.isWithdrawItemAlert(), is(false));
+        assertThat(userEntry.isWithdrawItemAlert(), is(true));
+        assertThat(userEntry.isExecutedAlert(), is(false));
 
         verify(repository).findOne(eq(userId.toString()));
     }

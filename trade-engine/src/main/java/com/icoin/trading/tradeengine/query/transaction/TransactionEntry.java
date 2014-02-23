@@ -29,7 +29,7 @@ public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, 
     private String orderBookIdentifier;
     private String portfolioIdentifier;
 
-    //    private String coinName;
+    private String coinId;
     private BigMoney amountOfItem;
     private BigMoney totalCommission;
     private BigMoney totalMoney;
@@ -86,13 +86,13 @@ public class TransactionEntry extends AuditAwareEntitySupport<TransactionEntry, 
         this.amountOfItem = amountOfItem;
     }
 
-//    public String getCoinName() {
-//        return coinName;
-//    }
-//
-//    public void setCoinName(String coinName) {
-//        this.coinName = coinName;
-//    }
+    public String getCoinId() {
+        return coinId;
+    }
+
+    public void setCoinId(String coinId) {
+        this.coinId = coinId;
+    }
 
     public String getOrderBookIdentifier() {
         return orderBookIdentifier;

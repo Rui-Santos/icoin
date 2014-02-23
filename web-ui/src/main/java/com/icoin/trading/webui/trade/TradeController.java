@@ -86,7 +86,7 @@ public class TradeController {
     @RequestMapping(value = "refresh", method = RequestMethod.GET)
     public String refresh() {
         tradeServiceFacade.refreshOrderBookPrice();
-        return "index";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/coin/{coinId}", method = RequestMethod.GET)
@@ -146,18 +146,18 @@ public class TradeController {
                 initPage(coinId, orderBookEntry, portfolioEntry, model);
                 return "/index";
             }
-
+//
             final TransactionId transactionId = new TransactionId();
             logger.info("placing a sell transaction {} with price {}, amount {}: {}.", transactionId, price, btcAmount, order);
             tradeServiceFacade.sellOrder(transactionId, coinId, currencyPair, orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
             logger.info("Sell order {} dispatched... ", order);
 
-            initPage(coinId, orderBookEntry, portfolioEntry, model);
-            return "redirect:/index";
+//            initPage(coinId, orderBookEntry, portfolioEntry, model);
+            return "redirect:/";
         }
 
 //        initPage(coinId, orderBookEntry, portfolioEntry, model);
-        return "redirect:/index";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.POST)
@@ -203,12 +203,12 @@ public class TradeController {
             tradeServiceFacade.buyOrder(transactionId, coinId, currencyPair, orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
             logger.info("Buy order {} dispatched... ", order);
 
-            initPage(coinId, orderBookEntry, portfolioEntry, model);
-            return "redirect:/index";
+//            initPage(coinId, orderBookEntry, portfolioEntry, model);
+            return "redirect:/";
         }
 
         initPage(coinId, orderBookEntry, portfolioEntry, model);
-        return "redirect:/index";
+        return "redirect:/";
     }
 
 

@@ -55,8 +55,35 @@ public class Identifier extends ValueObjectSupport<Identifier> {
         return type.isValid(number);
     }
 
+    public String getNumber() {
+        return number;
+    }
+
     public String getDisplayDesc() {
         return type.getDesc() + ": " + number;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Identifier that = (Identifier) o;
+
+        if (!number.equals(that.number)) return false;
+        if (type != that.type) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + type.hashCode();
+        result = 31 * result + number.hashCode();
+        return result;
     }
 
     @Override

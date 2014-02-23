@@ -1,5 +1,4 @@
 package com.icoin.trading.users.domain.event;
-
 import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.users.domain.model.user.UserId;
 
@@ -9,7 +8,7 @@ import com.icoin.trading.users.domain.model.user.UserId;
  * @author Jettro Coenradie
  */
 public class NotificationSettingsUpdatedEvent extends EventSupport<NotificationSettingsUpdatedEvent> {
-    private com.icoin.trading.users.domain.model.user.UserId userId;
+    private UserId userId;
 
     private String username;
 
@@ -21,9 +20,9 @@ public class NotificationSettingsUpdatedEvent extends EventSupport<NotificationS
     public NotificationSettingsUpdatedEvent(UserId userId,
                                             String username,
                                             boolean logonAlert,
-                                            boolean executedAlert,
                                             boolean withdrawMoneyAlert,
-                                            boolean withdrawItemAlert) {
+                                            boolean withdrawItemAlert,
+                                            boolean executedAlert) {
         this.userId = userId;
         this.username = username;
         this.logonAlert = logonAlert;

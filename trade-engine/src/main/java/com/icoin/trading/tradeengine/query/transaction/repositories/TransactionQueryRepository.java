@@ -18,6 +18,7 @@ package com.icoin.trading.tradeengine.query.transaction.repositories;
 
 import com.homhon.base.domain.repository.GenericCrudRepository;
 import com.icoin.trading.tradeengine.query.transaction.TransactionEntry;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
@@ -27,5 +28,5 @@ import java.util.List;
  */
 public interface TransactionQueryRepository extends PagingAndSortingRepository<TransactionEntry, String>, GenericCrudRepository<TransactionEntry, String> {
 
-    List<TransactionEntry> findByPortfolioIdentifier(String portfolioIdentifier);
+    List<TransactionEntry> findByPortfolioIdentifier(String portfolioIdentifier, Pageable pageable);
 }

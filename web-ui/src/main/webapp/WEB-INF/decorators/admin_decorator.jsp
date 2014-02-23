@@ -53,8 +53,7 @@
     <link href="${ctx}/style/admin.css" rel="stylesheet">
     <link href="${ctx}/style/switch.css" rel="stylesheet">
 
-    <script src="js/html5shiv.js"></script>
-    <script src="js/respond.min.js"></script>
+    <script src="${ctx}js/respond.min.js"></script>
 
     <decorator:head/>
 </head>

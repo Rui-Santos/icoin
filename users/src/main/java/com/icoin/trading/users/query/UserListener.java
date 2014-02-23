@@ -19,7 +19,9 @@ package com.icoin.trading.users.query;
 import com.homhon.util.Strings;
 import com.icoin.trading.users.domain.event.NotificationSettingsUpdatedEvent;
 import com.icoin.trading.users.domain.event.PasswordChangedEvent;
+import com.icoin.trading.users.domain.event.UserAdminInfoChangedEvent;
 import com.icoin.trading.users.domain.event.UserCreatedEvent;
+import com.icoin.trading.users.domain.event.UserInfoChangedEvent;
 import com.icoin.trading.users.domain.event.WithdrawPasswordChangedEvent;
 import com.icoin.trading.users.domain.event.WithdrawPasswordCreatedEvent;
 import com.icoin.trading.users.domain.model.user.UserId;
@@ -93,6 +95,38 @@ public class UserListener {
     }
 
     @EventHandler
+    public void handleUserInfoChanged(UserInfoChangedEvent event) {
+        UserEntry user = loadUser(event.getUserId(), event.getUsername());
+        if (user == null) {
+            return;
+        }
+
+        user.setLastName(event.getLastName());
+        user.setFirstName(event.getFirstName());
+        user.setEmail(event.getEmail());
+        user.setCellPhoneNumber(event.getMobile());
+
+        userRepository.save(user);
+    }
+
+    @EventHandler
+    public void handleUserAdminInfoChanged(UserAdminInfoChangedEvent event) {
+        UserEntry user = loadUser(event.getUserId(), event.getUsername());
+        if (user == null) {
+            return;
+        }
+
+        user.setLastName(event.getLastName());
+        user.setFirstName(event.getFirstName());
+        user.setIdentifier(event.getIdentifier());
+        user.setEmail(event.getEmail());
+        user.setCellPhoneNumber(event.getMobile());
+        user.setRoles(event.getRoles());
+
+        userRepository.save(user);
+    }
+
+    @EventHandler
     public void handleUpdateNotification(NotificationSettingsUpdatedEvent event) {
         UserEntry user = loadUser(event.getUserId(), event.getUsername());
 
@@ -110,14 +144,14 @@ public class UserListener {
 
     private UserEntry loadUser(UserId userId, String username) {
         if (userId == null || !Strings.hasLength(userId.toString())) {
-            logger.warn("user {} id is empty", username);
+            logger.error("user {} id is empty", username);
             return null;
         }
 
         final UserEntry user = userRepository.findOne(userId.toString());
 
         if (user == null) {
-            logger.warn("user {} cannot be found via id {}", username, userId);
+            logger.error("user {} cannot be found via id {}", username, userId);
             return null;
         }
 

@@ -19,11 +19,12 @@
 <decorators defaultdir="/WEB-INF/decorators">
     <decorator name="admin" page="admin_decorator.jsp">
         <pattern>/dashboard*</pattern>
+        <pattern>/user*</pattern>
+        <pattern>/error*</pattern>
     </decorator>
 
-    <decorator name="user" page="admin_decorator.jsp">
-        <pattern>/user*</pattern>
-    </decorator>
+    <!--<decorator name="user" page="admin_decorator.jsp">-->
+    <!--</decorator>-->
 
     <decorator name="master" page="master.jsp">
         <pattern>/*</pattern>

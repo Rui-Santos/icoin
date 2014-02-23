@@ -19,20 +19,24 @@
 
 <link href="${ctx}/style/sign.css" rel="stylesheet">
 
-<form:form id="forgetPassword" action="/user/forgetPassword" class="form-signin" role="form" modelAttribute="forgetPassword">
-    <h2 class="form-signin-heading">Lost password</h2>
+<div class="container-min-height">
+    <form:form id="forgetPassword" action="/user/forgetPassword" class="form-signin" role="form" modelAttribute="forgetPassword">
+        <h2 class="form-signin-heading">Lost password</h2>
 
-    <div class="input-group input-group-lg">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-        <input type="text" class="form-control"
-               id="email" name='email'
-               placeholder="Email"
-               data-placement="right"
-               required autofocus>
-        <form:errors path="email" cssClass="alert-danger"/>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Reset Password</button>
-</form:form>
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <input type="text" class="form-control"
+                   id="email" name='email'
+                   placeholder="Email"
+                   data-placement="right"
+                   required autofocus>
+            <form:errors path="email" cssClass="alert-danger"/>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Reset Password</button>
+    </form:form>
+</div>
+
+
 <c:set var="lang" value="<%= LocaleContextHolder.getLocale().getLanguage()%>"/>
 
 <content tag="additionalJs">

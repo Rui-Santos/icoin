@@ -21,44 +21,47 @@
 
 <%--<p>You need to login to access this part of the site. Please provided your username and password</p>--%>
 
-<c:if test="${not empty param.login_error}">
-    <div class="alert alert-danger text-center">
-        <p>
-            <strong>Your login attempt was not successful, please try again.</strong>
-        </p>
+<div class="container-min-height">
+    <c:if test="${not empty param.login_error}">
+        <div class="alert alert-danger text-center">
+            <p>
+                <strong>Your login attempt was not successful, please try again.</strong>
+            </p>
 
-        <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
+            <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
                 <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>.
-        </c:if>
+            </c:if>
 
-    </div>
-</c:if>
+        </div>
+    </c:if>
 
-<form:form id="signin" action="/signin/authenticate" class="form-signin" role="form">
-    <h2 class="form-signin-heading">Please sign in</h2>
+    <form:form id="signin" action="/signin/authenticate" class="form-signin" role="form">
+        <h2 class="form-signin-heading">Please sign in</h2>
 
-    <div class="input-group input-group-lg">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-        <input type="text" class="form-control"
-               id="j_username" name='j_username'
-               value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'
-               placeholder="Username"
-               data-placement="right"
-               required autofocus>
-    </div>
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <input type="text" class="form-control"
+                   id="j_username" name='j_username'
+                   value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'
+                   placeholder="Username"
+                   data-placement="right"
+                   required autofocus>
+        </div>
 
-    <div class="input-group input-group-lg">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-        <input type="password" id="j_password" name='j_password' class="form-control"
-               placeholder="Password"
-               data-placement="right"
-               required>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <%--<p><a href="/user/forgetPassword">Lost Password</a> Or <a href="/signup">Sign up</a> with a new account</p>--%>
-    <p class="alert"><a href="/user/forgetPassword" class="alert-link">Lost Password</a> Or <a href="/signup" class="alert-link">Sign up</a></p>
-    <%--<a class="login-link" href="#">Lost your password?</a>--%>
-</form:form>
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            <input type="password" id="j_password" name='j_password' class="form-control"
+                   placeholder="Password"
+                   data-placement="right"
+                   required>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <%--<p><a href="/user/forgetPassword">Lost Password</a> Or <a href="/signup">Sign up</a> with a new account</p>--%>
+        <p class="alert"><a href="/user/forgetPassword" class="alert-link">Lost Password</a> Or <a href="/signup" class="alert-link">Sign up</a></p>
+        <%--<a class="login-link" href="#">Lost your password?</a>--%>
+    </form:form>
+</div>
+
 <c:set var="lang" value="<%= LocaleContextHolder.getLocale().getLanguage()%>"/>
 
 <content tag="additionalJs">

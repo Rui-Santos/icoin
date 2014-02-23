@@ -32,7 +32,7 @@
                                     cache-ref="ehcache"
                                     event-bus="eventBus"
                                     event-store="eventStore">
-        <axon:snapshotter-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
+        <axon:snapshotter-trigger event-count-threshold="40" snapshotter-ref="snapshotter"/>
     </axon:event-sourcing-repository>
 
    <bean id="commissionPolicyFactory" class="com.icoin.trading.tradeengine.domain.model.commission.DefaultCommissionPolicyFactory"/>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="image/favicon.ico">
+    <link rel="icon" href="image/favicon.ico">
+    <title></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Website for BTC & Alt-BTC Trading">
+    <meta name="keywords"
+          content="BTC, ???±?????? BTC, ?±???????° BTC, ???±???????????? BTC, Bitcoin, ?±????????????, ???±?????? ?±????????????, ?±???????° ?±????????????, ???±???????????? ?±????????????, ?????????????° BTC, ?????????°???° BTC, ?????????????° bitcoin, ?????????°???° bitcoin, ?±???????° bitcoin, ???±???????????? bitcoin, echange trading">
+    <meta name="author" content="cooder">
+    <meta name="description" content="Website contaning the Axon sample using a trader application">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js" type="text/javascript"></script>
+    <script src="js/ie8-responsive-file-warning.js"></script>
+    <![endif]-->
+
+    <!-- Bootstrap core CSS -->
+    <link href="style/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="style/jumbotron.css" rel="stylesheet">
+    <link href="style/offcanvas.css" rel="stylesheet">
+    <link href="style/justified-nav.css" rel="stylesheet">
+    <link href="style/btn.css" rel="stylesheet">
+    <link href="style/footer.css" rel="stylesheet">
+    <link href="style/flat-ui.css" rel="stylesheet">
+    <link href="style/sign.css" rel="stylesheet">
+    <link href="style/admin.css" rel="stylesheet">
+    <link href="style/switch.css" rel="stylesheet">
+
+
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+
+    <style>
+        .bs-docs-section {
+            margin-bottom: 60px;
+            max-width: 768px;
+        }
+
+            /*.bs-docs-section:last-child {*/
+            /*margin-bottom: 0*/
+            /*}*/
+
+        .col-centered {
+            float: none;
+            margin: 0 auto;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">iCoin</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#" class="active">Last price:$639.00000</a>
+                </li>
+                <li>
+                    <a href="#">High:$650.15316</a>
+                </li>
+                <li>
+                    <a href="#">Low:$453.29000</a>
+                </li>
+                <li>
+                    <a href="#">Volume:61645 BTC</a>
+                </li>
+            </ul>
+
+
+            <form action="/signin/authenticate" class="navbar-form navbar-right" method="POST">
+                <div class="form-group">
+                    <input type="text" placeholder="Username" name='j_username' class="form-control"
+                           value=''/>
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" class="form-control" name='j_password'/>
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 col-centered">
+            <div class="bs-docs-section  col-centered">
+
+                <!--<h1 id="profile" class="page-header">Profile</h1>-->
+
+                <h3 id="details">Details</h3>
+
+                <p>Your detail information</p>
+
+                <div class="well well-lg">
+
+
+                    <!--<div class="row">-->
+
+                    <form role="form">
+                        <fieldset>
+                            <div class="admin-information">
+
+                                <dl class="myacc-col1">
+                                    <label for="username" class="control-label">Username</label>
+                                    <input type="text" class="form-control" id="username" placeholder="Enter username">
+                                </dl>
+                                <dl class="myacc-col2">
+                                    <label for="username" class="control-label">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter email">
+                                </dl>
+                                <dl class="myacc-col3">
+                                    <label for="identifier" class="control-label">ID Card</label>
+                                    <input type="text" class="form-control" id="identifier"
+                                           placeholder="Enter ID number" disabled>
+                                </dl>
+
+                                <dl class="myacc-col1">
+                                    <label for="cellPhone" class="control-label">Cell Phone Number</label>
+                                    <input type="tel" class="form-control" id="cellPhone" value="99999999922"
+                                           placeholder="Enter phone number">
+                                </dl>
+                                <dl class="myacc-col2">
+                                    <label for="firstName" class="control-label">First Name</label>
+                                    <input type="text" class="form-control" id="firstName"
+                                           placeholder="Enter first name">
+                                </dl>
+                                <dl class="myacc-col3">
+                                    <label for="lastName" class="control-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" placeholder="Enter last name">
+                                </dl>
+                                <button type="submit" class="btn btn-primary pull-right">Save</button>
+                            </div>
+                        </fieldset>
+
+
+                    </form>
+                </div>
+
+                <h3 id="privacy">Privacy</h3>
+
+                <div class="well well-lg">
+                    <form role="form">
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-md-5 col-md-offset-2 text-right"><strong>Logon notification</strong>
+                                </div>
+                                <div class="col-md-2"><input type="checkbox" checked="" data-toggle="switch"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-md-offset-2 text-right"><strong>Change password
+                                    notification</strong></div>
+                                <div class="col-md-2"><input type="checkbox" checked="" data-toggle="switch"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-md-offset-2 text-right"><strong>Change withdraw password
+                                    notification</strong>
+                                </div>
+                                <div class="col-md-2"><input type="checkbox" checked="true" data-toggle="switch"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-md-offset-2 text-right"><strong>Withdraw Money
+                                    Notification</strong></div>
+                                <div class="col-md-2"><input type="checkbox" checked="false" data-toggle="switch"/>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary pull-right">Save</button>
+                        </fieldset>
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- /container -->
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-switch.js"></script>
+<script src="js/icoin.js"></script>
+
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<script src="js/jquery.maskedinput.js"></script>
+<script src="js/adminedit.js"></script>
+<script src="js/messages_en.js"></script>
+
+
+<!--<script src="http://thrilleratplay.github.io/jquery-validation-bootstrap-tooltip/js/jquery-validate.bootstrap-tooltip.js"></script>-->
+
+
+</body>
+
+<script>
+
+</script>
+</html>

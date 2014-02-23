@@ -377,3 +377,7 @@ you can use the generic selector below, but it's slower:
     border-color: #ddd;
     border-color: rgba(0, 0, 0, 0.15);
 }
+
+.container-min-height{
+    min-height: 400px;
+}

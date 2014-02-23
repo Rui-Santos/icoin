@@ -18,8 +18,10 @@ package com.icoin.trading.users.domain.model.user;
 
 import com.icoin.trading.users.domain.event.NotificationSettingsUpdatedEvent;
 import com.icoin.trading.users.domain.event.PasswordChangedEvent;
+import com.icoin.trading.users.domain.event.UserAdminInfoChangedEvent;
 import com.icoin.trading.users.domain.event.UserAuthenticatedEvent;
 import com.icoin.trading.users.domain.event.UserCreatedEvent;
+import com.icoin.trading.users.domain.event.UserInfoChangedEvent;
 import com.icoin.trading.users.domain.event.WithdrawPasswordChangedEvent;
 import com.icoin.trading.users.domain.event.WithdrawPasswordCreatedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -69,11 +71,25 @@ public class User extends AbstractAnnotatedAggregateRoot {
         apply(new WithdrawPasswordCreatedEvent(userId, username, email, encodedPassword, encodedConfirmedPassword, operatingIp, changedTime));
     }
 
+    public void editInfo(String email, String mobile, String firstName, String lastName) {
+        apply(new UserInfoChangedEvent(userId, username, email, mobile, firstName, lastName));
+    }
+
+    public void editAdminInfo(String email, Identifier identifier, String mobile, String firstName, String lastName, List<String> roles) {
+        apply(new UserAdminInfoChangedEvent(userId, username, email, identifier, mobile, firstName, lastName ,roles));
+    }
+
     public void updateNotificationSettings(boolean logonAlert,
-                                           boolean executedAlert,
+                                           boolean withdrawMoneyAlert,
                                            boolean withdrawItemAlert,
-                                           boolean withdrawMoneyAlert) {
-        apply(new NotificationSettingsUpdatedEvent(userId, username, logonAlert, executedAlert, withdrawItemAlert, withdrawMoneyAlert));
+                                           boolean executedAlert) {
+        apply(new NotificationSettingsUpdatedEvent(userId, username, logonAlert, withdrawMoneyAlert, withdrawItemAlert, executedAlert));
+    }
+
+
+    @EventHandler
+    public void onUserInfoChanged(UserInfoChangedEvent event) {
+        this.email = event.getEmail();
     }
 
     @EventHandler

@@ -3,9 +3,12 @@ package com.icoin.trading.users.application.command;
 import com.google.common.collect.ImmutableList;
 import com.homhon.core.exception.IZookeyException;
 import com.icoin.trading.users.domain.PasswordResetTokenGenerator;
+import com.icoin.trading.users.domain.event.NotificationSettingsUpdatedEvent;
 import com.icoin.trading.users.domain.event.PasswordChangedEvent;
+import com.icoin.trading.users.domain.event.UserAdminInfoChangedEvent;
 import com.icoin.trading.users.domain.event.UserAuthenticatedEvent;
 import com.icoin.trading.users.domain.event.UserCreatedEvent;
+import com.icoin.trading.users.domain.event.UserInfoChangedEvent;
 import com.icoin.trading.users.domain.event.WithdrawPasswordChangedEvent;
 import com.icoin.trading.users.domain.event.WithdrawPasswordCreatedEvent;
 import com.icoin.trading.users.domain.model.function.TooManyResetsException;
@@ -370,10 +373,10 @@ public class UserCommandHandlerTest {
         userEntry.setIdentifier(identifier);
         when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
 
-        String newPassword = passwordEncoder.encode("newPassword");
+        String newPassword = "newPassword";
         ChangePasswordCommand command = new ChangePasswordCommand(aggregateIdentifier,
                 "buyer1",
-                passwordEncoder.encode("buyer1"),
+                "buyer1",
                 newPassword,
                 newPassword,
                 operatingIp,
@@ -453,13 +456,13 @@ public class UserCommandHandlerTest {
 
     @Test
     public void testHandlePasswordReset() throws Exception {
-        UserId aggregateIdentifier = new UserId();
+        final UserId aggregateIdentifier = new UserId();
         final String operatingIp = "223.124.18.123";
         final String email = "buyer1@163.com";
         final String username = "buyer1";
         final String generatedToken = "sdfoasop932723l3i47895df";
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
-        Date changedTime = currentTime();
+        final Date changedTime = currentTime();
 
         UserEntry userEntry = new UserEntry();
         userEntry.setUsername("buyer1");
@@ -604,4 +607,132 @@ public class UserCommandHandlerTest {
                                         passwordEncoder,
                                         "buyer1"))));
     }
-} 
+
+    @Test
+    public void testHandleUpdateNotificationCommand() {
+        UserId aggregateIdentifier = new UserId();
+        final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
+
+        UserEntry userEntry = new UserEntry();
+        userEntry.setUsername("buyer1");
+        userEntry.setPrimaryKey(aggregateIdentifier.toString());
+        userEntry.setLastName("Buyer One");
+        userEntry.setFirstName("Mr");
+        userEntry.setIdentifier(identifier);
+        when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
+
+        UpdateNotificationSettingsCommand command = new UpdateNotificationSettingsCommand(aggregateIdentifier,
+                "buyer1",
+                true,
+                false,
+                true,
+                false);
+
+        fixture.given(new UserCreatedEvent(aggregateIdentifier,
+                "buyer1",
+                "Mr",
+                "Buyer One",
+                identifier,
+                "buyer1@163.com",
+                passwordEncoder.encode("buyer1"),
+                UserCommandHandler.DEFAULT_ROLES))
+                .when(command)
+                .expectEvents(
+                        new NotificationSettingsUpdatedEvent(
+                                aggregateIdentifier,
+                                "buyer1",
+                                true,
+                                false,
+                                true,
+                                false));
+    }
+
+    @Test
+    public void testHandleChangeInfoCommand() {
+        final UserId aggregateIdentifier = new UserId();
+        final String email = "buyer1@163.com";
+        final String username = "buyer1";
+        final String phone = "13232321";
+        final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
+
+        UserEntry userEntry = new UserEntry();
+        userEntry.setUsername(username);
+        userEntry.setPrimaryKey(aggregateIdentifier.toString());
+        userEntry.setLastName("Buyer One");
+        userEntry.setFirstName("Mr");
+        userEntry.setIdentifier(identifier);
+        when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
+
+        ChangeInfoCommand command = new ChangeInfoCommand(aggregateIdentifier,
+                username,
+                email,
+                phone,
+                "Mr",
+                "Buyer One");
+
+        fixture.given(new UserCreatedEvent(aggregateIdentifier,
+                "buyer1",
+                "Mr",
+                "Buyer One",
+                identifier,
+                "buyer1@163.com",
+                passwordEncoder.encode("buyer1"),
+                UserCommandHandler.DEFAULT_ROLES))
+                .when(command)
+                .expectEvents(
+                        new UserInfoChangedEvent(
+                                aggregateIdentifier,
+                                username,
+                                email,
+                                phone,
+                                "Mr",
+                                "Buyer One"));
+    }
+
+    @Test
+    public void testHandleChangeAdminInfoCommand() {
+        final UserId aggregateIdentifier = new UserId();
+        final String email = "buyer1@163.com";
+        final String username = "buyer1";
+        final String phone = "13232321";
+        final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
+        final List<String> roles = ImmutableList.of("user", "admin");
+
+        UserEntry userEntry = new UserEntry();
+        userEntry.setUsername(username);
+        userEntry.setPrimaryKey(aggregateIdentifier.toString());
+        userEntry.setLastName("Buyer One");
+        userEntry.setFirstName("Mr");
+        userEntry.setIdentifier(identifier);
+        when(userQueryRepository.findByUsername("buyer1")).thenReturn(userEntry);
+
+        ChangeAdminInfoCommand command = new ChangeAdminInfoCommand(aggregateIdentifier,
+                username,
+                email,
+                identifier,
+                phone,
+                "Mr",
+                "Buyer One",
+                roles);
+
+        fixture.given(new UserCreatedEvent(aggregateIdentifier,
+                "buyer1",
+                "Mr",
+                "Buyer One",
+                identifier,
+                email,
+                passwordEncoder.encode("buyer1"),
+                UserCommandHandler.DEFAULT_ROLES))
+                .when(command)
+                .expectEvents(
+                        new UserAdminInfoChangedEvent(
+                                aggregateIdentifier,
+                                username,
+                                email,
+                                identifier,
+                                phone,
+                                "Mr",
+                                "Buyer One",
+                                roles));
+    }
+}

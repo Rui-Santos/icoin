@@ -17,6 +17,7 @@
 package com.icoin.trading.webui.init;
 
 import com.google.common.collect.ImmutableList;
+import com.homhon.core.exception.IZookeyException;
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.application.command.admin.EnsureCqrsIndexesCommand;
 import com.icoin.trading.tradeengine.application.command.admin.ReinitializeOrderBookTradingExecutorsCommand;
@@ -47,6 +48,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>Initializes the repository with a number of users, coins and order books</p>
@@ -97,14 +99,21 @@ public class SystemInit {
     public void createItems() {
         reinstallDB();
 
-        UserId buyer1 = createuser("Buyer One", "buyer1");
-        UserId buyer2 = createuser("Buyer two", "buyer2");
-        UserId buyer3 = createuser("Buyer three", "buyer3");
-        UserId buyer4 = createuser("Buyer four", "buyer4");
-        UserId buyer5 = createuser("Buyer five", "buyer5");
-        UserId buyer6 = createuser("Buyer six", "buyer6");
+        UserId buyer1 = createUser("Buyer One", "buyer1");
+        UserId buyer2 = createUser("Buyer two", "buyer2");
+        UserId buyer3 = createUser("Buyer three", "buyer3");
+        UserId buyer4 = createUser("Buyer four", "buyer4");
+        UserId buyer5 = createUser("Buyer five", "buyer5");
+        UserId buyer6 = createUser("Buyer six", "buyer6");
 
         createCoins();
+
+//        try {
+//            TimeUnit.MILLISECONDS.sleep(500L);
+//        } catch (InterruptedException e) {
+//            logger.error("System initialization interrupted!");
+//            throw new IZookeyException("System initialization interrupted!");
+//        }
 
         addMoney(buyer1, BigDecimal.valueOf(100000));
         addItems(buyer1, "BTC", BigDecimal.valueOf(10000l));
@@ -119,7 +128,9 @@ public class SystemInit {
     }
 
     private void addItems(UserId user, String coinId, BigDecimal amount) {
+        logger.info("to find user id {}", user);
         PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(user.toString());
+        logger.info("to find user id {}", user);
         AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
                 new CoinId(coinId),
@@ -180,7 +191,7 @@ public class SystemInit {
         commandGateway.send(command);
     }
 
-    private UserId createuser(String longName, String username) {
+    private UserId createUser(String longName, String username) {
         UserId userId = new UserId();
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
         CreateUserCommand command =
@@ -193,7 +204,7 @@ public class SystemInit {
                         username,
                         username,
                         ImmutableList.of("ROLE_USER", "ROLE_ADMIN"));
-        commandGateway.send(command);
+        commandGateway.sendAndWait(command);
         return userId;
     }
 }

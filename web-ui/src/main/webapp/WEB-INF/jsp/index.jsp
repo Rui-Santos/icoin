@@ -299,7 +299,7 @@
         <div class="panel-body">
             <table class="table table-condensed table-hover">
                 <thead>
-                <tr >
+                <tr>
                     <th class="text-center">Buy/Sell</th>
                     <th class="text-center">Price</th>
                     <th class="text-center">Amount</th>

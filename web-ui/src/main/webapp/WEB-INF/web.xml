@@ -28,8 +28,8 @@
     </context-param>
 
     <!--<context-param>-->
-        <!--<param-name>contextInitializerClasses</param-name>-->
-        <!--<param-value>com.icoin.trading.webui.init.CloudApplicationContextInitializer</param-value>-->
+    <!--<param-name>contextInitializerClasses</param-name>-->
+    <!--<param-value>com.icoin.trading.webui.init.CloudApplicationContextInitializer</param-value>-->
     <!--</context-param>-->
 
     <context-param>
@@ -71,7 +71,7 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    
+
     <listener>
         <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
     </listener>
@@ -158,5 +158,10 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/error</location>
+    </error-page>
 
 </web-app>

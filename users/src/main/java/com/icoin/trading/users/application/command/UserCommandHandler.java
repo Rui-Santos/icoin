@@ -188,6 +188,7 @@ public class UserCommandHandler {
     @CommandHandler
     public void handleChangePassword(ChangePasswordCommand command) {
         notNull(command.getUserId());
+        hasLength(command.getUserId().toString(), "user Id cannot be empty");
         hasLength(command.getConfirmPassword());
         hasLength(command.getPassword());
         isTrue(command.isValid(), "The password and confirmed password should be the same, but password should be different from previous one!");
@@ -202,7 +203,7 @@ public class UserCommandHandler {
         final String password = user.getPassword();
 
         final boolean matches = passwordEncoder.matches(command.getPreviousPassword(), password);
-        if (matches) {
+        if (!matches) {
             logger.warn("user {}, id {}, password not matched for previous to change.", command.getUsername(), command.getUserId());
             return;
         }
@@ -285,11 +286,11 @@ public class UserCommandHandler {
 
         user.updateNotificationSettings(
                 command.isLogonAlert(),
-                command.isExecutedAlert(),
+                command.isWithdrawMoneyAlert(),
                 command.isWithdrawItemAlert(),
-                command.isWithdrawMoneyAlert());
+                command.isExecutedAlert());
 
-        logger.info("userid {}, username {} has updated notification!", command.getUserId(), command.getUsername(), command);
+        logger.info("userid {}, username {} has updated notification info {}!", command.getUserId(), command.getUsername(), command);
     }
 
     private void clearPasswordResetTokens(String userId, String userName) {
@@ -313,6 +314,49 @@ public class UserCommandHandler {
             }
         }
         throw new IZookeyException("Cannot generate password token!");
+    }
+
+    @CommandHandler
+    public void handleChangeInfoCommand(ChangeInfoCommand command) {
+        notNull(command.getUserId(), "userid should not be empty");
+        hasLength(command.getUserId().toString(), "user Id cannot be empty");
+        hasLength(command.getUsername(), "username should not be empty");
+
+        User user = repository.load(command.getUserId());
+
+        if (user == null) {
+            logger.warn("cannot find user {}", command.getUserId());
+            return;
+        }
+
+        user.editInfo(command.getEmail(), command.getMobile(), command.getFirstName(), command.getLastName());
+
+        logger.info("userid {}, username {} has changed info {}!", command.getUserId(), command.getUsername(), command);
+    }
+
+    @CommandHandler
+    public void handleChangeAdminInfoCommand(ChangeAdminInfoCommand command) {
+        notNull(command.getUserId(), "userid should not be empty");
+        hasLength(command.getUserId().toString(), "user Id cannot be empty");
+        hasLength(command.getUsername(), "username should not be empty");
+        isTrue(command.isValid(), String.format("command %s is not validate", command));
+
+        User user = repository.load(command.getUserId());
+
+        if (user == null) {
+            logger.warn("cannot find user {}", command.getUserId());
+            return;
+        }
+
+        user.editAdminInfo(
+                command.getEmail(),
+                command.getIdentifier(),
+                command.getMobile(),
+                command.getFirstName(),
+                command.getLastName(),
+                command.getRoles());
+
+        logger.info("userid {}, username {} has changed admin info {}!", command.getUserId(), command.getUsername(), command);
     }
 
 

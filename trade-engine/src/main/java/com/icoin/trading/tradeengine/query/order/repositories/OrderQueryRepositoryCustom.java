@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.query.order.repositories;
 
+import com.icoin.trading.tradeengine.query.order.OrderEntry;
 import com.icoin.trading.tradeengine.query.order.OrderType;
 import com.icoin.trading.tradeengine.query.order.PriceAggregate;
 
@@ -28,4 +29,10 @@ import java.util.List;
 public interface OrderQueryRepositoryCustom {
 
     List<PriceAggregate> findOrderAggregatedPrice(String orderBookIdentifier, OrderType type, Date toDate, int limit);
+
+    List<OrderEntry> findAllUserOrders(String userId, int start, int limit);
+
+    List<OrderEntry> findActiveHintSellOrders(String orderBookId, int start, int limit);
+
+    List<OrderEntry> findActiveHintBuyOrders(String orderBookId, int start, int limit);
 }
