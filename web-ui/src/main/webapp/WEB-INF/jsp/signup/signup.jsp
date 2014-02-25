@@ -174,5 +174,6 @@
 <%--<script src="${ctx}/js/jquery.validate.min.js"></script>--%>
     <script type="text/javascript" src="${ctx}/js/localization/messages_${lang}.js"></script>
     <script src="${ctx}/js/tooltip.js"></script>
+    <script src="${ctx}/js/jquery.maskedinput.js"></script>
     <script src="${ctx}/js/signup.js"></script>
 </content>

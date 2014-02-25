@@ -182,7 +182,7 @@
                     <label id="balanceToBuy" class="col-sm-5  form-control-static text-success">
                         <fmt:formatNumber value="${buyOrder.balance}" type="number" pattern="#.##"/>
                     </label>
-                    <label class="col-sm-1  form-control-static text-info">BTC</label>
+                    <label class="col-sm-1  form-control-static text-info">CNY</label>
                 </div>
                 <div class="form-group">
                     <label for="amountToBuy" class="col-sm-5 control-label"><spring:message code="order.buyAmount"/></label>
