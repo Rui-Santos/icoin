@@ -379,10 +379,10 @@
                     </td>
                     <td class="text-center"><c:out value="${trade.tradeType}"/></td>
                     <td class="text-center">
-                        <fmt:formatNumber value="${trade.tradedAmount.amount}" type="number" pattern="#.####"/>
+                        <fmt:formatNumber value="${trade.tradedPrice.amount}" type="number" pattern="#.####"/>
                     </td>
                     <td class="text-center">
-                        <fmt:formatNumber value="${trade.tradedPrice.amount}" type="number" pattern="#.##" currencyCode="CNY"/>
+                        <fmt:formatNumber value="${trade.tradedAmount.amount}" type="number" pattern="#.##" currencyCode="CNY"/>
                     </td>
                     <td class="text-center">
                         <fmt:formatNumber value="${trade.tradedAmount.amount * trade.tradedPrice.amount}" type="number" pattern="#.##" currencyCode="CNY"/>
