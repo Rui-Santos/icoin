@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
@@ -210,7 +211,7 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     }
 
     @Override
-    public List<TradeExecutedEntry> findExecutedTradesByOrderBookIdentifier(String orderBookIdentifier) {
+    public List<TradeExecutedEntry> findExecutedTrades(String orderBookIdentifier) {
         if (orderBookIdentifier == null) {
             return Collections.emptyList();
         }
@@ -240,11 +241,12 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
     @Override
     public List<OrderEntry> findOrderForOrderBook(String orderBookIdentifier,
                                                   OrderType type,
-                                                  OrderStatus orderStatus) {
+                                                  OrderStatus orderStatus,
+                                                  Pageable pageable) {
         if (orderBookIdentifier == null || type == null || orderStatus == null) {
             return Collections.emptyList();
         }
-        return orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(orderBookIdentifier, type, orderStatus);
+        return orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(orderBookIdentifier, type, orderStatus, pageable);
     }
 
     @Override

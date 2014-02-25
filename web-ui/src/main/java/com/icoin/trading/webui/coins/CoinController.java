@@ -98,13 +98,15 @@ public class CoinController {
                 orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
                         bookEntry.getPrimaryKey(),
                         OrderType.BUY,
-                        OrderStatus.PENDING);
+                        OrderStatus.PENDING,
+                        new PageRequest(0, 100));
 
         final List<OrderEntry> sellOrders =
                 orderQueryRepository.findByOrderBookIdentifierAndTypeAndOrderStatus(
                         bookEntry.getPrimaryKey(),
                         OrderType.SELL,
-                        OrderStatus.PENDING);
+                        OrderStatus.PENDING,
+                        new PageRequest(0, 100));
 
         List<TradeExecutedEntry> executedTrades = tradeExecutedRepository.findByOrderBookIdentifier(bookEntry
                 .getPrimaryKey(), new PageRequest(0,20, Sort.Direction.DESC, "tradeTime"));

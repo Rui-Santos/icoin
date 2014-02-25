@@ -205,15 +205,15 @@ $(document).ready(function () {
         $('#feeToBuy').number(true, 3);
     });
 
-    $('#amountToBuy').number(true, 6);
+    $('#amountToBuy').number(true, 4);
     $('#priceToBuy').number(true, 3);
     $('#totalToBuy').number(true, 3);
     $('#feeToBuy').number(true, 3);
 
-    $('#amountToSell').number(true, 6);
+    $('#amountToSell').number(true, 4);
     $('#priceToSell').number(true, 3);
-    $('#totalToSell').number(true, 6);
-    $('#feeToSell').number(true, 6);
+    $('#totalToSell').number(true, 4);
+    $('#feeToSell').number(true, 4);
 });
 
 

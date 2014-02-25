@@ -20,6 +20,7 @@ import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -100,16 +101,17 @@ public class TradeController {
                 tradeServiceFacade.findOrderForOrderBook(
                         bookEntry.getPrimaryKey(),
                         OrderType.BUY,
-                        OrderStatus.PENDING);
+                        OrderStatus.PENDING,
+                        new PageRequest(0,50));
 
         final List<OrderEntry> sellOrders =
                 tradeServiceFacade.findOrderForOrderBook(
                         bookEntry.getPrimaryKey(),
                         OrderType.SELL,
-                        OrderStatus.PENDING);
+                        OrderStatus.PENDING,
+                        new PageRequest(0,50));
 
-        List<TradeExecutedEntry> executedTrades = tradeServiceFacade.findExecutedTradesByOrderBookIdentifier(bookEntry
-                .getPrimaryKey());
+        List<TradeExecutedEntry> executedTrades = tradeServiceFacade.findExecutedTrades(bookEntry.getPrimaryKey());
         model.addAttribute("coin", coin);
         model.addAttribute("sellOrders", sellOrders);
         model.addAttribute("buyOrders", buyOrders);
@@ -157,7 +159,7 @@ public class TradeController {
         }
 
 //        initPage(coinId, orderBookEntry, portfolioEntry, model);
-        return "redirect:/";
+        return "/index";
     }
 
     @RequestMapping(value = "/buy/{coinId}", method = RequestMethod.POST)
@@ -207,8 +209,8 @@ public class TradeController {
             return "redirect:/";
         }
 
-        initPage(coinId, orderBookEntry, portfolioEntry, model);
-        return "redirect:/";
+//        initPage(coinId, orderBookEntry, portfolioEntry, model);
+        return "/index";
     }
 
 
@@ -235,7 +237,7 @@ public class TradeController {
                     OrderType.SELL,
                     currentTime());
 
-            executedTrades = tradeServiceFacade.findExecutedTradesByOrderBookIdentifier(orderBookEntry.getPrimaryKey());
+            executedTrades = tradeServiceFacade.findExecutedTrades(orderBookEntry.getPrimaryKey());
 
             if (portfolioEntry != null) {
                 activeOrders = tradeServiceFacade.findUserActiveOrders(portfolioEntry.getPrimaryKey(), orderBookEntry.getPrimaryKey());

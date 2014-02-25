@@ -33,6 +33,19 @@
     <script src="js/html5shiv.js"></script>
     <script src="js/respond.min.js"></script>
     <![endif]-->
+
+    <style>
+        /*#sellModal*/
+        /*{*/
+            /*width: 300px;*/
+            /*margin-top: 0px !important;*/
+            /*margin-left:  0px !important;*/
+        /*}*/
+        /*#sellModal .modal-body {*/
+            /*max-height: 200px; !important*/
+           /*width: 300px;*/
+        /*}*/
+    </style>
 </head>
 
 <body>
@@ -152,9 +165,68 @@
                                     <label class="col-sm-1  form-control-static text-info">BTC</label>
                                 </div>
 
+                                <!--<div class="modal hide fade" id="abc">-->
+                                    <!--<div class="modal-header">-->
+                                        <!--<a href="#" class="btn btn-success pull-right" data-dismiss="modal">×</a>-->
+                                        <!--<h4>Welcome to technicalkeeda.com</h4>-->
+                                    <!--</div>-->
+                                    <!--<div class="modal-body">-->
+                                        <!--<form method="post" action='<?= base_url();?>/login' name="loginForm">-->
+                                            <!--<p><input type="text" class="span3" name="email" id="email" placeholder="Enter Email" value=""></p>-->
+                                            <!--<p><input type="password" class="span3" id="loginPassword" name="loginPassword" placeholder="Enter Password"></p>-->
+                                            <!--<p><button type="submit" class="btn btn-success">Sign in</button> <a href="<?= base_url();?>/forgotpassword">Forgot Password</a></p>-->
+                                        <!--</form>-->
+                                    <!--</div>-->
+                                <!--</div>-->
 
 
-                                <button type="submit" id="sellSubmit" class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
+
+
+                                <div id="sellModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+
+                                            <!--<div class="modal-header">-->
+                                                <!--<button type="button" class="btn btn-warning btn-sm pull-right" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                                                <!--<h4 class="modal-title" id="myModalLabel">Input your exchange password</h4>-->
+                                            <!--</div>-->
+                                            <div class="modal-body">
+                                                <!--<h4 class="text-center">Input your exchange password</h4>-->
+                                                <!--<div class="form-group">-->
+                                                <!--<label for="sellPassword" class="col-sm-5 control-label">Exchange password</label>-->
+
+                                                    <!--<input id="sellPassword" name="sellPassword" placeholder="Exchange Password" class="form-control" type="password" value=""/>-->
+                                                <!--</div>-->
+                                                <!--<h4 class="text-center">Input your exchange password</h4>-->
+                                                <div class="form-group">
+                                                    <label for="sellPassword" class="col-sm-4 control-label">Exchange password</label>
+                                                    <div class="input-group col-sm-6">
+                                                        <input id="sellPassword" name="sellPassword" placeholder="Your exchange password" class="form-control" type="password" value=""/>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-5 col-md-offset-4">
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Confirm</button>
+                                                            <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal" aria-hidden="true">
+                                                                Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--<div class="modal-footer">-->
+                                            <!--</div>-->
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+
+                                <button type="submit" id="sellSubmit" data-toggle="modal" data-target="#sellModal"
+                                        class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
                             </form>
                         </div>
                     </div>

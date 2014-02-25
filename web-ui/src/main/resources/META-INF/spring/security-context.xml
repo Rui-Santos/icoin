@@ -57,6 +57,7 @@
     <http auto-config='true' use-expressions="true">
         <intercept-url pattern="/index.html" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/" access="isAnonymous() or isAuthenticated()"/>
+        <intercept-url pattern="/displayError" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/data/**" access="isAnonymous() or isAuthenticated()"/>
         <intercept-url pattern="/auth/**" access="permitAll"/>
         <intercept-url pattern="/signin/**" access="permitAll"/>

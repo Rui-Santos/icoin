@@ -164,7 +164,7 @@ public class TradeControllerTest {
         verify(tradeServiceFacade).findOrderAggregatedPrice(eq(orderBookEntry.getPrimaryKey()),
                 eq(OrderType.SELL),
                 any(Date.class));
-        verify(tradeServiceFacade).findExecutedTradesByOrderBookIdentifier(eq(orderBookEntry.getPrimaryKey()));
+        verify(tradeServiceFacade).findExecutedTrades(eq(orderBookEntry.getPrimaryKey()));
         verify(tradeServiceFacade).findUserActiveOrders(eq(portfolioEntry.getPrimaryKey()), eq(orderBookEntry.getPrimaryKey()));
         verify(tradeServiceFacade).loadOrderBookByCurrencyPair(eq(TradeController.DEFAULT_CCY_PAIR));
         verify(tradeServiceFacade).calculateBuyOrderEffectiveAmount(any(BuyOrder.class));
@@ -229,7 +229,7 @@ public class TradeControllerTest {
         verify(tradeServiceFacade).findOrderAggregatedPrice(eq(orderBookEntry.getPrimaryKey()),
                 eq(OrderType.SELL),
                 any(Date.class));
-        verify(tradeServiceFacade).findExecutedTradesByOrderBookIdentifier(eq(orderBookEntry.getPrimaryKey()));
+        verify(tradeServiceFacade).findExecutedTrades(eq(orderBookEntry.getPrimaryKey()));
         verify(tradeServiceFacade).findUserActiveOrders(eq(portfolioEntry.getPrimaryKey()),eq(orderBookEntry.getPrimaryKey()));
         verify(tradeServiceFacade).loadOrderBookByCurrencyPair(eq(TradeController.DEFAULT_CCY_PAIR));
         verify(tradeServiceFacade).calculateSellOrderEffectiveAmount(any(SellOrder.class));

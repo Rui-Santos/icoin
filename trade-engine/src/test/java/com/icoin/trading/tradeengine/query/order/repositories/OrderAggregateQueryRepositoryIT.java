@@ -99,8 +99,55 @@ public class OrderAggregateQueryRepositoryIT {
                 OrderStatus.PENDING
         );
 
-        repository.save(Lists.newArrayList(sellOrder1, sellOrder2, sellOrder3, sellOrder4, sellOrder5));
+        final OrderEntry buyOrder1 = createBuyOrder(
+                Constants.CURRENCY_UNIT_BTC,
+                1027654.4998777,
+                1027654.4998777,
+                1034.56767,
+                date.toDate(),
+                OrderStatus.PENDING
+        );
 
+        final OrderEntry buyOrder2 = createBuyOrder(
+                Constants.CURRENCY_UNIT_BTC,
+                10.5,
+                0,
+                1034.56767,
+                date.toDate(),
+                OrderStatus.DONE
+        );
+
+
+        final OrderEntry buyOrder3 = createBuyOrder(
+                Constants.CURRENCY_UNIT_BTC,
+                10.5,
+                1,
+                1034.56767,
+                date.toDate(),
+                OrderStatus.DONE
+        );
+
+
+        final OrderEntry buyOrder4 = createBuyOrder(
+                Constants.CURRENCY_UNIT_BTC,
+                10.5,
+                1,
+                1000,
+                date.toDate(),
+                OrderStatus.PENDING
+        );
+
+        final OrderEntry buyOrder5 = createBuyOrder(
+                Constants.CURRENCY_UNIT_BTC,
+                15.5,
+                1,
+                1000,
+                date.toDate(),
+                OrderStatus.PENDING
+        );
+
+        repository.save(Lists.newArrayList(sellOrder1, sellOrder2, sellOrder3, sellOrder4, sellOrder5));
+        repository.save(Lists.newArrayList(buyOrder1, buyOrder2, buyOrder3, buyOrder4, buyOrder5));
     }
 
     private OrderEntry createSellOrder(
@@ -143,12 +190,35 @@ public class OrderAggregateQueryRepositoryIT {
     }
 
     @Test
-    public void testFindOrderAggregatedPrice() throws Exception {
+    public void testFindSellOrderAggregatedPrice() throws Exception {
 
         final List<PriceAggregate> aggregateList =
                 repository.findOrderAggregatedPrice(
                         orderBookId.toString(),
                         OrderType.SELL,
+                        date.toDate(),
+                        10);
+
+        assertThat(aggregateList, hasSize(2));
+        final PriceAggregate priceAggregate1 = aggregateList.get(0);
+        final PriceAggregate priceAggregate2 = aggregateList.get(1);
+
+        assertThat(priceAggregate1.getPrice().isEqual(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 1000)), is(true));
+        assertThat(priceAggregate1.getSumUpAmountPerPrice().isEqual(BigMoney.of(Constants.CURRENCY_UNIT_BTC, 2)), is(true));
+        assertThat(priceAggregate1.getTotal().isEqual(Money.of(Constants.DEFAULT_CURRENCY_UNIT, 2000, RoundingMode.HALF_EVEN)), is(true));
+
+        assertThat(priceAggregate2.getPrice().isEqual(BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 1034.568)), is(true));
+        assertThat(priceAggregate2.getSumUpAmountPerPrice().isEqual(BigMoney.of(Constants.CURRENCY_UNIT_BTC, 1027654.4998777)), is(true));
+        assertThat(priceAggregate2.getTotal().isEqual(Money.of(Constants.DEFAULT_CURRENCY_UNIT, 1027654.4998777D * 1034.568D, RoundingMode.HALF_EVEN)), is(true));
+    }
+
+    @Test
+    public void testFindBuyOrderAggregatedPrice() throws Exception {
+
+        final List<PriceAggregate> aggregateList =
+                repository.findOrderAggregatedPrice(
+                        orderBookId.toString(),
+                        OrderType.BUY,
                         date.toDate(),
                         10);
 

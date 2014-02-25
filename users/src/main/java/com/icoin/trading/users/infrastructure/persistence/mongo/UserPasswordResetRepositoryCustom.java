@@ -16,24 +16,16 @@ import java.util.List;
  * Time: PM8:53
  * To change this template use File | Settings | File Templates.
  */
-public interface UserPasswordResetRepositoryMongo extends
-        UserPasswordResetRepository,
-        PagingAndSortingRepository<UserPasswordReset, String>,
-        GenericCrudRepository<UserPasswordReset, String>,
-        UserPasswordResetRepositoryCustom {
+public interface UserPasswordResetRepositoryCustom {
 
-//    @Query(value = "{ 'email' : ?0 , " +
-//            "'ip' : ?1 , " +
-//            "'expirationDate' : {'$gte': ?2, '$lt': ?3} }, " +
-//            "Sort: { 'expirationDate' : -1 }")
+    @Query(value = "{ 'email' : ?0 , " +
+            "'ip' : ?1 , " +
+            "'expirationDate' : {'$gte': ?2, '$lt': ?3} }, " +
+            "Sort: { 'expirationDate' : -1 }")
     List<UserPasswordReset> findNotExpiredByEmail(String email, String ip, Date fromDate, Date currentDate);
 
-//    @Query(value = "{ 'email' : ?0 , " +
-//            "'expirationDate' : {'$gte': ?1, '$lt': ?2} }, " +
-//            "Sort: { 'expirationDate' : -1 }")
+    @Query(value = "{ 'email' : ?0 , " +
+            "'expirationDate' : {'$gte': ?1, '$lt': ?2} }, " +
+            "Sort: { 'expirationDate' : -1 }")
     List<UserPasswordReset> findNotExpiredByEmail(String email, Date fromDate, Date currentDate);
-
-    List<UserPasswordReset> findByUsername(String username);
-
-    UserPasswordReset findByToken(String token);
 }

@@ -35,8 +35,10 @@ import java.util.Date;
 import java.util.List;
 
 import static com.homhon.util.Asserts.hasLength;
+import static com.homhon.util.Asserts.hasText;
 import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
@@ -77,7 +79,8 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepositoryCustom {
                         .and(Fields.field("priceCurrency", "itemPrice.currency"))
                         .and(Fields.field("amountCurrency", "itemRemaining.currency")))
                         .sum("itemRemaining.amount").as("sumUpAmountPerPrice"),
-                sort(DESC, previousOperation()),
+                type == OrderType.BUY ? sort(DESC, previousOperation(), "itemPrice.amount") : sort(ASC, previousOperation(), "itemPrice.amount"),
+//                sort(DESC, "itemPrice.amount"),
                 limit(limit)
         );
 
@@ -111,7 +114,6 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepositoryCustom {
         return orders;
     }
 
-    @Override
     public List<OrderEntry> findActiveHintSellOrders(String orderBookId, int start, int limit) {
         notNull(orderBookId);
         isTrue(start >= 0);
@@ -132,7 +134,6 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepositoryCustom {
         return orders;
     }
 
-    @Override
     public List<OrderEntry> findActiveHintBuyOrders(String orderBookId, int start, int limit) {
         notNull(orderBookId);
         isTrue(start >= 0);
@@ -144,6 +145,25 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepositoryCustom {
                 .with(new Sort(Sort.Direction.DESC, "itemPrice.amount"))
                 .skip(start)
                 .limit(limit);
+
+        final List<OrderEntry> orders = mongoTemplate.find(query, OrderEntry.class);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("findActiveHintBuyOrders Queried with {} : {}", query, orders);
+        }
+        return orders;
+    }
+
+    @Override
+    public List<OrderEntry> findUserActiveOrders(String userId, String orderBookId) {
+        hasText(userId);
+        hasText(orderBookId);
+
+        final Query query = new Query()
+                .addCriteria(Criteria.where("userId").is(userId))
+                .addCriteria(Criteria.where("orderBookIdentifier").is(orderBookId))
+                .addCriteria(Criteria.where("orderStatus").is(OrderStatus.PENDING))
+                .with(new Sort(Sort.Direction.DESC, "placedDate"));
 
         final List<OrderEntry> orders = mongoTemplate.find(query, OrderEntry.class);
 

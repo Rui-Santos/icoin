@@ -13,6 +13,7 @@ import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.webui.order.BuyOrder;
 import com.icoin.trading.webui.order.SellOrder;
 import org.joda.money.BigMoney;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,7 @@ public interface TradeServiceFacade {
 
     BigMoney calculateBuyOrderEffectiveAmount(BuyOrder order);
 
-    List<TradeExecutedEntry> findExecutedTradesByOrderBookIdentifier(String orderBookIdentifier);
+    List<TradeExecutedEntry> findExecutedTrades(String orderBookIdentifier);
 
     List<OrderEntry> findUserActiveOrders(String userId,
                                           String orderBookId);
@@ -46,7 +47,8 @@ public interface TradeServiceFacade {
 
     List<OrderEntry> findOrderForOrderBook(String orderBookIdentifier,
                                            OrderType type,
-                                           OrderStatus orderStatus);
+                                           OrderStatus orderStatus,
+                                           Pageable pageable);
 
     BuyOrder prepareBuyOrder(String coinId,
                              CurrencyPair currencyPair,

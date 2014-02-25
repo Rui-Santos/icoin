@@ -32,7 +32,9 @@ public interface OrderQueryRepositoryCustom {
 
     List<OrderEntry> findAllUserOrders(String userId, int start, int limit);
 
-    List<OrderEntry> findActiveHintSellOrders(String orderBookId, int start, int limit);
+//    List<OrderEntry> findActiveHintSellOrders(String orderBookId, int start, int limit);
 
-    List<OrderEntry> findActiveHintBuyOrders(String orderBookId, int start, int limit);
+//    List<OrderEntry> findActiveHintBuyOrders(String orderBookId, int start, int limit);
+
+    List<OrderEntry> findUserActiveOrders(String userId, String orderBookId);
 }

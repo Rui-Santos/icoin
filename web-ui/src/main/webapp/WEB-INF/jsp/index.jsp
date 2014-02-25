@@ -156,8 +156,38 @@
                         </div>
                     </spring:hasBindErrors>
 
+                    <div id="sellModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="sellPassword" class="col-sm-4 control-label">Exchange password</label>
+                                        <div class="input-group col-sm-6">
+                                            <input id="sellPassword" name="sellPassword" placeholder="Your exchange password" class="form-control" type="password" value=""/>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-5 col-md-offset-4">
+                                            <div class="btn-group">
+                                                <button type="submit" class="btn btn-primary btn-sm">Confirm</button>
+                                                <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+
                     <%--<input class="btn primary" type="submit" name="submit" value="Place Order"/>--%>
-                    <button type="submit" id="sellSubmit"  class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
+                    <button type="submit" id="sellSubmit"  data-toggle="modal" data-target="#sellModal"
+                            class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
                 </form:form>
             </div>
         </div>
@@ -215,7 +245,8 @@
                     </div>
                 </spring:hasBindErrors>
 
-                    <button type="submit" id="buySubmit" class="btn btn-success col-lg-offset-5 col-lg-3">Buy</button>
+                    <button type="submit" id="buySubmit"
+                            class="btn btn-success col-lg-offset-5 col-lg-3">Buy</button>
                 </form:form>
             </div>
         </div>
