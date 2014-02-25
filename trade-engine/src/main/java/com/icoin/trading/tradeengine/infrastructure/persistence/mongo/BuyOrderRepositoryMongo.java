@@ -26,8 +26,7 @@ public interface BuyOrderRepositoryMongo extends BuyOrderRepository,
 //            "'itemPrice' : { '$gte' : ?1}, " +
 //            "'placeDate' : { '$lte' : ?0}, " +
 //            "'orderStatus' : 'PENDING' , " +
-//            "'orderType' : 'BUY' }, " +
-//            "Sort: { 'itemPrice' : -1 , 'placeDate' : 1 , 'itemRemaining' : -1}")
+//            "'orderType' : 'BUY' }")
     List<BuyOrder> findDescPendingOrdersByPriceTime(Date toTime,
                                                     BigMoney price,
                                                     OrderBookId orderBookId,
@@ -38,7 +37,6 @@ public interface BuyOrderRepositoryMongo extends BuyOrderRepository,
 
     //    @Query(value = "{ 'orderBookId' : ?0 , " +
 //            "'orderStatus' : 'PENDING' , " +
-//            "'orderType' : 'BUY' }, " +
-//            "Sort: { 'itemPrice' : -1 , 'placeDate' : 1 , 'itemRemaining' : -1}")
+//            "'orderType' : 'BUY' }" )
     BuyOrder findHighestPricePendingOrder(OrderBookId orderBookId);
 }
