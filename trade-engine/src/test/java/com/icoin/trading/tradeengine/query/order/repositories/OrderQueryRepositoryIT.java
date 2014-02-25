@@ -71,6 +71,15 @@ public class OrderQueryRepositoryIT {
 //
 //        System.out.println(orderAggregatedPrice);
     }
+    
+    @Test
+    public void testFindUserActiveOrders() throws Exception {
+        List<OrderEntry> list = repository.findUserActiveOrders("buyer1", orderBookId.toString());
+
+        assertThat(list, hasSize(3));
+        assertThat(list, contains(sellOrder1, buyOrder1, buyOrder2));
+
+    }
 
     @Test
     public void testFindUserAllOrders() {
