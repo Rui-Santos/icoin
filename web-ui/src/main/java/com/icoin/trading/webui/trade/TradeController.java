@@ -35,7 +35,7 @@ import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
 
-import static com.homhon.mongo.TimeUtils.currentTime;
+import static com.homhon.util.TimeUtils.currentTime;
 
 /**
  * Created with IntelliJ IDEA.
