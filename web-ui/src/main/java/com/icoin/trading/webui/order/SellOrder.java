@@ -20,5 +20,7 @@ package com.icoin.trading.webui.order;
  * @author Jettro Coenradie
  */
 public class SellOrder extends AbstractOrder {
-
+    public SellOrder() {
+        super(OrderType.SELL);
+    }
 }

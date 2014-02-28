@@ -140,10 +140,12 @@ public class TradeControllerTest {
         buyOrderPara.setPriceCcy(btc.getCounterCurrency());
         buyOrderPara.setItemPrice(BigDecimal.valueOf(32.988));
         buyOrderPara.setTradeAmount(BigDecimal.valueOf(1.2));
+        buyOrderPara.setTradingPassword("password123");
 
         mockMvc.perform(post("/buy/" + btc.getBaseCurrency())
                 .param("itemPrice", "32.988")
                 .param("tradeAmount", "1.2")
+                .param("tradingPassword", "password123")
         ).andExpect(status().isOk())
                 .andExpect(model().attributeExists(
                         "orderBook",
@@ -209,6 +211,7 @@ public class TradeControllerTest {
         mockMvc.perform(post("/sell/" + btc.getBaseCurrency())
                 .param("itemPrice", "32.988")
                 .param("tradeAmount", "1.2")
+                .param("tradingPassword", "password123")
         ).andExpect(status().isOk())
                 .andExpect(model().attributeExists(
                         "orderBook",

@@ -144,14 +144,14 @@ public class UserListener {
 
     private UserEntry loadUser(UserId userId, String username) {
         if (userId == null || !Strings.hasLength(userId.toString())) {
-            logger.error("user {} id is empty", username);
+            logger.warn("user {} id is empty", username);
             return null;
         }
 
         final UserEntry user = userRepository.findOne(userId.toString());
 
         if (user == null) {
-            logger.error("user {} cannot be found via id {}", username, userId);
+            logger.warn("user {} cannot be found via id {}", username, userId);
             return null;
         }
 

@@ -22,4 +22,9 @@ public abstract class Constants {
     public static CurrencyUnit CURRENCY_UNIT_XPM = CurrencyUnit.of(Currencies.XPM);
     public static final double INIT_SELL_PRICE = 100000000000D;
     public static List<String> DEFAULT_ROLES = ImmutableList.of("ROLE_USER");
+    public static final int WARNING_TRADING_TIMES = 10;
+    public static final int WARNING_WITHDRAWAL_MONEY_TIMES = 1;
+    public static final int WARNING_WITHDRAWAL_COIN_TIMES = 1;
+    public static final int MAX_WITHDRAWAL_MONEY_TIMES = 3;
+    public static final int MAX_WITHDRAWAL_COIN_TIMES = 3;
 }

@@ -3,14 +3,20 @@ $(document).ready(function () {
         rules: {
             tradeAmount: {
                 required: true,
+                number: true,
                 min: 0.001,
                 max: 999999999
             },
             itemPrice: {
                 required: true,
+                number: true,
                 min: 0.001,
                 max: 999999999
-            }
+            }/*,
+            sellPassword:{
+                required: true,
+                rangelength:[6,16]
+            }*/
 
         },
 //        messages: { 
@@ -65,6 +71,7 @@ $(document).ready(function () {
         rules: {
             tradeAmount: {
                 required: true,
+                number: true,
                 min: 0.001,
                 max: 999999999
 //                number:true, 
@@ -72,10 +79,15 @@ $(document).ready(function () {
             },
             itemPrice: {
                 required: true,
+                number: true,
                 min: 0.001,
                 max: 999999999999
 //                number:true, 
-            }
+            }/*,
+            sellPassword: {
+                required: true,
+                rangelength:[6,16]
+            }*/
 
         },
 //        messages: { 
@@ -214,6 +226,17 @@ $(document).ready(function () {
     $('#priceToSell').number(true, 3);
     $('#totalToSell').number(true, 4);
     $('#feeToSell').number(true, 4);
+
+    $('#sellSubmit').click(function(){
+        console.log("validating:");
+        if($('#sellOrder').valid()){
+            $('#sellSubmit').modal('show');
+
+        }else{
+            return false;
+        }
+
+    });
 });
 
 

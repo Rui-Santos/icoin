@@ -164,12 +164,12 @@
                                     <div class="form-group">
                                         <label for="sellPassword" class="col-sm-4 control-label">Exchange password</label>
                                         <div class="input-group col-sm-6">
-                                            <input id="sellPassword" name="sellPassword" placeholder="Your exchange password" class="form-control" type="password" value=""/>
+                                            <input id="sellPassword" name="tradingPassword" placeholder="Your exchange password" class="form-control" type="password" value=""/>
                                         </div>
 
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-5 col-md-offset-4">
+                                        <div class="col-md-5 col-md-offset-5">
                                             <div class="btn-group">
                                                 <button type="submit" class="btn btn-primary btn-sm">Confirm</button>
                                                 <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">
@@ -186,7 +186,7 @@
                     </div>
 
                     <%--<input class="btn primary" type="submit" name="submit" value="Place Order"/>--%>
-                    <button type="submit" id="sellSubmit"  data-toggle="modal" data-target="#sellModal"
+                    <button type="submit" id="sellSubmit" data-toggle="modal" data-target="#sellModal"
                             class="btn btn-danger col-lg-offset-5 col-lg-3">Sell</button>
                 </form:form>
             </div>

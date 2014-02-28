@@ -17,7 +17,7 @@
 package com.icoin.trading.webui.order;
 
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
@@ -30,6 +30,10 @@ public class AbstractOrder {
 
     private String coinId;
     private String coinName;
+
+    @NotNull(message = "trading.password.required")
+    @Length(min = 6, max = 16)
+    private String tradingPassword;
     private BigDecimal suggestedPrice = BigDecimal.ZERO;
     private BigDecimal balance = BigDecimal.ZERO;
     private String amountCcy = Constants.CURRENCY_UNIT_BTC.getCurrencyCode();// base ccy
@@ -38,12 +42,13 @@ public class AbstractOrder {
 
     @DecimalMin(value = "0.0001", message = "trading.minimal.amount")
     @NotNull(message = "trading.amount.required")
-    private BigDecimal tradeAmount;
+    private BigDecimal tradeAmount = BigDecimal.ZERO;
 
     @NotNull(message = "trading.price.required")
-    private BigDecimal itemPrice;
+    private BigDecimal itemPrice = BigDecimal.ZERO;
 
-    public AbstractOrder() {
+    public AbstractOrder(OrderType orderType) {
+        this.orderType = orderType;
     }
 
     public AbstractOrder(BigDecimal itemPrice, BigDecimal tradeAmount, String coinId, String coinName) {
@@ -125,16 +130,25 @@ public class AbstractOrder {
         this.orderType = orderType;
     }
 
+    public String getTradingPassword() {
+        return tradingPassword;
+    }
+
+    public void setTradingPassword(String tradingPassword) {
+        this.tradingPassword = tradingPassword;
+    }
+
     @Override
     public String toString() {
-        return getClass().getSimpleName()+ "{" +
+        return "AbstractOrder{" +
                 "coinId='" + coinId + '\'' +
                 ", coinName='" + coinName + '\'' +
-                ", orderType='" + orderType + '\'' +
+                ", tradingPassword='" + tradingPassword + '\'' +
                 ", suggestedPrice=" + suggestedPrice +
                 ", balance=" + balance +
                 ", amountCcy='" + amountCcy + '\'' +
                 ", priceCcy='" + priceCcy + '\'' +
+                ", orderType=" + orderType +
                 ", tradeAmount=" + tradeAmount +
                 ", itemPrice=" + itemPrice +
                 '}';

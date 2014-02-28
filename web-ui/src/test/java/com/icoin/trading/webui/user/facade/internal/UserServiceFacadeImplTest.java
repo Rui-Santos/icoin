@@ -163,23 +163,18 @@ public class UserServiceFacadeImplTest {
     public void testObtainPortfolioForUser() throws Exception {
         UserService userService = mockUserService();
 
-        UserQueryRepository userRepository = mock(UserQueryRepository.class);
-        when(userRepository.findByUsername(eq(username))).thenReturn(user);
-
         final PortfolioEntry portfolio = new PortfolioEntry();
         PortfolioQueryRepository portfolioQueryRepository = mock(PortfolioQueryRepository.class);
         when(portfolioQueryRepository.findByUserIdentifier(eq(userId.toString()))).thenReturn(portfolio);
 
         UserServiceFacadeImpl service = new UserServiceFacadeImpl();
         service.setUserService(userService);
-        service.setUserRepository(userRepository);
         service.setPortfolioQueryRepository(portfolioQueryRepository);
 
         service.obtainPortfolioForUser();
 
-        verify(userRepository).findByUsername(eq(username));
-        verify(portfolioQueryRepository).findByUserIdentifier(eq(userId.toString()));
         verify(userService).getCurrentUser();
+        verify(portfolioQueryRepository).findByUserIdentifier(eq(userId.toString()));
     }
 
 

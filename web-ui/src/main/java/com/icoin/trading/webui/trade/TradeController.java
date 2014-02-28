@@ -127,10 +127,17 @@ public class TradeController {
         CurrencyUnit priceCcy = currencyPair.getCounterCurrencyUnit();
         CurrencyUnit coinCcy = currencyPair.getBaseCurrencyUnit();
 
-        OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(currencyPair);
-        model.addAttribute("orderBook", orderBookEntry);
-
         PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
+        if(portfolioEntry == null){
+            bindingResult.rejectValue("error.user.notloggedon", "User not logged on, please log on first!");
+        }
+
+        if(!userServiceFacade.isWithdrawPasswordSet()){
+            bindingResult.rejectValue("error.user.withdrawpasswordnotset", "User trading password not set, Please create before trading!");
+        }
+
+        OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(currencyPair);
+
         if (!bindingResult.hasErrors()) {
             final BigDecimal tradeAmount = order.getTradeAmount();
             final BigDecimal itemPrice = order.getItemPrice();
@@ -144,6 +151,7 @@ public class TradeController {
                 bindingResult.rejectValue("tradeAmount", "error.order.sell.tomanyitems", "Not enough items available to create sell order.");
                 BuyOrder buyOrder = tradeServiceFacade.prepareBuyOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
                 model.addAttribute("buyOrder", buyOrder);
+                model.addAttribute("orderBook", orderBookEntry);
                 logger.info("rejected a sell order with price {}, amount {}, total money {}: {}.", price, btcAmount, totalMoney, order);
                 initPage(coinId, orderBookEntry, portfolioEntry, model);
                 return "/index";
@@ -158,7 +166,12 @@ public class TradeController {
             return "redirect:/";
         }
 
-//        initPage(coinId, orderBookEntry, portfolioEntry, model);
+        BuyOrder buyOrder = tradeServiceFacade.prepareBuyOrder(DEFUALT_COIN, DEFAULT_CCY_PAIR, orderBookEntry, portfolioEntry);
+        SellOrder sellOrder = tradeServiceFacade.prepareSellOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
+        model.addAttribute("buyOrder", buyOrder);
+        model.addAttribute("sellOrder", sellOrder);
+        model.addAttribute("orderBook", orderBookEntry);
+        initPage(coinId, orderBookEntry, portfolioEntry, model);
         return "/index";
     }
 
@@ -169,7 +182,6 @@ public class TradeController {
         CurrencyPair currencyPair = new CurrencyPair(coinId);
 
         OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(currencyPair);
-        model.addAttribute("orderBook", orderBookEntry);
         PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
 
         if (!bindingResult.hasErrors()) {
@@ -195,6 +207,7 @@ public class TradeController {
                 bindingResult.rejectValue("tradeAmount", "error.order.buy.notenoughmoney", "Not enough cash to spend to buy the items for the price you want");
                 SellOrder sellOrder = tradeServiceFacade.prepareSellOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
                 model.addAttribute("sellOrder", sellOrder);
+                model.addAttribute("orderBook", orderBookEntry);
                 logger.info("rejected a buy order with price {}, amount {}, total money {}: {}.", price, btcAmount, totalMoney, order);
                 initPage(coinId, orderBookEntry, portfolioEntry, model);
                 return "/index";
@@ -204,12 +217,19 @@ public class TradeController {
             logger.info("placing a buy transaction {} with price {}, amount {}, total money {}: {}.", transactionId, price, btcAmount, totalMoney, order);
             tradeServiceFacade.buyOrder(transactionId, coinId, currencyPair, orderBookEntry.getPrimaryKey(), portfolioEntry.getPrimaryKey(), btcAmount.toBigMoney(), price.toBigMoney());
             logger.info("Buy order {} dispatched... ", order);
-
-//            initPage(coinId, orderBookEntry, portfolioEntry, model);
+            SellOrder sellOrder = tradeServiceFacade.prepareSellOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
+            model.addAttribute("sellOrder", sellOrder);
+            model.addAttribute("orderBook", orderBookEntry);
+            initPage(coinId, orderBookEntry, portfolioEntry, model);
             return "redirect:/";
         }
 
-//        initPage(coinId, orderBookEntry, portfolioEntry, model);
+        BuyOrder buyOrder = tradeServiceFacade.prepareBuyOrder(DEFUALT_COIN, DEFAULT_CCY_PAIR, orderBookEntry, portfolioEntry);
+        SellOrder sellOrder = tradeServiceFacade.prepareSellOrder(coinId, currencyPair, orderBookEntry, portfolioEntry);
+        model.addAttribute("buyOrder", buyOrder);
+        model.addAttribute("sellOrder", sellOrder);
+        model.addAttribute("orderBook", orderBookEntry);
+        initPage(coinId, orderBookEntry, portfolioEntry, model);
         return "/index";
     }
 

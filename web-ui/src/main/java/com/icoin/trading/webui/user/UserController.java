@@ -30,6 +30,8 @@ import com.icoin.trading.webui.user.form.CreateWithdrawPasswordForm;
 import com.icoin.trading.webui.user.form.ForgetPasswordForm;
 import com.icoin.trading.webui.user.form.NotificationForm;
 import com.icoin.trading.webui.user.form.ResetPasswordForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,6 +45,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +61,7 @@ import static com.icoin.trading.webui.user.form.NotificationForm.toNotificationF
 @Controller
 @RequestMapping("/user")
 public class UserController {
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private UserQueryRepository userRepository;
     private UserServiceFacade userService;
@@ -75,10 +79,17 @@ public class UserController {
         return "user/list";
     }
 
-    @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
-    public String detail(@PathVariable("identifier") String userIdentifier, Model model) {
-        model.addAttribute("item", userRepository.findOne(userIdentifier));
-        return "user/detail";
+    @RequestMapping(value = "/isTradingPasswordSet", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    boolean handleRequest() throws Exception {
+        if (userService.currentUser() == null) {
+            logger.error("User not logged on");
+//            bindingResult.reject("error.notloggedon", "User not logged on");
+            return false;
+        }
+
+        return userService.isWithdrawPasswordSet();
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.GET)
@@ -339,5 +350,11 @@ public class UserController {
         }
 
         return "user/editnotificationsettings";
+    }
+
+    @RequestMapping(value = "/detail/{identifier}", method = RequestMethod.GET)
+    public String detail(@PathVariable("identifier") String userIdentifier, Model model) {
+        model.addAttribute("item", userRepository.findOne(userIdentifier));
+        return "user/detail";
     }
 }

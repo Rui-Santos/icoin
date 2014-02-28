@@ -87,7 +87,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
     public boolean isWithdrawPasswordSet() {
         final UserEntry user = currentDetailUser();
 
-        if (user != null && Strings.hasLength(user.getWithdrawPassword())) {
+        if (user != null && user.isWithdrawPasswordSet()) {
             return true;
         }
 
@@ -123,7 +123,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
      * @return The found portfolio for the logged in user.
      */
     public PortfolioEntry obtainPortfolioForUser() {
-        final UserEntry user = currentDetailUser();
+        final UserAccount user = currentUser();
         if (user == null) {
             return null;
         }
@@ -260,7 +260,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return false;
         }
 
-        if (Strings.hasLength(user.getWithdrawPassword())) {
+        if (user.isWithdrawPasswordSet()) {
             logger.warn("user {}, id {} has already created withdraw password!", user.getUsername(), user.getPrimaryKey());
             return false;
         }
@@ -283,7 +283,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
             return false;
         }
 
-        if (!Strings.hasLength(user.getWithdrawPassword())) {
+        if (!user.isWithdrawPasswordSet()) {
             return false;
         }
 
@@ -337,12 +337,7 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         }
 
         AuthenticateUserCommand authenticateUserCommand = new AuthenticateUserCommand(username, password, operatingIp, resetTime);
-        try {
-            final UserAccount account = commandGateway.sendAndWait(authenticateUserCommand);
-            return account;
-        } catch (StructuralCommandValidationFailedException e) {
-            return null;
-        }
+        return commandGateway.sendAndWait(authenticateUserCommand);
     }
 
     @Override

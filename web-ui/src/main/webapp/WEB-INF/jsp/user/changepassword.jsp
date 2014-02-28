@@ -58,7 +58,7 @@
                 <form:errors path="*" element="div"/>
             </div>
         </spring:hasBindErrors>
-        <h5 class="form-signin-heading text-primary text-center">Or Change your Withdraw password</h5>
+        <h5 class="form-signin-heading text-primary text-center">Or Change your Trading password</h5>
 
         <input type="password" id="previousWithdrawPassword" name='previousWithdrawPassword' class="form-control"
                placeholder="Previous withdraw password"
@@ -89,7 +89,7 @@
                 <form:errors path="*" element="div"/>
             </div>
         </spring:hasBindErrors>
-        <h5 class="form-signin-heading text-primary text-center">Or Create your Withdraw password</h5>
+        <h5 class="form-signin-heading text-primary text-center">Or Create your Trading password</h5>
 
         <input type="password" id="withdrawPassword" name='withdrawPassword' class="form-control"
                placeholder="New withdraw password"
