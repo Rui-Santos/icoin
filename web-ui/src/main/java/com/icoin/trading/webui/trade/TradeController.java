@@ -129,11 +129,11 @@ public class TradeController {
 
         PortfolioEntry portfolioEntry = userServiceFacade.obtainPortfolioForUser();
         if(portfolioEntry == null){
-            bindingResult.rejectValue("error.user.notloggedon", "User not logged on, please log on first!");
+            bindingResult.reject("error.user.notloggedon", "User not logged on, please log on first!");
         }
 
         if(!userServiceFacade.isWithdrawPasswordSet()){
-            bindingResult.rejectValue("error.user.withdrawpasswordnotset", "User trading password not set, Please create before trading!");
+            bindingResult.reject("error.user.withdrawpasswordnotset", "User trading password not set, Please create before trading!");
         }
 
         OrderBookEntry orderBookEntry = tradeServiceFacade.loadOrderBookByCurrencyPair(currencyPair);

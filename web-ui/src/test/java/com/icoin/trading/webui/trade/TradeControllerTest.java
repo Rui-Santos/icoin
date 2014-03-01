@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -55,18 +56,21 @@ public class TradeControllerTest {
 
     @Before
     public void setup() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/jsp/");
+        viewResolver.setSuffix(".jsp");
 //        mockMvc = standaloneSetup(new PersonController()).addFilters(new CharacterEncodingFilter()).build();
         this.mockMvc = standaloneSetup(tradeController)
                 .defaultRequest(get("/index")
 //                        .contextPath("/app").servletPath("/main")
 //                        .accept(MediaType.APPLICATION_JSON)
-                ).build();
+                ).setViewResolvers(viewResolver)
+                .build();
 
         tradeController.setTradeServiceFacade(tradeServiceFacade);
         tradeController.setUserServiceFacade(userServiceFacade);
     }
 
-    @Ignore
     @Test
     public void testIndex() throws Exception {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
@@ -89,7 +93,7 @@ public class TradeControllerTest {
         when(tradeServiceFacade.loadCoin(eq(TradeController.DEFUALT_COIN))).thenReturn(coinEntry);
 
 
-        mockMvc.perform(get("/")).andExpect(status().isOk())
+        mockMvc.perform(get("/index")).andExpect(status().isOk())
                 .andExpect(model().attributeExists(
                         "orderBook",
                         "sellOrder",

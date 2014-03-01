@@ -15,37 +15,27 @@
         <dependency>
             <groupId>homhon-base</groupId>
             <artifactId>core</artifactId>
-            <version>${homhon.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-core</artifactId>
-            <version>${axon.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-mongo</artifactId>
-            <version>${axon.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>${mongodb.java.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
-            <version>${springdata.mongodb.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-mongo</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
     </dependencies>
 </project>

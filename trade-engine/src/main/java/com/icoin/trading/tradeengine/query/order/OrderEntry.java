@@ -23,7 +23,7 @@ import org.joda.money.BigMoney;
 
 import java.util.Date;
 
-import static com.homhon.mongo.TimeUtils.currentTime;
+import static com.homhon.util.TimeUtils.currentTime;
 
 /**
  * @author Jettro Coenradie

@@ -42,8 +42,8 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 
-import static com.homhon.mongo.TimeUtils.currentTime;
-import static com.homhon.mongo.TimeUtils.futureMinute;
+import static com.homhon.util.TimeUtils.currentTime;
+import static com.homhon.util.TimeUtils.futureMinute;
 import static com.homhon.util.Asserts.hasLength;
 import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;

@@ -50,7 +50,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import static com.homhon.mongo.TimeUtils.currentTime;
+import static com.homhon.util.TimeUtils.currentTime;
 import static org.axonframework.test.matchers.Matchers.andNoMore;
 import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
 
