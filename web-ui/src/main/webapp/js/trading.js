@@ -178,43 +178,12 @@ $(document).ready(function () {
         }
     });
 
-    $("#priceToBuy").keyup(function () {
-        var fee = 0.005;
-        var priceToBuy = $("#priceToBuy").val();
-        var amountToBuy = $("#amountToBuy").val();
-        if ($.isNumeric(amountToBuy) && $.isNumeric(priceToBuy)) {
-            var price = parseFloat(priceToBuy);
-            var amount = parseFloat(amountToBuy);
-
-            var total = price * amount;
-            var commission = total * fee;
-            $('#totalToBuy').text(total + commission);
-            $('#feeToBuy').text(commission);
-        } else {
-            $('#totalToBuy').text(0);
-            $('#feeToBuy').text(0);
-        }
-        $('#totalToBuy').number(true, 3);
-        $('#feeToBuy').number(true, 3);
+    $("#priceToBuy").keyup(function(){
+        calcBuyFee();
     });
 
-    $("#amountToBuy").keyup(function () {
-        var fee = 0.005;
-        var priceToBuy = $("#priceToBuy").val();
-        var amountToBuy = $("#amountToBuy").val();
-        if ($.isNumeric(amountToBuy) && $.isNumeric(priceToBuy)) {
-            var price = parseFloat(priceToBuy);
-            var amount = parseFloat(amountToBuy);
-            var total = price * amount;
-            var commission = total * fee;
-            $('#totalToBuy').text(total + commission);
-            $('#feeToBuy').text(commission);
-        } else {
-            $('#totalToBuy').text(0);
-            $('#feeToBuy').text(0);
-        }
-        $('#totalToBuy').number(true, 3);
-        $('#feeToBuy').number(true, 3);
+    $("#amountToBuy").keyup(function(){
+        calcBuyFee();
     });
 
     $('#amountToBuy').number(true, 4);
@@ -228,7 +197,6 @@ $(document).ready(function () {
     $('#feeToSell').number(true, 4);
 
     $('#sellSubmit').click(function(){
-        console.log("validating:");
         if($('#sellOrder').valid()){
             $('#sellSubmit').modal('show');
 
@@ -237,10 +205,24 @@ $(document).ready(function () {
         }
 
     });
+
+    $("#priceToSell").keyup(function(){
+        calcSellFee();
+    });
+
+    $("#amountToSell").keyup(function(){
+        calcSellFee();
+    });
+
+    calcBuyFee();
+    calcSellFee();
 });
 
 
-$("#priceToSell").keyup(function () {
+
+
+function calcSellFee(){
+    console.log("come here");
     var amountToSell = $("#amountToSell").val();
     if ($.isNumeric(amountToSell)) {
         var amount = parseFloat(amountToSell);
@@ -252,18 +234,23 @@ $("#priceToSell").keyup(function () {
     }
     $('#totalToSell').number(true, 6);
     $('#feeToSell').number(true, 6);
-});
+}
 
-$("#amountToSell").keyup(function () {
-    var amountToSell = $("#amountToSell").val();
-    if ($.isNumeric(amountToSell)) {
-        var amount = parseFloat(amountToSell);
-        $('#totalToSell').text(amount * 1.005);
-        $('#feeToSell').text(amount * 0.005);
+function calcBuyFee(){
+    var fee = 0.005;
+    var priceToBuy = $("#priceToBuy").val();
+    var amountToBuy = $("#amountToBuy").val();
+    if ($.isNumeric(amountToBuy) && $.isNumeric(priceToBuy)) {
+        var price = parseFloat(priceToBuy);
+        var amount = parseFloat(amountToBuy);
+        var total = price * amount;
+        var commission = total * fee;
+        $('#totalToBuy').text(total + commission);
+        $('#feeToBuy').text(commission);
     } else {
-        $('#totalToSell').text(0);
-        $('#feeToSell').text(0);
+        $('#totalToBuy').text(0);
+        $('#feeToBuy').text(0);
     }
-    $('#totalToSell').number(true, 6);
-    $('#feeToSell').number(true, 6);
-}); 
+    $('#totalToBuy').number(true, 3);
+    $('#feeToBuy').number(true, 3);
+}

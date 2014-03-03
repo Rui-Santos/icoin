@@ -20,6 +20,8 @@ import org.joda.money.BigMoney;
 import org.joda.money.Money;
 
 import java.math.RoundingMode;
+import static com.homhon.util.Asserts.notNull;
+
 
 /**
  * @author Slawek
@@ -33,6 +35,7 @@ public class Commission extends ValueObjectSupport<Commission> {
     }
 
     public Commission(Money commission, String description) {
+        notNull(commission);
         this.commission = commission;
         this.description = description;
     }

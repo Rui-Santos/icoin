@@ -110,11 +110,12 @@
                 <form:form commandName="sellOrder" id="sellOrder" action="/sell/BTC" class="form-horizontal" role="form">
                     <form:hidden id="sellCoinId" path="coinId"/>
                     <form:hidden id="sellCoinName" path="coinName"/>
+                    <form:hidden id="balance" path="balance"/>
 
                     <div class="form-group">
                         <label for="highestBid" class="col-sm-5 control-label">Highest Bid Price</label>
                         <label id="highestBid" class="col-sm-5  form-control-static text-success">
-                            <fmt:formatNumber value="${sellOrder.suggestedPrice}" type="number" pattern="#.##"/>
+                            <fmt:formatNumber value="${sellOrder.suggestedPrice}" type="number" pattern="#.###"/>
                         </label>
                         <label class="col-sm-1  form-control-static text-info">CNY</label>
                     </div>
@@ -199,18 +200,19 @@
                 <form:form commandName="buyOrder" id="buyOrder" action="/buy/BTC" class="form-horizontal" role="form">
                 <form:hidden id="buyerCoinId" path="coinId"/>
                 <form:hidden id="buyCoinName" path="coinName"/>
+                <form:hidden id="balance" path="balance"/>
 
                 <div class="form-group">
                     <label for="lowestAsk" class="col-sm-5 control-label">Lowest Ask Price</label>
                     <label id="lowestAsk" class="col-sm-5  form-control-static text-success">
-                        <fmt:formatNumber value="${buyOrder.suggestedPrice}" type="number" pattern="#.##"/>
+                        <fmt:formatNumber value="${buyOrder.suggestedPrice}" type="number" pattern="#.###"/>
                     </label>
                     <label class="col-sm-1  form-control-static text-info">CNY</label>
                 </div>
                 <div class="form-group">
                     <label for="balanceToBuy" class="col-sm-5 control-label">Balance</label>
                     <label id="balanceToBuy" class="col-sm-5  form-control-static text-success">
-                        <fmt:formatNumber value="${buyOrder.balance}" type="number" pattern="#.##"/>
+                        <fmt:formatNumber value="${buyOrder.balance}" type="number" pattern="#.###"/>
                     </label>
                     <label class="col-sm-1  form-control-static text-info">CNY</label>
                 </div>

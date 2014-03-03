@@ -23,6 +23,8 @@ public interface UserServiceFacade {
 
     boolean isWithdrawPasswordSet();
 
+    boolean isWithdrawPasswordMatched(String withdrawPassword);
+
     boolean canAuthWithNewPassword(String username, String newPassword);
 
     UserPasswordReset getToken(String token);

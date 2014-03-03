@@ -8,6 +8,7 @@ import org.axonframework.commandhandling.NoHandlerForCommandException;
 import org.axonframework.commandhandling.interceptors.JSR303ViolationException;
 import org.axonframework.common.AxonException;
 import org.axonframework.eventhandling.annotation.EventHandlerInvocationException;
+import org.joda.money.IllegalCurrencyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,18 @@ public class ExceptionHandlingController {
         request.setAttribute("javax.servlet.error.status_code", 500, WebRequest.SCOPE_REQUEST);
         return "error";
     }
+
+    @ExceptionHandler(value = {
+            IllegalCurrencyException.class
+    })
+    public String handleException(IllegalCurrencyException ex, WebRequest request) {
+        logger.error("currency not found:", ex.getMessage(), ex.getCause());
+
+        request.setAttribute("javax.servlet.error.exception", ex, WebRequest.SCOPE_REQUEST);
+        request.setAttribute("javax.servlet.error.status_code", 404, WebRequest.SCOPE_REQUEST);
+        return "error";
+    }
+
 
     @ExceptionHandler(value = {
             JSR303ViolationException.class

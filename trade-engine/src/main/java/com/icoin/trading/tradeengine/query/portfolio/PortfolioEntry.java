@@ -100,7 +100,7 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
 
     public void addItemInPossession(String coinIdentifier, BigMoney amount) {
         if (!hasItem(coinIdentifier)) {
-            throw new IllegalArgumentException("cannot find item with " + coinIdentifier + ", please add it first if necessary");
+            throw new IllegalArgumentException("cannot find item with " + coinIdentifier + ", please create it first if necessary");
         }
         handleAddPossession(coinIdentifier, amount);
     }

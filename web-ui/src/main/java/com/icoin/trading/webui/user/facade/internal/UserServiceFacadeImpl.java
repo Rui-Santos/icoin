@@ -23,7 +23,6 @@ import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import com.icoin.trading.webui.user.facade.UserServiceFacade;
 import org.apache.commons.lang3.time.DateUtils;
-import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +91,21 @@ public class UserServiceFacadeImpl implements UserServiceFacade {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean isWithdrawPasswordMatched(String withdrawPassword) {
+        if (!Strings.hasText(withdrawPassword)) {
+            return false;
+        }
+
+        final UserEntry user = currentDetailUser();
+
+        if (user == null) {
+            return false;
+        }
+
+        return passwordEncoder.matches(withdrawPassword, user.getWithdrawPassword());
     }
 
     @Override
