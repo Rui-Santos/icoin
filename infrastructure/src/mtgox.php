@@ -10,16 +10,16 @@ static private $pending = array();
 public static function update() {
 // update all nodes
 $list = \DB::DAO('Money_Bitcoin_Host')->search(null);
-foreach($list as $bean) {
-$bean->Last_Update = \DB::i()->now();
-$client = \Controller::Driver('Bitcoin', $bean->Money_Bitcoin_Host__);
-if (!$client->isValid()) continue;
-$info = $client->getInfo();
-if (!$info) {
-$bean->Status = 'down';
-$bean->commit();
-continue;
-}
+  foreach($list as $bean) {
+    $bean->Last_Update = \DB::i()->now();
+    $client = \Controller::Driver('Bitcoin', $bean->Money_Bitcoin_Host__);
+    if (!$client->isValid()) continue;
+    $info = $client->getInfo();
+    if (!$info) {
+    $bean->Status = 'down';
+    $bean->commit();
+    continue;
+  }
 
 if (($info['generate']) && ($bean->Generate == 'N')) {
 $client->setGenerate(false);
