@@ -79,14 +79,13 @@ public class TradeControllerTest {
     @Test
     public void testIndex() throws Exception {
         OrderBookEntry orderBookEntry = new OrderBookEntry();
-
+        BuyOrder buyOrder = new BuyOrder();
+        SellOrder sellOrder = new SellOrder();
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         portfolioEntry.setPrimaryKey(new PortfolioId().toString());
 
         when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
 
-        BuyOrder buyOrder = new BuyOrder();
-        SellOrder sellOrder = new SellOrder();
         when(tradeServiceFacade.
                 prepareSellOrder(eq(TradeController.DEFUALT_COIN), eq(TradeController.DEFAULT_CCY_PAIR), eq(orderBookEntry), eq(portfolioEntry)))
                 .thenReturn(sellOrder);
@@ -116,88 +115,13 @@ public class TradeControllerTest {
     }
 
     @Test
-    public void testBuy() throws Exception {
-        final CurrencyPair btc = new CurrencyPair("BTC");
-        final BigMoney total = BigMoney.of(btc.getCounterCurrencyUnit(), 100);
-        final BigMoney reserved = BigMoney.of(btc.getCounterCurrencyUnit(), 80);
-        PortfolioEntry portfolioEntry = new PortfolioEntry();
-        portfolioEntry.setAmountOfMoney(total);
-        portfolioEntry.setReservedAmountOfMoney(reserved);
-
-        OrderBookEntry orderBookEntry = new OrderBookEntry();
-        portfolioEntry.setPrimaryKey(new PortfolioId().toString());
-        when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
-
-        BuyOrder buyOrder = new BuyOrder();
-        SellOrder sellOrder = new SellOrder();
-        when(tradeServiceFacade.
-                prepareSellOrder(eq(btc.getBaseCurrency()), eq(TradeController.DEFAULT_CCY_PAIR), eq(orderBookEntry), eq(portfolioEntry)))
-                .thenReturn(sellOrder);
-        when(tradeServiceFacade.
-                prepareBuyOrder(eq(btc.getBaseCurrency()), eq(TradeController.DEFAULT_CCY_PAIR), eq(orderBookEntry), eq(portfolioEntry)))
-                .thenReturn(buyOrder);
-        CoinEntry coinEntry = new CoinEntry();
-        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
-
-        when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
-        when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
-        when(tradeServiceFacade.calculateBuyOrderEffectiveAmount(any(BuyOrder.class)))
-                .thenReturn(BigMoney.of(CurrencyUnit.of(btc.getCounterCurrency()), BigDecimal.valueOf(32.988).multiply(BigDecimal.valueOf(1.3))));
-
-        final BuyOrder buyOrderPara = new BuyOrder();
-        buyOrderPara.setAmountCcy(btc.getBaseCurrency());
-        buyOrderPara.setPriceCcy(btc.getCounterCurrency());
-        buyOrderPara.setItemPrice(BigDecimal.valueOf(32.988));
-        buyOrderPara.setTradeAmount(BigDecimal.valueOf(1.2));
-        buyOrderPara.setTradingPassword("password123");
-
-        mockMvc.perform(post("/buy/" + btc.getBaseCurrency())
-                .param("itemPrice", "32.988")
-                .param("tradeAmount", "1.2")
-                .param("tradingPassword", "password123")
-        ).andExpect(status().isOk())
-                .andExpect(model().attributeExists(
-                        "orderBook",
-                        "sellOrder",
-                        "buyOrder",
-                        "coin",
-                        "activeOrders",
-                        "buyOrders",
-                        "sellOrders",
-                        "executedTrades"
-                ));
-
-        verify(tradeServiceFacade).prepareSellOrder(eq(TradeController.DEFUALT_COIN), eq(TradeController.DEFAULT_CCY_PAIR), eq(orderBookEntry), eq(portfolioEntry));
-        verify(tradeServiceFacade).loadCoin(eq(TradeController.DEFUALT_COIN));
-        verify(tradeServiceFacade).findOrderAggregatedPrice(eq(orderBookEntry.getPrimaryKey()),
-                eq(OrderType.BUY),
-                any(Date.class));
-        verify(tradeServiceFacade).findOrderAggregatedPrice(eq(orderBookEntry.getPrimaryKey()),
-                eq(OrderType.SELL),
-                any(Date.class));
-        verify(tradeServiceFacade).findExecutedTrades(eq(orderBookEntry.getPrimaryKey()));
-        verify(tradeServiceFacade).findUserActiveOrders(eq(portfolioEntry.getPrimaryKey()), eq(orderBookEntry.getPrimaryKey()));
-        verify(tradeServiceFacade).loadOrderBookByCurrencyPair(eq(TradeController.DEFAULT_CCY_PAIR));
-        verify(tradeServiceFacade).calculateBuyOrderEffectiveAmount(any(BuyOrder.class));
-    }
-
-    @Test
     public void testSellWithFormHasErrors() throws Exception {
         final CurrencyPair btc = new CurrencyPair("BTC");
-
-
-        final BuyOrder buyOrderPara = new BuyOrder();
-        buyOrderPara.setAmountCcy(btc.getBaseCurrency());
-        buyOrderPara.setPriceCcy(btc.getCounterCurrency());
-        buyOrderPara.setItemPrice(BigDecimal.valueOf(32.988));
-        buyOrderPara.setTradeAmount(BigDecimal.valueOf(1.2));
-
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         BuyOrder buyOrder = new BuyOrder();
-
         CoinEntry coinEntry = new CoinEntry();
-        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
 
+        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
         when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
         when(tradeServiceFacade.
                 prepareBuyOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), isNull(PortfolioEntry.class)))
@@ -235,20 +159,11 @@ public class TradeControllerTest {
     @Test
     public void testSellWithoutPortfolioFound() throws Exception {
         final CurrencyPair btc = new CurrencyPair("BTC");
-
-
-        final BuyOrder buyOrderPara = new BuyOrder();
-        buyOrderPara.setAmountCcy(btc.getBaseCurrency());
-        buyOrderPara.setPriceCcy(btc.getCounterCurrency());
-        buyOrderPara.setItemPrice(BigDecimal.valueOf(32.988));
-        buyOrderPara.setTradeAmount(BigDecimal.valueOf(1.2));
-
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         BuyOrder buyOrder = new BuyOrder();
-
         CoinEntry coinEntry = new CoinEntry();
-        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
 
+        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
         when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
         when(tradeServiceFacade.
                 prepareBuyOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), isNull(PortfolioEntry.class)))
@@ -286,30 +201,19 @@ public class TradeControllerTest {
     @Test
     public void testSellWithWithdrawPasswordNotSet() throws Exception {
         final CurrencyPair btc = new CurrencyPair("BTC");
-
+        OrderBookEntry orderBookEntry = new OrderBookEntry();
+        BuyOrder buyOrder = new BuyOrder();
+        CoinEntry coinEntry = new CoinEntry();
         PortfolioEntry portfolioEntry = new PortfolioEntry();
 
         portfolioEntry.setPrimaryKey(new PortfolioId().toString());
         when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
 
-        final BuyOrder buyOrderPara = new BuyOrder();
-        buyOrderPara.setAmountCcy(btc.getBaseCurrency());
-        buyOrderPara.setPriceCcy(btc.getCounterCurrency());
-        buyOrderPara.setItemPrice(BigDecimal.valueOf(32.988));
-        buyOrderPara.setTradeAmount(BigDecimal.valueOf(1.2));
-
-        OrderBookEntry orderBookEntry = new OrderBookEntry();
-        BuyOrder buyOrder = new BuyOrder();
-
-        CoinEntry coinEntry = new CoinEntry();
         when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
-
         when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
-
         when(tradeServiceFacade.
                 prepareBuyOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry)))
                 .thenReturn(buyOrder);
-
 
         mockMvc.perform(post("/sell/" + btc.getBaseCurrency())
                 .param("itemPrice", "32.988")
@@ -342,25 +246,16 @@ public class TradeControllerTest {
     @Test
     public void testSellWithWithdrawPasswordNotMatched() throws Exception {
         final CurrencyPair btc = new CurrencyPair("BTC");
-
+        OrderBookEntry orderBookEntry = new OrderBookEntry();
+        BuyOrder buyOrder = new BuyOrder();
+        CoinEntry coinEntry = new CoinEntry();
         PortfolioEntry portfolioEntry = new PortfolioEntry();
 
         portfolioEntry.setPrimaryKey(new PortfolioId().toString());
         when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
         when(userServiceFacade.isWithdrawPasswordSet()).thenReturn(true);
 
-        final BuyOrder buyOrderPara = new BuyOrder();
-        buyOrderPara.setAmountCcy(btc.getBaseCurrency());
-        buyOrderPara.setPriceCcy(btc.getCounterCurrency());
-        buyOrderPara.setItemPrice(BigDecimal.valueOf(32.988));
-        buyOrderPara.setTradeAmount(BigDecimal.valueOf(1.2));
-
-        OrderBookEntry orderBookEntry = new OrderBookEntry();
-        BuyOrder buyOrder = new BuyOrder();
-
-        CoinEntry coinEntry = new CoinEntry();
         when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
-
         when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
         when(tradeServiceFacade.calculateSellOrderEffectiveAmount(any(SellOrder.class)))
                 .thenReturn(BigMoney.of(Constants.CURRENCY_UNIT_BTC, 1.26));
@@ -368,7 +263,6 @@ public class TradeControllerTest {
         when(tradeServiceFacade.
                 prepareBuyOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry)))
                 .thenReturn(buyOrder);
-
 
         mockMvc.perform(post("/sell/" + btc.getBaseCurrency())
                 .param("itemPrice", "32.988")
@@ -402,26 +296,18 @@ public class TradeControllerTest {
     @Test
     public void testSellWithMoneyNotEnough() throws Exception {
         final CurrencyPair btc = new CurrencyPair("BTC");
-
-        PortfolioEntry portfolioEntry = new PortfolioEntry();
-
-        portfolioEntry.setPrimaryKey(new PortfolioId().toString());
-        when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
-        when(userServiceFacade.isWithdrawPasswordSet()).thenReturn(true);
-
-        final BuyOrder buyOrderPara = new BuyOrder();
-        buyOrderPara.setAmountCcy(btc.getBaseCurrency());
-        buyOrderPara.setPriceCcy(btc.getCounterCurrency());
-        buyOrderPara.setItemPrice(BigDecimal.valueOf(32.988));
-        buyOrderPara.setTradeAmount(BigDecimal.valueOf(1.2));
-
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         BuyOrder buyOrder = new BuyOrder();
-
         CoinEntry coinEntry = new CoinEntry();
-        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
+
+        PortfolioEntry portfolioEntry = new PortfolioEntry();
+        portfolioEntry.setPrimaryKey(new PortfolioId().toString());
+
+        when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
+        when(userServiceFacade.isWithdrawPasswordSet()).thenReturn(true);
         when(userServiceFacade.isWithdrawPasswordMatched(eq("password123"))).thenReturn(true);
 
+        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
         when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
         when(tradeServiceFacade.calculateSellOrderEffectiveAmount(any(SellOrder.class)))
                 .thenReturn(BigMoney.of(Constants.CURRENCY_UNIT_BTC, 1.26));
@@ -429,7 +315,6 @@ public class TradeControllerTest {
         when(tradeServiceFacade.
                 prepareBuyOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry)))
                 .thenReturn(buyOrder);
-
 
         mockMvc.perform(post("/sell/" + btc.getBaseCurrency())
                 .param("itemPrice", "32.988")
@@ -467,6 +352,8 @@ public class TradeControllerTest {
         final BigMoney total = BigMoney.of(btc.getCounterCurrencyUnit(), 100);
         final BigMoney reserved = BigMoney.of(btc.getCounterCurrencyUnit(), 80);
         final BigMoney available = BigMoney.of(btc.getBaseCurrencyUnit(), 10);
+        BuyOrder buyOrder = new BuyOrder();
+        SellOrder sellOrder = new SellOrder();
         OrderBookEntry orderBookEntry = new OrderBookEntry();
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         portfolioEntry.setAmountOfMoney(total);
@@ -479,8 +366,6 @@ public class TradeControllerTest {
         when(userServiceFacade.isWithdrawPasswordSet()).thenReturn(true);
         when(userServiceFacade.isWithdrawPasswordMatched(eq("password123"))).thenReturn(true);
 
-        BuyOrder buyOrder = new BuyOrder();
-        SellOrder sellOrder = new SellOrder();
         when(tradeServiceFacade.
                 prepareSellOrder(eq(btc.getBaseCurrency()), eq(TradeController.DEFAULT_CCY_PAIR), eq(orderBookEntry), eq(portfolioEntry)))
                 .thenReturn(sellOrder);
@@ -514,5 +399,304 @@ public class TradeControllerTest {
                         eq(BigMoney.of(btc.getBaseCurrencyUnit(), 1.2).toMoney().toBigMoney()), eq(BigMoney.of(btc.getCounterCurrencyUnit(), 32.988)));
 
         verify(userServiceFacade).isWithdrawPasswordMatched(eq("password123"));
+    }
+
+    @Test
+    public void testBuyWithFormHasErrors() throws Exception {
+        final CurrencyPair btc = new CurrencyPair("BTC");
+        OrderBookEntry orderBookEntry = new OrderBookEntry();
+        SellOrder sellOrder = new SellOrder();
+        CoinEntry coinEntry = new CoinEntry();
+
+        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
+
+        when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
+        when(tradeServiceFacade.
+                prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), isNull(PortfolioEntry.class)))
+                .thenReturn(sellOrder);
+
+
+        mockMvc.perform(post("/buy/" + btc.getBaseCurrency())
+                .param("itemPrice", "0.0000000000988")
+                .param("tradeAmount", "0.0000000001")
+                .param("tradingPassword", "21")
+        ).andExpect(status().isOk())
+                .andExpect(model().attributeExists(
+                        "orderBook",
+                        "sellOrder",
+                        "buyOrder",
+                        "coin",
+                        "activeOrders",
+                        "buyOrders",
+                        "sellOrders",
+                        "executedTrades"
+                ))
+                .andExpect(model().attributeErrorCount("buyOrder", 2));
+
+        verify(userServiceFacade, never()).isWithdrawPasswordSet();
+
+        verify(tradeServiceFacade).loadCoin(eq(btc.getBaseCurrency()));
+        verify(tradeServiceFacade).loadOrderBookByCurrencyPair(eq(btc));
+        verify(tradeServiceFacade).prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), isNull(PortfolioEntry.class));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.BUY), any(Date.class));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.SELL), any(Date.class));
+        verify(tradeServiceFacade).findExecutedTrades(anyString());
+        verify(tradeServiceFacade, never()).findUserActiveOrders(anyString(), anyString());
+    }
+
+    @Test
+    public void testBuyWithoutPortfolioFound() throws Exception {
+        final CurrencyPair btc = new CurrencyPair("BTC");
+        OrderBookEntry orderBookEntry = new OrderBookEntry();
+        SellOrder sellOrder = new SellOrder();
+        CoinEntry coinEntry = new CoinEntry();
+
+        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
+
+        when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
+        when(tradeServiceFacade.
+                prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), isNull(PortfolioEntry.class)))
+                .thenReturn(sellOrder);
+
+
+        mockMvc.perform(post("/buy/" + btc.getBaseCurrency())
+                .param("itemPrice", "0.00000988")
+                .param("tradeAmount", "0.01")
+                .param("tradingPassword", "2123423aafsdf")
+        ).andExpect(status().isOk())
+                .andExpect(model().attributeExists(
+                        "orderBook",
+                        "sellOrder",
+                        "buyOrder",
+                        "coin",
+                        "activeOrders",
+                        "buyOrders",
+                        "sellOrders",
+                        "executedTrades"
+                ))
+                .andExpect(model().attributeErrorCount("buyOrder", 1));
+
+        verify(userServiceFacade, never()).isWithdrawPasswordSet();
+
+        verify(tradeServiceFacade).loadCoin(eq(btc.getBaseCurrency()));
+        verify(tradeServiceFacade).loadOrderBookByCurrencyPair(eq(btc));
+        verify(tradeServiceFacade).prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), isNull(PortfolioEntry.class));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.BUY), any(Date.class));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.SELL), any(Date.class));
+        verify(tradeServiceFacade).findExecutedTrades(anyString());
+        verify(tradeServiceFacade, never()).findUserActiveOrders(anyString(), anyString());
+    }
+
+    @Test
+    public void testBuyWithWithdrawPasswordNotSet() throws Exception {
+        final CurrencyPair btc = new CurrencyPair("BTC");
+        OrderBookEntry orderBookEntry = new OrderBookEntry();
+        SellOrder sellOrder = new SellOrder();
+        CoinEntry coinEntry = new CoinEntry();
+        PortfolioEntry portfolioEntry = new PortfolioEntry();
+
+        portfolioEntry.setPrimaryKey(new PortfolioId().toString());
+
+        when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
+
+        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
+
+        when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
+        when(tradeServiceFacade.
+                prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry)))
+                .thenReturn(sellOrder);
+
+
+        mockMvc.perform(post("/buy/" + btc.getBaseCurrency())
+                .param("itemPrice", "0.00000988")
+                .param("tradeAmount", "0.01")
+                .param("tradingPassword", "2123423aafsdf")
+        ).andExpect(status().isOk())
+                .andExpect(model().attributeExists(
+                        "orderBook",
+                        "sellOrder",
+                        "buyOrder",
+                        "coin",
+                        "activeOrders",
+                        "buyOrders",
+                        "sellOrders",
+                        "executedTrades"
+                ))
+                .andExpect(model().attributeErrorCount("buyOrder", 1));
+
+        verify(userServiceFacade).isWithdrawPasswordSet();
+
+        verify(tradeServiceFacade).loadCoin(eq(btc.getBaseCurrency()));
+        verify(tradeServiceFacade).loadOrderBookByCurrencyPair(eq(btc));
+        verify(tradeServiceFacade).prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.BUY), any(Date.class));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.SELL), any(Date.class));
+        verify(tradeServiceFacade).findExecutedTrades(anyString());
+        verify(tradeServiceFacade).findUserActiveOrders(anyString(), anyString());
+    }
+
+    @Test
+    public void testBuyWithWithdrawPasswordNotMatched() throws Exception {
+        final CurrencyPair btc = new CurrencyPair("BTC");
+
+        PortfolioEntry portfolioEntry = new PortfolioEntry();
+
+        portfolioEntry.setPrimaryKey(new PortfolioId().toString());
+        when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
+        when(userServiceFacade.isWithdrawPasswordSet()).thenReturn(true);
+
+        OrderBookEntry orderBookEntry = new OrderBookEntry();
+        SellOrder sellOrder = new SellOrder();
+
+        CoinEntry coinEntry = new CoinEntry();
+        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
+
+        when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
+        when(tradeServiceFacade.
+                prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry)))
+                .thenReturn(sellOrder);
+
+
+        mockMvc.perform(post("/buy/" + btc.getBaseCurrency())
+                .param("itemPrice", "0.00000988")
+                .param("tradeAmount", "0.01")
+                .param("tradingPassword", "2123423aafsdf")
+        ).andExpect(status().isOk())
+                .andExpect(model().attributeExists(
+                        "orderBook",
+                        "sellOrder",
+                        "buyOrder",
+                        "coin",
+                        "activeOrders",
+                        "buyOrders",
+                        "sellOrders",
+                        "executedTrades"
+                ))
+                .andExpect(model().attributeErrorCount("buyOrder", 1));
+
+        verify(userServiceFacade).isWithdrawPasswordSet();
+        verify(userServiceFacade).isWithdrawPasswordMatched(eq("2123423aafsdf"));
+
+        verify(tradeServiceFacade).loadCoin(eq(btc.getBaseCurrency()));
+        verify(tradeServiceFacade).loadOrderBookByCurrencyPair(eq(btc));
+        verify(tradeServiceFacade).prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.BUY), any(Date.class));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.SELL), any(Date.class));
+        verify(tradeServiceFacade).findExecutedTrades(anyString());
+        verify(tradeServiceFacade).findUserActiveOrders(anyString(), anyString());
+    }
+
+    @Test
+    public void testBuyWithMoneyNotEnough() throws Exception {
+        final CurrencyPair btc = new CurrencyPair("BTC");
+
+        PortfolioEntry portfolioEntry = new PortfolioEntry();
+        portfolioEntry.setPrimaryKey(new PortfolioId().toString());
+        when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
+        when(userServiceFacade.isWithdrawPasswordSet()).thenReturn(true);
+        when(userServiceFacade.isWithdrawPasswordMatched(eq("2123423aafsdf"))).thenReturn(true);
+
+        portfolioEntry.setPrimaryKey(new PortfolioId().toString());
+        when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
+        when(userServiceFacade.isWithdrawPasswordSet()).thenReturn(true);
+
+        OrderBookEntry orderBookEntry = new OrderBookEntry();
+        SellOrder sellOrder = new SellOrder();
+
+        CoinEntry coinEntry = new CoinEntry();
+        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
+
+        when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
+        when(tradeServiceFacade.prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry))).thenReturn(sellOrder);
+
+        when(tradeServiceFacade.calculateBuyOrderEffectiveAmount(any(BuyOrder.class)))
+                .thenReturn(BigMoney.of(CurrencyUnit.of(btc.getCounterCurrency()), 0.00000002));
+
+
+        mockMvc.perform(post("/buy/" + btc.getBaseCurrency())
+                .param("itemPrice", "0.00988")
+                .param("tradeAmount", "0.01")
+                .param("tradingPassword", "2123423aafsdf")
+        ).andExpect(status().isOk())
+                .andExpect(model().attributeExists(
+                        "orderBook",
+                        "sellOrder",
+                        "buyOrder",
+                        "coin",
+                        "activeOrders",
+                        "buyOrders",
+                        "sellOrders",
+                        "executedTrades"
+                ))
+                .andExpect(model().attributeHasFieldErrors("buyOrder", "tradeAmount"));
+
+        verify(userServiceFacade).isWithdrawPasswordSet();
+        verify(userServiceFacade).isWithdrawPasswordMatched(eq("2123423aafsdf"));
+        verify(tradeServiceFacade).calculateBuyOrderEffectiveAmount(any(BuyOrder.class));
+
+        verify(tradeServiceFacade).loadCoin(eq(btc.getBaseCurrency()));
+        verify(tradeServiceFacade).loadOrderBookByCurrencyPair(eq(btc));
+        verify(tradeServiceFacade).prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.BUY), any(Date.class));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.SELL), any(Date.class));
+        verify(tradeServiceFacade).findExecutedTrades(anyString());
+        verify(tradeServiceFacade).findUserActiveOrders(anyString(), anyString());
+    }
+
+    @Test
+    public void testBuy() throws Exception {
+        final CurrencyPair btc = new CurrencyPair("BTC");
+
+        PortfolioEntry portfolioEntry = new PortfolioEntry();
+        portfolioEntry.setPrimaryKey(new PortfolioId().toString());
+        when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
+        when(userServiceFacade.isWithdrawPasswordSet()).thenReturn(true);
+        when(userServiceFacade.isWithdrawPasswordMatched(eq("2123423aafsdf"))).thenReturn(true);
+
+        portfolioEntry.setPrimaryKey(new PortfolioId().toString());
+        when(userServiceFacade.obtainPortfolioForUser()).thenReturn(portfolioEntry);
+        when(userServiceFacade.isWithdrawPasswordSet()).thenReturn(true);
+
+        OrderBookEntry orderBookEntry = new OrderBookEntry();
+        SellOrder sellOrder = new SellOrder();
+
+        CoinEntry coinEntry = new CoinEntry();
+        when(tradeServiceFacade.loadCoin(eq(btc.getBaseCurrency()))).thenReturn(coinEntry);
+
+        when(tradeServiceFacade.loadOrderBookByCurrencyPair(eq(btc))).thenReturn(orderBookEntry);
+        when(tradeServiceFacade.prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry))).thenReturn(sellOrder);
+
+        when(tradeServiceFacade.calculateBuyOrderEffectiveAmount(any(BuyOrder.class)))
+                .thenReturn(BigMoney.of(CurrencyUnit.of(btc.getCounterCurrency()), BigDecimal.valueOf(32.988).multiply(BigDecimal.valueOf(1.3))));
+
+
+        mockMvc.perform(post("/buy/" + btc.getBaseCurrency())
+                .param("itemPrice", "32.988")
+                .param("tradeAmount", "1.2")
+                .param("tradingPassword", "2123423aafsdf")
+        ).andExpect(status().isOk())
+                .andExpect(model().attributeExists(
+                        "orderBook",
+                        "sellOrder",
+                        "buyOrder",
+                        "coin",
+                        "activeOrders",
+                        "buyOrders",
+                        "sellOrders",
+                        "executedTrades"
+                ))
+                .andExpect(model().attributeHasFieldErrors("buyOrder", "tradeAmount"));
+
+        verify(userServiceFacade).isWithdrawPasswordSet();
+        verify(userServiceFacade).isWithdrawPasswordMatched(eq("2123423aafsdf"));
+        verify(tradeServiceFacade).calculateBuyOrderEffectiveAmount(any(BuyOrder.class));
+
+        verify(tradeServiceFacade).loadCoin(eq(btc.getBaseCurrency()));
+        verify(tradeServiceFacade).loadOrderBookByCurrencyPair(eq(btc));
+        verify(tradeServiceFacade).prepareSellOrder(eq(btc.getBaseCurrency()), eq(btc), eq(orderBookEntry), eq(portfolioEntry));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.BUY), any(Date.class));
+        verify(tradeServiceFacade).findOrderAggregatedPrice(anyString(), eq(OrderType.SELL), any(Date.class));
+        verify(tradeServiceFacade).findExecutedTrades(anyString());
+        verify(tradeServiceFacade).findUserActiveOrders(anyString(), anyString());
     }
 }

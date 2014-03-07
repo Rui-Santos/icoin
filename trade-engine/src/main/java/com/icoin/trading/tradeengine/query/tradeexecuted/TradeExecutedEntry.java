@@ -17,6 +17,7 @@
 package com.icoin.trading.tradeengine.query.tradeexecuted;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
+import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -25,11 +26,14 @@ import java.util.Date;
  * @author Jettro Coenradie
  */
 public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEntry, String, Long> {
-
+    private String buyOrderId;
+    private String sellOrderId;
+    private String buyTransactionId;
+    private String sellTransactionId;
     private BigMoney tradedAmount;
     private BigMoney tradedPrice;
     private BigMoney executedMoney;
-    private String coinName;
+    private String coinId;
     private String orderBookIdentifier;
     private Date tradeTime;
 
@@ -44,12 +48,44 @@ public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEnt
         this.tradedAmount = tradedAmount;
     }
 
-    public String getCoinName() {
-        return coinName;
+    public String getBuyOrderId() {
+        return buyOrderId;
     }
 
-    public void setCoinName(String coinName) {
-        this.coinName = coinName;
+    public void setBuyOrderId(String buyOrderId) {
+        this.buyOrderId = buyOrderId;
+    }
+
+    public String getSellOrderId() {
+        return sellOrderId;
+    }
+
+    public String getBuyTransactionId() {
+        return buyTransactionId;
+    }
+
+    public void setBuyTransactionId(String buyTransactionId) {
+        this.buyTransactionId = buyTransactionId;
+    }
+
+    public String getSellTransactionId() {
+        return sellTransactionId;
+    }
+
+    public void setSellTransactionId(String sellTransactionId) {
+        this.sellTransactionId = sellTransactionId;
+    }
+
+    public void setSellOrderId(String sellOrderId) {
+        this.sellOrderId = sellOrderId;
+    }
+
+    public String getCoinId() {
+        return coinId;
+    }
+
+    public void setCoinId(String coinId) {
+        this.coinId = coinId;
     }
 
     public BigMoney getTradedPrice() {

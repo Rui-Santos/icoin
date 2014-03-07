@@ -247,7 +247,36 @@
                     </div>
                 </spring:hasBindErrors>
 
-                    <button type="submit" id="buySubmit"
+<div id="buyModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="buyPassword" class="col-sm-4 control-label">Exchange password</label>
+                                        <div class="input-group col-sm-6">
+                                            <input id="buyPassword" name="tradingPassword" placeholder="Your exchange password" class="form-control" type="password" value=""/>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-5 col-md-offset-5">
+                                            <div class="btn-group">
+                                                <button type="submit" class="btn btn-primary btn-sm">Confirm</button>
+                                                <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+
+                    <button type="submit" id="buySubmit" data-toggle="modal" data-target="#buyModal"
                             class="btn btn-success col-lg-offset-5 col-lg-3">Buy</button>
                 </form:form>
             </div>
@@ -455,51 +484,6 @@
 </div>
 </div>
 
-<%--longon/ singup page--%>
-<%--<p>There are a few things implemented. You can choose the coin to trade stock items for. Before you can--%>
-    <%--use them you need to login.</p>--%>
-
-<%--<div class="row">--%>
-    <%--<div class="span5">--%>
-        <%--<h2>Available Credentials</h2>--%>
-        <%--<table class="zebra-striped">--%>
-            <%--<thead>--%>
-            <%--<tr>--%>
-                <%--<th>User</th>--%>
-                <%--<th>Password</th>--%>
-            <%--</tr>--%>
-            <%--</thead>--%>
-            <%--<tbody>--%>
-            <%--<tr>--%>
-                <%--<td>buyer1</td>--%>
-                <%--<td>buyer1</td>--%>
-            <%--</tr>--%>
-            <%--<tr>--%>
-                <%--<td>buyer2</td>--%>
-                <%--<td>buyer2</td>--%>
-            <%--</tr>--%>
-            <%--<tr>--%>
-                <%--<td>buyer3</td>--%>
-                <%--<td>buyer3</td>--%>
-            <%--</tr>--%>
-            <%--</tbody>--%>
-        <%--</table>--%>
-    <%--</div>--%>
-    <%--<div class="span4">--%>
-        <%--<h2>Check the stocks</h2>--%>
-
-        <%--<p>If you have logged in, you can go to the coins</p>--%>
-
-        <%--<p><a class="btn primary" href="${ctx}/coin">To the items &raquo;</a></p>--%>
-    <%--</div>--%>
-    <%--<div class="span5">--%>
-        <%--<h2>Executed trades</h2>--%>
-
-        <%--<p>Trace all executed trades using the sockjs connection. Beware, vertx needs to be running as well.</p>--%>
-
-        <%--<p><a class="btn primary" href="${ctx}/orderbook/socket">Executed trades &raquo;</a></p>--%>
-    <%--</div>--%>
-<%--</div>--%>
 </body>
 <c:set var="lang" value="<%= LocaleContextHolder.getLocale().getLanguage()%>"/>
 <content tag="additionalJs">

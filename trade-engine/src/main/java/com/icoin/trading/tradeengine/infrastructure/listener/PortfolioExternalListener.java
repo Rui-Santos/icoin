@@ -171,11 +171,11 @@ public class PortfolioExternalListener {
         }
         final OrderEntry order = orderQueryRepository.findOne(orderId);
 
-        if (order == null || !hasLength(order.getUserId())) {
+        if (order == null || !hasLength(order.getPortfolioId())) {
             return null;
         }
 
-        return obtainUser(new PortfolioId(order.getUserId()));
+        return obtainUser(new PortfolioId(order.getPortfolioId()));
     }
 
     private UserEntry obtainUser(PortfolioId portfolioId) {

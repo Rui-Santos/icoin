@@ -1,7 +1,654 @@
-{ "_id" : "185788ad-1ada-452b-8f78-4a38088fc61b", "_class" : "com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry", "userIdentifier" : "8ffac63d-61f5-49cf-8aca-2da96267504e", "fullName" : "Buyer two Buyer two", "userName" : "buyer2", "amountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "reservedAmountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "items" : { }, "audit" : { "created_by" : null, "created_on" : "2014-02-22T05:02:00.424", "last_modified_by" : null }, "version" : NumberLong(0) }
-{ "_id" : "1e9dcb55-027e-4c64-a3bd-d9f29f7e6ca6", "_class" : "com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry", "userIdentifier" : "400f6d4e-833a-4e36-9656-8d6afa40d8b9", "fullName" : "Buyer three Buyer three", "userName" : "buyer3", "amountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "reservedAmountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "items" : { }, "audit" : { "created_by" : null, "created_on" : "2014-02-22T05:02:05.670", "last_modified_by" : null }, "version" : NumberLong(0) }
-{ "_id" : "cb66785f-5f20-41f7-9097-99a6153347f0", "_class" : "com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry", "userIdentifier" : "f8eb1d41-bfe2-4835-aa0d-85c75cd28227", "fullName" : "Buyer four Buyer four", "userName" : "buyer4", "amountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "reservedAmountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "items" : { }, "audit" : { "created_by" : null, "created_on" : "2014-02-22T05:02:11.019", "last_modified_by" : null }, "version" : NumberLong(0) }
-{ "_id" : "e72e2701-32c4-4cee-80e7-68c19e8e8532", "_class" : "com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry", "userIdentifier" : "9685764a-99bb-430f-97eb-d2b8b5fc6d49", "fullName" : "Buyer five Buyer five", "userName" : "buyer5", "amountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "reservedAmountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "items" : { }, "audit" : { "created_by" : null, "created_on" : "2014-02-22T05:02:11.437", "last_modified_by" : null }, "version" : NumberLong(0) }
-{ "_id" : "62b2ec32-144e-4a6d-a57d-ecf02c7def27", "_class" : "com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry", "userIdentifier" : "2b33c146-ae8f-4fad-8159-1b06ea5c66d1", "fullName" : "Buyer six Buyer six", "userName" : "buyer6", "amountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "reservedAmountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "items" : { }, "audit" : { "created_by" : null, "created_on" : "2014-02-22T05:02:11.861", "last_modified_by" : null }, "version" : NumberLong(0) }
-{ "_id" : "39a022f7-da9b-4af9-86bf-cf1e6eabb740", "_class" : "com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry", "userIdentifier" : "f104bcaf-be81-4930-bc75-f4fff552b0b8", "fullName" : "Buyer One Buyer One", "userName" : "buyer1", "amountOfMoney" : { "amount" : NumberLong(100000000), "currency" : "CNY" }, "reservedAmountOfMoney" : { "amount" : NumberLong(0), "currency" : "CNY" }, "items" : { }, "audit" : { "created_by" : null, "last_modified_by" : null, "last_modified_on" : "2014-02-22T05:02:11.942" }, "version" : NumberLong(1) }
-> 
+*********************************************************************************************************
+CurrencyPair 
+
+
+------------------------------------------------------------------------------------ 
+
+
+
+
+
+
+
+
+
+
+package com.icoin.trading.tradeengine.infrastructure.security; 
+
+
+
+package com.icoin.trading.tradeengine.domain.events.status; 
+
+
+package com.icoin.trading.tradeengine.domain.events.status; 
+
+import com.icoin.trading.tradeengine.domain.model.status.ChangedReason; 
+
+import static com.homhon.util.Asserts.hasLength; 
+import static com.homhon.util.Asserts.notNull; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/5/14 
+* Time: 6:32 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+public class DisabledAddingMoneyEvent { 
+    private String changedBy;
+    private String lastChangedTime; 
+    private ChangedReason reason; 
+
+    public DisabledAddingMoneyEvent(String lastChangedBy, String lastChangedTime, ChangedReason reason) { 
+        hasLength(changedBy);
+        notNull(reason); 
+        notNull(lastChangedTime); 
+        this.changedBy = changedBy;
+        this.lastChangedTime = lastChangedTime; 
+        this.reason = reason; 
+    } 
+
+    public String getLastChangedBy() { 
+        return changedBy;
+    } 
+
+    public String getLastChangedTime() { 
+        return lastChangedTime; 
+    } 
+
+    public ChangedReason getReason() { 
+        return reason; 
+    } 
+} 
+
+
+package com.icoin.trading.tradeengine.domain.events.status; 
+
+import com.icoin.trading.tradeengine.domain.model.status.ChangedReason; 
+
+import static com.homhon.util.Asserts.hasLength; 
+import static com.homhon.util.Asserts.notNull; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/5/14 
+* Time: 6:32 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+public class DisabledWithdrawingCoinEvent { 
+    private String changedBy;
+    private String lastChangedTime; 
+    private ChangedReason reason; 
+
+    public DisabledWithdrawingCoinEvent(String changedBy, String lastChangedTime, ChangedReason reason) {
+        hasLength(changedBy);
+        notNull(reason); 
+        notNull(lastChangedTime); 
+        this.changedBy = changedBy;
+        this.lastChangedTime = lastChangedTime; 
+        this.reason = reason; 
+    } 
+
+    public String getLastChangedBy() { 
+        return changedBy;
+    } 
+
+    public String getLastChangedTime() { 
+        return lastChangedTime; 
+    } 
+
+    public ChangedReason getReason() { 
+        return reason; 
+    } 
+} 
+
+
+package com.icoin.trading.tradeengine.domain.events.status; 
+
+import com.icoin.trading.tradeengine.domain.model.status.ChangedReason; 
+
+import static com.homhon.util.Asserts.hasLength; 
+import static com.homhon.util.Asserts.notNull; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/5/14 
+* Time: 6:32 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+public class DisabledWithdrawingMoneyEvent { 
+    private String changedBy;
+    private String lastChangedTime; 
+    private ChangedReason reason; 
+
+    public DisabledWithdrawingMoneyEvent(String changedBy, String lastChangedTime, ChangedReason reason) {
+        hasLength(changedBy);
+        notNull(reason); 
+        notNull(lastChangedTime); 
+        this.changedBy = changedBy;
+        this.lastChangedTime = lastChangedTime; 
+        this.reason = reason; 
+    } 
+
+    public String getLastChangedBy() { 
+        return changedBy;
+    } 
+
+    public String getLastChangedTime() { 
+        return lastChangedTime; 
+    } 
+
+    public ChangedReason getReason() { 
+        return reason; 
+    } 
+} 
+
+
+package com.icoin.trading.tradeengine.domain.events.status; 
+
+import com.icoin.trading.tradeengine.domain.model.status.ChangedReason; 
+
+import static com.homhon.util.Asserts.hasLength; 
+import static com.homhon.util.Asserts.notNull; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/5/14 
+* Time: 6:32 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+public class RevivedAddingCoinEvent { 
+    private String changedBy;
+    private String lastChangedTime; 
+    private ChangedReason reason; 
+
+    public RevivedAddingCoinEvent(String changedBy, String lastChangedTime, ChangedReason reason) {
+        hasLength(changedBy);
+        notNull(reason); 
+        notNull(lastChangedTime); 
+        this.changedBy = changedBy;
+        this.lastChangedTime = lastChangedTime; 
+        this.reason = reason; 
+    } 
+
+    public String getLastChangedBy() { 
+        return changedBy;
+    } 
+
+    public String getLastChangedTime() { 
+        return lastChangedTime; 
+    } 
+
+    public ChangedReason getReason() { 
+        return reason; 
+    } 
+} 
+
+package com.icoin.trading.tradeengine.domain.events.status; 
+
+import com.icoin.trading.tradeengine.domain.model.status.ChangedReason; 
+
+import static com.homhon.util.Asserts.hasLength; 
+import static com.homhon.util.Asserts.notNull; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/5/14 
+* Time: 6:32 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+public class RevivedAddingMoneyEvent { 
+    private String changedBy;
+    private String lastChangedTime; 
+    private ChangedReason reason; 
+
+    public RevivedAddingMoneyEvent(String changedBy, String lastChangedTime, ChangedReason reason) {
+        hasLength(changedBy);
+        notNull(reason); 
+        notNull(lastChangedTime); 
+        this.changedBy = changedBy;
+        this.lastChangedTime = lastChangedTime; 
+        this.reason = reason; 
+    } 
+
+    public String getLastChangedBy() { 
+        return changedBy;
+    } 
+
+    public String getLastChangedTime() { 
+        return lastChangedTime; 
+    } 
+
+    public ChangedReason getReason() { 
+        return reason; 
+    } 
+} 
+
+
+package com.icoin.trading.tradeengine.domain.events.status; 
+
+import com.icoin.trading.tradeengine.domain.model.status.ChangedReason; 
+
+import java.util.Date; 
+
+import static com.homhon.util.Asserts.hasLength; 
+import static com.homhon.util.Asserts.notNull; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/5/14 
+* Time: 6:32 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+public class RevivedTradingEvent { 
+    private String changedBy;
+    private Date lastChangedTime; 
+    private ChangedReason reason; 
+
+    public RevivedTradingEvent(String changedBy, Date lastChangedTime, ChangedReason reason) {
+        hasLength(changedBy);
+        notNull(reason); 
+        notNull(lastChangedTime); 
+        this.changedBy = changedBy;
+        this.lastChangedTime = lastChangedTime; 
+        this.reason = reason; 
+    } 
+
+    public String getLastChangedBy() { 
+        return changedBy;
+    } 
+
+    public Date getLastChangedTime() { 
+        return lastChangedTime; 
+    } 
+
+    public ChangedReason getReason() { 
+        return reason; 
+    } 
+} 
+
+
+package com.icoin.trading.tradeengine.domain.events.status; 
+
+import com.icoin.trading.tradeengine.domain.model.status.ChangedReason; 
+
+import static com.homhon.util.Asserts.hasLength; 
+import static com.homhon.util.Asserts.notNull; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/5/14 
+* Time: 6:32 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+public class RevivedWithdrawingCoinEvent { 
+    private String changedBy;
+    private String lastChangedTime; 
+    private ChangedReason reason; 
+
+    public RevivedWithdrawingCoinEvent(String changedBy, String lastChangedTime, ChangedReason reason) {
+        hasLength(changedBy);
+        notNull(reason); 
+        notNull(lastChangedTime); 
+        this.changedBy = changedBy;
+        this.lastChangedTime = lastChangedTime; 
+        this.reason = reason; 
+    } 
+
+    public String getLastChangedBy() { 
+        return changedBy;
+    } 
+
+    public String getLastChangedTime() { 
+        return lastChangedTime; 
+    } 
+
+    public ChangedReason getReason() { 
+        return reason; 
+    } 
+} 
+
+package com.icoin.trading.tradeengine.domain.events.status; 
+
+import com.icoin.trading.tradeengine.domain.model.status.ChangedReason; 
+
+import static com.homhon.util.Asserts.hasLength; 
+import static com.homhon.util.Asserts.notNull; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/5/14 
+* Time: 6:32 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+public class RevivedWithdrawingMoneyEvent { 
+    private String changedBy;
+    private String lastChangedTime; 
+    private ChangedReason reason; 
+
+    public RevivedWithdrawingMoneyEvent(String changedBy, String lastChangedTime, ChangedReason reason) {
+        hasLength(changedBy);
+        notNull(reason); 
+        notNull(lastChangedTime); 
+        this.changedBy = changedBy;
+        this.lastChangedTime = lastChangedTime; 
+        this.reason = reason; 
+    } 
+
+    public String getLastChangedBy() { 
+        return changedBy;
+    } 
+
+    public String getLastChangedTime() { 
+        return lastChangedTime; 
+    } 
+
+    public ChangedReason getReason() { 
+        return reason; 
+    } 
+} 
+
+package com.icoin.trading.tradeengine.domain.model.status; 
+
+import com.homhon.base.domain.repository.GenericCrudRepository; 
+import com.icoin.trading.tradeengine.domain.model.activity.PortfolioActivity; 
+import com.icoin.trading.tradeengine.domain.model.activity.PortfolioActivityType; 
+
+import java.util.Date; 
+import java.util.List; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 2/27/14 
+* Time: 11:00 AM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+public interface TradingSystemStatusRepository extends GenericCrudRepository<TradingSystemStatus, String> { 
+} 
+
+package com.icoin.trading.tradeengine.infrastructure.security; 
+
+import com.google.common.eventbus.EventBus; 
+import com.google.common.eventbus.Subscribe; 
+import org.junit.Test; 
+import org.springframework.beans.factory.support.DefaultListableBeanFactory; 
+import org.springframework.beans.factory.support.RootBeanDefinition; 
+
+import static org.hamcrest.MatcherAssert.assertThat; 
+import static org.hamcrest.Matchers.is; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/6/14 
+* Time: 11:56 AM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+public class GuavaEventBusRegisterBeanPostProcessorIT { 
+    @Test 
+    public void test() throws Exception { 
+        DefaultListableBeanFactory bf = new DefaultListableBeanFactory(); 
+
+        GuavaEventBusRegisterBeanPostProcessor guavaEventBusRegisterBeanPostProcessor = new GuavaEventBusRegisterBeanPostProcessor(); 
+        guavaEventBusRegisterBeanPostProcessor.setBeanFactory(bf); 
+        bf.addBeanPostProcessor(guavaEventBusRegisterBeanPostProcessor); 
+
+        bf.registerBeanDefinition("guavaListener", new RootBeanDefinition(TestGuavaListener.class)); 
+        bf.registerBeanDefinition("eventBus", new RootBeanDefinition(EventBus.class)); 
+
+
+        EventBus eventBus = (EventBus) bf.getBean("eventBus"); 
+        TestGuavaListener listener = (TestGuavaListener) bf.getBean("guavaListener"); 
+
+        final int event = 120320; 
+        eventBus.post(event); 
+
+        assertThat(listener.getNumber(), is(event)); 
+    } 
+
+    private static class TestGuavaListener { 
+        private int number; 
+
+        @Subscribe 
+        public void handle(Integer event) { 
+            number = event; 
+        } 
+
+        private int getNumber() { 
+            return number; 
+        } 
+    } 
+} 
+
+
+package com.icoin.trading.tradeengine.infrastructure.security; 
+
+import com.google.common.eventbus.EventBus; 
+import org.springframework.beans.BeansException; 
+import org.springframework.beans.factory.BeanFactory; 
+import org.springframework.beans.factory.BeanFactoryAware; 
+import org.springframework.beans.factory.config.BeanPostProcessor; 
+import org.springframework.context.ApplicationContext; 
+import org.springframework.context.ApplicationContextAware; 
+import org.springframework.stereotype.Component; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/5/14 
+* Time: 6:42 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+@Component 
+public class GuavaEventBusRegisterBeanPostProcessor implements BeanPostProcessor, BeanFactoryAware { 
+    private EventBus eventBus; 
+    private BeanFactory beanFactory; 
+
+    @Override 
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException { 
+        return bean; 
+    } 
+
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException { 
+
+        if (bean == null) { 
+            return bean; 
+        } 
+
+        if (bean.getClass().getCanonicalName().endsWith("GuavaListener")) { 
+            registerToEventBus(bean); 
+        } 
+
+        return bean; 
+    } 
+
+    private void registerToEventBus(Object bean) { 
+        eventBus = beanFactory.getBean(EventBus.class); 
+        this.eventBus.register(bean); 
+    } 
+
+    @Override 
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException { 
+       this.beanFactory = beanFactory; 
+    } 
+} 
+
+
+
+package com.homhon.util; 
+
+import org.apache.commons.lang.time.DateUtils; 
+import org.joda.time.DateTimeZone; 
+import org.joda.time.LocalDateTime; 
+
+import java.util.Calendar; 
+import java.util.Date; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: liougehooa 
+* Date: 13-4-26 
+* Time: PM10:19 
+* To change this homhon use File | Settings | File Templates. 
+*/ 
+public abstract class TimeUtils { 
+    private static final Date positiveInfinityTime; 
+    private static final Date negativeInfinityTime; 
+
+    static { 
+        Calendar positiveInfinity = Calendar.getInstance(); 
+        positiveInfinity.set(9999, 11, 31, 23, 59, 59); 
+        positiveInfinity.set(Calendar.MILLISECOND, 999); 
+        positiveInfinityTime = positiveInfinity.getTime(); 
+
+        Calendar negativeInfinity = Calendar.getInstance(); 
+        negativeInfinity.set(0, 0, 1, 0, 0, 0); 
+        negativeInfinity.set(Calendar.MILLISECOND, 0); 
+        negativeInfinityTime = negativeInfinity.getTime(); 
+    } 
+
+    public static LocalDateTime getUTCNow() { 
+        return LocalDateTime.now(DateTimeZone.UTC); 
+    } 
+
+    public static Date currentTime() { 
+        return new Date(); 
+    } 
+
+    public static Date positiveInfinityTime() { 
+        return positiveInfinityTime; 
+    } 
+
+    public static Date negativeInfinityTime() { 
+        return negativeInfinityTime; 
+    } 
+
+    public static LocalDateTime currentLocalTime() { 
+        return LocalDateTime.now(DateTimeZone.UTC); 
+    } 
+
+    public static Date today() { 
+        return truncate(currentTime()); 
+    } 
+
+    public static Date truncate(Date date) { 
+        return DateUtils.truncate(date, Calendar.DATE); 
+    } 
+
+    public static Date futureDate(int days) { 
+        return DateUtils.addDays(today(), days); 
+    } 
+
+    public static Date futureDate(Date currentDay, int days) { 
+        return DateUtils.addDays(truncate(currentDay), days); 
+    } 
+
+    public static Date futureMinute(Date currentTime, int days) { 
+        return DateUtils.addMinutes(currentTime, days); 
+    } 
+} 
+package com.icoin.trading.tradeengine.domain.service; 
+
+import com.icoin.trading.tradeengine.domain.model.status.TradingSystemStatus; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 3/5/14 
+* Time: 6:22 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+
+
+
+
+
+package com.icoin.trading.tradeengine.domain.model.activity; 
+
+import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport; 
+import org.springframework.data.mongodb.core.index.CompoundIndex; 
+import org.springframework.data.mongodb.core.index.CompoundIndexes; 
+import org.springframework.data.mongodb.core.index.Indexed; 
+
+/** 
+* Created with IntelliJ IDEA. 
+* User: jihual 
+* Date: 2/26/14 
+* Time: 3:30 PM 
+* To change this template use File | Settings | File Templates. 
+*/ 
+@CompoundIndexes({ 
+        @CompoundIndex(name = "portfolioActivity_user_type", def = "{'username': 1, 'type': 1}", unique = true), 
+        @CompoundIndex(name = "portfolioActivity_portfolio_type", def = "{'portfolioId': 1, 'type': 1}", unique = true) 
+}) 
+public class TradingExceptionActivity extends VersionedEntitySupport<TradingExceptionActivity, String, Long> { 
+    @Indexed 
+    private String userId; 
+    @Indexed 
+    private String username; 
+    @Indexed 
+    private String portfolioId; 
+
+    private PortfolioActivityType type; 
+
+    private Activity activity; 
+
+
+    public String getUserId() { 
+        return userId; 
+    } 
+
+    public void setUserId(String userId) { 
+        this.userId = userId; 
+    } 
+
+    public String getUsername() { 
+        return username; 
+    } 
+
+    public void setUsername(String username) { 
+        this.username = username; 
+    } 
+
+    public String getPortfolioId() { 
+        return portfolioId; 
+    } 
+
+    public void setPortfolioId(String portfolioId) { 
+        this.portfolioId = portfolioId; 
+    } 
+
+    public PortfolioActivityType getType() { 
+        return type; 
+    } 
+
+    public void setType(PortfolioActivityType type) { 
+        this.type = type; 
+    } 
+
+    public Activity getActivity() { 
+        return activity; 
+    } 
+
+    public void setActivity(Activity activity) { 
+        this.activity = activity; 
+    } 
+} 
+
+package com.icoin.trading.tradeengine.domain.model.activity; 
+
+
+
+
+package com.icoin.trading.tradeengine.domain.model.activity; 
+
+package com.icoin.trading.tradeengine.domain.model.activity;
+

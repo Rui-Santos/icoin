@@ -1,14 +1,20 @@
 package com.icoin.trading.tradeengine.application.command.admin;
 
 import com.google.common.collect.ImmutableList;
+import com.icoin.trading.tradeengine.application.TradingSystemStatusHolder;
 import com.icoin.trading.tradeengine.application.command.order.handler.TradeExecutor;
+import com.icoin.trading.tradeengine.domain.model.admin.TradingSystemStatus;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
+import com.icoin.trading.tradeengine.query.activity.ExecutedExceptionActivity;
+import com.icoin.trading.tradeengine.query.activity.PortfolioActivity;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.transaction.TransactionEntry;
+import com.icoin.trading.users.domain.model.function.UserPasswordReset;
+import com.icoin.trading.users.domain.model.social.SocialConnection;
 import com.icoin.trading.users.query.UserEntry;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventstore.mongo.MongoEventStore;
@@ -29,14 +35,19 @@ import java.util.List;
 @Component
 public class AdminCommandHandler {
     private static List<Class> queryEntityClasses = ImmutableList.<Class>of(
-            UserEntry.class,
-            OrderBookEntry.class,
-            OrderEntry.class,
-            CoinEntry.class,
-            TradeExecutedEntry.class,
-            PortfolioEntry.class,
-            TransactionEntry.class,
-            Order.class);
+                UserEntry.class,
+                OrderBookEntry.class,
+                OrderEntry.class,
+                CoinEntry.class,
+                TradeExecutedEntry.class,
+                PortfolioEntry.class,
+                TransactionEntry.class,
+                Order.class,
+                PortfolioActivity.class,
+                ExecutedExceptionActivity.class,
+                TradingSystemStatus.class,
+                UserPasswordReset.class,
+                SocialConnection.class);
 
     private MongoEventStore eventStore;
 
@@ -44,12 +55,15 @@ public class AdminCommandHandler {
     private org.axonframework.saga.repository.mongo.MongoTemplate systemAxonSagaMongo;
     private org.axonframework.eventstore.mongo.MongoTemplate systemAxonMongo;
     private TradeExecutor tradeExecutor;
+    private TradingSystemStatusHolder tradingSystemStatusHolder;
 
     @CommandHandler
     public void handleReInstallDataBase(ReinstallDataBaseCommand command) {
         dropCqrsInfraTables();
 
         dropQueryTables();
+
+        tradingSystemStatusHolder.init();
     }
 
     /**
@@ -61,6 +75,15 @@ public class AdminCommandHandler {
     @CommandHandler
     public void handleEnsureCqrsIndexes(EnsureCqrsIndexesCommand command) {
         eventStore.ensureIndexes();
+    }
+
+    @CommandHandler
+    public void handleRevivedTrading(RevivedTradingCommand command) {
+        tradingSystemStatusHolder.reviveTrading(command.getChangedBy(), command.getChangedTime(), command.getReason());
+    }
+
+    public void handleDisabledTrading(DisabledTradingCommand command) {
+        tradingSystemStatusHolder.disableTrading(command.getAllowedToTradeStartTime(), command.getChangedBy(), command.getChangedTime(), command.getReason());
     }
 
     @CommandHandler
@@ -103,5 +126,10 @@ public class AdminCommandHandler {
     @Autowired
     public void setTradeExecutor(TradeExecutor tradeExecutor) {
         this.tradeExecutor = tradeExecutor;
+    }
+
+    @Autowired
+    public void setTradingSystemStatusHolder(TradingSystemStatusHolder tradingSystemStatusHolder) {
+        this.tradingSystemStatusHolder = tradingSystemStatusHolder;
     }
 }

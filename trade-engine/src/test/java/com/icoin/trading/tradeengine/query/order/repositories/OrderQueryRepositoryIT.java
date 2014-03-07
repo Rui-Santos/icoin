@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -121,7 +120,7 @@ public class OrderQueryRepositoryIT {
 
     private OrderEntry createOrderEntry(String userId, OrderType type, BigMoney price, Date placeDate) {
         final OrderEntry orderEntry = new OrderEntry();
-        orderEntry.setUserId(userId);
+        orderEntry.setPortfolioId(userId);
         orderEntry.setOrderBookIdentifier(orderBookId.toString());
         orderEntry.setType(type);
         orderEntry.setItemPrice(price);

@@ -15,7 +15,7 @@ import static com.homhon.util.Asserts.notNull;
  * To change this template use File | Settings | File Templates.
  */
 public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
-    public static final String CCY_DEFAULT = "CNY";
+    public static final CurrencyUnit CCY_DEFAULT = CurrencyUnit.of("CNY");
     public static final String CCY_USD = "USD";
     // Provide some standard major symbols
     public static final CurrencyPair EUR_USD = new CurrencyPair("EUR", "USD");
@@ -80,7 +80,7 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
      * @param baseCurrency The base symbol (single unit)
      */
     public CurrencyPair(String baseCurrency) {
-        this(baseCurrency, CCY_DEFAULT);
+        this(CurrencyUnit.of(baseCurrency), CCY_DEFAULT);
     }
 
     /**
@@ -94,10 +94,7 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
 
     @PersistenceConstructor
     public CurrencyPair(String baseCurrency, String counterCurrency) {
-        notNull(baseCurrency);
-        notNull(counterCurrency);
-        this.baseCurrency = baseCurrency;
-        this.counterCurrency = counterCurrency;
+        this(CurrencyUnit.of(baseCurrency),CurrencyUnit.of(counterCurrency));
     }
 
     public CurrencyPair(CurrencyUnit baseCurrency, CurrencyUnit counterCurrency) {
@@ -130,43 +127,24 @@ public class CurrencyPair extends ValueObjectSupport<CurrencyPair> {
     }
 
     @Override
-    public int hashCode() {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((baseCurrency == null) ? 0 : baseCurrency.hashCode());
-        result = prime * result + ((counterCurrency == null) ? 0 : counterCurrency.hashCode());
-        return result;
-    }
+        CurrencyPair that = (CurrencyPair) o;
 
-    @Override
-    public boolean equals(Object obj) {
+        if (!baseCurrency.equals(that.baseCurrency)) return false;
+        if (!counterCurrency.equals(that.counterCurrency)) return false;
 
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        CurrencyPair other = (CurrencyPair) obj;
-        if (baseCurrency == null) {
-            if (other.baseCurrency != null) {
-                return false;
-            }
-        } else if (!baseCurrency.equals(other.baseCurrency)) {
-            return false;
-        }
-        if (counterCurrency == null) {
-            if (other.counterCurrency != null) {
-                return false;
-            }
-        } else if (!counterCurrency.equals(other.counterCurrency)) {
-            return false;
-        }
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + baseCurrency.hashCode();
+        result = 31 * result + counterCurrency.hashCode();
+        return result;
+    }
 }

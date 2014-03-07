@@ -32,7 +32,7 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
     private String orderBookIdentifier;
     private String transactionIdentifier;
     private BigMoney tradeAmount;
-    private String userId;
+    private String portfolioId;
     private BigMoney itemPrice;
     private BigMoney itemRemaining;
     private BigMoney totalCommission;
@@ -110,12 +110,12 @@ public class OrderEntry extends AuditAwareEntitySupport<OrderEntry, String, Long
         this.totalCommission = totalCommission;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getPortfolioId() {
+        return portfolioId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setPortfolioId(String userId) {
+        this.portfolioId = userId;
     }
 
     public OrderType getType() {

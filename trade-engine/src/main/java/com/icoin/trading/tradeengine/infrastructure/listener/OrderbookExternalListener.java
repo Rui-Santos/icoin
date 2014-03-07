@@ -51,7 +51,7 @@ import java.io.Writer;
  *
  * @author Jettro Coenradie
  */
-@Component
+//@Component
 public class OrderbookExternalListener {
     private static final Logger logger = LoggerFactory.getLogger(OrderbookExternalListener.class);
 

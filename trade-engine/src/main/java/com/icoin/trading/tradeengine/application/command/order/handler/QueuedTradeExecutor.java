@@ -8,6 +8,8 @@ import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
+import com.icoin.trading.tradeengine.domain.model.admin.TradingSystemStatus;
+import com.icoin.trading.tradeengine.domain.service.TradingSystemService;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -43,22 +45,21 @@ public class QueuedTradeExecutor implements TradeExecutor {
     private OrderRepository orderRepository;
     private ExecutorService executor;
     private OrderBookQueryRepository orderBookRepository;
+    private TradingSystemService tradingSystemService;
     private AtomicBoolean halted;
+    private AtomicBoolean needToExecuteNotExecuted = new AtomicBoolean(false);
 
-    //todo, load orderbook id from the repo
-    //todo cannot reloaded runtime
-//    QueuedTradeExecutor(Map<OrderBookId, BlockingQueue<AbstractOrder>> orderBookPool) {
-//        this.orderBookPool = ImmutableMap.copyOf(orderBookPool);
-//    }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public QueuedTradeExecutor(OrderBookQueryRepository orderBookRepository,
                                CommandGateway commandGateway,
-                               OrderRepository orderRepository) {
+                               OrderRepository orderRepository,
+                               TradingSystemService tradingSystemService) {
         this.orderBookRepository = orderBookRepository;
         this.commandGateway = commandGateway;
         this.orderRepository = orderRepository;
+        this.tradingSystemService = tradingSystemService;
         initialize();
         start();
         logger.info("resolving unfinished orders ...");
@@ -69,7 +70,6 @@ public class QueuedTradeExecutor implements TradeExecutor {
 
     public void reinitialize() {
         logger.info("Start to reinitialize trade executors.");
-        logger.info("Shutting down thread executor pool.");
         stop();
         logger.info("Stopped thread executor pool first.");
         if (executor != null) {
@@ -77,15 +77,9 @@ public class QueuedTradeExecutor implements TradeExecutor {
             logger.info("Shut down thread executor pool already.");
         }
 
-        logger.info("reinitializing orderbook queues.");
         initialize();
-        logger.info("reinitialized orderbook queues.");
-        logger.info("starting executors...");
         start();
-        logger.info("resolving unfinished orders ...");
         resolveNotExecutedOrders();
-        logger.info("resolved unfinished orders ...");
-        logger.info("Trading executor started ...");
         logger.info("Trading executor reinitialization finished ...");
     }
 
@@ -94,12 +88,13 @@ public class QueuedTradeExecutor implements TradeExecutor {
     }
 
     protected void initialize() {
+        logger.info("reinitializing orderbook queues.");
         initOrderBookPool(orderBookRepository);
-//        executor = Executors.newFixedThreadPool(orderBookPool.size());
     }
 
     //OrderBookListener.handleTradeExecuted, add lastTradedTime
     private void resolveNotExecutedOrders() {
+        logger.info("resolving unfinished orders ...");
         for (OrderBookId orderBookId : orderBookPool.keySet()) {
             Order highestBuyOrder = orderRepository.findHighestPricePendingBuyOrder(orderBookId);
 
@@ -124,7 +119,7 @@ public class QueuedTradeExecutor implements TradeExecutor {
 
             while (!isEmpty(orders)) {
                 for (Order order : orders) {
-                    execute(order);
+                    execute0(order);
                 }
 
                 orderBook = orderBookRepository.findOne(orderBookId.toString());
@@ -135,6 +130,7 @@ public class QueuedTradeExecutor implements TradeExecutor {
                 orders = orderRepository.findPlacedPendingOrdersAfter(lastTradedTime, orderBookId, 100);
             }
         }
+        logger.info("resolved unfinished orders ...");
     }
 
     private void initOrderBookPool(OrderBookQueryRepository orderBookRepository) {
@@ -151,6 +147,25 @@ public class QueuedTradeExecutor implements TradeExecutor {
 
     @Override
     public void execute(Order order) {
+        if (needToExecuteNotExecuted.get()) {
+            resolveNotExecutedOrders();
+            needToExecuteNotExecuted.set(false);
+        }
+
+        execute0(order);
+    }
+
+    private void execute0(Order order){
+        TradingSystemStatus tradingSystemStatus = tradingSystemService.currentStatus();
+        if (tradingSystemStatus != null && !tradingSystemStatus.allowedToTrade(order.getPlaceDate())) {
+            logger.info("System is waiting to revive trading");
+            if (!needToExecuteNotExecuted.get()) { // stop the buying and selling execution,
+                                                   // need to reinitialize the old ones once wake up
+                needToExecuteNotExecuted.set(true);
+            }
+            return;
+        }
+
         final OrderBookId orderBookId = order.getOrderBookId();
 
         if (!orderBookPool.containsKey(orderBookId)) {
@@ -245,8 +260,10 @@ public class QueuedTradeExecutor implements TradeExecutor {
     }
 
     public void start() {
+        logger.info("starting executors...");
         final Runnable setup = new Setup();
         halted = new AtomicBoolean(false);
         new Thread(setup).start();
+        logger.info("Trading executor started ...");
     }
 }

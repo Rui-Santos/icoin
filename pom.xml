@@ -47,7 +47,7 @@
         <!--<springdata.mongodb.version>1.4.0.BUILD-SNAPSHOT</springdata.mongodb.version>-->
         <xstream.version>1.4.5</xstream.version>
         <apache.httpcomponents.httpclient.version>4.3.2</apache.httpcomponents.httpclient.version>
-        <!--<argLine>-javaagent:${jacoco.agent.path}=destfile=${jacoco.file.path}</argLine>-->
+        <google.guava.version>15.0</google.guava.version>
     </properties>
 
     <modules>
@@ -56,6 +56,8 @@
         <module>trade-engine</module>
         <module>users</module>
         <module>web-ui</module>
+        <module>coin</module>
+        <module>money-support</module>
     </modules>
 
     <build>
@@ -182,6 +184,12 @@
                 <groupId>homhon-base</groupId>
                 <artifactId>mongobase</artifactId>
                 <version>${homhon.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${google.guava.version}</version>
             </dependency>
 
             <dependency>

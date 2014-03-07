@@ -135,7 +135,7 @@ public class OrderListenerIT {
         assertThat(orderEntry.getItemPrice().isEqual(
                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(100))),
                 is(true));
-        assertThat(orderEntry.getUserId(), equalTo(portfolioId.toString()));
+        assertThat(orderEntry.getPortfolioId(), equalTo(portfolioId.toString()));
         assertThat(orderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(orderEntry.getType(), equalTo(OrderType.BUY));
         assertThat(orderEntry.getTotalCommission()
@@ -188,7 +188,7 @@ public class OrderListenerIT {
         assertThat(orderEntry.getItemPrice().isEqual(
                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(100))),
                 is(true));
-        assertThat(orderEntry.getUserId(), equalTo(portfolioId.toString()));
+        assertThat(orderEntry.getPortfolioId(), equalTo(portfolioId.toString()));
         assertThat(orderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(orderEntry.getType(), equalTo(OrderType.SELL));
         assertThat(orderEntry.getTotalCommission()
@@ -282,7 +282,7 @@ public class OrderListenerIT {
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))),
                 is(true));
         assertThat(sellOrderEntry.getType(), equalTo(OrderType.SELL));
-        assertThat(sellOrderEntry.getUserId(), equalTo(portfolioId.toString()));
+        assertThat(sellOrderEntry.getPortfolioId(), equalTo(portfolioId.toString()));
         assertThat(sellOrderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(sellOrderEntry.getCompleteDate(), nullValue());
         assertThat(sellOrderEntry.getLastTradedTime(), equalTo(tradeTime));
@@ -313,7 +313,7 @@ public class OrderListenerIT {
                 BigMoney.zero(CurrencyUnit.of(Currencies.BTC))),
                 is(true));
         assertThat(buyOrderEntry.getType(), equalTo(OrderType.BUY));
-        assertThat(buyOrderEntry.getUserId(), equalTo(portfolioId.toString()));
+        assertThat(buyOrderEntry.getPortfolioId(), equalTo(portfolioId.toString()));
         assertThat(buyOrderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(buyOrderEntry.getCompleteDate(), equalTo(tradeTime));
         assertThat(buyOrderEntry.getLastTradedTime(), equalTo(tradeTime));

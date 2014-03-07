@@ -265,7 +265,7 @@ public class TradingIT1 {
         assertThat(buyOrder.getOrderStatus(), equalTo(OrderStatus.PENDING));
         assertThat(buyOrder.getTradeAmount().isEqual(tradeAmount.plus(0.01)), is(true));
         assertThat(buyOrder.getType(), equalTo(OrderType.BUY));
-        assertThat(buyOrder.getUserId(), equalTo(buyPortfolio.getPrimaryKey()));
+        assertThat(buyOrder.getPortfolioId(), equalTo(buyPortfolio.getPrimaryKey()));
 
         assertThat(buyOrder.getPlacedDate(), notNullValue());
         assertThat(buyOrder.getLastTradedTime(), notNullValue());
@@ -289,7 +289,7 @@ public class TradingIT1 {
         assertThat(sellOrder.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(sellOrder.getTradeAmount().isEqual(tradeAmount), is(true));
         assertThat(sellOrder.getType(), equalTo(OrderType.SELL));
-        assertThat(sellOrder.getUserId(), equalTo(sellPortfolio.getPrimaryKey()));
+        assertThat(sellOrder.getPortfolioId(), equalTo(sellPortfolio.getPrimaryKey()));
 
         assertThat(sellOrder.getCompleteDate(), notNullValue());
         assertThat(sellOrder.getPlacedDate(), notNullValue());

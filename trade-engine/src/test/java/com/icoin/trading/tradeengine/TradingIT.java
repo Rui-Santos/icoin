@@ -224,7 +224,7 @@ public class TradingIT {
         assertThat(buyOrder.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(buyOrder.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(buyOrder.getType(), equalTo(OrderType.BUY));
-        assertThat(buyOrder.getUserId(), equalTo(buyPortfolio.getPrimaryKey()));
+        assertThat(buyOrder.getPortfolioId(), equalTo(buyPortfolio.getPrimaryKey()));
         assertThat(buyOrder.getItemRemaining().isNegativeOrZero(), is(true));
         assertThat(buyOrder.getTradeAmount().isEqual(tradeAmount), is(true));
         assertThat(buyOrder.getExecutedCommission().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 0.326)), is(true));
@@ -251,7 +251,7 @@ public class TradingIT {
         assertThat(sellOrder.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(sellOrder.getOrderStatus(), equalTo(OrderStatus.PENDING));
         assertThat(sellOrder.getType(), equalTo(OrderType.SELL));
-        assertThat(sellOrder.getUserId(), equalTo(sellPortfolio.getPrimaryKey()));
+        assertThat(sellOrder.getPortfolioId(), equalTo(sellPortfolio.getPrimaryKey()));
         assertThat(sellOrder.getItemPrice().isEqual(price), is(true));
         assertThat(sellOrder.getItemRemaining().isPositive(), is(true));
         assertThat(sellOrder.getTradeAmount().isEqual(tradeAmount.plus(0.001)), is(true));
@@ -405,7 +405,7 @@ public class TradingIT {
         assertThat(buyOrder.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(buyOrder.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(buyOrder.getType(), equalTo(OrderType.BUY));
-        assertThat(buyOrder.getUserId(), equalTo(buyPortfolio.getPrimaryKey()));
+        assertThat(buyOrder.getPortfolioId(), equalTo(buyPortfolio.getPrimaryKey()));
         assertThat(buyOrder.getItemPrice().isEqual(price), is(true));
         assertThat(buyOrder.getItemRemaining().isNegativeOrZero(), is(true));
         assertThat(buyOrder.getTotalCommission().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(0.485))), is(true));
@@ -435,7 +435,7 @@ public class TradingIT {
         assertThat(sellOrder.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(sellOrder.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(sellOrder.getType(), equalTo(OrderType.SELL));
-        assertThat(sellOrder.getUserId(), equalTo(sellPortfolio.getPrimaryKey()));
+        assertThat(sellOrder.getPortfolioId(), equalTo(sellPortfolio.getPrimaryKey()));
         assertThat(sellOrder.getItemPrice().isEqual(price), is(true));
         assertThat(sellOrder.getItemRemaining().isNegativeOrZero(), is(true));
         assertThat(sellOrder.getTradeAmount().isEqual(tradeAmount), is(true));
@@ -622,7 +622,7 @@ public class TradingIT {
         assertThat(buyOrder.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(buyOrder.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(buyOrder.getType(), equalTo(OrderType.BUY));
-        assertThat(buyOrder.getUserId(), equalTo(buyPortfolio.getPrimaryKey()));
+        assertThat(buyOrder.getPortfolioId(), equalTo(buyPortfolio.getPrimaryKey()));
         assertThat(buyOrder.getTradeAmount().isEqual(buyAmount), is(true));
         assertThat(buyOrder.getItemPrice().isEqual(buyPrice), is(true));
         assertThat(buyOrder.getItemRemaining().isNegativeOrZero(), is(true));
@@ -663,7 +663,7 @@ public class TradingIT {
         assertThat(sellOrder1.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(sellOrder1.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(sellOrder1.getType(), equalTo(OrderType.SELL));
-        assertThat(sellOrder1.getUserId(), equalTo(sellPortfolio.getPrimaryKey()));
+        assertThat(sellOrder1.getPortfolioId(), equalTo(sellPortfolio.getPrimaryKey()));
         assertThat(sellOrder1.getItemPrice().isEqual(sellPrice1), is(true));
         assertThat(sellOrder1.getItemRemaining().isZero(), is(true));
         assertThat(sellOrder1.getTradeAmount().isEqual(sellAmount1), is(true));
@@ -683,7 +683,7 @@ public class TradingIT {
         assertThat(sellOrder2.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(sellOrder2.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(sellOrder2.getType(), equalTo(OrderType.SELL));
-        assertThat(sellOrder2.getUserId(), equalTo(sellPortfolio.getPrimaryKey()));
+        assertThat(sellOrder2.getPortfolioId(), equalTo(sellPortfolio.getPrimaryKey()));
         assertThat(sellOrder2.getItemPrice().isEqual(sellPrice2), is(true));
         assertThat(sellOrder2.getItemRemaining().isZero(), is(true));
         assertThat(sellOrder2.getTradeAmount().isEqual(sellAmount2), is(true));
@@ -703,7 +703,7 @@ public class TradingIT {
         assertThat(sellOrder3.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(sellOrder3.getOrderStatus(), equalTo(OrderStatus.PENDING));
         assertThat(sellOrder3.getType(), equalTo(OrderType.SELL));
-        assertThat(sellOrder3.getUserId(), equalTo(sellPortfolio.getPrimaryKey()));
+        assertThat(sellOrder3.getPortfolioId(), equalTo(sellPortfolio.getPrimaryKey()));
         assertThat(sellOrder3.getTradeAmount().isEqual(sellAmount3), is(true));
         assertThat(sellOrder3.getTotalCommission().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(0.03))), is(true));
         assertThat(sellOrder3.getItemPrice().isEqual(sellPrice3), is(true));
@@ -948,7 +948,7 @@ public class TradingIT {
         assertThat(buyOrder1.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(buyOrder1.getOrderStatus(), equalTo(OrderStatus.PENDING));
         assertThat(buyOrder1.getType(), equalTo(OrderType.BUY));
-        assertThat(buyOrder1.getUserId(), equalTo(buyPortfolio.getPrimaryKey()));
+        assertThat(buyOrder1.getPortfolioId(), equalTo(buyPortfolio.getPrimaryKey()));
         assertThat(buyOrder1.getItemPrice().isEqual(buyPrice1), is(true));
         assertThat(buyOrder1.getItemRemaining().isPositive(), is(true));
         assertThat(buyOrder1.getItemRemaining().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(2))), is(true));
@@ -968,7 +968,7 @@ public class TradingIT {
         assertThat(buyOrder2.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(buyOrder2.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(buyOrder2.getType(), equalTo(OrderType.BUY));
-        assertThat(buyOrder2.getUserId(), equalTo(buyPortfolio.getPrimaryKey()));
+        assertThat(buyOrder2.getPortfolioId(), equalTo(buyPortfolio.getPrimaryKey()));
         assertThat(buyOrder2.getItemPrice().isEqual(buyPrice2), is(true));
         assertThat(buyOrder2.getItemRemaining().isNegativeOrZero(), is(true));
         assertThat(buyOrder2.getTradeAmount().isEqual(buyAmount2), is(true));
@@ -989,7 +989,7 @@ public class TradingIT {
         assertThat(buyOrder3.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(buyOrder3.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(buyOrder3.getType(), equalTo(OrderType.BUY));
-        assertThat(buyOrder3.getUserId(), equalTo(buyPortfolio.getPrimaryKey()));
+        assertThat(buyOrder3.getPortfolioId(), equalTo(buyPortfolio.getPrimaryKey()));
         assertThat(buyOrder3.getItemPrice().isEqual(buyPrice3), is(true));
         assertThat(buyOrder3.getItemRemaining().isNegativeOrZero(), is(true));
         assertThat(buyOrder3.getTradeAmount().isEqual(buyAmount3), is(true));
@@ -1019,7 +1019,7 @@ public class TradingIT {
         assertThat(sellOrder.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(sellOrder.getOrderStatus(), equalTo(OrderStatus.DONE));
         assertThat(sellOrder.getType(), equalTo(OrderType.SELL));
-        assertThat(sellOrder.getUserId(), equalTo(sellPortfolio.getPrimaryKey()));
+        assertThat(sellOrder.getPortfolioId(), equalTo(sellPortfolio.getPrimaryKey()));
         assertThat(sellOrder.getItemPrice().isEqual(sellPrice), is(true));
         assertThat(sellOrder.getItemRemaining().isZero(), is(true));
         assertThat(sellOrder.getTradeAmount().isEqual(sellAmount), is(true));

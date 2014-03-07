@@ -67,11 +67,7 @@
             <artifactId>basedomain</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.joda</groupId>
-            <artifactId>joda-money</artifactId>
-        </dependency>
-
+        <!--log-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -85,6 +81,7 @@
             <artifactId>logback-core</artifactId>
         </dependency>
 
+        <!--iCoin-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>icoin-trading-users</artifactId>
@@ -94,6 +91,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>icoin-axon-support</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>icoin-money-support</artifactId>
             <version>${project.version}</version>
         </dependency>
 

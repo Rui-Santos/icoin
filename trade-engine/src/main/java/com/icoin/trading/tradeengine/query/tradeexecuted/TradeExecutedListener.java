@@ -18,17 +18,21 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TradeExecutedListener {
-    private OrderBookQueryRepository orderBookRepository;
+//    private OrderBookQueryRepository orderBookRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
 
     @EventHandler
     public void handleTradeExecuted(TradeExecutedEvent event) {
-        OrderBookId orderBookIdentifier = event.getOrderBookIdentifier();
-        OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.toString());
+//        OrderBookId orderBookIdentifier = event.getOrderBookIdentifier();
+//        OrderBookEntry orderBookEntry = orderBookRepository.findOne(orderBookIdentifier.toString());
 
         TradeExecutedEntry tradeExecutedEntry = new TradeExecutedEntry();
-        tradeExecutedEntry.setCoinName(orderBookEntry.getCoinName());
-        tradeExecutedEntry.setOrderBookIdentifier(orderBookEntry.getPrimaryKey());
+        tradeExecutedEntry.setBuyOrderId(event.getBuyOrderId());
+        tradeExecutedEntry.setSellOrderId(event.getSellOrderId());
+        tradeExecutedEntry.setBuyTransactionId(event.getBuyTransactionId().toString());
+        tradeExecutedEntry.setSellTransactionId(event.getSellTransactionId().toString());
+        tradeExecutedEntry.setCoinId(event.getCoinId().toString());
+        tradeExecutedEntry.setOrderBookIdentifier(event.getOrderBookId().toString());
         tradeExecutedEntry.setTradedAmount(event.getTradeAmount());
         tradeExecutedEntry.setExecutedMoney(event.getExecutedMoney());
         tradeExecutedEntry.setTradedPrice(event.getTradedPrice());
@@ -38,11 +42,11 @@ public class TradeExecutedListener {
         tradeExecutedRepository.save(tradeExecutedEntry);
     }
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setOrderBookRepository(OrderBookQueryRepository orderBookRepository) {
-        this.orderBookRepository = orderBookRepository;
-    }
+//    @SuppressWarnings("SpringJavaAutowiringInspection")
+//    @Autowired
+//    public void setOrderBookRepository(OrderBookQueryRepository orderBookRepository) {
+//        this.orderBookRepository = orderBookRepository;
+//    }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
