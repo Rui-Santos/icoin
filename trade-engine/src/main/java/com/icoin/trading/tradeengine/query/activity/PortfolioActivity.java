@@ -5,6 +5,10 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.util.Date;
+
+import static com.homhon.util.Asserts.notNull;
+
 /**
  * Created with IntelliJ IDEA.
  * User: jihual
@@ -28,44 +32,42 @@ public class PortfolioActivity extends VersionedEntitySupport<PortfolioActivity,
 
     private Activity activity;
 
+    public PortfolioActivity(String userId,
+                             String username,
+                             String portfolioId,
+                             PortfolioActivityType type,
+                             Activity activity) {
+        notNull(userId);
+        notNull(portfolioId);
+        notNull(type);
+        notNull(activity);
+
+        this.userId = userId;
+        this.username = username;
+        this.portfolioId = portfolioId;
+        this.type = type;
+        this.activity = activity;
+    }
 
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getPortfolioId() {
         return portfolioId;
-    }
-
-    public void setPortfolioId(String portfolioId) {
-        this.portfolioId = portfolioId;
     }
 
     public PortfolioActivityType getType() {
         return type;
     }
 
-    public void setType(PortfolioActivityType type) {
-        this.type = type;
-    }
-
-    public Activity getActivity() {
-        return activity;
-    }
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
+    public void addActivityItem(Date currentTime, ActivityItem item) {
+        activity.addItems(currentTime, item);
     }
 }

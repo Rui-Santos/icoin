@@ -21,7 +21,7 @@
     <script type="text/javascript" src="${ctx}/js/jquery.tablesorter.min.js"></script>
 </head>
 <body>
-<content tag="title">Profile detail : <c:out value="${portfolio.userName}"/></content>
+<content tag="title">Profile detail : <c:out value="${portfolio.username}"/></content>
 <content tag="tagline">Here you can add money and items to the portfolio.</content>
 <h2>Money</h2>
 

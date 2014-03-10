@@ -23,6 +23,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -31,15 +33,18 @@ public class ItemReservedEvent extends EventSupport<ItemReservedEvent> {
     private CoinId coinId;
     private TransactionId transactionIdentifier;
     private BigMoney amountOfItemReserved;
+    private Date time;
 
     public ItemReservedEvent(PortfolioId portfolioIdentifier,
                              CoinId coinId,
                              TransactionId transactionIdentifier,
-                             BigMoney amountOfItemReserved) {
+                             BigMoney amountOfItemReserved,
+                             Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItemReserved = amountOfItemReserved;
+        this.time = time;
     }
 
     public BigMoney getAmountOfItemReserved() {
@@ -56,5 +61,9 @@ public class ItemReservedEvent extends EventSupport<ItemReservedEvent> {
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

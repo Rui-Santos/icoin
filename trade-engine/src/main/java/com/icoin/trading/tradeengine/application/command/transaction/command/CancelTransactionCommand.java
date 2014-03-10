@@ -20,18 +20,26 @@ package com.icoin.trading.tradeengine.application.command.transaction.command;
 import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
 public class CancelTransactionCommand extends CommandSupport<CancelTransactionCommand> {
 
     private TransactionId transactionIdentifier;
+    private Date time;
 
-    public CancelTransactionCommand(TransactionId transactionIdentifier) {
+    public CancelTransactionCommand(TransactionId transactionIdentifier,Date time) {
         this.transactionIdentifier = transactionIdentifier;
+        this.time = time;
     }
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

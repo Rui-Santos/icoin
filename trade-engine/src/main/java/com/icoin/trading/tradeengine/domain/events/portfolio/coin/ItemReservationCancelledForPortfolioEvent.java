@@ -23,6 +23,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -32,17 +34,20 @@ public class ItemReservationCancelledForPortfolioEvent extends EventSupport<Item
     private TransactionId transactionIdentifier;
     private BigMoney leftTotalItem;
     private BigMoney leftCommission;
+    private Date time;
 
     public ItemReservationCancelledForPortfolioEvent(PortfolioId portfolioIdentifier,
                                                      CoinId coinId,
                                                      TransactionId transactionIdentifier,
                                                      BigMoney leftTotalItem,
-                                                     BigMoney leftCommission) {
+                                                     BigMoney leftCommission,
+                                                     Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
         this.leftTotalItem = leftTotalItem;
         this.leftCommission = leftCommission;
+        this.time = time;
     }
 
     public BigMoney getLeftTotalItem() {
@@ -63,5 +68,9 @@ public class ItemReservationCancelledForPortfolioEvent extends EventSupport<Item
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

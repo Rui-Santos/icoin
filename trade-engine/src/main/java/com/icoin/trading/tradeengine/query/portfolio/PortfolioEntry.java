@@ -31,7 +31,7 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
 
     private String userIdentifier;
     private String fullName;
-    private String userName;
+    private String username;
     private BigMoney amountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
     private BigMoney reservedAmountOfMoney = BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT);
 //    private BigMoney lowestPrice = BigDecimal.valueOf(0.00000001);
@@ -193,12 +193,12 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
 //        return items;
 //    }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFullName() {
@@ -237,7 +237,7 @@ public class PortfolioEntry extends AuditAwareEntitySupport<PortfolioEntry, Stri
                 "primaryKey='" + primaryKey + '\'' +
                 ", amountOfMoney=" + amountOfMoney +
                 ", userIdentifier='" + userIdentifier + '\'' +
-                ", userName='" + userName + '\'' +
+                ", username='" + username + '\'' +
                 ", reservedAmountOfMoney=" + reservedAmountOfMoney +
                 ", items=" + items +
                 '}';

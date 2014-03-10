@@ -5,7 +5,7 @@ import com.icoin.trading.tradeengine.application.TradingSystemStatusHolder;
 import com.icoin.trading.tradeengine.application.command.order.handler.TradeExecutor;
 import com.icoin.trading.tradeengine.domain.model.admin.TradingSystemStatus;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
-import com.icoin.trading.tradeengine.query.activity.ExecutedExceptionActivity;
+import com.icoin.trading.tradeengine.query.activity.ExecutedAlarmActivity;
 import com.icoin.trading.tradeengine.query.activity.PortfolioActivity;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
@@ -44,7 +44,7 @@ public class AdminCommandHandler {
                 TransactionEntry.class,
                 Order.class,
                 PortfolioActivity.class,
-                ExecutedExceptionActivity.class,
+                ExecutedAlarmActivity.class,
                 TradingSystemStatus.class,
                 UserPasswordReset.class,
                 SocialConnection.class);

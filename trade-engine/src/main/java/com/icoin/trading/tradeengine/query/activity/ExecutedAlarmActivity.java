@@ -17,30 +17,37 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @CompoundIndexes({
-        @CompoundIndex(name = "portfolioActivity_user_type", def = "{'username': 1, 'type': 1}", unique = true),
-        @CompoundIndex(name = "portfolioActivity_portfolio_type", def = "{'portfolioId': 1, 'type': 1}", unique = true)
+        @CompoundIndex(name = "executedExceptionActivity_time_checked", def = "{'tradeTime': 1, 'checked': -1}", unique = true)
 })
-public class ExecutedExceptionActivity extends VersionedEntitySupport<ExecutedExceptionActivity, String, Long> {
-    @Indexed
+public class ExecutedAlarmActivity extends VersionedEntitySupport<ExecutedAlarmActivity, String, Long> {
     private String buyOrderId;
-    @Indexed
     private String sellOrderId;
-    @Indexed
     private String buyTransactionId;
-    @Indexed
     private String sellTransactionId;
+
     private BigMoney tradedAmount;
     private BigMoney tradedPrice;
     private BigMoney executedMoney;
-    private String coinId;
-    private String orderBookIdentifier;
+
     @Indexed
+    private String coinId;
+    @Indexed
+    private String sellUsername;
+    @Indexed
+    private String buyUsername;
+    @Indexed
+    private String sellPortfolioId;
+    @Indexed
+    private String buyPortfolioId;
+    @Indexed
+    private String orderBookIdentifier;
+
     private Date tradeTime;
+    private boolean checked;
 
     private TradeType tradeType;
 
-    private ExecutedExceptionActivityType type;
-
+    private ExecutedAlarmType type;
 
     public String getBuyOrderId() {
         return buyOrderId;
@@ -106,6 +113,38 @@ public class ExecutedExceptionActivity extends VersionedEntitySupport<ExecutedEx
         this.coinId = coinId;
     }
 
+    public String getSellUsername() {
+        return sellUsername;
+    }
+
+    public void setSellUsername(String sellUsername) {
+        this.sellUsername = sellUsername;
+    }
+
+    public String getBuyUsername() {
+        return buyUsername;
+    }
+
+    public void setBuyUsername(String buyUsername) {
+        this.buyUsername = buyUsername;
+    }
+
+    public String getSellPortfolioId() {
+        return sellPortfolioId;
+    }
+
+    public void setSellPortfolioId(String sellPortfolioId) {
+        this.sellPortfolioId = sellPortfolioId;
+    }
+
+    public String getBuyPortfolioId() {
+        return buyPortfolioId;
+    }
+
+    public void setBuyPortfolioId(String buyPortfolioId) {
+        this.buyPortfolioId = buyPortfolioId;
+    }
+
     public String getOrderBookIdentifier() {
         return orderBookIdentifier;
     }
@@ -122,6 +161,14 @@ public class ExecutedExceptionActivity extends VersionedEntitySupport<ExecutedEx
         this.tradeTime = tradeTime;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     public TradeType getTradeType() {
         return tradeType;
     }
@@ -130,11 +177,11 @@ public class ExecutedExceptionActivity extends VersionedEntitySupport<ExecutedEx
         this.tradeType = tradeType;
     }
 
-    public ExecutedExceptionActivityType getType() {
+    public ExecutedAlarmType getType() {
         return type;
     }
 
-    public void setType(ExecutedExceptionActivityType type) {
+    public void setType(ExecutedAlarmType type) {
         this.type = type;
     }
 }

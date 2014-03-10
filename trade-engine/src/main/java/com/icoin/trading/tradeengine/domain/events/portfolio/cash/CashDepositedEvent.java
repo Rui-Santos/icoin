@@ -21,16 +21,20 @@ import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
 public class CashDepositedEvent extends EventSupport<CashDepositedEvent> {
     private PortfolioId portfolioId;
     private BigMoney moneyAdded;
+    private Date time;
 
-    public CashDepositedEvent(PortfolioId portfolioId, BigMoney moneyAdded) {
+    public CashDepositedEvent(PortfolioId portfolioId, BigMoney moneyAdded,Date time) {
         this.portfolioId = portfolioId;
         this.moneyAdded = moneyAdded;
+        this.time = time;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -39,5 +43,13 @@ public class CashDepositedEvent extends EventSupport<CashDepositedEvent> {
 
     public BigMoney getMoneyAdded() {
         return moneyAdded;
+    }
+
+    public PortfolioId getPortfolioId() {
+        return portfolioId;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

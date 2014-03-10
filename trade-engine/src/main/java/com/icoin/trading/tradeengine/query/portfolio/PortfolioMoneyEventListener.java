@@ -55,7 +55,7 @@ public class PortfolioMoneyEventListener {
         portfolioEntry.setIdentifier(event.getPortfolioId().toString());
         portfolioEntry.setUserIdentifier(event.getUserId().toString());
         final UserEntry user = userQueryRepository.findOne(event.getUserId().toString());
-        portfolioEntry.setUserName(user.getUsername());
+        portfolioEntry.setUsername(user.getUsername());
         portfolioEntry.setFullName(user.getFullName());
         portfolioEntry.setAmountOfMoney(BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT));
         portfolioEntry.setReservedAmountOfMoney(BigMoney.zero(Constants.DEFAULT_CURRENCY_UNIT));

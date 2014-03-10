@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -28,13 +30,16 @@ public class ItemToReserveNotAvailableInPortfolioEvent extends EventSupport<Item
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
     private TransactionId transactionIdentifier;
+    private Date time;
 
     public ItemToReserveNotAvailableInPortfolioEvent(PortfolioId portfolioIdentifier,
                                                      CoinId coinId,
-                                                     TransactionId transactionIdentifier) {
+                                                     TransactionId transactionIdentifier,
+                                                     Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
+        this.time = time;
     }
 
     public CoinId getCoinId() {
@@ -47,5 +52,9 @@ public class ItemToReserveNotAvailableInPortfolioEvent extends EventSupport<Item
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

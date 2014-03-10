@@ -6,24 +6,21 @@ import com.homhon.base.domain.ValueObject;
  * Created with IntelliJ IDEA.
  * User: liougehooa
  * Date: 14-3-7
- * Time: AM12:47
+ * Time: AM12:52
  * To change this template use File | Settings | File Templates.
  */
-public enum PortfolioActivityType implements ValueObject<PortfolioActivityType> {
-    WITHDRAW_COIN,
-    ADD_COIN,
-    WITHDRAW_MONEY,
-    ADD_MONEY,
-    BUY_ORDER_ACTIVITY,
-    SELL_ORDER_ACTIVITY;
+public enum ExecutedAlarmType implements ValueObject<ExecutedAlarmType> {
+    PRICE,
+    MONEY,
+    AMOUNT;
 
     @Override
-    public boolean sameValueAs(PortfolioActivityType other) {
+    public boolean sameValueAs(ExecutedAlarmType other) {
         return other == this;
     }
 
     @Override
-    public PortfolioActivityType copy() {
+    public ExecutedAlarmType copy() {
         return this;
     }
 }

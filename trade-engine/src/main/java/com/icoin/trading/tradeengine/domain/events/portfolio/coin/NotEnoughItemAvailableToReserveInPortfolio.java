@@ -23,6 +23,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -32,17 +34,20 @@ public class NotEnoughItemAvailableToReserveInPortfolio extends EventSupport<Not
     private TransactionId transactionIdentifier;
     private BigMoney availableAmountOfItem;
     private BigMoney amountOfItemToReserve;
+    private Date time;
 
     public NotEnoughItemAvailableToReserveInPortfolio(PortfolioId portfolioIdentifier,
                                                       CoinId coinId,
                                                       TransactionId transactionIdentifier,
                                                       BigMoney availableAmountOfItem,
-                                                      BigMoney amountOfItemToReserve) {
+                                                      BigMoney amountOfItemToReserve,
+                                                      Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
         this.availableAmountOfItem = availableAmountOfItem;
         this.amountOfItemToReserve = amountOfItemToReserve;
+        this.time = time;
     }
 
     public BigMoney getAmountOfItemToReserve() {
@@ -63,5 +68,9 @@ public class NotEnoughItemAvailableToReserveInPortfolio extends EventSupport<Not
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

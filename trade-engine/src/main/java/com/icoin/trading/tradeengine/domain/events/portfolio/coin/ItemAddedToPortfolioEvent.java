@@ -22,6 +22,8 @@ import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * New items have been added to the portfolio for the OrderBook of the provided identifier.
  *
@@ -31,13 +33,16 @@ public class ItemAddedToPortfolioEvent extends EventSupport<ItemAddedToPortfolio
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
     private BigMoney amountOfItemAdded;
+    private Date time;
 
     public ItemAddedToPortfolioEvent(PortfolioId portfolioIdentifier,
                                      CoinId coinId,
-                                     BigMoney amountOfItemAdded) {
+                                     BigMoney amountOfItemAdded,
+                                     Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.amountOfItemAdded = amountOfItemAdded;
+        this.time = time;
     }
 
     public BigMoney getAmountOfItemAdded() {
@@ -50,5 +55,9 @@ public class ItemAddedToPortfolioEvent extends EventSupport<ItemAddedToPortfolio
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

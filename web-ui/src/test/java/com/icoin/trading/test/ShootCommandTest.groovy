@@ -55,7 +55,7 @@ for (int i = 0; i < 1000; i++) {
     PortfolioEntry portfolio = commandSender.obtainPortfolio(portfolioIdentifier)
     def command = commandCreator.createCommand(portfolio)
 
-    println "${portfolio.userName} # ${command.tradeAmount} \$ ${command.itemPrice} ${coinNames[command.orderBookIdentifier.toString()]}"
+    println "${portfolio.username} # ${command.tradeAmount} \$ ${command.itemPrice} ${coinNames[command.orderBookIdentifier.toString()]}"
 
     commandSender.sendCommand(command)
 

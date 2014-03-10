@@ -6,6 +6,7 @@ import org.joda.time.Period;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -23,33 +24,31 @@ import static com.homhon.util.Collections.isEmpty;
  * To change this template use File | Settings | File Templates.
  */
 public class Activity extends ValueObjectSupport<Activity> {
-    private String name;
     private long maxArchiveInterval;
     private int maxSize;
     private List<ActivityItem> activityItems;
 
-    public Activity(String name, List<ActivityItem> activityItems) {
-        this(name, 5 * 366 * 3, activityItems);
+    public Activity(ActivityItem... activityItems) {
+        this(5 * 366 * 3, Arrays.asList(activityItems));
     }
 
-    public Activity(String name, int maxSize, List<ActivityItem> activityItems) {
-        this(name, 5 * 365 * 24 * 60 * 60 * 1000L, maxSize, activityItems);
+    public Activity(List<ActivityItem> activityItems) {
+        this(5 * 366 * 3, activityItems);
+    }
+
+    public Activity(int maxSize, List<ActivityItem> activityItems) {
+        this(5 * 365 * 24 * 60 * 60 * 1000L, maxSize, activityItems);
     }
 
     @PersistenceConstructor
-    public Activity(String name, long maxArchiveInterval, int maxSize, List<ActivityItem> activityItems) {
+    public Activity(long maxArchiveInterval, int maxSize, List<ActivityItem> activityItems) {
         isTrue(maxArchiveInterval > 0, "max archive interval should be greater than 0");
         isTrue(maxSize > 0, "max size should be greater than 0");
-        this.name = name;
         this.maxArchiveInterval = maxArchiveInterval;
         this.maxSize = maxSize;
         this.activityItems = isEmpty(activityItems) ? new ArrayList<ActivityItem>() : new ArrayList<ActivityItem>(activityItems);
         sortActivitiesIfNecessary();
         archiveBySizeIfNecessary();
-    }
-
-    public String getName() {
-        return name;
     }
 
     public long getMaxArchiveInterval() {
@@ -64,22 +63,15 @@ public class Activity extends ValueObjectSupport<Activity> {
         return activityItems;
     }
 
-    public Activity addItem(ActivityItem item) {
-        notNull(item);
-        activityItems.add(item);
-        sortActivitiesIfNecessary();
-        archiveBySizeIfNecessary();
-        return this;
-    }
-
-    public Activity addItems(ActivityItem... items) {
+    public Activity addItems(Date currentTime, ActivityItem... items) {
+        notNull(currentTime);
         for (ActivityItem item : items) {
             if (item != null) {
                 activityItems.add(item);
             }
         }
         sortActivitiesIfNecessary();
-        archiveBySizeIfNecessary();
+        archiveIfNecessary(currentTime);
         return this;
     }
 

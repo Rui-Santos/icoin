@@ -22,6 +22,8 @@ import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -33,19 +35,22 @@ public class ExecutedTransactionCommand extends CommandSupport<ExecutedTransacti
     private BigMoney itemPrice;
     private BigMoney executedMoney;
     private BigMoney commission;
+    private Date time;
 
     public ExecutedTransactionCommand(TransactionId transactionIdentifier,
                                       CoinId coinId,
                                       BigMoney tradeAmount,
                                       BigMoney itemPrice,
                                       BigMoney executedMoney,
-                                      BigMoney commission) {
+                                      BigMoney commission,
+                                      Date time) {
         this.transactionIdentifier = transactionIdentifier;
         this.coinId = coinId;
         this.tradeAmount = tradeAmount;
         this.itemPrice = itemPrice;
         this.executedMoney = executedMoney;
         this.commission = commission;
+        this.time = time;
     }
 
     public CoinId getCoinId() {
@@ -71,5 +76,9 @@ public class ExecutedTransactionCommand extends CommandSupport<ExecutedTransacti
 
     public BigMoney getCommission() {
         return commission;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

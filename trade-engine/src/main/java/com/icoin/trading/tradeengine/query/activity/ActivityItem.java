@@ -19,17 +19,13 @@ public class ActivityItem extends ValueObjectSupport<ActivityItem> {
     private Date timestamp;
     private String userId;
     private String ip;
-    private String refEntityName;
-    private String refKey;
     private BigMoney amount;
 
-    public ActivityItem(Date timestamp, String userId, String ip, String refEntityName, String refKey, BigMoney amount) {
+    public ActivityItem(Date timestamp, String userId, String ip, BigMoney amount) {
         notNull(timestamp);
         this.timestamp = timestamp;
         this.ip = ip;
         this.userId = userId;
-        this.refEntityName = refEntityName;
-        this.refKey = refKey;
         this.amount = amount;
     }
 
@@ -43,14 +39,6 @@ public class ActivityItem extends ValueObjectSupport<ActivityItem> {
 
     public String getUserId() {
         return userId;
-    }
-
-    public String getRefEntityName() {
-        return refEntityName;
-    }
-
-    public String getRefKey() {
-        return refKey;
     }
 
     public BigMoney getAmount() {
@@ -67,9 +55,6 @@ public class ActivityItem extends ValueObjectSupport<ActivityItem> {
 
         if (amount != null ? !amount.equals(that.amount) : that.amount != null) return false;
         if (ip != null ? !ip.equals(that.ip) : that.ip != null) return false;
-        if (refEntityName != null ? !refEntityName.equals(that.refEntityName) : that.refEntityName != null)
-            return false;
-        if (refKey != null ? !refKey.equals(that.refKey) : that.refKey != null) return false;
         if (!timestamp.equals(that.timestamp)) return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
 
@@ -82,8 +67,6 @@ public class ActivityItem extends ValueObjectSupport<ActivityItem> {
         result = 31 * result + timestamp.hashCode();
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (ip != null ? ip.hashCode() : 0);
-        result = 31 * result + (refEntityName != null ? refEntityName.hashCode() : 0);
-        result = 31 * result + (refKey != null ? refKey.hashCode() : 0);
         result = 31 * result + (amount != null ? amount.hashCode() : 0);
         return result;
     }
@@ -94,8 +77,6 @@ public class ActivityItem extends ValueObjectSupport<ActivityItem> {
                 "timestamp=" + timestamp +
                 ", userId='" + userId + '\'' +
                 ", ip='" + ip + '\'' +
-                ", refEntityName='" + refEntityName + '\'' +
-                ", refKey='" + refKey + '\'' +
                 ", amount=" + amount +
                 '}';
     }

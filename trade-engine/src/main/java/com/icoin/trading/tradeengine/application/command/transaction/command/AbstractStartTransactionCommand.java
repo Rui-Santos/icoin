@@ -24,6 +24,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -36,6 +38,7 @@ public abstract class AbstractStartTransactionCommand<T extends AbstractStartTra
     private PortfolioId portfolioIdentifier;
     private BigMoney tradeAmount;
     private BigMoney itemPrice;
+    private Date time;
 
     public AbstractStartTransactionCommand(TransactionId transactionId,
                                            CoinId coinId,
@@ -43,7 +46,8 @@ public abstract class AbstractStartTransactionCommand<T extends AbstractStartTra
                                            OrderBookId orderBookIdentifier,
                                            PortfolioId portfolioIdentifier,
                                            BigMoney tradeAmount,
-                                           BigMoney itemPrice) {
+                                           BigMoney itemPrice,
+                                           Date time) {
         this.transactionId = transactionId;
         this.coinId = coinId;
         this.currencyPair = currencyPair;
@@ -51,6 +55,7 @@ public abstract class AbstractStartTransactionCommand<T extends AbstractStartTra
         this.portfolioIdentifier = portfolioIdentifier;
         this.tradeAmount = tradeAmount;
         this.itemPrice = itemPrice;
+        this.time = time;
     }
 
     public CurrencyPair getCurrencyPair() {
@@ -79,5 +84,9 @@ public abstract class AbstractStartTransactionCommand<T extends AbstractStartTra
 
     public CoinId getCoinId() {
         return coinId;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

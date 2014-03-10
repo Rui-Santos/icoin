@@ -22,6 +22,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -30,15 +32,18 @@ public class CashReservationConfirmedEvent extends EventSupport<CashReservationC
     private PortfolioId portfolioIdentifier;
     private BigMoney amountOfMoney;
     private BigMoney commission;
+    private Date time;
 
     public CashReservationConfirmedEvent(PortfolioId portfolioIdentifier,
                                          TransactionId transactionId,
                                          BigMoney amountOfMoney,
-                                         BigMoney commission) {
+                                         BigMoney commission,
+                                         Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionId;
         this.amountOfMoney = amountOfMoney;
         this.commission = commission;
+        this.time = time;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -55,5 +60,9 @@ public class CashReservationConfirmedEvent extends EventSupport<CashReservationC
 
     public BigMoney getCommission() {
         return commission;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

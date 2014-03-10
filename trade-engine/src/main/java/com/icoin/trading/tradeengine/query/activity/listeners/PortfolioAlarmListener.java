@@ -19,6 +19,7 @@ import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
+import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.money.BigMoney;
@@ -39,8 +40,8 @@ import static com.homhon.util.Asserts.notNull;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class PortfolioActivityListener {
-    private final static Logger logger = LoggerFactory.getLogger(PortfolioActivityListener.class);
+public class PortfolioAlarmListener {
+    private final static Logger logger = LoggerFactory.getLogger(PortfolioAlarmListener.class);
 
     private PortfolioActivityQueryRepository portfolioActivityRepository;
     private PortfolioQueryRepository portfolioRepository;
@@ -59,14 +60,15 @@ public class PortfolioActivityListener {
             create(event.getPortfolioIdentifier().toString(),
                     PortfolioActivityType.ADD_COIN,
                     event.getCoinId(),
-                    event.getAmountOfItemAdded(),
-                    event.getTime());
+                    event.getAmountOfItemAdded());
 
             return;
         }
 
+
         portfolioActivity.addActivityItem(event.getTime(),
                 new ActivityItem(event.getTime(), null, null, event.getAmountOfItemAdded()));
+
 
         portfolioActivityRepository.save(portfolioActivity);
     }
@@ -82,18 +84,15 @@ public class PortfolioActivityListener {
             logger.error("Cannot find portfolio with {}", portfolioId);
         }
 
+        PortfolioActivity portfolioActivity = new PortfolioActivity();
+        portfolioActivity.setPortfolioId(portfolioId);
+        portfolioActivity.setActivity(new Activity(new ActivityItem()));
+        final UserEntry user = userQueryRepository.findOne(portfolioEntry.getUserIdentifier());
+        portfolioActivity.setUsername(user.getUsername());
+        portfolioActivity.setFullName(user.getFullName());
+        portfolioActivity.setType(PortfolioActivityType.ADD_COIN);
+        portfolioActivity.setUserId(user.getPrimaryKey());
 
-        final Activity activity = new Activity();
-
-        activity.addItems(time, new ActivityItem(time, null, null, amountOfItemAdded));
-
-
-        final String userIdentifier = portfolioEntry == null ? null : portfolioEntry.getUserIdentifier();
-        final String username = portfolioEntry == null ? null : portfolioEntry.getUsername();
-
-
-        PortfolioActivity portfolioActivity = new PortfolioActivity(userIdentifier,
-                username, portfolioId, type, activity);
         portfolioActivityRepository.save(portfolioActivity);
 
         return portfolioActivity;

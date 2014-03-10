@@ -43,7 +43,7 @@
     <tbody>
     <c:forEach items="${portfolios}" var="portfolio">
         <tr>
-            <td><c:out value='${portfolio.userName}'/></td>
+            <td><c:out value='${portfolio.username}'/></td>
             <td><c:out value='${portfolio.amountOfMoney}'/></td>
             <td>
                 <c:forEach items="${portfolio.itemsInPossession}" var="item">

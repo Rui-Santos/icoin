@@ -24,6 +24,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -35,7 +37,8 @@ public class StartBuyTransactionCommand extends AbstractStartTransactionCommand<
                                       OrderBookId orderBookIdentifier,
                                       PortfolioId portfolioIdentifier,
                                       BigMoney tradeAmount,
-                                      BigMoney itemPrice) {
-        super(transactionId, coinId, currencyPair, orderBookIdentifier, portfolioIdentifier, tradeAmount, itemPrice);
+                                      BigMoney itemPrice,
+                                      Date time) {
+        super(transactionId, coinId, currencyPair, orderBookIdentifier, portfolioIdentifier, tradeAmount, itemPrice, time);
     }
 }

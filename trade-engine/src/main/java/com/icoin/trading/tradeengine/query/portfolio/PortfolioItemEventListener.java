@@ -42,8 +42,10 @@ public class PortfolioItemEventListener {
 
     @EventHandler
     public void handleEvent(ItemAddedToPortfolioEvent event) {
-        logger.debug("Handle ItemAddedToPortfolioEvent {} for coin {} with amount {}", event.getPortfolioIdentifier(),
-                event.getCoinId(), event.getAmountOfItemAdded());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Handle ItemAddedToPortfolioEvent {} for coin {} with amount {}", event.getPortfolioIdentifier(),
+                    event.getCoinId(), event.getAmountOfItemAdded());
+        }
         CoinEntry coin = findCoinEntry(event.getCoinId());
 
         if (coin == null) {
@@ -68,8 +70,10 @@ public class PortfolioItemEventListener {
 
     @EventHandler
     public void handleEvent(ItemReservationCancelledForPortfolioEvent event) {
-        logger.debug("Handle ItemReservationCancelledForPortfolioEvent {} for coin {}, left commission {}, left total item {}", event.getPortfolioIdentifier(),
-                event.getCoinId(), event.getLeftCommission(), event.getLeftTotalItem());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Handle ItemReservationCancelledForPortfolioEvent {} for coin {}, left commission {}, left total item {}", event.getPortfolioIdentifier(),
+                    event.getCoinId(), event.getLeftCommission(), event.getLeftTotalItem());
+        }
         CoinEntry coin = findCoinEntry(event.getCoinId());
 
         if (coin == null) {
@@ -102,7 +106,9 @@ public class PortfolioItemEventListener {
 
     @EventHandler
     public void handleEvent(ItemReservedEvent event) {
-        logger.debug("Handle ItemReservedEvent {} for coin {}, amount {}", event.getPortfolioIdentifier(), event.getCoinId(), event.getAmountOfItemReserved());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Handle ItemReservedEvent {} for coin {}, amount {}", event.getPortfolioIdentifier(), event.getCoinId(), event.getAmountOfItemReserved());
+        }
         final CoinEntry coin = findCoinEntry(event.getCoinId());
 
         if (coin == null) {

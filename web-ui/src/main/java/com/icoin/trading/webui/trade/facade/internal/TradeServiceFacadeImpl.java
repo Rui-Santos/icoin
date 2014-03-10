@@ -52,6 +52,7 @@ import java.util.List;
 import static com.homhon.util.Asserts.hasLength;
 import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
+import static com.homhon.util.TimeUtils.currentTime;
 
 /**
  * Created with IntelliJ IDEA.
@@ -265,7 +266,8 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
                         new OrderBookId(orderBookId),
                         new PortfolioId(portfolioId),
                         tradeAmount,
-                        price);
+                        price,
+                        currentTime());
 
         commandGateway.send(command);
     }
@@ -286,7 +288,8 @@ public class TradeServiceFacadeImpl implements TradeServiceFacade {
                         new OrderBookId(orderBookId),
                         new PortfolioId(portfolioId),
                         tradeAmount,
-                        price);
+                        price,
+                        currentTime());
 
         commandGateway.send(command);
     }

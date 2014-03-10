@@ -22,6 +22,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -29,11 +31,13 @@ public class CashReservedClearedEvent extends EventSupport<CashReservedClearedEv
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
     private BigMoney amountToClear;
+    private Date time;
 
-    public CashReservedClearedEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier, BigMoney amountToClear) {
+    public CashReservedClearedEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier, BigMoney amountToClear,Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountToClear = amountToClear;
+        this.time = time;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -46,5 +50,9 @@ public class CashReservedClearedEvent extends EventSupport<CashReservedClearedEv
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

@@ -9,20 +9,19 @@ import com.homhon.base.domain.ValueObject;
  * Time: AM12:52
  * To change this template use File | Settings | File Templates.
  */
-public enum ExecutedExceptionActivityType implements ValueObject<ExecutedExceptionActivityType> {
-    PRICE_TOO_HIGH,
-    PRICE_TOO_LOW,
-    AMOUNT_TOO_SMALL,
-    AMOUNT_TOO_LARGE,
-    ;
+public enum PortfolioAlarmType implements ValueObject<PortfolioAlarmType> {
+    WITHDRAW_LARGE_AMOUNT_OF_MONEY,
+    ADD_LARGE_AMOUNT_OF_MONEY,
+    WITHDRAW_LARGE_AMOUNT_OF_COIN,
+    ADD_LARGE_AMOUNT_OF_COIN;
 
     @Override
-    public boolean sameValueAs(ExecutedExceptionActivityType other) {
+    public boolean sameValueAs(PortfolioAlarmType other) {
         return other == this;
     }
 
     @Override
-    public ExecutedExceptionActivityType copy() {
+    public PortfolioAlarmType copy() {
         return this;
     }
 }
