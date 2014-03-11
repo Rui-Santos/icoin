@@ -23,6 +23,6 @@ public class GreaterSpecification extends CompositeSpecification<BigMoney> {
     @Override
     public boolean isSatisfiedBy(BigMoney amount) {
         notNull(amount);
-        return threshold.isGreaterThan(amount);
+        return amount.isGreaterThan(threshold);
     }
 }

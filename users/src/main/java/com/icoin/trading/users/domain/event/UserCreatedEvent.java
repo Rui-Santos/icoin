@@ -20,6 +20,7 @@ import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.users.domain.model.user.Identifier;
 import com.icoin.trading.users.domain.model.user.UserId;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +37,7 @@ public class UserCreatedEvent extends EventSupport<UserCreatedEvent> {
     private String email;
     private String password;
     private List<String> roles;
+    private Date time;
 
     public UserCreatedEvent(UserId userId,
                             String username,
@@ -44,7 +46,8 @@ public class UserCreatedEvent extends EventSupport<UserCreatedEvent> {
                             Identifier identifier,
                             String email,
                             String password,
-                            List<String> roles) {
+                            List<String> roles,
+                            Date time) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -53,6 +56,7 @@ public class UserCreatedEvent extends EventSupport<UserCreatedEvent> {
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.time = time;
     }
 
     public String getEmail() {
@@ -87,17 +91,7 @@ public class UserCreatedEvent extends EventSupport<UserCreatedEvent> {
         return roles;
     }
 
-    @Override
-    public String toString() {
-        return "UserCreatedEvent{" +
-                "userId=" + userId +
-                ", username='" + username + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", identifier=" + identifier +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", roles=" + roles +
-                '}';
+    public Date getTime() {
+        return time;
     }
 }

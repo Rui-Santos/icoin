@@ -6,6 +6,9 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -19,17 +22,21 @@ public class ClearReservedCashCommand extends CommandSupport<ClearReservedCashCo
     private OrderBookId orderBookIdentifier;
     private BigMoney leftReservedMoney;
     private BigMoney leftCommission;
+    @NotNull
+    private Date time;
 
     public ClearReservedCashCommand(PortfolioId portfolioIdentifier,
                                     TransactionId transactionIdentifier,
                                     OrderBookId orderBookIdentifier,
                                     BigMoney leftReservedMoney,
-                                    BigMoney leftCommission) {
+                                    BigMoney leftCommission,
+                                    Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.orderBookIdentifier = orderBookIdentifier;
         this.leftReservedMoney = leftReservedMoney;
         this.leftCommission = leftCommission;
+        this.time = time;
     }
 
     public PortfolioId getPortfolioIdentifier() {
@@ -50,5 +57,9 @@ public class ClearReservedCashCommand extends CommandSupport<ClearReservedCashCo
 
     public BigMoney getLeftCommission() {
         return leftCommission;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

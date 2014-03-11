@@ -47,8 +47,8 @@ public class User extends AbstractAnnotatedAggregateRoot {
     protected User() {
     }
 
-    public User(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email, String password, List<String> roles) {
-        apply(new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password, roles));
+    public User(UserId userId, String username, String firstName, String lastName, Identifier identifier, String email, String password, List<String> roles, Date time) {
+        apply(new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password, roles, time));
     }
 
     public boolean authenticate(PasswordEncoder passwordEncoder, String rawPassword, String operatingIp, Date authTime) {

@@ -32,21 +32,21 @@ import java.util.Date;
 public class ItemWithdrawnEvent extends EventSupport<ItemWithdrawnEvent> {
     private PortfolioId portfolioIdentifier;
     private CoinId coinId;
-    private BigMoney amountOfItemAdded;
+    private BigMoney amount;
     private Date withdrawnTime;
 
     public ItemWithdrawnEvent(PortfolioId portfolioIdentifier,
                               CoinId coinId,
-                              BigMoney amountOfItemAdded,
+                              BigMoney amount,
                               Date withdrawnTime) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
-        this.amountOfItemAdded = amountOfItemAdded;
+        this.amount = amount;
         this.withdrawnTime = withdrawnTime;
     }
 
-    public BigMoney getAmountOfItemAdded() {
-        return amountOfItemAdded;
+    public BigMoney getAmount() {
+        return amount;
     }
 
     public CoinId getCoinId() {

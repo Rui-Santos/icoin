@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -32,7 +34,8 @@ public class BuyTransactionPartiallyExecutedEvent extends AbstractTransactionPar
                                                 BigMoney totalOfExecutedItem,
                                                 BigMoney itemPrice,
                                                 BigMoney executedMoney,
-                                                BigMoney commission) {
-        super(transactionIdentifier, coinId, amountOfExecutedItem, totalOfExecutedItem, itemPrice, executedMoney, commission);
+                                                BigMoney commission,
+                                                Date time) {
+        super(transactionIdentifier, coinId, amountOfExecutedItem, totalOfExecutedItem, itemPrice, executedMoney, commission, time);
     }
 }

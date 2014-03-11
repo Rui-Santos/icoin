@@ -70,4 +70,8 @@ public class PortfolioActivity extends VersionedEntitySupport<PortfolioActivity,
     public void addActivityItem(Date currentTime, ActivityItem item) {
         activity.addItems(currentTime, item);
     }
+
+    public Activity getActivity() {
+        return activity;
+    }
 }

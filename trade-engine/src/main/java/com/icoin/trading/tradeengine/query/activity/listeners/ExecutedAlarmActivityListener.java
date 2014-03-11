@@ -78,11 +78,11 @@ public class ExecutedAlarmActivityListener {
             type = ExecutedAlarmType.MONEY;
         }
 
-        if (amountCheck.isSatisfiedBy(event.getTradeAmount())) {
+        if (type == null && amountCheck.isSatisfiedBy(event.getTradeAmount())) {
             type = ExecutedAlarmType.AMOUNT;
         }
 
-        if (priceCheck.isSatisfiedBy(event.getTradedPrice())) {
+        if (type == null && priceCheck.isSatisfiedBy(event.getTradedPrice())) {
             type = ExecutedAlarmType.PRICE;
         }
 
@@ -113,12 +113,12 @@ public class ExecutedAlarmActivityListener {
             logger.error("cannot found buyPortfolio for suspicious executed activity: {}", event);
         }
 
-        ExecutedAlarmActivity alarm =  createAlarm(event, sellPortfolio, buyPortfolio);
+        ExecutedAlarmActivity alarm =  createAlarm(event,  type ,sellPortfolio, buyPortfolio);
 
         executedAlarmActivityRepository.save(alarm);
     }
 
-    private ExecutedAlarmActivity createAlarm(TradeExecutedEvent event, PortfolioEntry sellPortfolio, PortfolioEntry buyPortfolio) {
+    private ExecutedAlarmActivity createAlarm(TradeExecutedEvent event, ExecutedAlarmType type, PortfolioEntry sellPortfolio, PortfolioEntry buyPortfolio) {
         final ExecutedAlarmActivity activity = new ExecutedAlarmActivity();
 
         activity.setBuyOrderId(event.getBuyOrderId());
@@ -131,11 +131,12 @@ public class ExecutedAlarmActivityListener {
         activity.setExecutedMoney(event.getExecutedMoney());
         activity.setTradedPrice(event.getTradedPrice());
         activity.setTradeTime(event.getTradeTime());
+        activity.setType(type);
         activity.setTradeType(TradeType.convert(event.getTradeType()));
 
         activity.setSellPortfolioId(sellPortfolio == null? null : sellPortfolio.getIdentifier());
         activity.setSellUsername(sellPortfolio == null ? null : sellPortfolio.getUsername());
-        activity.setBuyPortfolioId(buyPortfolio == null ? null : buyPortfolio.getUsername());
+        activity.setBuyPortfolioId(buyPortfolio == null ? null : buyPortfolio.getIdentifier());
         activity.setBuyUsername(buyPortfolio == null ? null : buyPortfolio.getUsername());
 
         return activity;
@@ -143,7 +144,7 @@ public class ExecutedAlarmActivityListener {
 
 
     private PortfolioEntry getPortfolio(OrderEntry orderEntry) {
-        if (orderEntry == null || Strings.hasText(orderEntry.getPortfolioId())) {
+        if (orderEntry == null || !Strings.hasText(orderEntry.getPortfolioId())) {
             return null;
         }
 

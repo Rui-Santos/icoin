@@ -22,6 +22,9 @@ import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * Try to add new items for a specific OrderBook to the portfolio.
  *
@@ -33,6 +36,8 @@ public class AddAmountToPortfolioCommand extends CommandSupport<AddAmountToPortf
     private CoinId coinId;
     //    @DecimalMin("0.00000001")
     private BigMoney amountOfItemToAdd;
+    @NotNull
+    private Date time;
 
     /**
      * Create a new command.
@@ -43,10 +48,12 @@ public class AddAmountToPortfolioCommand extends CommandSupport<AddAmountToPortf
      */
     public AddAmountToPortfolioCommand(PortfolioId portfolioIdentifier,
                                        CoinId coinId,
-                                       BigMoney amountOfItemToAdd) {
+                                       BigMoney amountOfItemToAdd,
+                                       Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.amountOfItemToAdd = amountOfItemToAdd;
+        this.time = time;
     }
 
     public BigMoney getAmountOfItemToAdd() {
@@ -61,12 +68,17 @@ public class AddAmountToPortfolioCommand extends CommandSupport<AddAmountToPortf
         return portfolioIdentifier;
     }
 
+    public Date getTime() {
+        return time;
+    }
+
     @Override
     public String toString() {
         return "AddAmountToPortfolioCommand{" +
-                "amountOfItemToAdd=" + amountOfItemToAdd +
-                ", portfolioIdentifier=" + portfolioIdentifier +
+                "portfolioIdentifier=" + portfolioIdentifier +
                 ", coinId=" + coinId +
+                ", amountOfItemToAdd=" + amountOfItemToAdd +
+                ", time=" + time +
                 '}';
     }
 }

@@ -31,18 +31,18 @@ public class PortfolioActivityRepositoryMongoImpl implements PortfolioActivityRe
         this.mongoTemplate = mongoTemplate;
     }
 
-    @Override
-    public PortfolioActivity save(PortfolioActivity entity) {
+//    @Override
+    public <S extends PortfolioActivity> S save(S entity) {
         return save(entity, currentTime());
     }
 
-    @Override
-    public List<PortfolioActivity> save(List<PortfolioActivity> entities) {
+//    @Override
+    public <S extends PortfolioActivity> Iterable<S> save(Iterable<S> entities) {
         return save(entities, currentTime());
     }
 
     @Override
-    public PortfolioActivity save(PortfolioActivity entity, Date currentTime) {
+    public <S extends PortfolioActivity> S save(S entity, Date currentTime) {
         notNull(entity, "The given entity cannot not be null!");
         notNull(currentTime, "The given currentTime cannot be null!");
 
@@ -56,13 +56,13 @@ public class PortfolioActivityRepositoryMongoImpl implements PortfolioActivityRe
     }
 
     @Override
-    public List<PortfolioActivity> save(List<PortfolioActivity> entities, Date currentTime) {
+    public <S extends PortfolioActivity> Iterable<S> save(Iterable<S> entities, Date currentTime) {
         notNull(entities, "The given entities cannot not be null!");
         notNull(currentTime, "The given currentTime cannot be null!");
 
-        List<PortfolioActivity> result = new ArrayList<PortfolioActivity>();
+        List<S> result = new ArrayList<S>();
 
-        for (PortfolioActivity entity : entities) {
+        for (S entity : entities) {
             save(entity, currentTime);
             result.add(entity);
         }

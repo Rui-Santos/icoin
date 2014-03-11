@@ -81,6 +81,7 @@ public class UserCommandHandlerTest {
         UserId aggregateIdentifier = new UserId();
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
 
+        final Date time = currentTime();
         fixture.given()
                 .when(new CreateUserCommand(aggregateIdentifier,
                         "buyer1",
@@ -90,7 +91,8 @@ public class UserCommandHandlerTest {
                         "buyer1@163.com",
                         "buyer1",
                         "buyer1",
-                        UserCommandHandler.DEFAULT_ROLES))
+                        UserCommandHandler.DEFAULT_ROLES,
+                        time))
                 .expectEventsMatching(
                         Matchers.payloadsMatching(
                                 sequenceOf(new UserCreatedEventMatcher(new UserCreatedEvent(aggregateIdentifier,
@@ -100,7 +102,8 @@ public class UserCommandHandlerTest {
                                         identifier,
                                         "buyer1@163.com",
                                         passwordEncoder.encode("buyer1"),
-                                        UserCommandHandler.DEFAULT_ROLES),
+                                        UserCommandHandler.DEFAULT_ROLES,
+                                        time),
                                         passwordEncoder,
                                         "buyer1"
                                 ))));
@@ -109,6 +112,7 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandleAuthenticateUser() throws Exception {
         UserId aggregateIdentifier = new UserId();
+        final Date time = currentTime();
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
 
         UserEntry userEntry = new UserEntry();
@@ -128,7 +132,8 @@ public class UserCommandHandlerTest {
                         identifier,
                         "buyer1@163.com",
                         passwordEncoder.encode("buyer1"),
-                        UserCommandHandler.DEFAULT_ROLES))
+                        UserCommandHandler.DEFAULT_ROLES,
+                        time))
                 .when(new AuthenticateUserCommand("buyer1", "buyer1", "localhost", current))
                 .expectEvents(new UserAuthenticatedEvent(aggregateIdentifier, "buyer1", "buyer1@163.com", "localhost", current));
     }
@@ -361,6 +366,7 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandleChangePassword() throws Exception {
         UserId aggregateIdentifier = new UserId();
+        final Date time = currentTime();
         final String operatingIp = "223.124.18.123";
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
         Date changedTime = currentTime();
@@ -389,7 +395,8 @@ public class UserCommandHandlerTest {
                 identifier,
                 "buyer1@163.com",
                 passwordEncoder.encode("buyer1"),
-                UserCommandHandler.DEFAULT_ROLES))
+                UserCommandHandler.DEFAULT_ROLES,
+                time))
                 .when(command)
                 .expectEventsMatching(
                         Matchers.payloadsMatching(
@@ -408,6 +415,7 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandlePasswordResetWithNotFoundToken() throws Exception {
         UserId aggregateIdentifier = new UserId();
+        final Date time = currentTime();
         final String operatingIp = "223.124.18.123";
         final String email = "buyer1@163.com";
         final String username = "buyer1";
@@ -445,7 +453,8 @@ public class UserCommandHandlerTest {
                 identifier,
                 email,
                 passwordEncoder.encode("buyer1"),
-                UserCommandHandler.DEFAULT_ROLES))
+                UserCommandHandler.DEFAULT_ROLES,
+                time))
                 .when(command)
                 .expectEvents();
 
@@ -457,6 +466,7 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandlePasswordReset() throws Exception {
         final UserId aggregateIdentifier = new UserId();
+        final Date time = currentTime();
         final String operatingIp = "223.124.18.123";
         final String email = "buyer1@163.com";
         final String username = "buyer1";
@@ -495,7 +505,8 @@ public class UserCommandHandlerTest {
                 identifier,
                 email,
                 passwordEncoder.encode("buyer1"),
-                UserCommandHandler.DEFAULT_ROLES))
+                UserCommandHandler.DEFAULT_ROLES,
+                time))
                 .when(command)
                 .expectEventsMatching(
                         Matchers.payloadsMatching(
@@ -518,6 +529,7 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandleCreateWithdrawPasswordCommand() throws Exception {
         UserId aggregateIdentifier = new UserId();
+        final Date time = currentTime();
         final String operatingIp = "223.124.18.123";
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
         Date changedTime = currentTime();
@@ -545,7 +557,8 @@ public class UserCommandHandlerTest {
                 identifier,
                 "buyer1@163.com",
                 passwordEncoder.encode("buyer1"),
-                UserCommandHandler.DEFAULT_ROLES))
+                UserCommandHandler.DEFAULT_ROLES,
+                time))
                 .when(command)
                 .expectEventsMatching(
                         Matchers.payloadsMatching(
@@ -564,6 +577,7 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandleChangeWithdrawPasswordCommand() throws Exception {
         UserId aggregateIdentifier = new UserId();
+        final Date time = currentTime();
         final String operatingIp = "223.124.18.123";
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
         Date changedTime = currentTime();
@@ -592,7 +606,8 @@ public class UserCommandHandlerTest {
                 identifier,
                 "buyer1@163.com",
                 passwordEncoder.encode("buyer1"),
-                UserCommandHandler.DEFAULT_ROLES))
+                UserCommandHandler.DEFAULT_ROLES,
+                time))
                 .when(command)
                 .expectEventsMatching(
                         Matchers.payloadsMatching(
@@ -611,6 +626,7 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandleUpdateNotificationCommand() {
         UserId aggregateIdentifier = new UserId();
+        final Date time = currentTime();
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
 
         UserEntry userEntry = new UserEntry();
@@ -635,7 +651,8 @@ public class UserCommandHandlerTest {
                 identifier,
                 "buyer1@163.com",
                 passwordEncoder.encode("buyer1"),
-                UserCommandHandler.DEFAULT_ROLES))
+                UserCommandHandler.DEFAULT_ROLES,
+                time))
                 .when(command)
                 .expectEvents(
                         new NotificationSettingsUpdatedEvent(
@@ -650,6 +667,7 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandleChangeInfoCommand() {
         final UserId aggregateIdentifier = new UserId();
+        final Date time = currentTime();
         final String email = "buyer1@163.com";
         final String username = "buyer1";
         final String phone = "13232321";
@@ -677,7 +695,8 @@ public class UserCommandHandlerTest {
                 identifier,
                 "buyer1@163.com",
                 passwordEncoder.encode("buyer1"),
-                UserCommandHandler.DEFAULT_ROLES))
+                UserCommandHandler.DEFAULT_ROLES,
+                time))
                 .when(command)
                 .expectEvents(
                         new UserInfoChangedEvent(
@@ -692,6 +711,7 @@ public class UserCommandHandlerTest {
     @Test
     public void testHandleChangeAdminInfoCommand() {
         final UserId aggregateIdentifier = new UserId();
+        final Date time = currentTime();
         final String email = "buyer1@163.com";
         final String username = "buyer1";
         final String phone = "13232321";
@@ -722,7 +742,8 @@ public class UserCommandHandlerTest {
                 identifier,
                 email,
                 passwordEncoder.encode("buyer1"),
-                UserCommandHandler.DEFAULT_ROLES))
+                UserCommandHandler.DEFAULT_ROLES,
+                time))
                 .when(command)
                 .expectEvents(
                         new UserAdminInfoChangedEvent(

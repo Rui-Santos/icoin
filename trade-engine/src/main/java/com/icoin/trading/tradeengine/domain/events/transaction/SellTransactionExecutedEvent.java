@@ -21,6 +21,8 @@ import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -31,7 +33,8 @@ public class SellTransactionExecutedEvent extends AbstractTransactionExecutedEve
                                         BigMoney amountOfItem,
                                         BigMoney itemPrice,
                                         BigMoney executedMoney,
-                                        BigMoney commission) {
-        super(transactionIdentifier, coinId, amountOfItem, itemPrice, executedMoney, commission);
+                                        BigMoney commission,
+                                        Date time) {
+        super(transactionIdentifier, coinId, amountOfItem, itemPrice, executedMoney, commission, time);
     }
 }

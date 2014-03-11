@@ -89,7 +89,6 @@ public class TradeExecutedListenerIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))));
 
         tradeExecutedListener = new TradeExecutedListener();
-        tradeExecutedListener.setOrderBookRepository(orderBookRepository);
         tradeExecutedListener.setTradeExecutedRepository(tradeExecutedRepository);
 
         OrderBookListener orderBookListener = new OrderBookListener();
@@ -130,7 +129,7 @@ public class TradeExecutedListenerIT {
         TradeExecutedEntry tradeExecutedEntry = tradeExecutedEntries.iterator().next();
 
         assertThat(tradeExecutedEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
-        assertThat(tradeExecutedEntry.getCoinName(), equalTo("Test Coin"));
+        assertThat(tradeExecutedEntry.getCoinId(), equalTo("XPM"));
         assertThat(tradeExecutedEntry.getTradeTime(), equalTo(tradeTime));
         assertThat(tradeExecutedEntry.getTradeType(), equalTo(com.icoin.trading.tradeengine.query.tradeexecuted.TradeType.BUY));
         assertThat(tradeExecutedEntry

@@ -177,4 +177,23 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
                 .append(coinId)
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "TradeExecutedEvent{" +
+                "tradeAmount=" + tradeAmount.toMoney(RoundingMode.HALF_EVEN) +
+                ", tradedPrice=" + tradedPrice.toMoney(RoundingMode.HALF_EVEN) +
+                ", buyOrderId='" + buyOrderId + '\'' +
+                ", coinId=" + coinId +
+                ", sellOrderId='" + sellOrderId + '\'' +
+                ", buyTransactionId=" + buyTransactionId +
+                ", sellTransactionId=" + sellTransactionId +
+                ", orderBookId=" + orderBookId +
+                ", tradeTime=" + tradeTime +
+                ", tradeType=" + tradeType +
+                ", buyCommission=" + buyCommission.toMoney(RoundingMode.HALF_EVEN) +
+                ", sellCommission=" + sellCommission.toMoney(RoundingMode.HALF_EVEN) +
+                ", executedMoney=" + executedMoney.toMoney(RoundingMode.HALF_EVEN) +
+                '}';
+    }
 }

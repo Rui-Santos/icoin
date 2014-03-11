@@ -21,6 +21,9 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -31,15 +34,19 @@ public class ReserveCashCommand extends CommandSupport<ReserveCashCommand> {
     //    @DecimalMin("0.0000001")
     private BigMoney totalMoney;
     private BigMoney totalCommission;
+    @NotNull
+    private Date time;
 
     public ReserveCashCommand(PortfolioId portfolioIdentifier,
                               TransactionId transactionIdentifier,
                               BigMoney totalMoney,
-                              BigMoney totalCommission) {
+                              BigMoney totalCommission,
+                              Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.totalMoney = totalMoney;
         this.totalCommission = totalCommission;
+        this.time = time;
     }
 
     public BigMoney getTotalCommission() {
@@ -56,5 +63,9 @@ public class ReserveCashCommand extends CommandSupport<ReserveCashCommand> {
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

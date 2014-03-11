@@ -22,6 +22,8 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -34,7 +36,8 @@ public class SellTransactionStartedEvent extends AbstractTransactionStartedEvent
                                        BigMoney totalItem,
                                        BigMoney pricePerItem,
                                        BigMoney totalMoney,
-                                       BigMoney totalCommission) {
-        super(transactionIdentifier, coinId, orderBookIdentifier, portfolioIdentifier, totalItem, pricePerItem, totalMoney, totalCommission);
+                                       BigMoney totalCommission,
+                                       Date time) {
+        super(transactionIdentifier, coinId, orderBookIdentifier, portfolioIdentifier, totalItem, pricePerItem, totalMoney, totalCommission, time);
     }
 }

@@ -52,6 +52,7 @@ public class PortfolioMoneyEventListenerTest {
         final UserId userIdentifier = new UserId();
         final PortfolioId portfolioIdentifier = new PortfolioId();
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
+        final Date time = currentTime();
 
         final UserEntry user = new UserEntry();
         user.setUsername(username);
@@ -67,7 +68,7 @@ public class PortfolioMoneyEventListenerTest {
         listener.setPortfolioRepository(portfolioQueryRepository);
         listener.setUserQueryRepository(userQueryRepository);
 
-        final PortfolioCreatedEvent event = new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier);
+        final PortfolioCreatedEvent event = new PortfolioCreatedEvent(portfolioIdentifier, userIdentifier, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<PortfolioEntry> captor = ArgumentCaptor.forClass(PortfolioEntry.class);
@@ -88,6 +89,7 @@ public class PortfolioMoneyEventListenerTest {
         final PortfolioId portfolioIdentifier = new PortfolioId();
         final BigMoney availableMoney = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 11);
         final BigMoney moneyAdded = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.091);
+        final Date time = currentTime();
 
         PortfolioQueryRepository portfolioQueryRepository = mock(PortfolioQueryRepository.class);
         final PortfolioEntry portfolio = new PortfolioEntry();
@@ -98,7 +100,7 @@ public class PortfolioMoneyEventListenerTest {
         final PortfolioMoneyEventListener listener = new PortfolioMoneyEventListener();
         listener.setPortfolioRepository(portfolioQueryRepository);
 
-        final CashDepositedEvent event = new CashDepositedEvent(portfolioIdentifier, moneyAdded);
+        final CashDepositedEvent event = new CashDepositedEvent(portfolioIdentifier, moneyAdded, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<PortfolioEntry> captor = ArgumentCaptor.forClass(PortfolioEntry.class);
@@ -143,6 +145,7 @@ public class PortfolioMoneyEventListenerTest {
         final BigMoney total = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.091);
         final BigMoney commission = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.091);
         final TransactionId transactionIdentifier = new TransactionId();
+        final Date time = currentTime();
 
         PortfolioQueryRepository portfolioQueryRepository = mock(PortfolioQueryRepository.class);
         final PortfolioEntry portfolio = new PortfolioEntry();
@@ -153,7 +156,7 @@ public class PortfolioMoneyEventListenerTest {
         final PortfolioMoneyEventListener listener = new PortfolioMoneyEventListener();
         listener.setPortfolioRepository(portfolioQueryRepository);
 
-        final CashReservedEvent event = new CashReservedEvent(portfolioIdentifier, transactionIdentifier, total, commission);
+        final CashReservedEvent event = new CashReservedEvent(portfolioIdentifier, transactionIdentifier, total, commission, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<PortfolioEntry> captor = ArgumentCaptor.forClass(PortfolioEntry.class);
@@ -171,6 +174,7 @@ public class PortfolioMoneyEventListenerTest {
         final BigMoney total = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.091);
         final BigMoney commission = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 0.9);
         final TransactionId transactionIdentifier = new TransactionId();
+        final Date time = currentTime();
 
         PortfolioQueryRepository portfolioQueryRepository = mock(PortfolioQueryRepository.class);
         final PortfolioEntry portfolio = new PortfolioEntry();
@@ -181,7 +185,7 @@ public class PortfolioMoneyEventListenerTest {
         final PortfolioMoneyEventListener listener = new PortfolioMoneyEventListener();
         listener.setPortfolioRepository(portfolioQueryRepository);
 
-        final CashReservationCancelledEvent event = new CashReservationCancelledEvent(portfolioIdentifier, transactionIdentifier, total, commission);
+        final CashReservationCancelledEvent event = new CashReservationCancelledEvent(portfolioIdentifier, transactionIdentifier, total, commission, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<PortfolioEntry> captor = ArgumentCaptor.forClass(PortfolioEntry.class);
@@ -200,6 +204,7 @@ public class PortfolioMoneyEventListenerTest {
         final BigMoney total = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10.091);
         final BigMoney commission = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 0.9);
         final TransactionId transactionIdentifier = new TransactionId();
+        final Date time = currentTime();
 
         PortfolioQueryRepository portfolioQueryRepository = mock(PortfolioQueryRepository.class);
         final PortfolioEntry portfolio = new PortfolioEntry();
@@ -212,7 +217,7 @@ public class PortfolioMoneyEventListenerTest {
         final PortfolioMoneyEventListener listener = new PortfolioMoneyEventListener();
         listener.setPortfolioRepository(portfolioQueryRepository);
 
-        final CashReservationConfirmedEvent event = new CashReservationConfirmedEvent(portfolioIdentifier, transactionIdentifier, total, commission);
+        final CashReservationConfirmedEvent event = new CashReservationConfirmedEvent(portfolioIdentifier, transactionIdentifier, total, commission, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<PortfolioEntry> captor = ArgumentCaptor.forClass(PortfolioEntry.class);

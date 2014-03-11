@@ -22,6 +22,9 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * Cancel a reservation for an amount of items for the OrderBook belonging to the provided identifier in the Portfolio
  * of the provided identifier.
@@ -35,17 +38,21 @@ public class CancelAmountReservationForPortfolioCommand extends CommandSupport<C
     private TransactionId transactionIdentifier;
     private BigMoney leftTotalItem;
     private BigMoney leftCommission;
+    @NotNull
+    private Date time;
 
     public CancelAmountReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
                                                       CoinId coinId,
                                                       TransactionId transactionIdentifier,
                                                       BigMoney leftTotalItem,
-                                                      BigMoney leftCommission) {
+                                                      BigMoney leftCommission,
+                                                      Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
         this.leftTotalItem = leftTotalItem;
         this.leftCommission = leftCommission;
+        this.time = time;
     }
 
     public BigMoney getLeftTotalItem() {
@@ -66,5 +73,9 @@ public class CancelAmountReservationForPortfolioCommand extends CommandSupport<C
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

@@ -42,13 +42,13 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 
-import static com.homhon.util.TimeUtils.currentTime;
-import static com.homhon.util.TimeUtils.futureMinute;
 import static com.homhon.util.Asserts.hasLength;
 import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
 import static com.homhon.util.Collections.isEmpty;
 import static com.homhon.util.Objects.nullSafe;
+import static com.homhon.util.TimeUtils.currentTime;
+import static com.homhon.util.TimeUtils.futureMinute;
 
 /**
  * @author Jettro Coenradie
@@ -90,7 +90,8 @@ public class UserCommandHandler {
                 command.getIdentifier(),
                 command.getEmail(),
                 passwordEncoder.encode(command.getPassword()),
-                DEFAULT_ROLES);
+                isEmpty(command.getRoles()) ? DEFAULT_ROLES : command.getRoles(),
+                command.getTime());
         repository.add(user);
         return identifier;
     }

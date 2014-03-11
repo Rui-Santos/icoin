@@ -21,7 +21,6 @@ import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.commission.FixedRateCommissionPolicy;
-import com.icoin.trading.tradeengine.domain.model.order.AbstractOrder;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderId;
@@ -81,6 +80,7 @@ public class BuyTradeManagerSagaIT {
 
     @Test
     public void testHandle_BuyTransactionStarted() throws Exception {
+        Date time = currentTime();
         fixture.givenAggregate(transactionIdentifier).published()
                 .whenAggregate(transactionIdentifier).publishes(
                 new BuyTransactionStartedEvent(transactionIdentifier,
@@ -90,7 +90,8 @@ public class BuyTradeManagerSagaIT {
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
-                        TOTAL_COMMISSION))
+                        TOTAL_COMMISSION,
+                        time))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(new ReserveMoneyFromPortfolioCommandMatcher(
@@ -102,6 +103,7 @@ public class BuyTradeManagerSagaIT {
 
     @Test
     public void testHandle_MoneyIsReserved() {
+        Date time = currentTime();
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
                         coinId,
@@ -110,12 +112,14 @@ public class BuyTradeManagerSagaIT {
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
-                        TOTAL_COMMISSION))
+                        TOTAL_COMMISSION,
+                        time))
                 .whenAggregate(portfolioIdentifier).publishes(
                 new CashReservedEvent(portfolioIdentifier,
                         transactionIdentifier,
                         TOTAL_MONEY,
-                        TOTAL_COMMISSION))
+                        TOTAL_COMMISSION,
+                        time))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(new ConfirmTransactionCommandMatcher(
@@ -124,6 +128,7 @@ public class BuyTradeManagerSagaIT {
 
     @Test
     public void testHandle_NotEnoughMoneyToReserved() {
+        Date time = currentTime();
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
                         coinId,
@@ -132,18 +137,21 @@ public class BuyTradeManagerSagaIT {
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
-                        TOTAL_COMMISSION))
+                        TOTAL_COMMISSION,
+                        time))
                 .whenAggregate(portfolioIdentifier).publishes(
                 new CashReservationRejectedEvent(
                         portfolioIdentifier,
                         transactionIdentifier,
                         TOTAL_MONEY,
-                        TOTAL_COMMISSION))
+                        TOTAL_COMMISSION,
+                        time))
                 .expectActiveSagas(0);
     }
 
     @Test
     public void testHandle_TransactionConfirmed() {
+        Date time = currentTime();
         fixture.givenAggregate(transactionIdentifier).published(
                 new BuyTransactionStartedEvent(transactionIdentifier,
                         coinId,
@@ -152,13 +160,15 @@ public class BuyTradeManagerSagaIT {
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
-                        TOTAL_COMMISSION))
+                        TOTAL_COMMISSION,
+                        time))
                 .andThenAggregate(portfolioIdentifier).published(
                 new CashReservedEvent(
                         portfolioIdentifier,
                         transactionIdentifier,
                         TOTAL_MONEY,
-                        TOTAL_COMMISSION))
+                        TOTAL_COMMISSION,
+                        time))
                 .whenAggregate(transactionIdentifier).publishes(new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(
@@ -170,6 +180,7 @@ public class BuyTradeManagerSagaIT {
 
     @Test
     public void testHandle_TransactionCancelled() {
+        Date time = currentTime();
         fixture.givenAggregate(transactionIdentifier).published(new BuyTransactionStartedEvent(transactionIdentifier,
                 coinId,
                 orderBookIdentifier,
@@ -177,10 +188,12 @@ public class BuyTradeManagerSagaIT {
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM,
                 TOTAL_MONEY,
-                TOTAL_COMMISSION))
+                TOTAL_COMMISSION,
+                time))
                 .whenAggregate(transactionIdentifier).publishes(
                 new BuyTransactionCancelledEvent(transactionIdentifier,
-                        coinId))
+                        coinId,
+                        time))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(new CancelMoneyReservationFromPortfolioCommandMatcher(
@@ -190,6 +203,7 @@ public class BuyTradeManagerSagaIT {
 
     @Test
     public void testHandle_TradeExecutedPlaced() {
+        Date time = currentTime();
         OrderId sellOrderIdentifier = new OrderId();
         OrderId buyOrderIdentifier = new OrderId();
 
@@ -207,14 +221,16 @@ public class BuyTradeManagerSagaIT {
                                 TOTAL_ITEMS,
                                 PRICE_PER_ITEM,
                                 TOTAL_MONEY,
-                                TOTAL_COMMISSION))
+                                TOTAL_COMMISSION,
+                                time))
                 .andThenAggregate(portfolioIdentifier)
                 .published(
                         new CashReservedEvent(
                                 portfolioIdentifier,
                                 transactionIdentifier,
                                 TOTAL_MONEY,
-                                TOTAL_COMMISSION))
+                                TOTAL_COMMISSION,
+                                time))
                 .andThenAggregate(transactionIdentifier)
                 .published(new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
                 .whenAggregate(orderBookIdentifier)
@@ -246,6 +262,7 @@ public class BuyTradeManagerSagaIT {
 
     @Test
     public void testHandle_BuyTransactionExecuted() {
+        Date time = currentTime();
         OrderId sellOrderIdentifier = new OrderId();
         OrderId buyOrderIdentifier = new OrderId();
         TransactionId sellTransactionIdentifier = new TransactionId();
@@ -262,13 +279,15 @@ public class BuyTradeManagerSagaIT {
                                 TOTAL_ITEMS,
                                 PRICE_PER_ITEM,
                                 TOTAL_MONEY,
-                                TOTAL_COMMISSION))
+                                TOTAL_COMMISSION,
+                                time))
                 .andThenAggregate(portfolioIdentifier)
                 .published(
                         new CashReservedEvent(
                                 portfolioIdentifier, transactionIdentifier,
                                 TOTAL_MONEY,
-                                TOTAL_COMMISSION))
+                                TOTAL_COMMISSION,
+                                time))
                 .andThenAggregate(transactionIdentifier)
                 .published(new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
                 .andThenAggregate(orderBookIdentifier)
@@ -295,7 +314,8 @@ public class BuyTradeManagerSagaIT {
                                 TOTAL_ITEMS,
                                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, price),
                                 TOTAL_ITEMS.convertedTo(PRICE_PER_ITEM.getCurrencyUnit(), price),
-                                TOTAL_COMMISSION))
+                                TOTAL_COMMISSION,
+                                time))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
@@ -309,6 +329,7 @@ public class BuyTradeManagerSagaIT {
 
     @Test
     public void testHandle_BuyTransactionPartiallyExecuted() {
+        Date time = currentTime();
         OrderId sellOrderIdentifier = new OrderId();
         OrderId buyOrderIdentifier = new OrderId();
         TransactionId sellTransactionIdentifier = new TransactionId();
@@ -323,14 +344,16 @@ public class BuyTradeManagerSagaIT {
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
-                        TOTAL_COMMISSION))
+                        TOTAL_COMMISSION,
+                        time))
                 .andThenAggregate(portfolioIdentifier)
                 .published(
                         new CashReservedEvent(
                                 portfolioIdentifier,
                                 transactionIdentifier,
                                 TOTAL_MONEY,
-                                TOTAL_COMMISSION))
+                                TOTAL_COMMISSION,
+                                time))
                 .andThenAggregate(transactionIdentifier)
                 .published(
                         new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
@@ -359,7 +382,8 @@ public class BuyTradeManagerSagaIT {
                                 TOTAL_ITEMS,
                                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
                                 TOTAL_ITEMS.dividedBy(2, RoundingMode.HALF_EVEN).convertedTo(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
-                                TOTAL_COMMISSION))
+                                TOTAL_COMMISSION,
+                                time))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
@@ -375,6 +399,7 @@ public class BuyTradeManagerSagaIT {
 
     @Test
     public void testHandle_MultipleBuyTransactionPartiallyExecuted() {
+        Date time = currentTime();
         OrderId sellOrderIdentifier = new OrderId();
         OrderId buyOrderIdentifier = new OrderId();
         TransactionId sellTransactionIdentifier = new TransactionId();
@@ -388,13 +413,15 @@ public class BuyTradeManagerSagaIT {
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
-                        TOTAL_COMMISSION))
+                        TOTAL_COMMISSION,
+                        time))
                 .andThenAggregate(portfolioIdentifier).published(
                 new CashReservedEvent(
                         portfolioIdentifier,
                         transactionIdentifier,
                         TOTAL_MONEY,
-                        TOTAL_COMMISSION))
+                        TOTAL_COMMISSION,
+                        time))
                 .andThenAggregate(transactionIdentifier)
                 .published(new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
                 .andThenAggregate(orderBookIdentifier).published(
@@ -421,7 +448,8 @@ public class BuyTradeManagerSagaIT {
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(99)),
                                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99)),
-                                TOTAL_COMMISSION.dividedBy(2, RoundingMode.HALF_EVEN)))
+                                TOTAL_COMMISSION.dividedBy(2, RoundingMode.HALF_EVEN),
+                                time))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(

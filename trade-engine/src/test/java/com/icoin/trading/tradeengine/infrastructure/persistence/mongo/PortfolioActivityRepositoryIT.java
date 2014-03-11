@@ -4,7 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.icoin.trading.tradeengine.query.activity.Activity;
 import com.icoin.trading.tradeengine.query.activity.ActivityItem;
 import com.icoin.trading.tradeengine.query.activity.PortfolioActivity;
-import com.icoin.trading.tradeengine.query.activity.PortfolioActivityRepository;
+import com.icoin.trading.tradeengine.query.activity.PortfolioActivityType;
+import com.icoin.trading.tradeengine.query.activity.repositories.PortfolioActivityQueryRepository;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.junit.Before;
@@ -42,7 +43,7 @@ public class PortfolioActivityRepositoryIT {
     private PortfolioActivity activity2;
 
     @Autowired
-    private PortfolioActivityRepository repository;
+    private PortfolioActivityQueryRepository repository;
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -56,18 +57,16 @@ public class PortfolioActivityRepositoryIT {
     }
 
     private PortfolioActivity create() {
-        PortfolioActivity activity = new PortfolioActivity();
-
         String userId = "userId";
         BigMoney amount = BigMoney.of(CurrencyUnit.EUR, 10);
 
         ImmutableList<ActivityItem> activityItems =
-                ImmutableList.of(new ActivityItem(futureMinute(currentTime(), -2), userId, "45.23.98.243", "entity", "key1", amount),
-                        new ActivityItem(futureMinute(currentTime(), -1), userId, "45.23.98.243", "entity", "key2", amount),
-                        new ActivityItem(currentTime(), userId, "45.23.98.243", "entity", "key3", amount));
+                ImmutableList.of(new ActivityItem(futureMinute(currentTime(), -2), userId, "45.23.98.243", amount),
+                        new ActivityItem(futureMinute(currentTime(), -1), userId, "45.23.98.243", amount),
+                        new ActivityItem(currentTime(), userId, "45.23.98.243", amount));
 
-        activity.setWithdrawCoin(new Activity("withdrawCoins", 10, activityItems));
-        activity.setAddCoin(new Activity("addCoins", 10, activityItems));
+        PortfolioActivity activity = new PortfolioActivity(userId, "username", "portfolioId", PortfolioActivityType.ADD_COIN,
+                new Activity(activityItems));
 
         return activity;
     }
@@ -77,18 +76,18 @@ public class PortfolioActivityRepositoryIT {
         BigMoney amount = BigMoney.of(CurrencyUnit.AUD, 10);
         PortfolioActivity one = repository.findOne(activity1.getPrimaryKey());
 
-        Activity withdrawCoin = one.getWithdrawCoin();
+        Activity withdrawCoin = one.getActivity();
 
         List<ActivityItem> activityItems = withdrawCoin.getActivityItems();
         assertThat(activityItems, hasSize(3));
 
-        withdrawCoin.addItem(new ActivityItem(currentTime(), "userId", "45.23.98.243", "entity", "key2", amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(currentTime(), "userId", "45.23.98.243", amount));
 
         repository.save(one);
 
         one = repository.findOne(activity1.getPrimaryKey());
 
-        withdrawCoin = one.getWithdrawCoin();
+        withdrawCoin = one.getActivity();
 
         activityItems = withdrawCoin.getActivityItems();
         assertThat(activityItems, hasSize(4));
@@ -104,28 +103,28 @@ public class PortfolioActivityRepositoryIT {
 
         PortfolioActivity one = mongoTemplate.findOne(query, PortfolioActivity.class);
 
-        Activity withdrawCoin = one.getWithdrawCoin();
+        Activity withdrawCoin = one.getActivity();
 
         BigMoney amount = BigMoney.of(CurrencyUnit.AUD, 10);
 
-        withdrawCoin.addItem(new ActivityItem(futureMinute(currentTime(), 1), "userId", "45.23.98.243", "entity", "key2",amount));
-        withdrawCoin.addItem(new ActivityItem(futureMinute(currentTime(), 2), "userId", "45.23.98.243", "entity", "key2",amount));
-        withdrawCoin.addItem(new ActivityItem(futureMinute(currentTime(), 3), "userId", "45.23.98.243", "entity", "key2",amount));
-        withdrawCoin.addItem(new ActivityItem(futureMinute(currentTime(), 4), "userId", "45.23.98.243", "entity", "key2",amount));
-        withdrawCoin.addItem(new ActivityItem(futureMinute(currentTime(), 5), "userId", "45.23.98.243", "entity", "key2",amount));
-        withdrawCoin.addItem(new ActivityItem(futureMinute(currentTime(), 6), "userId", "45.23.98.243", "entity", "key2",amount));
-        withdrawCoin.addItem(new ActivityItem(futureMinute(currentTime(), 7), "userId", "45.23.98.243", "entity", "key2",amount));
-        withdrawCoin.addItem(new ActivityItem(futureMinute(currentTime(), 8), "userId", "45.23.98.243", "entity", "key2",amount));
-        withdrawCoin.addItem(new ActivityItem(futureMinute(currentTime(), 9), "userId", "45.23.98.243", "entity", "key2",amount));
-        withdrawCoin.addItem(new ActivityItem(futureMinute(currentTime(), 10), "userId", "45.23.98.243", "entity", "key2",amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(futureMinute(currentTime(), 1), "userId", "200.12.12.125", amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(futureMinute(currentTime(), 2), "userId", "200.12.12.125", amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(futureMinute(currentTime(), 3), "userId", "200.12.12.125", amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(futureMinute(currentTime(), 4), "userId", "200.12.12.125", amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(futureMinute(currentTime(), 5), "userId", "200.12.12.125", amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(futureMinute(currentTime(), 6), "userId", "200.12.12.125", amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(futureMinute(currentTime(), 7), "userId", "200.12.12.125", amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(futureMinute(currentTime(), 8), "userId", "200.12.12.125", amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(futureMinute(currentTime(), 9), "userId", "200.12.12.125", amount));
+        withdrawCoin.addItems(currentTime(), new ActivityItem(futureMinute(currentTime(), 10), "userId", "200.12.12.125", amount));
 
         Update update = new Update();
         update.set("withdrawCoin", withdrawCoin);
 
-        mongoTemplate.updateFirst(new Query(Criteria.where("_id").is(activity1.getPrimaryKey())), update,PortfolioActivity.class);
+        mongoTemplate.updateFirst(new Query(Criteria.where("_id").is(activity1.getPrimaryKey())), update, PortfolioActivity.class);
 
         one = repository.findOne(activity1.getPrimaryKey());
 
-        withdrawCoin = one.getWithdrawCoin();
+        withdrawCoin = one.getActivity();
     }
 } 

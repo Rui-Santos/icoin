@@ -21,17 +21,24 @@ import com.homhon.base.domain.event.EventSupport;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
 public abstract class AbstractTransactionCancelledEvent<T extends AbstractTransactionCancelledEvent> extends EventSupport<T> {
     private TransactionId transactionIdentifier;
     private CoinId coinId;
+    @NotNull
+    private Date time;
 
     public AbstractTransactionCancelledEvent(TransactionId transactionIdentifier,
-                                             CoinId coinId) {
+                                             CoinId coinId,
+                                             Date time) {
         this.transactionIdentifier = transactionIdentifier;
         this.coinId = coinId;
+        this.time = time;
     }
 
     public TransactionId getTransactionIdentifier() {
@@ -40,5 +47,9 @@ public abstract class AbstractTransactionCancelledEvent<T extends AbstractTransa
 
     public CoinId getCoinId() {
         return coinId;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

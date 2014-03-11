@@ -34,6 +34,7 @@ import org.mockito.ArgumentCaptor;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import static com.homhon.util.TimeUtils.currentTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -74,6 +75,7 @@ public class TransactionCommandHandlerTest {
 
     @Test
     public void testStartBuyTransaction() {
+        Date time = currentTime();
         when(policy.calculateBuyCommission(any(Order.class)))
                 .thenReturn(new Commission(BigMoney.of(CurrencyUnit.of(Currencies.EUR), BigDecimal.valueOf(10)),
                         "test buy"));
@@ -86,7 +88,8 @@ public class TransactionCommandHandlerTest {
                         orderBook,
                         portfolio,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
-                        BigMoney.of(CurrencyUnit.EUR, BigDecimal.valueOf(20)));
+                        BigMoney.of(CurrencyUnit.EUR, BigDecimal.valueOf(20)),
+                        time);
         fixture.given()
                 .when(command)
                 .expectEvents(
@@ -98,7 +101,8 @@ public class TransactionCommandHandlerTest {
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
                                 BigMoney.of(CurrencyUnit.EUR, BigDecimal.valueOf(20)),
                                 BigMoney.of(CurrencyUnit.EUR, BigDecimal.valueOf(4000)).toMoney().toBigMoney(),
-                                BigMoney.of(CurrencyUnit.EUR, BigDecimal.valueOf(10)).toMoney().toBigMoney()));
+                                BigMoney.of(CurrencyUnit.EUR, BigDecimal.valueOf(10)).toMoney().toBigMoney(),
+                                time));
 
         ArgumentCaptor<Order> captor = ArgumentCaptor.forClass(Order.class);
         verify(policy).calculateBuyCommission(captor.capture());
@@ -116,6 +120,7 @@ public class TransactionCommandHandlerTest {
 
     @Test
     public void testStartSellTransaction() {
+        Date time = currentTime();
         when(policy.calculateSellCommission(any(Order.class)))
                 .thenReturn(new Commission(BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                         "test sell"));
@@ -128,7 +133,8 @@ public class TransactionCommandHandlerTest {
                         orderBook,
                         portfolio,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
-                        BigMoney.of(CurrencyUnit.CAD, BigDecimal.valueOf(20)));
+                        BigMoney.of(CurrencyUnit.CAD, BigDecimal.valueOf(20)),
+                        time);
         fixture.given()
                 .when(command)
                 .expectEvents(
@@ -140,7 +146,8 @@ public class TransactionCommandHandlerTest {
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
                                 BigMoney.of(CurrencyUnit.CAD, BigDecimal.valueOf(20)),
                                 BigMoney.of(CurrencyUnit.CAD, BigDecimal.valueOf(4000)).toMoney().toBigMoney(),
-                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)).toMoney().toBigMoney()));
+                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)).toMoney().toBigMoney(),
+                                time));
 
         ArgumentCaptor<Order> captor = ArgumentCaptor.forClass(Order.class);
         verify(policy).calculateSellCommission(captor.capture());
@@ -168,14 +175,17 @@ public class TransactionCommandHandlerTest {
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(4000)),
-                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10))))
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10)),
+                confirmDate))
                 .when(command)
                 .expectEvents(new BuyTransactionConfirmedEvent(transactionId, confirmDate));
     }
 
     @Test
     public void testCancelTransaction() {
-        CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
+        Date time = currentTime();
+        CancelTransactionCommand command = new CancelTransactionCommand(transactionId,
+                time);
         fixture.given(new BuyTransactionStartedEvent(
                 transactionId,
                 coinId,
@@ -184,15 +194,18 @@ public class TransactionCommandHandlerTest {
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(4000)),
-                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10))))
+                BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10)),
+                time))
                 .when(command)
                 .expectEvents(new BuyTransactionCancelledEvent(
-                        transactionId, coinId));
+                        transactionId, coinId, time));
     }
 
     @Test
     public void testCancelTransaction_partiallyExecuted() {
-        CancelTransactionCommand command = new CancelTransactionCommand(transactionId);
+        Date time = currentTime();
+        CancelTransactionCommand command = new CancelTransactionCommand(transactionId,
+                time);
         fixture.given(new BuyTransactionStartedEvent(
                 transactionId,
                 coinId,
@@ -201,34 +214,40 @@ public class TransactionCommandHandlerTest {
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20))),
+                BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                time),
                 new BuyTransactionPartiallyExecutedEvent(transactionId,
                         coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)))
+                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                        time)
         )
                 .when(command)
-                .expectEvents(new BuyTransactionCancelledEvent(transactionId, coinId));
+                .expectEvents(new BuyTransactionCancelledEvent(transactionId, coinId,
+                        time));
     }
 
     @Test
     public void testExecuteTransaction() {
+        Date time = currentTime();
         ExecutedTransactionCommand command =
                 new ExecutedTransactionCommand(transactionId,
                         coinId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)));
+                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                        time);
         fixture.given(new BuyTransactionStartedEvent(transactionId,
                 coinId, orderBook,
                 portfolio,
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20))),
+                BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                time),
                 new BuyTransactionConfirmedEvent(transactionId,
                         new Date()))
                 .when(command)
@@ -236,25 +255,29 @@ public class TransactionCommandHandlerTest {
                         coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20))));
+                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                        time));
     }
 
     @Test
     public void testExecuteTransaction_partiallyExecuted() {
+        Date time = currentTime();
         ExecutedTransactionCommand command =
                 new ExecutedTransactionCommand(transactionId,
                         coinId,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)));
+                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                        time);
         fixture.given(new BuyTransactionStartedEvent(transactionId,
                 coinId, orderBook,
                 portfolio,
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20))),
+                BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                time),
                 new BuyTransactionConfirmedEvent(transactionId, new Date()))
                 .when(command)
                 .expectEvents(new BuyTransactionPartiallyExecutedEvent(transactionId,
@@ -262,17 +285,20 @@ public class TransactionCommandHandlerTest {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20))));
+                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                        time));
     }
 
     @Test
     public void testExecuteTransaction_completeAfterPartiallyExecuted() {
+        Date time = currentTime();
         ExecutedTransactionCommand command = new ExecutedTransactionCommand(transactionId,
                 coinId,
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(150)),
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)));
+                BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                time);
         fixture.given(
                 new BuyTransactionStartedEvent(transactionId,
                         coinId,
@@ -281,7 +307,8 @@ public class TransactionCommandHandlerTest {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(200)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20))),
+                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                        time),
                 new BuyTransactionConfirmedEvent(transactionId, new Date()),
                 new BuyTransactionPartiallyExecutedEvent(transactionId,
                         coinId,
@@ -289,13 +316,15 @@ public class TransactionCommandHandlerTest {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20))))
+                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                        time))
                 .when(command)
                 .expectEvents(new BuyTransactionExecutedEvent(
                         transactionId,
                         coinId, BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(150)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(20)),
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(4000)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20))));
+                        BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(20)),
+                        time));
     }
 }

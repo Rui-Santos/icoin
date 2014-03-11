@@ -12,6 +12,8 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
+import static com.homhon.util.TimeUtils.currentTime;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -37,7 +39,8 @@ public class PortfolioManagementUserListenerTest {
                          identifier,
                         "email@163.com",
                         "testpassword",
-                        Constants.DEFAULT_ROLES);
+                        Constants.DEFAULT_ROLES,
+                        currentTime());
 
         listener.createNewPortfolioWhenUserIsCreated(event);
 

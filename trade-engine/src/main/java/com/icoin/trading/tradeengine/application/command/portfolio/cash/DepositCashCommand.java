@@ -22,6 +22,7 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import org.joda.money.BigMoney;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * Adding cash to your Portfolio through a deposit
@@ -36,9 +37,13 @@ public class DepositCashCommand extends CommandSupport<DepositCashCommand> {
 //    @DecimalMin("0.00000001")
     private BigMoney moneyToAdd;
 
-    public DepositCashCommand(PortfolioId portfolioIdentifier, BigMoney moneyToAdd) {
+    @NotNull
+    private Date time;
+
+    public DepositCashCommand(PortfolioId portfolioIdentifier, BigMoney moneyToAdd, Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.moneyToAdd = moneyToAdd;
+        this.time = time;
     }
 
     public BigMoney getMoneyToAdd() {
@@ -47,5 +52,9 @@ public class DepositCashCommand extends CommandSupport<DepositCashCommand> {
 
     public PortfolioId getPortfolioIdentifier() {
         return portfolioIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

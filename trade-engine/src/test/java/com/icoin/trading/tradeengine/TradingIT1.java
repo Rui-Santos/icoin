@@ -43,9 +43,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.homhon.util.TimeUtils.currentTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -82,6 +84,7 @@ public class TradingIT1 {
     private final BigDecimal btcAmount = BigDecimal.valueOf(5.233412);
     private final String coinName = "Bitcoin";
     private final CurrencyPair currencyPair = new CurrencyPair(Currencies.BTC);
+    private final Date time = currentTime();
     private UserId userId1;
     private UserId userId2;
 
@@ -153,7 +156,8 @@ public class TradingIT1 {
                         userName + "@163.com",
                         userName,
                         userName,
-                        Constants.DEFAULT_ROLES);
+                        Constants.DEFAULT_ROLES,
+                        time);
         commandGateway.send(createUser);
         return userId;
     }
@@ -165,7 +169,7 @@ public class TradingIT1 {
 
     public void depositMoneyToPortfolio(String portfolioIdentifier, BigDecimal amountOfMoney) {
         DepositCashCommand command =
-                new DepositCashCommand(new PortfolioId(portfolioIdentifier), BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, amountOfMoney));
+                new DepositCashCommand(new PortfolioId(portfolioIdentifier), BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, amountOfMoney), time);
         commandGateway.send(command);
     }
 
@@ -174,7 +178,8 @@ public class TradingIT1 {
         AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
                 this.coinId,
-                BigMoney.of(CurrencyUnit.of(coinId), amount));
+                BigMoney.of(CurrencyUnit.of(coinId), amount),
+                time);
         commandGateway.send(command);
     }
 
@@ -323,7 +328,7 @@ public class TradingIT1 {
                 new OrderBookId(orderBookEntry.getPrimaryKey()),
                 new PortfolioId(portfolioEntry.getPrimaryKey()),
                 tradeAmount,
-                price);
+                price, time);
         commandGateway.send(command);
     }
 
@@ -334,7 +339,8 @@ public class TradingIT1 {
                 new OrderBookId(orderBookEntry.getPrimaryKey()),
                 new PortfolioId(portfolioEntry.getPrimaryKey()),
                 tradeAmount,
-                price);
+                price,
+                time);
         commandGateway.send(command);
     }
 } 

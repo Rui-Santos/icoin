@@ -23,6 +23,9 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * Confirm the reserved items belonging to OrderBook of the provided identifier for the Portfolio of the provided
  * identifier.
@@ -36,17 +39,21 @@ public class ConfirmAmountReservationForPortfolioCommand extends CommandSupport<
     private TransactionId transactionIdentifier;
     private BigMoney amountOfItem;
     private BigMoney commission;
+    @NotNull
+    private Date time;
 
     public ConfirmAmountReservationForPortfolioCommand(PortfolioId portfolioIdentifier,
                                                        CoinId coinId,
                                                        TransactionId transactionIdentifier,
                                                        BigMoney amountOfItem,
-                                                       BigMoney commission) {
+                                                       BigMoney commission,
+                                                       Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItem = amountOfItem;
         this.commission = commission;
+        this.time = time;
     }
 
     public BigMoney getAmountOfItem() {
@@ -67,5 +74,9 @@ public class ConfirmAmountReservationForPortfolioCommand extends CommandSupport<
 
     public BigMoney getCommission() {
         return commission;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

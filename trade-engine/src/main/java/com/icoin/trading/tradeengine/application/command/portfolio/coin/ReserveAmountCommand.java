@@ -23,6 +23,9 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -31,19 +34,24 @@ public class ReserveAmountCommand extends CommandSupport<ReserveAmountCommand> {
     private PortfolioId portfolioIdentifier;
     private TransactionId transactionIdentifier;
     private CoinId coinId;
+    @NotNull
     private BigMoney amountOfItemToReserve;
     private BigMoney commission;
+    @NotNull
+    private Date time;
 
     public ReserveAmountCommand(PortfolioId portfolioIdentifier,
                                 CoinId coinId,
                                 TransactionId transactionIdentifier,
                                 BigMoney amountOfItemToReserve,
-                                BigMoney commission) {
+                                BigMoney commission,
+                                Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.coinId = coinId;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfItemToReserve = amountOfItemToReserve;
         this.commission = commission;
+        this.time = time;
     }
 
     public BigMoney getAmountOfItemToReserve() {
@@ -64,5 +72,9 @@ public class ReserveAmountCommand extends CommandSupport<ReserveAmountCommand> {
 
     public BigMoney getCommission() {
         return commission;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

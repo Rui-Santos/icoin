@@ -70,76 +70,82 @@ public class Portfolio extends AbstractAnnotatedAggregateRoot {
     protected Portfolio() {
     }
 
-    public Portfolio(PortfolioId portfolioId, UserId userIdentifier) {
-        apply(new PortfolioCreatedEvent(portfolioId, userIdentifier));
+    public Portfolio(PortfolioId portfolioId, UserId userIdentifier, Date time) {
+        apply(new PortfolioCreatedEvent(portfolioId, userIdentifier, time));
     }
 
-    public void addItem(CoinId coinId, BigMoney amountOfItemToAdd) {
-        apply(new ItemAddedToPortfolioEvent(portfolioId, coinId, amountOfItemToAdd));
+    public void addItem(CoinId coinId, BigMoney amountOfItemToAdd, Date time) {
+        apply(new ItemAddedToPortfolioEvent(portfolioId, coinId, amountOfItemToAdd, time));
     }
 
-    public void reserveItem(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemToReserve, BigMoney commission) {
+    public void reserveItem(CoinId coinId, TransactionId transactionIdentifier, BigMoney amountOfItemToReserve, BigMoney commission, Date time) {
         if (!availableCoins.containsKey(coinId)) {
-            apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, coinId, transactionIdentifier));
+            apply(new ItemToReserveNotAvailableInPortfolioEvent(portfolioId, coinId, transactionIdentifier, time));
         } else {
             BigMoney availableAmountOfItem = availableCoins.get(coinId).getAvailableAmount();
             final BigMoney totalReserved = amountOfItemToReserve.plus(commission);
             if (availableAmountOfItem.compareTo(totalReserved.toMoney(RoundingMode.HALF_EVEN)) < 0) {
                 apply(new NotEnoughItemAvailableToReserveInPortfolio(
-                        portfolioId, coinId, transactionIdentifier, availableAmountOfItem, totalReserved));
+                        portfolioId, coinId, transactionIdentifier, availableAmountOfItem, totalReserved, time));
             } else {
-                apply(new ItemReservedEvent(portfolioId, coinId, transactionIdentifier, totalReserved));
+                apply(new ItemReservedEvent(portfolioId, coinId, transactionIdentifier, totalReserved, time));
             }
         }
     }
 
     public void confirmReservation(CoinId coinId, TransactionId transactionIdentifier,
-                                   BigMoney amount, BigMoney commission) {
+                                   BigMoney amount, BigMoney commission, Date time) {
         apply(new ItemReservationConfirmedForPortfolioEvent(
                 portfolioId,
                 coinId,
                 transactionIdentifier,
                 amount,
-                commission));
+                commission,
+                time));
     }
 
-    public void cancelReservation(CoinId coinId, TransactionId transactionIdentifier, BigMoney leftTotalItem, BigMoney leftCommission) {
+    public void cancelReservation(CoinId coinId,
+                                  TransactionId transactionIdentifier,
+                                  BigMoney leftTotalItem,
+                                  BigMoney leftCommission,
+                                  Date time) {
         apply(new ItemReservationCancelledForPortfolioEvent(
                 portfolioId,
                 coinId,
                 transactionIdentifier,
                 leftTotalItem,
-                leftCommission));
+                leftCommission,
+                time));
     }
 
-    public void addMoney(BigMoney money) {
-        apply(new CashDepositedEvent(portfolioId, money));
+    public void addMoney(BigMoney money, Date time) {
+        apply(new CashDepositedEvent(portfolioId, money, time));
     }
 
     public void makePayment(BigMoney amount, Date withdrawnTime) {
         apply(new CashWithdrawnEvent(portfolioId, amount, withdrawnTime));
     }
 
-    public void reserveMoney(TransactionId transactionIdentifier, BigMoney totalMoney, BigMoney totalCommission) {
+    public void reserveMoney(TransactionId transactionIdentifier, BigMoney totalMoney, BigMoney totalCommission, Date time) {
         BigMoney amountToReserve = totalMoney.plus(totalCommission);
 
         if (amountOfMoney.compareTo(amountToReserve) >= 0) {
-            apply(new CashReservedEvent(portfolioId, transactionIdentifier, totalMoney, totalCommission));
+            apply(new CashReservedEvent(portfolioId, transactionIdentifier, totalMoney, totalCommission, time));
         } else {
-            apply(new CashReservationRejectedEvent(portfolioId, transactionIdentifier, totalMoney, totalCommission));
+            apply(new CashReservationRejectedEvent(portfolioId, transactionIdentifier, totalMoney, totalCommission, time));
         }
     }
 
-    public void clearReservedMoney(TransactionId transactionIdentifier, BigMoney moneyToClear) {
-        apply(new CashReservedClearedEvent(portfolioId, transactionIdentifier, moneyToClear));
+    public void clearReservedMoney(TransactionId transactionIdentifier, BigMoney moneyToClear, Date time) {
+        apply(new CashReservedClearedEvent(portfolioId, transactionIdentifier, moneyToClear, time));
     }
 
-    public void cancelMoneyReservation(TransactionId transactionIdentifier, BigMoney leftTotalMoney, BigMoney leftCommission) {
-        apply(new CashReservationCancelledEvent(portfolioId, transactionIdentifier, leftTotalMoney, leftCommission));
+    public void cancelMoneyReservation(TransactionId transactionIdentifier, BigMoney leftTotalMoney, BigMoney leftCommission, Date time) {
+        apply(new CashReservationCancelledEvent(portfolioId, transactionIdentifier, leftTotalMoney, leftCommission, time));
     }
 
-    public void confirmMoneyReservation(TransactionId transactionIdentifier, BigMoney amountOfMoney, BigMoney commission) {
-        apply(new CashReservationConfirmedEvent(portfolioId, transactionIdentifier, amountOfMoney, commission));
+    public void confirmMoneyReservation(TransactionId transactionIdentifier, BigMoney amountOfMoney, BigMoney commission, Date time) {
+        apply(new CashReservationConfirmedEvent(portfolioId, transactionIdentifier, amountOfMoney, commission, time));
     }
 
     private static CurrencyUnit currencyUnit(BigMoney money) {

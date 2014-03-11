@@ -64,7 +64,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                        BigMoney amountOfItems,
                        BigMoney pricePerItem,
                        BigMoney totalMoney,
-                       BigMoney totalCommission) {
+                       BigMoney totalCommission,
+                       Date time) {
         switch (type) {
             case BUY:
                 apply(new BuyTransactionStartedEvent(
@@ -75,7 +76,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                         amountOfItems,
                         pricePerItem,
                         totalMoney,
-                        totalCommission));
+                        totalCommission,
+                        time));
                 break;
             case SELL:
                 apply(new SellTransactionStartedEvent(
@@ -86,7 +88,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                         amountOfItems,
                         pricePerItem,
                         totalMoney,
-                        totalCommission));
+                        totalCommission,
+                        time));
                 break;
         }
     }
@@ -102,18 +105,18 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
         }
     }
 
-    public void cancel() {
+    public void cancel(Date time) {
         switch (this.type) {
             case BUY:
-                apply(new BuyTransactionCancelledEvent(transactionId, coinId));
+                apply(new BuyTransactionCancelledEvent(transactionId, coinId, time));
                 break;
             case SELL:
-                apply(new SellTransactionCancelledEvent(transactionId, coinId));
+                apply(new SellTransactionCancelledEvent(transactionId, coinId, time));
                 break;
         }
     }
 
-    public void execute(BigMoney amountOfItem, BigMoney itemPrice, BigMoney executedMoney, BigMoney commission) {
+    public void execute(BigMoney amountOfItem, BigMoney itemPrice, BigMoney executedMoney, BigMoney commission, Date time) {
         switch (this.type) {
             case BUY:
                 if (isPartiallyExecuted(amountOfItem)) {
@@ -123,7 +126,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                             amountOfItem.plus(executedAmount),
                             itemPrice,
                             executedMoney,
-                            commission));
+                            commission,
+                            time));
                 } else {
                     apply(new BuyTransactionExecutedEvent(
                             transactionId,
@@ -131,7 +135,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                             amountOfItem,
                             itemPrice,
                             executedMoney,
-                            commission));
+                            commission,
+                            time));
                 }
                 break;
             case SELL:
@@ -142,7 +147,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                             amountOfItem.plus(executedAmount),
                             itemPrice,
                             executedMoney,
-                            commission));
+                            commission,
+                            time));
                 } else {
                     apply(new SellTransactionExecutedEvent(
                             transactionId,
@@ -150,7 +156,8 @@ public class Transaction extends AbstractAnnotatedAggregateRoot {
                             amountOfItem,
                             itemPrice,
                             executedMoney,
-                            commission));
+                            commission,
+                            time));
                 }
                 break;
         }

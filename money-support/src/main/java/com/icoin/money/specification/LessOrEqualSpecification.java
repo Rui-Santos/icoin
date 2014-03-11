@@ -23,6 +23,6 @@ public class LessOrEqualSpecification extends CompositeSpecification<BigMoney> {
     @Override
     public boolean isSatisfiedBy(BigMoney amount) {
         notNull(amount);
-        return threshold.compareTo(amount) <= 0;
+        return amount.compareTo(threshold) <= 0;
     }
 }

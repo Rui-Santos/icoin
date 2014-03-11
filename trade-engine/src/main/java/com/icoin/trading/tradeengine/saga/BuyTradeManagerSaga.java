@@ -82,7 +82,8 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
         ReserveCashCommand command = new ReserveCashCommand(getPortfolioIdentifier(),
                 getTransactionIdentifier(),
                 event.getTotalMoney(),
-                event.getTotalCommission());
+                event.getTotalCommission(),
+                event.getTime());
         getCommandGateway().send(command);
     }
 
@@ -140,7 +141,8 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 getPortfolioIdentifier(),
                 getTransactionIdentifier(),
                 leftTotalMoney,
-                getLeftCommission());
+                getLeftCommission(),
+                event.getTime());
         logger.info("transaction {} is to cancel, left money {} , left commission {}.", getTransactionIdentifier(), leftTotalMoney, getLeftCommission());
         getCommandGateway().send(command);
         logger.info("transaction {} was cancelled, left money {} , left commission {}.", getTransactionIdentifier(), leftTotalMoney, getLeftCommission());
@@ -157,7 +159,8 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                         event.getTradeAmount(),
                         event.getTradedPrice(),
                         event.getExecutedMoney(),
-                        event.getBuyCommission());
+                        event.getBuyCommission(),
+                        event.getTradeTime());
         getCommandGateway().send(command);
     }
 
@@ -174,13 +177,15 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
                         event.getExecutedMoney(),
-                        commission);
+                        commission,
+                        event.getTime());
         getCommandGateway().sendAndWait(confirmCommand);
 
         AddAmountToPortfolioCommand addItemsCommand =
                 new AddAmountToPortfolioCommand(getPortfolioIdentifier(),
                         getCoinId(),
-                        event.getAmountOfItem());
+                        event.getAmountOfItem(),
+                        event.getTime());
         getCommandGateway().sendAndWait(addItemsCommand);
 
         //calc left commission and left reserved
@@ -193,7 +198,8 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                             getTransactionIdentifier(),
                             getOrderBookIdentifier(),
                             leftTotalMoney,
-                            getLeftCommission());
+                            getLeftCommission(),
+                            event.getTime());
             getCommandGateway().send(clearReservedCashCommand);
         }
     }
@@ -212,13 +218,15 @@ public class BuyTradeManagerSaga extends TradeManagerSaga {
                 new ConfirmCashReservationCommand(getPortfolioIdentifier(),
                         getTransactionIdentifier(),
                         event.getExecutedMoney(),
-                        commission);
+                        commission,
+                        event.getTime());
         getCommandGateway().sendAndWait(confirmCommand);
 
         AddAmountToPortfolioCommand addItemsCommand =
                 new AddAmountToPortfolioCommand(getPortfolioIdentifier(),
                         getCoinId(),
-                        event.getAmountOfExecutedItem());
+                        event.getAmountOfExecutedItem(),
+                        event.getTime());
         getCommandGateway().send(addItemsCommand);
     }
 

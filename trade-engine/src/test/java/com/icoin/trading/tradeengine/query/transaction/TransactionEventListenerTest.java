@@ -47,6 +47,7 @@ import org.mockito.Mockito;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import static com.homhon.util.TimeUtils.currentTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -89,6 +90,7 @@ public class TransactionEventListenerTest {
 
     @Test
     public void handleBuyTransactionStartedEvent() {
+        final Date time = currentTime();
         BuyTransactionStartedEvent event = new BuyTransactionStartedEvent(transactionIdentifier,
                 coinIdentifier,
                 orderBookIdentifier,
@@ -96,7 +98,8 @@ public class TransactionEventListenerTest {
                 DEFAULT_TOTAL_ITEMS,
                 DEFAULT_ITEM_PRICE,
                 DEFAULT_TOTAL_MONEY,
-                DEFAULT_BUY_COMMISSION);
+                DEFAULT_BUY_COMMISSION,
+                time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -116,13 +119,15 @@ public class TransactionEventListenerTest {
 
     @Test
     public void handleSellTransactionStartedEvent() {
+        final Date time = currentTime();
         SellTransactionStartedEvent event = new SellTransactionStartedEvent(transactionIdentifier,
                 coinIdentifier, orderBookIdentifier,
                 portfolioIdentifier,
                 DEFAULT_TOTAL_ITEMS,
                 DEFAULT_ITEM_PRICE,
                 DEFAULT_TOTAL_MONEY,
-                DEFAULT_SELL_COMMISSION);
+                DEFAULT_SELL_COMMISSION,
+                time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -143,6 +148,7 @@ public class TransactionEventListenerTest {
 
     @Test
     public void handleSellTransactionCancelledEvent() {
+        final Date time = currentTime();
         TransactionEntry transactionEntry = new TransactionEntry();
         transactionEntry.setPrimaryKey(transactionIdentifier.toString());
         transactionEntry.setAmountOfExecutedItem(BigMoney.zero(CurrencyUnit.of(Currencies.BTC)));
@@ -156,7 +162,7 @@ public class TransactionEventListenerTest {
         SellTransactionCancelledEvent event =
                 new SellTransactionCancelledEvent(
                         transactionIdentifier,
-                        coinIdentifier);
+                        coinIdentifier,time);
         listener.handleEvent(event);
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
@@ -170,12 +176,13 @@ public class TransactionEventListenerTest {
 
     @Test
     public void testBuyTransactionCancelled() throws Exception {
+        final Date time = currentTime();
         final TransactionEntry entry = new TransactionEntry();
         entry.setState(TransactionState.STARTED);
         when(transactionQueryRepository.findOne(eq(transactionIdentifier.toString())))
                 .thenReturn(entry);
 
-        final BuyTransactionCancelledEvent event = new BuyTransactionCancelledEvent(transactionIdentifier, coinIdentifier);
+        final BuyTransactionCancelledEvent event = new BuyTransactionCancelledEvent(transactionIdentifier, coinIdentifier,time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -188,12 +195,13 @@ public class TransactionEventListenerTest {
 
     @Test
     public void testSellTransactionCancelled() throws Exception {
+        final Date time = currentTime();
         final TransactionEntry entry = new TransactionEntry();
         entry.setState(TransactionState.STARTED);
         when(transactionQueryRepository.findOne(eq(transactionIdentifier.toString())))
                 .thenReturn(entry);
 
-        final SellTransactionCancelledEvent event = new SellTransactionCancelledEvent(transactionIdentifier, coinIdentifier);
+        final SellTransactionCancelledEvent event = new SellTransactionCancelledEvent(transactionIdentifier, coinIdentifier,time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -248,6 +256,7 @@ public class TransactionEventListenerTest {
 
     @Test
     public void testBuyTransactionExecuted() throws Exception {
+        final Date time = currentTime();
         final BigMoney amount = BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10);
         final BigMoney price = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10);
         final BigMoney money = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 10);
@@ -261,7 +270,7 @@ public class TransactionEventListenerTest {
 
         final BuyTransactionExecutedEvent event =
                 new BuyTransactionExecutedEvent(transactionIdentifier, coinIdentifier,
-                        amount, price, money, commission);
+                        amount, price, money, commission,time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -277,6 +286,7 @@ public class TransactionEventListenerTest {
 
     @Test
     public void testSellTransactionExecuted() throws Exception {
+        final Date time = currentTime();
         final BigMoney executedMoney = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 30);
         final BigMoney executedCommission = BigMoney.of(Constants.CURRENCY_UNIT_BTC, 30);
         final BigMoney executed = BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10);
@@ -296,7 +306,7 @@ public class TransactionEventListenerTest {
 
         final SellTransactionExecutedEvent event =
                 new SellTransactionExecutedEvent(transactionIdentifier, coinIdentifier,
-                        item, price, money, commission);
+                        item, price, money, commission,time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -312,6 +322,7 @@ public class TransactionEventListenerTest {
 
     @Test
     public void testBuyTransactionPartiallyExecuted() throws Exception {
+        final Date time = currentTime();
         final BigMoney executedMoney = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 30);
         final BigMoney executedCommission = BigMoney.of(Constants.CURRENCY_UNIT_BTC, 30);
         final BigMoney executed = BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10);
@@ -331,7 +342,7 @@ public class TransactionEventListenerTest {
 
         final BuyTransactionPartiallyExecutedEvent event =
                 new BuyTransactionPartiallyExecutedEvent(transactionIdentifier, coinIdentifier,
-                        item, item.plus(executed), price, money, commission);
+                        item, item.plus(executed), price, money, commission,time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -347,6 +358,7 @@ public class TransactionEventListenerTest {
 
     @Test
     public void testSellTransactionPartiallyExecuted() throws Exception {
+        final Date time = currentTime();
         final BigMoney executedMoney = BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, 30);
         final BigMoney executedCommission = BigMoney.of(Constants.CURRENCY_UNIT_BTC, 30);
         final BigMoney executed = BigMoney.of(Constants.CURRENCY_UNIT_BTC, 10);
@@ -366,7 +378,7 @@ public class TransactionEventListenerTest {
 
         final SellTransactionPartiallyExecutedEvent event =
                 new SellTransactionPartiallyExecutedEvent(transactionIdentifier, coinIdentifier,
-                        item, item.plus(executed), price, money, commission);
+                        item, item.plus(executed), price, money, commission,time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);

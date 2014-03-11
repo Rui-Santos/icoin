@@ -49,7 +49,7 @@ public class PortfolioCommandHandler {
 
     @CommandHandler
     public void handleCreatePortfolio(CreatePortfolioCommand command) {
-        Portfolio portfolio = new Portfolio(command.getPortfolioId(), command.getUserId());
+        Portfolio portfolio = new Portfolio(command.getPortfolioId(), command.getUserId(), command.getCreatedTime());
         portfolioRepository.add(portfolio);
     }
 
@@ -68,7 +68,8 @@ public class PortfolioCommandHandler {
                         portfolio.reserveItem(command.getCoinId(),
                                 command.getTransactionIdentifier(),
                                 command.getAmountOfItemToReserve(),
-                                command.getCommission());
+                                command.getCommission(),
+                                command.getTime());
                         return null;
                     }
                 }
@@ -87,7 +88,9 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.addItem(command.getCoinId(), command.getAmountOfItemToAdd());
+                        portfolio.addItem(command.getCoinId(),
+                                command.getAmountOfItemToAdd(),
+                                command.getTime());
                         return null;
                     }
                 }
@@ -110,7 +113,8 @@ public class PortfolioCommandHandler {
                         portfolio.confirmReservation(command.getCoinId(),
                                 command.getTransactionIdentifier(),
                                 command.getAmountOfItem(),
-                                command.getCommission());
+                                command.getCommission(),
+                                command.getTime());
                         return null;
                     }
                 }
@@ -132,7 +136,8 @@ public class PortfolioCommandHandler {
                         portfolio.cancelReservation(command.getCoinId(),
                                 command.getTransactionIdentifier(),
                                 command.getLeftTotalItem(),
-                                command.getLeftCommission());
+                                command.getLeftCommission(),
+                                command.getTime());
                         return null;
                     }
                 }
@@ -151,7 +156,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.addMoney(command.getMoneyToAdd());
+                        portfolio.addMoney(command.getMoneyToAdd(), command.getTime());
                         return null;
                     }
                 }
@@ -190,7 +195,7 @@ public class PortfolioCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Portfolio portfolio = portfolioRepository.load(command.getPortfolioIdentifier());
-                        portfolio.reserveMoney(command.getTransactionIdentifier(), command.getTotalMoney(), command.getTotalCommission());
+                        portfolio.reserveMoney(command.getTransactionIdentifier(), command.getTotalMoney(), command.getTotalCommission(), command.getTime());
                         return null;
                     }
                 }
@@ -213,7 +218,8 @@ public class PortfolioCommandHandler {
                         portfolio.cancelMoneyReservation(
                                 command.getTransactionIdentifier(),
                                 command.getLeftTotalMoney(),
-                                command.getLeftCommission());
+                                command.getLeftCommission(),
+                                command.getTime());
                         return null;
                     }
                 }
@@ -235,7 +241,8 @@ public class PortfolioCommandHandler {
                         portfolio.confirmMoneyReservation(
                                 command.getTransactionIdentifier(),
                                 command.getAmountOfMoney(),
-                                command.getCommission());
+                                command.getCommission(),
+                                command.getTime());
                         return null;
                     }
                 }
@@ -261,7 +268,7 @@ public class PortfolioCommandHandler {
                         logger.info("Clear reserved total {}, amount {}, commission {} for transaction {}, portfolio {}",
                                 moneyToClear, command.getLeftReservedMoney(), command.getLeftCommission(),
                                 command.getTransactionIdentifier(), command.getPortfolioIdentifier());
-                        portfolio.clearReservedMoney(command.getTransactionIdentifier(), moneyToClear);
+                        portfolio.clearReservedMoney(command.getTransactionIdentifier(), moneyToClear, command.getTime());
                         return null;
                     }
                 }

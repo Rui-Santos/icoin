@@ -314,7 +314,7 @@ public class TradingIT {
 
         assertThat(executedEntries, hasSize(1));
         TradeExecutedEntry executedEntry = executedEntries.get(0);
-        assertThat(executedEntry.getCoinName(), equalTo(coinName));
+        assertThat(executedEntry.getCoinId(), equalTo("BTC"));
         assertThat(executedEntry.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(executedEntry.getTradedAmount().isEqual(tradeAmount), is(true));
         assertThat(executedEntry.getTradedPrice().isEqual(price), is(true));
@@ -500,7 +500,7 @@ public class TradingIT {
 
         assertThat(executedEntries, hasSize(1));
         TradeExecutedEntry executedEntry = executedEntries.get(0);
-        assertThat(executedEntry.getCoinName(), equalTo(coinName));
+        assertThat(executedEntry.getCoinId(), equalTo("BTC"));
         assertThat(executedEntry.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(executedEntry.getTradedAmount().isEqual(tradeAmount), is(true));
         assertThat(executedEntry.getTradedPrice().isEqual(price), is(true));
@@ -804,7 +804,7 @@ public class TradingIT {
 
         assertThat(executedEntries, hasSize(3));
         TradeExecutedEntry executedEntry1 = executedEntries.get(0);
-        assertThat(executedEntry1.getCoinName(), equalTo(coinName));
+        assertThat(executedEntry1.getCoinId(), equalTo("BTC"));
         assertThat(executedEntry1.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(executedEntry1.getTradedAmount().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 2)), is(true));
         assertThat(executedEntry1.getTradedPrice().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 12.125)), is(true));
@@ -814,7 +814,7 @@ public class TradingIT {
         assertThat(executedEntry1.getTradeType(), equalTo(TradeType.SELL));
 
         TradeExecutedEntry executedEntry2 = executedEntries.get(1);
-        assertThat(executedEntry2.getCoinName(), equalTo(coinName));
+        assertThat(executedEntry2.getCoinId(), equalTo("BTC"));
         assertThat(executedEntry2.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(executedEntry2.getTradedAmount().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 4)), is(true));
         assertThat(executedEntry2.getTradedPrice().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 12.125)), is(true));
@@ -824,7 +824,7 @@ public class TradingIT {
         assertThat(executedEntry2.getTradeType(), equalTo(TradeType.SELL));
 
         TradeExecutedEntry executedEntry3 = executedEntries.get(2);
-        assertThat(executedEntry3.getCoinName(), equalTo(coinName));
+        assertThat(executedEntry3.getCoinId(), equalTo("BTC"));
         assertThat(executedEntry3.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(executedEntry3.getTradedAmount().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 2)), is(true));
         assertThat(executedEntry3.getTradedPrice().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 12.125)), is(true));
@@ -1121,7 +1121,7 @@ public class TradingIT {
 
         assertThat(executedEntries, hasSize(3));
         TradeExecutedEntry executedEntry1 = executedEntries.get(0);
-        assertThat(executedEntry1.getCoinName(), equalTo(coinName));
+        assertThat(executedEntry1.getCoinId(), equalTo("BTC"));
         assertThat(executedEntry1.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(executedEntry1.getTradedAmount().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 2)), is(true));
         assertThat(executedEntry1.getTradedPrice().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 12)), is(true));
@@ -1131,7 +1131,7 @@ public class TradingIT {
         assertThat(executedEntry1.getTradeType(), equalTo(TradeType.SELL));
 
         TradeExecutedEntry executedEntry2 = executedEntries.get(1);
-        assertThat(executedEntry2.getCoinName(), equalTo(coinName));
+        assertThat(executedEntry2.getCoinId(), equalTo("BTC"));
         assertThat(executedEntry2.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(executedEntry2.getTradedAmount().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 4)), is(true));
         assertThat(executedEntry2.getTradedPrice().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 12.12)), is(true));
@@ -1141,7 +1141,7 @@ public class TradingIT {
         assertThat(executedEntry2.getTradeType(), equalTo(TradeType.SELL));
 
         TradeExecutedEntry executedEntry3 = executedEntries.get(2);
-        assertThat(executedEntry3.getCoinName(), equalTo(coinName));
+        assertThat(executedEntry3.getCoinId(), equalTo(coinName));
         assertThat(executedEntry3.getOrderBookIdentifier(), equalTo(orderBookIdentifier));
         assertThat(executedEntry3.getTradedAmount().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.BTC), 2)), is(true));
         assertThat(executedEntry3.getTradedPrice().isEqual(BigMoney.of(CurrencyUnit.of(Currencies.CNY), 12.125)), is(true));

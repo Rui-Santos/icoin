@@ -1,33 +1,27 @@
 package com.icoin.trading.tradeengine.query.activity.listeners;
 
+import com.homhon.base.domain.Specification;
+import com.icoin.money.specification.GreaterOrEqualSpecification;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashDepositedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationCancelledEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationConfirmedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashWithdrawnEvent;
 import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemAddedToPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationCancelledForPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservedEvent;
+import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemWithdrawnEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.query.activity.Activity;
-import com.icoin.trading.tradeengine.query.activity.ActivityItem;
-import com.icoin.trading.tradeengine.query.activity.PortfolioActivity;
-import com.icoin.trading.tradeengine.query.activity.PortfolioActivityType;
-import com.icoin.trading.tradeengine.query.activity.repositories.PortfolioActivityQueryRepository;
-import com.icoin.trading.tradeengine.query.coin.CoinEntry;
-import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
+import com.icoin.trading.tradeengine.query.activity.PortfolioAlarmActivity;
+import com.icoin.trading.tradeengine.query.activity.PortfolioAlarmType;
+import com.icoin.trading.tradeengine.query.activity.repositories.PortfolioAlarmQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.users.query.UserEntry;
-import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.money.BigMoney;
+import org.joda.money.CurrencyUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import static com.homhon.util.Asserts.notNull;
@@ -43,189 +37,112 @@ import static com.homhon.util.Asserts.notNull;
 public class PortfolioAlarmListener {
     private final static Logger logger = LoggerFactory.getLogger(PortfolioAlarmListener.class);
 
-    private PortfolioActivityQueryRepository portfolioActivityRepository;
+    private PortfolioAlarmQueryRepository portfolioAlarmRepository;
     private PortfolioQueryRepository portfolioRepository;
-    private OrderQueryRepository orderRepository;
-    private UserQueryRepository userQueryRepository;
-
+    private BigDecimal highestAmountThreshold;
+    private BigDecimal highestMoneyThreshold;
 
     @EventHandler
     public void handleEvent(ItemAddedToPortfolioEvent event) {
-        notNull(event.getPortfolioIdentifier());
+        notNull(event.getAmountOfItemAdded());
+        final CurrencyUnit amountCurrency = event.getAmountOfItemAdded().getCurrencyUnit();
+        final BigMoney threshold = BigMoney.of(amountCurrency, highestAmountThreshold);
 
-        PortfolioActivity portfolioActivity =
-                portfolioActivityRepository.findByPortfolioId(event.getPortfolioIdentifier().toString(), PortfolioActivityType.ADD_COIN);
+        handler(event.getPortfolioIdentifier().toString(),
+                PortfolioAlarmType.ADD_LARGE_AMOUNT_OF_COIN,
+                event.getCoinId(),
+                event.getAmountOfItemAdded(),
+                threshold,
+                event.getTime());
+    }
 
-        if (portfolioActivity == null) {
-            create(event.getPortfolioIdentifier().toString(),
-                    PortfolioActivityType.ADD_COIN,
-                    event.getCoinId(),
-                    event.getAmountOfItemAdded());
+    @EventHandler
+    public void handleEvent(ItemWithdrawnEvent event) {
+        notNull(event.getAmount());
+        final CurrencyUnit amountCurrency = event.getAmount().getCurrencyUnit();
+        final BigMoney threshold = BigMoney.of(amountCurrency, highestAmountThreshold);
 
+        handler(event.getPortfolioIdentifier().toString(),
+                PortfolioAlarmType.WITHDRAW_LARGE_AMOUNT_OF_COIN,
+                event.getCoinId(),
+                event.getAmount(),
+                threshold,
+                event.getWithdrawnTime());
+    }
+
+    @EventHandler
+    public void handleEvent(CashDepositedEvent event) {
+        notNull(event.getMoneyAdded());
+        final CurrencyUnit amountCurrency = event.getMoneyAdded().getCurrencyUnit();
+        final BigMoney threshold = BigMoney.of(amountCurrency, highestMoneyThreshold);
+
+        handler(event.getPortfolioIdentifier().toString(),
+                PortfolioAlarmType.ADD_LARGE_AMOUNT_OF_MONEY,
+                null,
+                event.getMoneyAdded(),
+                threshold,
+                event.getTime());
+    }
+
+    @EventHandler
+    public void handleEvent(CashWithdrawnEvent event) {
+        notNull(event.getAmountPaid());
+        final CurrencyUnit amountCurrency = event.getAmountPaid().getCurrencyUnit();
+        final BigMoney threshold = BigMoney.of(amountCurrency, highestMoneyThreshold);
+
+        handler(event.getPortfolioIdentifier().toString(),
+                PortfolioAlarmType.WITHDRAW_LARGE_AMOUNT_OF_MONEY,
+                null,
+                event.getAmountPaid(),
+                threshold,
+                event.getWithdrawnTime());
+    }
+
+    private void handler(String portfolioId,
+                         PortfolioAlarmType type,
+                         CoinId coinId,
+                         BigMoney amount,
+                         BigMoney threshold,
+                         Date time) {
+        notNull(portfolioId);
+        notNull(threshold);
+        notNull(amount);
+
+
+        final Specification<BigMoney> moneyCheck =
+                new GreaterOrEqualSpecification(threshold);
+
+        if (!moneyCheck.isSatisfiedBy(amount)) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("No need to alert amount {} given threshold {} ", amount, threshold);
+            }
             return;
         }
 
-
-        portfolioActivity.addActivityItem(event.getTime(),
-                new ActivityItem(event.getTime(), null, null, event.getAmountOfItemAdded()));
-
-
-        portfolioActivityRepository.save(portfolioActivity);
-    }
-
-    private PortfolioActivity create(String portfolioId,
-                                     PortfolioActivityType type,
-                                     CoinId coinId,
-                                     BigMoney amountOfItemAdded,
-                                     Date time) {
         PortfolioEntry portfolioEntry = portfolioRepository.findOne(portfolioId);
 
         if (portfolioEntry == null) {
             logger.error("Cannot find portfolio with {}", portfolioId);
         }
 
-        PortfolioActivity portfolioActivity = new PortfolioActivity();
-        portfolioActivity.setPortfolioId(portfolioId);
-        portfolioActivity.setActivity(new Activity(new ActivityItem()));
-        final UserEntry user = userQueryRepository.findOne(portfolioEntry.getUserIdentifier());
-        portfolioActivity.setUsername(user.getUsername());
-        portfolioActivity.setFullName(user.getFullName());
-        portfolioActivity.setType(PortfolioActivityType.ADD_COIN);
-        portfolioActivity.setUserId(user.getPrimaryKey());
 
-        portfolioActivityRepository.save(portfolioActivity);
+        PortfolioAlarmActivity activity = new PortfolioAlarmActivity();
 
-        return portfolioActivity;
-    }
-
-    private CoinEntry findCoinEntry(CoinId coinId) {
-        return coinQueryRepository.findOne(coinId.toString());
-    }
-
-    @EventHandler
-    public void handleEvent(ItemReservationCancelledForPortfolioEvent event) {
-        logger.debug("Handle ItemReservationCancelledForPortfolioEvent {} for coin {}, left commission {}, left total item {}", event.getPortfolioIdentifier(),
-                event.getCoinId(), event.getLeftCommission(), event.getLeftTotalItem());
-        CoinEntry coin = findCoinEntry(event.getCoinId());
-
-        if (coin == null) {
-            logger.error("coin {} cannot be found.", event.getCoinId());
-            return;
-        }
-
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.cancelReserved(coin.getPrimaryKey(), event.getLeftTotalItem().plus(event.getLeftCommission()));
-
-        portfolioRepository.save(portfolioEntry);
-    }
-
-    @EventHandler
-    public void handleEvent(ItemReservationConfirmedForPortfolioEvent event) {
-        logger.debug("Handle ItemReservationConfirmedForPortfolioEvent {} for coin {}, amount {}, commission {}", event.getPortfolioIdentifier(),
-                event.getCoinId(), event.getAmount(), event.getCommission());
-        CoinEntry coin = findCoinEntry(event.getCoinId());
-
-        if (coin == null) {
-            logger.error("coin {} cannot be found.", event.getCoinId());
-            return;
-        }
-
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.confirmReserved(event.getCoinId().toString(), event.getAmount().plus(event.getCommission()));
-
-        portfolioRepository.save(portfolioEntry);
-    }
-
-    @EventHandler
-    public void handleEvent(ItemReservedEvent event) {
-        logger.debug("Handle ItemReservedEvent {} for coin {}, amount {}", event.getPortfolioIdentifier(), event.getCoinId(), event.getAmountOfItemReserved());
-        final CoinEntry coin = findCoinEntry(event.getCoinId());
-
-        if (coin == null) {
-            logger.error("coin {} cannot be found.", event.getCoinId());
-            return;
-        }
-
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.addReserved(coin.getPrimaryKey(), event.getAmountOfItemReserved());
-
-        portfolioRepository.save(portfolioEntry);
-    }
+        activity.setPortfolioId(portfolioId);
+        activity.setUserId(portfolioEntry == null ? null : portfolioEntry.getUserIdentifier());
+        activity.setUsername(portfolioEntry == null ? null : portfolioEntry.getUsername());
+        activity.setTime(time);
+        activity.setType(type);
 
 
-    @EventHandler
-    public void handleEvent(CashDepositedEvent event) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Handle CashDepositedEvent {} to add money {} ",
-                    event.getPortfolioIdentifier(), event.getMoneyAdded());
-        }
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().plus(event.getMoneyAdded()));
-        portfolioRepository.save(portfolioEntry);
-    }
-
-    @EventHandler
-    public void handleEvent(CashWithdrawnEvent event) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Handle CashWithdrawnEvent {} to withdraw money {} ",
-                    event.getPortfolioIdentifier(), event.getAmountPaid());
-        }
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().minus(event.getAmountPaid()));
-        portfolioRepository.save(portfolioEntry);
-    }
-
-    @EventHandler
-    public void handleEvent(CashReservedEvent event) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Handle CashReservedEvent {} to withdraw money {} '+' commission {}",
-                    event.getPortfolioIdentifier(), event.getTotalMoney(), event.getTotalCommission());
-        }
-
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        final BigMoney total = event.getTotalMoney().plus(event.getTotalCommission());
-        portfolioEntry.setReservedAmountOfMoney(portfolioEntry.getReservedAmountOfMoney().plus(total));
-        portfolioRepository.save(portfolioEntry);
-    }
-
-    @EventHandler
-    public void handleEvent(CashReservationCancelledEvent event) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Handle CashReservationCancelledEvent {} with left money {} '+' left commission {}",
-                    event.getPortfolioIdentifier(), event.getLeftTotalMoney(), event.getLeftCommission());
-        }
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        final BigMoney totalLeft = event.getLeftTotalMoney().plus(event.getLeftCommission());
-        portfolioEntry.setReservedAmountOfMoney(
-                portfolioEntry.getReservedAmountOfMoney().minus(totalLeft));
-
-//        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().plus(totalLeft));
-        portfolioRepository.save(portfolioEntry);
-    }
-
-    @EventHandler
-    public void handleEvent(CashReservationConfirmedEvent event) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Handle CashReservationConfirmedEvent {} with money {} '+'  commission {}",
-                    event.getPortfolioIdentifier(), event.getAmountOfMoney(), event.getCommission());
-        }
-        PortfolioEntry portfolioEntry = portfolioRepository.findOne(event.getPortfolioIdentifier().toString());
-        BigMoney reservedAmountOfMoney = portfolioEntry.getReservedAmountOfMoney();
-        BigMoney amountOfMoneyConfirmed = event.getAmountOfMoney().plus(event.getCommission());
-        if (amountOfMoneyConfirmed.compareTo(reservedAmountOfMoney) < 0) {
-            portfolioEntry.setReservedAmountOfMoney(reservedAmountOfMoney.minus(amountOfMoneyConfirmed));
-        } else {
-            portfolioEntry.setReservedAmountOfMoney(BigMoney.zero(event.getAmountOfMoney().getCurrencyUnit()));
-        }
-
-        portfolioEntry.setAmountOfMoney(portfolioEntry.getAmountOfMoney().minus(amountOfMoneyConfirmed));
-        portfolioRepository.save(portfolioEntry);
+        logger.info("portfolioId {} has {} alarm {}: {}", portfolioId, type, portfolioEntry == null ? null : portfolioEntry.describe());
+        portfolioAlarmRepository.save(activity);
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public void setPortfolioActivityRepository(PortfolioActivityQueryRepository portfolioActivityRepository) {
-        this.portfolioActivityRepository = portfolioActivityRepository;
+    public void setPortfolioAlarmRepository(PortfolioAlarmQueryRepository portfolioAlarmRepository) {
+        this.portfolioAlarmRepository = portfolioAlarmRepository;
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -234,16 +151,13 @@ public class PortfolioAlarmListener {
         this.portfolioRepository = portfolioRepository;
     }
 
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setOrderRepository(OrderQueryRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    @Value("${trading.highest.alarm.coin.amount}")
+    public void setHighestAmountThreshold(BigDecimal highestAmountThreshold) {
+        this.highestAmountThreshold = highestAmountThreshold;
     }
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setUserQueryRepository(UserQueryRepository userQueryRepository) {
-        this.userQueryRepository = userQueryRepository;
+    @Value("${trading.highest.alarm.money}")
+    public void setHighestMoneyThreshold(BigDecimal highestMoneyThreshold) {
+        this.highestMoneyThreshold = highestMoneyThreshold;
     }
-}
+} 

@@ -37,7 +37,9 @@ import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
+import static com.homhon.util.TimeUtils.currentTime;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -86,11 +88,13 @@ public class PortfolioItemEventListenerTest {
 
     @Test
     public void testHandleEventAddItems() throws Exception {
+        Date time = currentTime();
         ItemAddedToPortfolioEvent event =
                 new ItemAddedToPortfolioEvent(
                         portfolioIdentifier,
                         coinIdentifier,
-                        BigMoney.of(CurrencyUnit.of(Currencies.LTC), BigDecimal.valueOf(100)));
+                        BigMoney.of(CurrencyUnit.of(Currencies.LTC), BigDecimal.valueOf(100)),
+                        time);
 
         listener.handleEvent(event);
 
@@ -103,12 +107,14 @@ public class PortfolioItemEventListenerTest {
 
     @Test
     public void testHandleEventCancelItemReservation() throws Exception {
+        final Date time = currentTime();
         ItemReservationCancelledForPortfolioEvent event =
                 new ItemReservationCancelledForPortfolioEvent(portfolioIdentifier,
                         coinIdentifier,
                         transactionIdentifier,
                         DEFAULT_AMOUNT_ITEM.minus(2),
-                        DEFAULT_AMOUNT_COMMISSION.minus(0.1));
+                        DEFAULT_AMOUNT_COMMISSION.minus(0.1),
+                        time);
 
         portfolioEntry.addReserved(coinIdentifier.toString(), DEFAULT_AMOUNT_ITEM);
         portfolioEntry.confirmReserved(coinIdentifier.toString(),
@@ -127,13 +133,15 @@ public class PortfolioItemEventListenerTest {
      */
     @Test
     public void testHandleEventConfirmItemReservation() {
+        final Date time = currentTime();
         ItemReservationConfirmedForPortfolioEvent event =
                 new ItemReservationConfirmedForPortfolioEvent(
                         portfolioIdentifier,
                         coinIdentifier,
                         transactionIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.LTC), BigDecimal.valueOf(50)),
-                        BigMoney.of(CurrencyUnit.of(Currencies.LTC), BigDecimal.valueOf(1)));
+                        BigMoney.of(CurrencyUnit.of(Currencies.LTC), BigDecimal.valueOf(1)),
+                        time);
 
         portfolioEntry.addReserved(coinIdentifier.toString(),
                 BigMoney.of(CurrencyUnit.of(Currencies.LTC), BigDecimal.valueOf(100)));
@@ -148,12 +156,14 @@ public class PortfolioItemEventListenerTest {
 
     @Test
     public void testHandleItemReservedEvent() {
+        final Date time = currentTime();
         ItemReservedEvent event =
                 new ItemReservedEvent(
                         portfolioIdentifier,
                         coinIdentifier,
                         transactionIdentifier,
-                        DEFAULT_AMOUNT_ITEM);
+                        DEFAULT_AMOUNT_ITEM,
+                        time);
 
         listener.handleEvent(event);
 

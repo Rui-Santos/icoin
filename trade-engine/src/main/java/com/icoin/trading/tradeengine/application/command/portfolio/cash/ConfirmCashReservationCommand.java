@@ -22,6 +22,9 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -31,16 +34,20 @@ public class ConfirmCashReservationCommand extends CommandSupport<ConfirmCashRes
     private TransactionId transactionIdentifier;
     private BigMoney amountOfMoney;
     private BigMoney commission;
+    @NotNull
+    private Date time;
 
 
     public ConfirmCashReservationCommand(PortfolioId portfolioIdentifier,
                                          TransactionId transactionIdentifier,
                                          BigMoney amountOfMoney,
-                                         BigMoney commission) {
+                                         BigMoney commission,
+                                         Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountOfMoney = amountOfMoney;
         this.commission = commission;
+        this.time = time;
     }
 
     public BigMoney getAmountOfMoney() {
@@ -59,13 +66,18 @@ public class ConfirmCashReservationCommand extends CommandSupport<ConfirmCashRes
         return commission;
     }
 
+    public Date getTime() {
+        return time;
+    }
+
     @Override
     public String toString() {
         return "ConfirmCashReservationCommand{" +
-                "amountOfMoney=" + amountOfMoney +
-                ", commission=" + commission +
-                ", portfolioIdentifier=" + portfolioIdentifier +
+                "portfolioIdentifier=" + portfolioIdentifier +
                 ", transactionIdentifier=" + transactionIdentifier +
+                ", amountOfMoney=" + amountOfMoney +
+                ", commission=" + commission +
+                ", time=" + time +
                 '}';
     }
 }

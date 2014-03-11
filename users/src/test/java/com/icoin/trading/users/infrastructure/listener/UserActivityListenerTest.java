@@ -13,19 +13,14 @@ import com.icoin.trading.users.domain.model.user.UserId;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.util.Date;
 import java.util.Map;
 
 import static com.homhon.util.TimeUtils.currentTime;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,6 +46,7 @@ public class UserActivityListenerTest {
         final String email = "buyerAbc@163.com";
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
         final String password = "sjfsudm9ei8r899e9e87745jkdkjfhd";
+        final Date time = currentTime();
 
         final Map<String, Object> model =
                 ImmutableMap.of("username", (Object) username);
@@ -64,7 +60,7 @@ public class UserActivityListenerTest {
                 eq(model),
                 eq(true));
 
-        final UserCreatedEvent event = new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password, UserCommandHandler.DEFAULT_ROLES);
+        final UserCreatedEvent event = new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password, UserCommandHandler.DEFAULT_ROLES, time);
         final UserActivityListener listener = new UserActivityListener();
         listener.setSender(sender);
 

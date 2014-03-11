@@ -122,7 +122,7 @@ public class PortfolioExternalListener {
             return;
         }
 
-        handle(user, "Coin withdrawal notification", event.getAmountOfItemAdded(), event.getWithdrawnTime());
+        handle(user, "Coin withdrawal notification", event.getAmount(), event.getWithdrawnTime());
     }
 
     @EventHandler

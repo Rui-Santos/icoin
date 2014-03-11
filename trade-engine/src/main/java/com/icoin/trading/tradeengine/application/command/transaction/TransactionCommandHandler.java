@@ -82,7 +82,8 @@ public class TransactionCommandHandler {
                         command.getTradeAmount(),
                         command.getItemPrice(),
                         totalMoney.toBigMoney(),
-                        totalCommission);
+                        totalCommission,
+                        command.getTime());
         repository.add(transaction);
     }
 
@@ -116,7 +117,8 @@ public class TransactionCommandHandler {
                         command.getTradeAmount(),
                         command.getItemPrice(),
                         totalMoney.toBigMoney(),
-                        totalCommission);
+                        totalCommission,
+                        command.getTime());
         repository.add(transaction);
     }
 
@@ -175,7 +177,7 @@ public class TransactionCommandHandler {
                     @Override
                     public Void execute() throws Exception {
                         Transaction transaction = repository.load(command.getTransactionIdentifier());
-                        transaction.cancel();
+                        transaction.cancel(command.getTime());
                         return null;
                     }
                 }
@@ -199,7 +201,8 @@ public class TransactionCommandHandler {
                                 command.getTradeAmount(),
                                 command.getItemPrice(),
                                 command.getExecutedMoney(),
-                                command.getCommission());
+                                command.getCommission(),
+                                command.getTime());
                         return null;
                     }
                 }

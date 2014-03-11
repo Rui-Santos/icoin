@@ -20,13 +20,16 @@ package com.icoin.trading.tradeengine.domain.events.transaction;
 import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
 public class SellTransactionCancelledEvent extends AbstractTransactionCancelledEvent<SellTransactionCancelledEvent> {
 
     public SellTransactionCancelledEvent(TransactionId transactionIdentifier,
-                                         CoinId coinId) {
-        super(transactionIdentifier, coinId);
+                                         CoinId coinId,
+                                         Date time) {
+        super(transactionIdentifier, coinId, time);
     }
 }

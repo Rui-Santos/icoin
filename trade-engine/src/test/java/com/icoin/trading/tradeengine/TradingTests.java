@@ -24,7 +24,10 @@ import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+
+import static com.homhon.util.TimeUtils.currentTime;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,6 +47,7 @@ public abstract class TradingTests {
     }
 
     static UserId createUser(String userName, String firstName, String lastName, CommandGateway commandGateway) {
+        Date time = currentTime();
         UserId userId = new UserId();
         CreateUserCommand createUser =
                 new CreateUserCommand(userId,
@@ -54,7 +58,7 @@ public abstract class TradingTests {
                         userName + "@163.com",
                         userName,
                         userName,
-                        Constants.DEFAULT_ROLES);
+                        Constants.DEFAULT_ROLES, time);
         commandGateway.send(createUser);
         return userId;
     }
@@ -65,17 +69,19 @@ public abstract class TradingTests {
     }
 
     static void depositMoneyToPortfolio(String portfolioIdentifier, BigDecimal amountOfMoney, CommandGateway commandGateway) {
+        Date time = currentTime();
         DepositCashCommand command =
-                new DepositCashCommand(new PortfolioId(portfolioIdentifier), BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, amountOfMoney));
+                new DepositCashCommand(new PortfolioId(portfolioIdentifier), BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, amountOfMoney), time);
         commandGateway.send(command);
     }
 
     static void addItems(UserId user, String coinId, BigDecimal amount, CommandGateway commandGateway, PortfolioQueryRepository portfolioRepository) {
+        Date time = currentTime();
         PortfolioEntry portfolioEntry = portfolioRepository.findByUserIdentifier(user.toString());
         AddAmountToPortfolioCommand command = new AddAmountToPortfolioCommand(
                 new PortfolioId(portfolioEntry.getIdentifier()),
                 new CoinId(coinId),
-                BigMoney.of(CurrencyUnit.of(coinId), amount));
+                BigMoney.of(CurrencyUnit.of(coinId), amount), time);
         commandGateway.send(command);
     }
 
@@ -92,24 +98,26 @@ public abstract class TradingTests {
 
 
     static void placeSellOrder(CoinId coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry, BigMoney tradeAmount, BigMoney price, TransactionId sellTransactionId, CommandGateway commandGateway) {
+        Date time = currentTime();
         StartSellTransactionCommand command = new StartSellTransactionCommand(sellTransactionId,
                 coinId,
                 currencyPair,
                 new OrderBookId(orderBookEntry.getPrimaryKey()),
                 new PortfolioId(portfolioEntry.getPrimaryKey()),
                 tradeAmount,
-                price);
+                price, time);
         commandGateway.send(command);
     }
 
     static void placeBuyOrder(CoinId coinId, CurrencyPair currencyPair, OrderBookEntry orderBookEntry, PortfolioEntry portfolioEntry, BigMoney tradeAmount, BigMoney price, TransactionId buyTransactionId, CommandGateway commandGateway) {
+        Date time = currentTime();
         StartBuyTransactionCommand command = new StartBuyTransactionCommand(buyTransactionId,
                 coinId,
                 currencyPair,
                 new OrderBookId(orderBookEntry.getPrimaryKey()),
                 new PortfolioId(portfolioEntry.getPrimaryKey()),
                 tradeAmount,
-                price);
+                price, time);
         commandGateway.send(command);
     }
 } 

@@ -21,6 +21,8 @@ import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.users.domain.model.user.UserId;
 
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -28,10 +30,12 @@ public class CreatePortfolioCommand extends CommandSupport<CreatePortfolioComman
 
     private PortfolioId portfolioId;
     private UserId userId;
+    private Date createdTime;
 
-    public CreatePortfolioCommand(PortfolioId portfolioId, UserId userId) {
+    public CreatePortfolioCommand(PortfolioId portfolioId, UserId userId, Date createdTime) {
         this.portfolioId = portfolioId;
         this.userId = userId;
+        this.createdTime = createdTime;
     }
 
     public UserId getUserId() {
@@ -40,5 +44,9 @@ public class CreatePortfolioCommand extends CommandSupport<CreatePortfolioComman
 
     public PortfolioId getPortfolioId() {
         return portfolioId;
+    }
+
+    public Date getCreatedTime() {
+        return createdTime;
     }
 }

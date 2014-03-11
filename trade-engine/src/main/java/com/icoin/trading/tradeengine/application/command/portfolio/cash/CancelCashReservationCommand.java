@@ -22,6 +22,9 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -31,15 +34,19 @@ public class CancelCashReservationCommand extends CommandSupport<CancelCashReser
     private TransactionId transactionIdentifier;
     private BigMoney leftTotalMoney;
     private BigMoney leftCommission;
+    @NotNull
+    private Date time;
 
     public CancelCashReservationCommand(PortfolioId portfolioIdentifier,
                                         TransactionId transactionIdentifier,
                                         BigMoney leftTotalMoney,
-                                        BigMoney leftCommission) {
+                                        BigMoney leftCommission,
+                                        Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.leftTotalMoney = leftTotalMoney;
         this.leftCommission = leftCommission;
+        this.time = time;
     }
 
     public BigMoney getLeftTotalMoney() {
@@ -56,5 +63,9 @@ public class CancelCashReservationCommand extends CommandSupport<CancelCashReser
 
     public TransactionId getTransactionIdentifier() {
         return transactionIdentifier;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

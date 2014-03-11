@@ -31,7 +31,7 @@ public class PortfolioCreatedEvent extends EventSupport<PortfolioCreatedEvent> {
     private UserId userId;
     private Date time;
 
-    public PortfolioCreatedEvent(PortfolioId portfolioId, UserId userId,Date time) {
+    public PortfolioCreatedEvent(PortfolioId portfolioId, UserId userId, Date time) {
         this.portfolioId = portfolioId;
         this.userId = userId;
         this.time = time;

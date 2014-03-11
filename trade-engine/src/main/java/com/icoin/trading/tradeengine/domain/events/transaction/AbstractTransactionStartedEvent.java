@@ -23,6 +23,9 @@ import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
 import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * @author Jettro Coenradie
  */
@@ -35,6 +38,8 @@ public abstract class AbstractTransactionStartedEvent<T extends AbstractTransact
     private BigMoney pricePerItem;
     private BigMoney totalMoney;
     private BigMoney totalCommission;
+    @NotNull
+    private Date time;
 
     public AbstractTransactionStartedEvent(TransactionId transactionIdentifier,
                                            CoinId coinId,
@@ -43,7 +48,8 @@ public abstract class AbstractTransactionStartedEvent<T extends AbstractTransact
                                            BigMoney totalItem,
                                            BigMoney pricePerItem,
                                            BigMoney totalMoney,
-                                           BigMoney totalCommission) {
+                                           BigMoney totalCommission,
+                                           Date time) {
         this.transactionIdentifier = transactionIdentifier;
         this.coinId = coinId;
         this.orderBookIdentifier = orderBookIdentifier;
@@ -52,6 +58,7 @@ public abstract class AbstractTransactionStartedEvent<T extends AbstractTransact
         this.pricePerItem = pricePerItem;
         this.totalMoney = totalMoney;
         this.totalCommission = totalCommission;
+        this.time = time;
     }
 
     public CoinId getCoinId() {
@@ -84,5 +91,9 @@ public abstract class AbstractTransactionStartedEvent<T extends AbstractTransact
 
     public BigMoney getTotalItem() {
         return totalItem;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

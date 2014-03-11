@@ -84,7 +84,8 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                         getCoinId(),
                         getTransactionIdentifier(),
                         event.getTotalItem(),
-                        event.getTotalCommission());
+                        event.getTotalCommission(),
+                        event.getTime());
         getCommandGateway().send(reserveAmountCommand);
     }
 
@@ -147,7 +148,8 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                         getCoinId(),
                         getTransactionIdentifier(),
                         leftTotalItem,
-                        getLeftCommission());
+                        getLeftCommission(),
+                        event.getTime());
         getCommandGateway().send(command);
     }
 
@@ -163,7 +165,8 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                 event.getTradeAmount(),
                 event.getTradedPrice(),
                 event.getExecutedMoney(),
-                event.getSellCommission());
+                event.getSellCommission(),
+                event.getTradeTime());
         getCommandGateway().send(command);
     }
 
@@ -183,12 +186,13 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                         getCoinId(),
                         getTransactionIdentifier(),
                         event.getAmountOfItem(),
-                        commission);
+                        commission,
+                        event.getTime());
         getCommandGateway().sendAndWait(confirmCommand);
 
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
-                        event.getExecutedMoney());
+                        event.getExecutedMoney(), event.getTime());
         getCommandGateway().send(depositCommand);
 
 
@@ -211,11 +215,13 @@ public class SellTradeManagerSaga extends TradeManagerSaga {
                         getCoinId(),
                         getTransactionIdentifier(),
                         event.getAmountOfExecutedItem(),
-                        commission);
+                        commission,
+                        event.getTime());
         getCommandGateway().sendAndWait(confirmCommand);
         DepositCashCommand depositCommand =
                 new DepositCashCommand(getPortfolioIdentifier(),
-                        event.getExecutedMoney());
+                        event.getExecutedMoney(),
+                        event.getTime());
         getCommandGateway().send(depositCommand);
     }
 

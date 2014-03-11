@@ -3,7 +3,6 @@ package com.icoin.trading.tradeengine.query.activity.repositories;
 import com.icoin.trading.tradeengine.query.activity.PortfolioActivity;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,13 +12,13 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface PortfolioActivityRepositoryMongoCustom {
-    PortfolioActivity save(PortfolioActivity entity);
+//    <S extends PortfolioActivity> S save(S entity);
 
 
-    List<PortfolioActivity> save(List<PortfolioActivity> entities);
+//    <S extends PortfolioActivity> Iterable<S> save(Iterable<S> entities);
 
-    PortfolioActivity save(PortfolioActivity entity, Date currentTime);
+    <S extends PortfolioActivity> S save(S entity, Date currentTime);
 
 
-    List<PortfolioActivity> save(List<PortfolioActivity> entities, Date currentTime);
+    <S extends PortfolioActivity> Iterable<S> save(Iterable<S> entities, Date currentTime);
 } 

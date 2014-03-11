@@ -43,10 +43,11 @@ public class UserListenerTest {
         final String email = "buyerAbc@163.com";
         final Identifier identifier = new Identifier(Identifier.Type.IDENTITY_CARD, "110101201101019252");
         final String password = "sjfsudm9ei8r899e9e87745jkdkjfhd";
+        final Date time = currentTime();
 
         final UserQueryRepository repository = mock(UserQueryRepository.class);
 
-        final UserCreatedEvent event = new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password, UserCommandHandler.DEFAULT_ROLES);
+        final UserCreatedEvent event = new UserCreatedEvent(userId, username, firstName, lastName, identifier, email, password, UserCommandHandler.DEFAULT_ROLES, time);
         final UserListener listener = new UserListener();
         listener.setUserRepository(repository);
 
