@@ -12,7 +12,7 @@ import com.icoin.trading.api.fee.domain.offset.OffsetStatus;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
 import com.icoin.trading.api.fee.events.offset.OffsetAmountNotMatchedEvent;
 import com.icoin.trading.api.fee.events.offset.OffsetCancelledEvent;
-import com.icoin.trading.api.fee.events.offset.OffsetStartedEvent;
+import com.icoin.trading.api.fee.events.offset.OffsetCreatedEvent;
 import com.icoin.trading.api.fee.events.offset.OffsetedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
@@ -57,7 +57,7 @@ public class Offset extends AxonAnnotatedAggregateRoot<Offset, String> {
     public Offset(OffsetId offsetId, OffsetType offsetType, String accountId, List<FeeItem> arapList, List<FeeItem> receivedPaidList, BigMoney offsetAmount, Date startedDate) {
         isTrue(isValid(arapList));
         isTrue(isValid(receivedPaidList));
-        apply(new OffsetStartedEvent(offsetId, offsetType, accountId, arapList, receivedPaidList, offsetAmount, startedDate));
+        apply(new OffsetCreatedEvent(offsetId, offsetType, accountId, arapList, receivedPaidList, offsetAmount, startedDate));
     }
 
     private boolean isValid(List<FeeItem> feeItems) {
@@ -81,6 +81,16 @@ public class Offset extends AxonAnnotatedAggregateRoot<Offset, String> {
     }
 
 
+    @EventHandler
+    public void on(OffsetCreatedEvent event) {
+        this.offsetId = event.getOffsetId();
+        this.offsetType = event.getOffsetType();
+        this.accountId = event.getAccountId();
+        this.arapList = event.getArapList();
+        this.receivedPaidList = event.getReceivedPaidList();
+        this.offsetAmount = event.getOffsetAmount();
+    }
+
     public void offset(OffsetReason offsetReason, Date date) {
         changeStatus(offsetStatus.offset());
 
@@ -100,15 +110,6 @@ public class Offset extends AxonAnnotatedAggregateRoot<Offset, String> {
         apply(new OffsetCancelledEvent(offsetId, cancelledReason, date));
     }
 
-    @EventHandler
-    public void on(OffsetStartedEvent event) {
-        this.offsetId = event.getOffsetId();
-        this.accountId = event.getAccountId();
-        this.arapList = event.getArapList();
-        this.receivedPaidList = event.getReceivedPaidList();
-        this.offsetAmount = event.getOffsetAmount();
-        this.offsetType = event.getOffsetType();
-    }
 
     @EventHandler
     public void on(OffsetedEvent event) {
@@ -123,49 +124,6 @@ public class Offset extends AxonAnnotatedAggregateRoot<Offset, String> {
 
     }
 
-    public OffsetId getOffsetId() {
-        return offsetId;
-    }
-
-    public BigMoney getOffsetAmount() {
-        return offsetAmount;
-    }
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public List<FeeItem> getArapList() {
-        return arapList;
-    }
-
-    public List<FeeItem> getReceivedPaidList() {
-        return receivedPaidList;
-    }
-
-    public OffsetType getOffsetType() {
-        return offsetType;
-    }
-
-    public OffsetStatus getOffsetStatus() {
-        return offsetStatus;
-    }
-
-    public OffsetReason getOffsetReason() {
-        return offsetReason;
-    }
-
-    public Date getOffsetDate() {
-        return offsetDate;
-    }
-
-    public Date getCancelledDate() {
-        return cancelledDate;
-    }
-
-    public CancelledReason getCancelledReason() {
-        return cancelledReason;
-    }
 
     private BigMoney sumUp(List<FeeItem> arapList) {
         BigMoney money = null;
@@ -181,17 +139,10 @@ public class Offset extends AxonAnnotatedAggregateRoot<Offset, String> {
         return money;
     }
 
-    public void setOffsetReason(OffsetReason offsetReason) {
-        this.offsetReason = offsetReason;
-    }
-
-    private void setOffsetDate(Date offsetDate) {
-        this.offsetDate = offsetDate;
-    }
 
     private void changeStatus(OffsetStatus status) {
         if (offsetStatus != null && status != this.offsetStatus) {
-            if (logger.isInfoEnabled()) {
+            if (logger.isDebugEnabled()) {
                 logger.debug("Offset#{}: changing status from {} to {}", identity(), this.offsetStatus, status);
             }
             this.offsetStatus = status;

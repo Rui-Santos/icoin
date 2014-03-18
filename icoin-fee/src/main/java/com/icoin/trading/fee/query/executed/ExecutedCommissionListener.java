@@ -1,4 +1,4 @@
-package com.icoin.trading.fee.application.listener;
+package com.icoin.trading.fee.query.executed;
 
 import com.icoin.trading.api.fee.command.commission.StartSellCommissionTransactionCommand;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
@@ -71,4 +71,3 @@ public class ExecutedCommissionListener {
         this.zone = DateTimeZone.forID(zone);
     }
 }
-
