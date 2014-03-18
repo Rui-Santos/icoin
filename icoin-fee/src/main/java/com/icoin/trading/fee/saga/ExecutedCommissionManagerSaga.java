@@ -1,20 +1,28 @@
 package com.icoin.trading.fee.saga;
 
+import com.icoin.trading.api.fee.command.offset.CancelOffsetCommand;
 import com.icoin.trading.api.fee.command.offset.OffsetFeesCommand;
+import com.icoin.trading.api.fee.command.receivable.CancelAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.ConfirmAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.OffsetAccountReceivableFeeCommand;
+import com.icoin.trading.api.fee.command.received.CancelReceivedFeeCommand;
 import com.icoin.trading.api.fee.command.received.ConfirmReceivedFeeCommand;
 import com.icoin.trading.api.fee.command.received.OffsetReceivedFeeCommand;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.domain.offset.CancelledReason;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
+import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeCreatedEvent;
 import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeOffsetedEvent;
+import com.icoin.trading.api.fee.events.fee.ReceivedFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.ReceivedFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.ReceivedFeeCreatedEvent;
 import com.icoin.trading.api.fee.events.fee.ReceivedFeeOffsetedEvent;
 import com.icoin.trading.api.fee.events.offset.FeesOffsetedEvent;
+import com.icoin.trading.api.fee.events.offset.OffsetAmountNotMatchedEvent;
+import com.icoin.trading.api.fee.events.offset.OffsetCancelledEvent;
 import com.icoin.trading.api.fee.events.offset.OffsetCreatedEvent;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.saga.annotation.AbstractAnnotatedSaga;
@@ -119,5 +127,31 @@ public class ExecutedCommissionManagerSaga extends AbstractAnnotatedSaga {
                 && receivedFeeStatus == TransactionStatus.OFFSETED) {
             end();
         }
+
+        if (offsetStatus == TransactionStatus.CANCELLED
+                && accountReceivableStatus == TransactionStatus.CANCELLED
+                && receivedFeeStatus == TransactionStatus.CANCELLED) {
+            end();
+        }
+    }
+
+    @SagaEventHandler(associationProperty = "offsetId")
+    public void onOffsetAmountNotMatched(final OffsetAmountNotMatchedEvent event) {
+        commandGateway.send(new CancelOffsetCommand(offsetId, CancelledReason.AMOUNT_NOT_MATCHED, event.getOffsetDate()));
+    }
+
+
+    @SagaEventHandler(associationProperty = "feeId", keyName = "accountReceivableId")
+    public void onReceivableCancelled(final AccountReceivableFeeCancelledEvent event) {
+        accountReceivableStatus = TransactionStatus.CANCELLED;
+
+        completeIfPossible();
+    }
+
+    @SagaEventHandler(associationProperty = "feeId", keyName = "receivedFeeId")
+    public void onReceivedCancelled(final ReceivedFeeCancelledEvent event) {
+        receivedFeeStatus = TransactionStatus.CANCELLED;
+
+        completeIfPossible();
     }
 }

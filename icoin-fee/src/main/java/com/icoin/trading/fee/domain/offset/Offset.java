@@ -119,7 +119,7 @@ public class Offset extends AxonAnnotatedAggregateRoot<Offset, String> {
 
     @EventHandler
     public void on(OffsetCancelledEvent event) {
-        this.cancelledDate = event.getDate();
+        this.cancelledDate = event.getCancelledDate();
         this.cancelledReason = event.getCancelledReason();
 
     }

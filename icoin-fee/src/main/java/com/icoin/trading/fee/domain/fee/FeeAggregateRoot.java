@@ -3,7 +3,7 @@ package com.icoin.trading.fee.domain.fee;
 import com.homhon.base.domain.Identity;
 import com.icoin.axonsupport.domain.AxonAnnotatedAggregateRoot;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
-import com.icoin.trading.api.fee.domain.fee.CancelReason;
+import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
@@ -34,7 +34,7 @@ public abstract class FeeAggregateRoot<T extends FeeAggregateRoot> extends AxonA
     protected Date dueDate;
     protected Date confirmedDate;
     protected Date cancelledDate;
-    protected CancelReason cancelReason;
+    protected CancelledReason cancelledReason;
     protected Date businessCreationTime;
     protected boolean offseted;
     protected Date offsetDate;

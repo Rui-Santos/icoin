@@ -2,7 +2,7 @@ package com.icoin.trading.fee.query.fee;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
-import com.icoin.trading.api.fee.domain.fee.CancelReason;
+import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
 import com.icoin.trading.api.fee.events.fee.FeeCreatedEvent;
@@ -24,7 +24,7 @@ public abstract class FeeEntry<T extends FeeEntry> extends VersionedEntitySuppor
     protected Date dueDate;
     protected Date confirmedDate;
     protected Date cancelledDate;
-    protected CancelReason cancelReason;
+    protected CancelledReason cancelledReason;
     protected Date businessCreationTime;
     protected boolean offseted;
     protected Date offsetDate;
@@ -84,12 +84,12 @@ public abstract class FeeEntry<T extends FeeEntry> extends VersionedEntitySuppor
         this.cancelledDate = cancelledDate;
     }
 
-    public CancelReason getCancelReason() {
-        return cancelReason;
+    public CancelledReason getCancelledReason() {
+        return cancelledReason;
     }
 
-    public void setCancelReason(CancelReason cancelReason) {
-        this.cancelReason = cancelReason;
+    public void setCancelledReason(CancelledReason cancelledReason) {
+        this.cancelledReason = cancelledReason;
     }
 
     public Date getBusinessCreationTime() {
@@ -165,15 +165,15 @@ public abstract class FeeEntry<T extends FeeEntry> extends VersionedEntitySuppor
     }
 
 
-    public static void create(FeeCreatedEvent event, FeeEntry entry) {
-        entry.setPrimaryKey(event.getFeeId().toString());
-        entry.setAmount(event.getAmount());
-        entry.setBusinessCreationTime(event.getBusinessCreationTime());
-        entry.setBusinessReferenceId(event.getBusinessReferenceId());
-        entry.setBusinessType(event.getBusinessType());
-        entry.setDueDate(event.getDueDate());
-        entry.setFeeStatus(event.getFeeStatus());
-        entry.setFeeType(event.getFeeType());
-        entry.setUserAccountId(event.getUserAccountId());
+    public void copy(FeeCreatedEvent event) {
+        setPrimaryKey(event.getFeeId().toString());
+        setAmount(event.getAmount());
+        setBusinessCreationTime(event.getBusinessCreationTime());
+        setBusinessReferenceId(event.getBusinessReferenceId());
+        setBusinessType(event.getBusinessType());
+        setDueDate(event.getDueDate());
+        setFeeStatus(event.getFeeStatus());
+        setFeeType(event.getFeeType());
+        setUserAccountId(event.getUserAccountId());
     }
 }

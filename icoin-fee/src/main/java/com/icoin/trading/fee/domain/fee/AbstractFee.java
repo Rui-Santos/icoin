@@ -2,7 +2,7 @@ package com.icoin.trading.fee.domain.fee;
 
 import com.homhon.base.domain.model.ValueObjectSupport;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
-import com.icoin.trading.api.fee.domain.fee.CancelReason;
+import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeMovingDirection;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
@@ -29,7 +29,7 @@ public abstract class AbstractFee<T extends AbstractFee> extends ValueObjectSupp
     private Date dueDate;
     private Date confirmedDate;
     private Date cancelledDate;
-    private CancelReason cancelReason;
+    private CancelledReason cancelledReason;
     private Date businessCreationTime;
     private boolean offseted;
     private Date offsetDate;
@@ -41,12 +41,12 @@ public abstract class AbstractFee<T extends AbstractFee> extends ValueObjectSupp
     //like order id, like interest rates from back
     private String businessReferenceId;
 
-    public CancelReason getCancelReason() {
-        return cancelReason;
+    public CancelledReason getCancelledReason() {
+        return cancelledReason;
     }
 
-    public void setCancelReason(CancelReason cancelReason) {
-        this.cancelReason = cancelReason;
+    public void setCancelledReason(CancelledReason cancelledReason) {
+        this.cancelledReason = cancelledReason;
     }
 
     public AbstractFee(FeeType feeType) {
