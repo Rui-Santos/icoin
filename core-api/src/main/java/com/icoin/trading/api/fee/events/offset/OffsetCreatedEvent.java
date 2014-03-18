@@ -15,7 +15,7 @@ import java.util.List;
  * Time: AM7:40
  * To change this template use File | Settings | File Templates.
  */
-public class OffsetStartedEvent extends AbstractOffsetEvent<OffsetStartedEvent> {
+public class OffsetCreatedEvent extends AbstractOffsetEvent<OffsetCreatedEvent> {
     private final OffsetType offsetType;
     private final String accountId;
     private final List<FeeItem> arapList;
@@ -23,8 +23,7 @@ public class OffsetStartedEvent extends AbstractOffsetEvent<OffsetStartedEvent> 
     private final BigMoney offsetAmount;
     private final Date startedDate;
 
-
-    public OffsetStartedEvent(OffsetId offsetId, OffsetType offsetType, String accountId, List<FeeItem> arapList, List<FeeItem> receivedPaidList, BigMoney offsetAmount, Date startedDate) {
+    public OffsetCreatedEvent(OffsetId offsetId, OffsetType offsetType, String accountId, List<FeeItem> arapList, List<FeeItem> receivedPaidList, BigMoney offsetAmount, Date startedDate) {
         super(offsetId);
         this.offsetType = offsetType;
         this.accountId = accountId;

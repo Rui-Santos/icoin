@@ -1,7 +1,11 @@
 package com.icoin.trading.api.fee.command;
 
 import com.homhon.base.domain.model.ValueObjectSupport;
+import com.icoin.trading.api.fee.domain.FeeTransactionId;
+import com.icoin.trading.api.fee.domain.fee.FeeId;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
 
 import static com.homhon.util.Asserts.notNull;
 
@@ -13,14 +17,22 @@ import static com.homhon.util.Asserts.notNull;
  * To change this template use File | Settings | File Templates.
  */
 public class AbstractFeeCommand<T extends AbstractFeeCommand> extends ValueObjectSupport<T> {
-    @NotEmpty
-    private String transactionId;
+    @NotNull
+    private FeeTransactionId feeTransactionId;
 
-    public AbstractFeeCommand(String transactionId) {
-        this.transactionId = transactionId;
+    @NotNull
+    private FeeId feeId;
+
+    public AbstractFeeCommand(FeeTransactionId feeTransactionId, FeeId feeId) {
+        this.feeTransactionId = feeTransactionId;
+        this.feeId = feeId;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public FeeTransactionId getFeeTransactionId() {
+        return feeTransactionId;
+    }
+
+    public FeeId getFeeId() {
+        return feeId;
     }
 }

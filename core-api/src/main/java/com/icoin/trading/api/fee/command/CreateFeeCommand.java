@@ -1,11 +1,14 @@
 package com.icoin.trading.api.fee.command;
 
+import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -16,18 +19,25 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class CreateFeeCommand<T extends CreateFeeCommand> extends AbstractFeeCommand<T> {
-    private FeeId feeId;
+    @NotNull
     private FeeStatus feeStatus;
+    @NotNull
     private BigMoney amount;
+    @NotNull
     private FeeType feeType;
+    @NotNull
     private BusinessType businessType;
 
+    @NotNull
     private Date createdTime;
+    @NotNull
     private Date dueDate;
+    @NotEmpty
     private String userAccountId;
+    @NotNull
     private String businessReferenceId;
 
-    public CreateFeeCommand(String transactionId,
+    public CreateFeeCommand(FeeTransactionId feeTransactionId,
                             FeeId feeId,
                             FeeStatus feeStatus,
                             BigMoney amount,
@@ -37,8 +47,7 @@ public class CreateFeeCommand<T extends CreateFeeCommand> extends AbstractFeeCom
                             Date dueDate,
                             String userAccountId,
                             String businessReferenceId) {
-        super(transactionId);
-        this.feeId = feeId;
+        super(feeTransactionId, feeId);
         this.feeStatus = feeStatus;
         this.amount = amount;
         this.feeType = feeType;
@@ -79,9 +88,5 @@ public class CreateFeeCommand<T extends CreateFeeCommand> extends AbstractFeeCom
 
     public String getBusinessReferenceId() {
         return businessReferenceId;
-    }
-
-    public FeeId getFeeId() {
-        return feeId;
     }
 }
