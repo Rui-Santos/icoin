@@ -3,7 +3,7 @@ package com.icoin.trading.api.fee.domain.offset;
 import com.homhon.base.domain.model.ValueObjectSupport;
 import org.joda.money.BigMoney;
 
-import static com.homhon.util.Asserts.*;
+import static com.homhon.util.Asserts.notNull;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +12,7 @@ import static com.homhon.util.Asserts.*;
  * Time: AM7:27
  * To change this template use File | Settings | File Templates.
  */
-public class FeeItem extends ValueObjectSupport<FeeItem>{
+public class FeeItem extends ValueObjectSupport<FeeItem> {
     private String identifier;
     private FeeItemType type;
     private BigMoney amount;

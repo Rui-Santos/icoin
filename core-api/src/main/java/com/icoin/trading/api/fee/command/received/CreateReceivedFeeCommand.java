@@ -10,6 +10,7 @@ import com.icoin.trading.api.fee.domain.fee.FeeType;
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -20,6 +21,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class CreateReceivedFeeCommand<T extends CreateReceivedFeeCommand> extends CreateFeeCommand<T> {
+    @NotNull
     private final ReceivedSource receivedSource;
 
     public CreateReceivedFeeCommand(FeeTransactionId feeTransactionId,

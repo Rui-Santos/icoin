@@ -3,6 +3,7 @@ package com.icoin.trading.api.fee.command.offset;
 import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -13,7 +14,9 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class OffsetFeesCommand extends CommandSupport<OffsetFeesCommand> {
+    @NotNull
     private final OffsetId offsetId;
+    @NotNull
     private final Date offsetedDate;
 
     public OffsetFeesCommand(OffsetId offsetId, Date offsetedDate) {

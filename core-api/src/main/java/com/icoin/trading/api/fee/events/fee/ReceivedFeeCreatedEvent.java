@@ -4,6 +4,7 @@ import com.icoin.trading.api.fee.domain.fee.BusinessType;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -16,7 +17,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class ReceivedFeeCreatedEvent extends FeeCreatedEvent<ReceivedFeeCreatedEvent> {
-
+    private final ReceivedSource receivedSource;
     public ReceivedFeeCreatedEvent(FeeId feeId,
                                    FeeStatus feeStatus,
                                    BigMoney amount,
@@ -25,7 +26,13 @@ public class ReceivedFeeCreatedEvent extends FeeCreatedEvent<ReceivedFeeCreatedE
                                    Date businessCreationTime,
                                    String userAccountId,
                                    BusinessType businessType,
-                                   String businessReferenceId) {
+                                   String businessReferenceId,
+                                   ReceivedSource receivedSource) {
         super(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, userAccountId, businessType, businessReferenceId);
+        this.receivedSource = receivedSource;
+    }
+
+    public ReceivedSource getReceivedSource() {
+        return receivedSource;
     }
 }

@@ -1,7 +1,6 @@
 package com.icoin.trading.api.fee.command.receivable;
 
 import com.icoin.trading.api.fee.command.CreateFeeCommand;
-
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
 import com.icoin.trading.api.fee.domain.fee.FeeId;

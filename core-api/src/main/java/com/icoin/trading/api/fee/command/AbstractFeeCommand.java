@@ -3,11 +3,8 @@ package com.icoin.trading.api.fee.command;
 import com.homhon.base.domain.model.ValueObjectSupport;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
-
-import static com.homhon.util.Asserts.notNull;
 
 /**
  * Created with IntelliJ IDEA.

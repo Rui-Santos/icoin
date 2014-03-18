@@ -9,7 +9,7 @@ import com.homhon.base.domain.ValueObject;
  * Time: PM9:32
  * To change this template use File | Settings | File Templates.
  */
-public enum  CommissionType implements ValueObject<CommissionType> {
+public enum CommissionType implements ValueObject<CommissionType> {
     BUY,
     SELL;
 

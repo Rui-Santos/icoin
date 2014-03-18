@@ -10,8 +10,6 @@ import org.joda.money.BigMoney;
 
 import java.util.Date;
 
-import static com.homhon.util.Asserts.notNull;
-
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -19,7 +17,7 @@ import static com.homhon.util.Asserts.notNull;
  * Time: AM9:14
  * To change this template use File | Settings | File Templates.
  */
-public class CommissionStartedEvent <T extends CommissionStartedEvent> extends EventSupport<T> {
+public class CommissionStartedEvent<T extends CommissionStartedEvent> extends EventSupport<T> {
     private final BigMoney tradeAmount;
     private final BigMoney tradedPrice;
     private final String buyOrderId;

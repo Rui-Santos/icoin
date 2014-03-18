@@ -9,21 +9,21 @@ import com.homhon.base.domain.ValueObject;
  * Time: AM9:30
  * To change this template use File | Settings | File Templates.
  */
-public enum CancelReason implements ValueObject<CancelReason> {
+public enum CancelledReason implements ValueObject<CancelledReason> {
     DUPLICATED("Duplicated fee found"),
     OFFSET_ERROR("Error When offset");
 
     private final String desc;
 
-    private CancelReason(String desc) {
+    private CancelledReason(String desc) {
         this.desc = desc;
     }
 
-    public boolean sameValueAs(CancelReason other) {
+    public boolean sameValueAs(CancelledReason other) {
         return this == other;
     }
 
-    public CancelReason copy() {
+    public CancelledReason copy() {
         return this;
     }
 }
