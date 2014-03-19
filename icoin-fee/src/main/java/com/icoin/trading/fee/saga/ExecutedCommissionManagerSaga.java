@@ -139,7 +139,14 @@ public class ExecutedCommissionManagerSaga extends AbstractAnnotatedSaga {
     public void onOffsetAmountNotMatched(final OffsetAmountNotMatchedEvent event) {
         commandGateway.send(new CancelOffsetCommand(offsetId, CancelledReason.AMOUNT_NOT_MATCHED, event.getOffsetDate()));
     }
+    
+    @SagaEventHandler(associationProperty = "offsetId")
+    public void onOffsetCancelled(final OffsetCancelledEvent event) {
+        offsetStatus = TransactionStatus.CANCELLED;
 
+        commandGateway.send(new CancelReceivedFeeCommand(accountReceivableId, CancelledReason.OFFSET_ERROR, event.getOffsetDate()));
+        commandGateway.send(new CancelReceivedFeeCommand(receivedFeeId, CancelledReason.OFFSET_ERROR, event.getOffsetDate()));
+    }
 
     @SagaEventHandler(associationProperty = "feeId", keyName = "accountReceivableId")
     public void onReceivableCancelled(final AccountReceivableFeeCancelledEvent event) {
