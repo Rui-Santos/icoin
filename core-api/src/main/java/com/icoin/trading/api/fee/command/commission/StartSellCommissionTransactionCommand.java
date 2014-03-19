@@ -3,6 +3,8 @@ package com.icoin.trading.api.fee.command.commission;
 
 import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
+import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
@@ -21,6 +23,9 @@ import java.util.Date;
  */
 public class StartSellCommissionTransactionCommand extends StartCommissionTransactionCommand<StartSellCommissionTransactionCommand> {
     public StartSellCommissionTransactionCommand(FeeTransactionId feeTransactionId,
+                                                 FeeId receivedFeeId,
+                                                 FeeId accountReceivableFeeId,
+                                                 OffsetId offsetId,
                                                  BigMoney commissionAmount,
                                                  String orderId,
                                                  TransactionId orderTransactionId,
@@ -34,6 +39,9 @@ public class StartSellCommissionTransactionCommand extends StartCommissionTransa
                                                  OrderBookId orderBookId,
                                                  CoinId coinId) {
         super(feeTransactionId,
+                receivedFeeId,
+                accountReceivableFeeId,
+                offsetId,
                 commissionAmount,
                 orderId,
                 orderTransactionId,

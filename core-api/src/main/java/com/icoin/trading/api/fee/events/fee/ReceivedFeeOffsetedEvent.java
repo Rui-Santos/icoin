@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class ReceivedFeeOffsetedEvent extends FeeOffsetedEvent<ReceivedFeeOffsetedEvent> {
 
-    protected ReceivedFeeOffsetedEvent(FeeId feeId, Date offsetedDate) {
+    public ReceivedFeeOffsetedEvent(FeeId feeId, Date offsetedDate) {
         super(feeId, offsetedDate);
     }
 }

@@ -3,6 +3,8 @@ package com.icoin.trading.api.fee.command.commission;
 import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
+import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
@@ -23,6 +25,12 @@ import java.util.Date;
 public class StartCommissionTransactionCommand<T extends StartCommissionTransactionCommand> extends CommandSupport<T> {
     @NotNull
     private final FeeTransactionId feeTransactionId;
+    @NotNull
+    private final FeeId receivedFeeId;
+    @NotNull
+    private final FeeId accountReceivableFeeId;
+    @NotNull
+    private final OffsetId offsetId;
     @NotNull
     private final BigMoney commissionAmount;
     @NotEmpty
@@ -49,6 +57,9 @@ public class StartCommissionTransactionCommand<T extends StartCommissionTransact
     private final CoinId coinId;
 
     public StartCommissionTransactionCommand(FeeTransactionId feeTransactionId,
+                                             FeeId receivedFeeId,
+                                             FeeId accountReceivableFeeId,
+                                             OffsetId offsetId,
                                              BigMoney commissionAmount,
                                              String orderId,
                                              TransactionId orderTransactionId,
@@ -62,6 +73,9 @@ public class StartCommissionTransactionCommand<T extends StartCommissionTransact
                                              OrderBookId orderBookId,
                                              CoinId coinId) {
         this.feeTransactionId = feeTransactionId;
+        this.receivedFeeId = receivedFeeId;
+        this.accountReceivableFeeId = accountReceivableFeeId;
+        this.offsetId = offsetId;
         this.commissionAmount = commissionAmount;
         this.orderId = orderId;
         this.orderTransactionId = orderTransactionId;
@@ -127,5 +141,17 @@ public class StartCommissionTransactionCommand<T extends StartCommissionTransact
 
     public CoinId getCoinId() {
         return coinId;
+    }
+
+    public FeeId getReceivedFeeId() {
+        return receivedFeeId;
+    }
+
+    public FeeId getAccountReceivableFeeId() {
+        return accountReceivableFeeId;
+    }
+
+    public OffsetId getOffsetId() {
+        return offsetId;
     }
 }

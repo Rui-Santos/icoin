@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class ReceivedFeeConfirmedEvent extends FeeConfirmedEvent<ReceivedFeeConfirmedEvent> {
 
-    protected ReceivedFeeConfirmedEvent(FeeId feeId, Date confirmedDate) {
+    public ReceivedFeeConfirmedEvent(FeeId feeId, Date confirmedDate) {
         super(feeId, confirmedDate);
     }
 }

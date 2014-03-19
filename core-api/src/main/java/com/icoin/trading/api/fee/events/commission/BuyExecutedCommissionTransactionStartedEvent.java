@@ -28,7 +28,7 @@ public class BuyExecutedCommissionTransactionStartedEvent extends ExecutedCommis
                                                         String orderBookId,
                                                         String coinId) {
         super(feeTransactionId,
-                commissionAmount,
+                receivedFeeId, accountReceivableFeeId, offsetId, commissionAmount,
                 orderId,
                 orderTransactionId,
                 portfolioId,
