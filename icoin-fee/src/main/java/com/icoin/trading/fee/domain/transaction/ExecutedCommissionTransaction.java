@@ -5,6 +5,8 @@ import com.icoin.axonsupport.domain.AxonAnnotatedAggregateRoot;
 import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.fee.domain.CommissionType;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
+import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.events.commission.SellExecutedCommissionTransactionStartedEvent;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
@@ -29,11 +31,11 @@ public class ExecutedCommissionTransaction extends AxonAnnotatedAggregateRoot<Ex
 
     @AggregateIdentifier
     @Identity
-    private String feeTransactionId;
+    private FeeTransactionId feeTransactionId;
     private BigMoney commissionAmount;
     private String orderId;
-    private String orderTransactionId;
-    private String portfolioId;
+    private TransactionId orderTransactionId;
+    private PortfolioId portfolioId;
     private Date tradeTime;
     private Date dueDate;
     private CommissionType commissionType;
@@ -43,6 +45,9 @@ public class ExecutedCommissionTransaction extends AxonAnnotatedAggregateRoot<Ex
     }
 
     public ExecutedCommissionTransaction(FeeTransactionId feeTransactionId,
+                                         FeeId receivedFeeId,
+                                         FeeId accountReceivableFeeId,
+                                         OffsetId offsetId,
                                          CommissionType commissionType,
                                          BigMoney commissionAmount,
                                          String orderId,
@@ -61,20 +66,22 @@ public class ExecutedCommissionTransaction extends AxonAnnotatedAggregateRoot<Ex
         switch (commissionType) {
             case SELL:
                 apply(new SellExecutedCommissionTransactionStartedEvent(
-                        feeTransactionId.toString(),
+                        feeTransactionId,
+                        receivedFeeId,
+                        accountReceivableFeeId,
+                        offsetId,
                         commissionAmount,
                         orderId,
-                        orderTransactionId.toString(),
-                        portfolioId.toString(),
+                        orderTransactionId,
+                        portfolioId,
                         tradeTime,
                         dueDate,
                         tradeType,
                         tradedPrice,
                         tradeAmount,
                         executedMoney,
-                        orderBookId.toString(),
-                        coinId.toString()
-                ));
+                        orderBookId,
+                        coinId));
                 break;
             case BUY:
                 break;

@@ -7,14 +7,14 @@ import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.events.fee.FeeCancelledEvent;
+import com.icoin.trading.api.fee.events.fee.FeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.FeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.FeeOffsetedEvent;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
-
-import static com.homhon.util.Asserts.hasLength;
-import static com.homhon.util.Asserts.notNull;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,7 +47,7 @@ public abstract class FeeAggregateRoot<T extends FeeAggregateRoot> extends AxonA
     protected String businessReferenceId;
 
 
-    public void onCreated(FeeCreatedEvent event) {
+    protected void onCreated(FeeCreatedEvent event) {
         this.feeId = event.getFeeId();
         this.feeStatus = event.getFeeStatus();
         this.amount = event.getAmount();
@@ -59,5 +59,19 @@ public abstract class FeeAggregateRoot<T extends FeeAggregateRoot> extends AxonA
         this.businessReferenceId = event.getBusinessReferenceId();
     }
 
+    protected void onConfirm(FeeConfirmedEvent event) {
+        this.feeStatus = FeeStatus.CONFIRMED;
+        this.confirmedDate = event.getConfirmedDate();
+    }
 
+    protected void onCancel(FeeCancelledEvent event) {
+        this.feeStatus = FeeStatus.CANCELLED;
+        this.cancelledDate = event.getCancelledDate();
+        this.cancelledReason = event.getCancelledReason();
+    }
+
+    protected void onOffset(FeeOffsetedEvent event) {
+        this.offseted = true;
+        this.offsetDate = event.getOffsetedDate();
+    }
 }

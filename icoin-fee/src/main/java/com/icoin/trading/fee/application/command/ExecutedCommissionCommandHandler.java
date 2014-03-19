@@ -33,6 +33,9 @@ public class ExecutedCommissionCommandHandler {
     public void handleStartSellCommissionTransaction(StartSellCommissionTransactionCommand command) {
         ExecutedCommissionTransaction transaction = new ExecutedCommissionTransaction(
                 command.getFeeTransactionId(),
+                command.getReceivedFeeId(),
+                command.getAccountReceivableFeeId(),
+                command.getOffsetId(),
                 CommissionType.SELL,
                 command.getCommissionAmount(),
                 command.getOrderId(),

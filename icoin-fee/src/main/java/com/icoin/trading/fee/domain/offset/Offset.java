@@ -7,7 +7,6 @@ import com.icoin.trading.api.fee.domain.offset.CancelledReason;
 import com.icoin.trading.api.fee.domain.offset.FeeItem;
 import com.icoin.trading.api.fee.domain.offset.FeeItemType;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
-import com.icoin.trading.api.fee.domain.offset.OffsetReason;
 import com.icoin.trading.api.fee.domain.offset.OffsetStatus;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
 import com.icoin.trading.api.fee.events.offset.OffsetAmountNotMatchedEvent;
@@ -45,7 +44,6 @@ public class Offset extends AxonAnnotatedAggregateRoot<Offset, String> {
     private List<FeeItem> receivedPaidList;
     private OffsetType offsetType;
     private OffsetStatus offsetStatus = OffsetStatus.NOT_OFFSETED;
-    private OffsetReason offsetReason;
     private Date offsetDate;
     private Date cancelledDate;
     private CancelledReason cancelledReason;
@@ -80,6 +78,24 @@ public class Offset extends AxonAnnotatedAggregateRoot<Offset, String> {
         return true;
     }
 
+    public void offset(Date offsetDate) {
+        changeStatus(offsetStatus.offset());
+
+        BigMoney arapAmount = sumUp(arapList);
+        BigMoney receivedPaidAmount = sumUp(receivedPaidList);
+
+        if (receivedPaidAmount.isEqual(arapAmount) && offsetAmount.isEqual(receivedPaidAmount)) {
+            apply(new OffsetedEvent(offsetId, offsetAmount, offsetDate));
+        } else {
+            apply(new OffsetAmountNotMatchedEvent(offsetId, offsetAmount, arapAmount, receivedPaidAmount, offsetDate));
+        }
+    }
+
+
+    public void cancel(CancelledReason cancelledReason, Date date) {
+        changeStatus(offsetStatus.cancel());
+        apply(new OffsetCancelledEvent(offsetId, cancelledReason, date));
+    }
 
     @EventHandler
     public void on(OffsetCreatedEvent event) {
@@ -91,30 +107,9 @@ public class Offset extends AxonAnnotatedAggregateRoot<Offset, String> {
         this.offsetAmount = event.getOffsetAmount();
     }
 
-    public void offset(OffsetReason offsetReason, Date date) {
-        changeStatus(offsetStatus.offset());
-
-        BigMoney arapAmount = sumUp(arapList);
-        BigMoney receivedPaidAmount = sumUp(receivedPaidList);
-
-        if (receivedPaidAmount.isEqual(arapAmount) && offsetAmount.isEqual(receivedPaidAmount)) {
-            apply(new OffsetedEvent(offsetId, offsetReason, offsetAmount, date));
-        } else {
-            apply(new OffsetAmountNotMatchedEvent(offsetId, offsetReason, offsetAmount, arapAmount, receivedPaidAmount, date));
-        }
-    }
-
-
-    public void cancel(CancelledReason cancelledReason, Date date) {
-        changeStatus(offsetStatus.cancel());
-        apply(new OffsetCancelledEvent(offsetId, cancelledReason, date));
-    }
-
-
     @EventHandler
     public void on(OffsetedEvent event) {
         this.offsetDate = event.getOffsetDate();
-        this.offsetReason = event.getOffsetReason();
     }
 
     @EventHandler

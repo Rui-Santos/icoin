@@ -2,6 +2,8 @@ package com.icoin.trading.fee.application.listener;
 
 import com.icoin.trading.api.fee.command.commission.StartSellCommissionTransactionCommand;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
+import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -9,6 +11,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -22,6 +25,7 @@ import static com.homhon.util.Asserts.notNull;
  * Time: 11:27 AM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class ExecutedCommissionListener {
     private final static Logger logger = LoggerFactory.getLogger(ExecutedCommissionListener.class);
     private DateTimeZone zone = DateTimeZone.forID("Asia/Chongqing");
@@ -36,6 +40,9 @@ public class ExecutedCommissionListener {
         StartSellCommissionTransactionCommand command =
                 new StartSellCommissionTransactionCommand(
                         new FeeTransactionId(),
+                        new FeeId(),
+                        new FeeId(),
+                        new OffsetId(),
                         event.getSellCommission(),
                         event.getSellOrderId(),
                         event.getSellTransactionId(),
