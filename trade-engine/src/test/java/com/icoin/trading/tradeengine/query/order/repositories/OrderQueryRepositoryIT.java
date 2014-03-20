@@ -1,7 +1,7 @@
 package com.icoin.trading.tradeengine.query.order.repositories;
 
 import com.google.common.collect.Lists;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;
 import com.icoin.trading.tradeengine.query.order.OrderType;
 import org.joda.money.BigMoney;

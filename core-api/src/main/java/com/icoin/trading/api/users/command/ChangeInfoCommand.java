@@ -1,7 +1,7 @@
 package com.icoin.trading.api.users.command;
 
 import com.homhon.base.command.CommandSupport;
-import com.icoin.trading.api.users.event.UserId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 

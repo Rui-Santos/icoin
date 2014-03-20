@@ -16,16 +16,19 @@
 
 package com.icoin.trading.users.domain.model.user;
 
-import com.icoin.trading.users.domain.event.NotificationSettingsUpdatedEvent;
-import com.icoin.trading.users.domain.event.PasswordChangedEvent;
-import com.icoin.trading.users.domain.event.UserAdminInfoChangedEvent;
-import com.icoin.trading.users.domain.event.UserAuthenticatedEvent;
-import com.icoin.trading.users.domain.event.UserCreatedEvent;
-import com.icoin.trading.users.domain.event.UserInfoChangedEvent;
-import com.icoin.trading.users.domain.event.WithdrawPasswordChangedEvent;
-import com.icoin.trading.users.domain.event.WithdrawPasswordCreatedEvent;
+import com.homhon.base.domain.Identity;
+import com.icoin.axonsupport.domain.AxonAnnotatedAggregateRoot;
+import com.icoin.trading.api.users.domain.Identifier;
+import com.icoin.trading.api.users.event.NotificationSettingsUpdatedEvent;
+import com.icoin.trading.api.users.event.PasswordChangedEvent;
+import com.icoin.trading.api.users.event.UserAdminInfoChangedEvent;
+import com.icoin.trading.api.users.event.UserAuthenticatedEvent;
+import com.icoin.trading.api.users.event.UserCreatedEvent;
+import com.icoin.trading.api.users.domain.UserId;
+import com.icoin.trading.api.users.event.UserInfoChangedEvent;
+import com.icoin.trading.api.users.event.WithdrawPasswordChangedEvent;
+import com.icoin.trading.api.users.event.WithdrawPasswordCreatedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -35,8 +38,10 @@ import java.util.List;
 /**
  * @author Jettro Coenradie
  */
-public class User extends AbstractAnnotatedAggregateRoot {
-    private static final long serialVersionUID = 3291411359839192350L;
+public class User extends AxonAnnotatedAggregateRoot<User,UserId> {
+    private static final long serialVersionUID = -8099449873027456890L;
+
+    @Identity
     @AggregateIdentifier
     private UserId userId;
     private String username;

@@ -4,7 +4,8 @@ import com.homhon.base.domain.Specification;
 import com.homhon.util.Strings;
 import com.icoin.money.specification.GreaterOrEqualSpecification;
 import com.icoin.money.specification.LessOrEqualSpecification;
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.query.activity.ExecutedAlarmActivity;
 import com.icoin.trading.tradeengine.query.activity.ExecutedAlarmType;
 import com.icoin.trading.tradeengine.query.activity.repositories.ExecutedAlarmActivityQueryRepository;
@@ -39,7 +40,6 @@ public class ExecutedAlarmActivityListener {
 
     private ExecutedAlarmActivityQueryRepository executedAlarmActivityRepository;
     private PortfolioQueryRepository portfolioRepository;
-    private OrderQueryRepository orderRepository;
 
     private BigDecimal highestPriceThreshold;
     private BigDecimal lowestPriceThreshold;
@@ -93,22 +93,22 @@ public class ExecutedAlarmActivityListener {
             return;
         }
 
-        final OrderEntry sellOrder = orderRepository.findOne(event.getSellOrderId());
-        if (sellOrder == null) {
-            logger.error("cannot found sellorder for suspicious executed activity: {}", event);
-        }
+//        final OrderEntry sellOrder = orderRepository.findOne(event.getSellOrderId());
+//        if (sellOrder == null) {
+//            logger.error("cannot found sellorder for suspicious executed activity: {}", event);
+//        }
+//
+//        final OrderEntry buyOrder = orderRepository.findOne(event.getBuyOrderId());
+//        if (buyOrder == null) {
+//            logger.error("cannot found buyOrder for suspicious executed activity: {}", event);
+//        }
 
-        final OrderEntry buyOrder = orderRepository.findOne(event.getBuyOrderId());
-        if (buyOrder == null) {
-            logger.error("cannot found buyOrder for suspicious executed activity: {}", event);
-        }
-
-        final PortfolioEntry sellPortfolio = getPortfolio(sellOrder);
+        final PortfolioEntry sellPortfolio = getPortfolio(event.getSellPortfolioId());
         if (sellPortfolio == null) {
             logger.error("cannot found sellPortfolio for suspicious executed activity: {}", event);
         }
 
-        final PortfolioEntry buyPortfolio = getPortfolio(buyOrder);
+        final PortfolioEntry buyPortfolio = getPortfolio(event.getBuyPortfolioId());
         if (buyPortfolio == null) {
             logger.error("cannot found buyPortfolio for suspicious executed activity: {}", event);
         }
@@ -134,21 +134,21 @@ public class ExecutedAlarmActivityListener {
         activity.setType(type);
         activity.setTradeType(TradeType.convert(event.getTradeType()));
 
-        activity.setSellPortfolioId(sellPortfolio == null? null : sellPortfolio.getIdentifier());
+        activity.setSellPortfolioId(event.getSellPortfolioId().toString());
         activity.setSellUsername(sellPortfolio == null ? null : sellPortfolio.getUsername());
-        activity.setBuyPortfolioId(buyPortfolio == null ? null : buyPortfolio.getIdentifier());
+        activity.setBuyPortfolioId(event.getBuyPortfolioId().toString());
         activity.setBuyUsername(buyPortfolio == null ? null : buyPortfolio.getUsername());
 
         return activity;
     }
 
 
-    private PortfolioEntry getPortfolio(OrderEntry orderEntry) {
-        if (orderEntry == null || !Strings.hasText(orderEntry.getPortfolioId())) {
+    private PortfolioEntry getPortfolio(PortfolioId portfolioId) {
+        if (portfolioId == null || !Strings.hasText(portfolioId.toString())) {
             return null;
         }
 
-        return portfolioRepository.findOne(orderEntry.getPortfolioId());
+        return portfolioRepository.findOne(portfolioId.toString());
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -161,13 +161,6 @@ public class ExecutedAlarmActivityListener {
     @Autowired
     public void setPortfolioRepository(PortfolioQueryRepository portfolioRepository) {
         this.portfolioRepository = portfolioRepository;
-    }
-
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setOrderRepository(OrderQueryRepository orderRepository) {
-        this.orderRepository = orderRepository;
     }
 
     @Value("${trading.highest.alarm.price}")

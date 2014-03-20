@@ -16,20 +16,20 @@
 
 package com.icoin.trading.tradeengine.query.transaction;
 
-import com.icoin.trading.tradeengine.domain.events.transaction.AbstractTransactionExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.AbstractTransactionPartiallyExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.AbstractTransactionStartedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionCancelledEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionConfirmedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionPartiallyExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCancelledEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionConfirmedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionPartiallyExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
+import com.icoin.trading.api.tradeengine.events.transaction.AbstractTransactionExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.AbstractTransactionPartiallyExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.AbstractTransactionStartedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionCancelledEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionConfirmedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionPartiallyExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionStartedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionCancelledEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionConfirmedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionPartiallyExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionStartedEvent;
+import com.icoin.trading.api.tradeengine.domain.TransactionType;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.transaction.repositories.TransactionQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;

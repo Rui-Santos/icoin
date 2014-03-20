@@ -1,7 +1,6 @@
 package com.icoin.trading.users.application.command;
 
-import com.icoin.trading.users.domain.event.PasswordEvent;
-import com.icoin.trading.users.domain.event.UserCreatedEvent;
+import com.icoin.trading.api.users.event.UserCreatedEvent;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;

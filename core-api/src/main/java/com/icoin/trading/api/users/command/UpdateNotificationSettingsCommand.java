@@ -1,7 +1,7 @@
 package com.icoin.trading.api.users.command;
 
 import com.homhon.base.command.CommandSupport;
-import com.icoin.trading.api.users.event.UserId;
+import com.icoin.trading.api.users.domain.UserId;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

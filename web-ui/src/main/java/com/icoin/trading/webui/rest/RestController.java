@@ -16,7 +16,7 @@
 
 package com.icoin.trading.webui.rest;
 
-import com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters.JodaMoneyConverter;
+import com.icoin.money.converter.JodaMoneyConverter;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;

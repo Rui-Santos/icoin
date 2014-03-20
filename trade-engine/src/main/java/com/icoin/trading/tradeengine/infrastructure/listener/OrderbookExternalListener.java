@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.infrastructure.listener;
 
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -29,7 +29,6 @@ import org.codehaus.jackson.JsonGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.StringWriter;

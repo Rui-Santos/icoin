@@ -80,7 +80,7 @@ public class BuyExecutedCommissionManagerSaga extends ExecutedCommissionManagerS
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
                         event.getOrderTransactionId().toString(),
-                        new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, event.getPortfolioId())));
+                        new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, event.getPortfolioId().toString())));
 
         offsetId = new OffsetId();
         associateWith("offsetId", offsetId.toString());
@@ -88,7 +88,7 @@ public class BuyExecutedCommissionManagerSaga extends ExecutedCommissionManagerS
                 new CreateOffsetCommand(
                         offsetId,
                         OffsetType.RECEIVED_AR,
-                        event.getPortfolioId(),
+                        event.getPortfolioId().toString(),
                         ImmutableList.of(new FeeItem(accountReceivableId.toString(), FeeItemType.AR, event.getCommissionAmount())),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, event.getCommissionAmount())),
                         event.getCommissionAmount(),

@@ -49,13 +49,6 @@ public class ExecutedCommissionManagerSaga extends AbstractAnnotatedSaga {
     protected TransactionStatus receivedFeeStatus = TransactionStatus.NEW;
     protected TransactionStatus offsetStatus = TransactionStatus.NEW;
 
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setCommandGateway(CommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
-
     @SagaEventHandler(associationProperty = "feeId", keyName = "accountReceivableId")
     public void onReceivableCreated(final AccountReceivableFeeCreatedEvent event) {
         accountReceivableStatus = TransactionStatus.CREATED;
@@ -153,5 +146,11 @@ public class ExecutedCommissionManagerSaga extends AbstractAnnotatedSaga {
         receivedFeeStatus = TransactionStatus.CANCELLED;
 
         completeIfPossible();
+    }
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    public void setCommandGateway(CommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
     }
 }

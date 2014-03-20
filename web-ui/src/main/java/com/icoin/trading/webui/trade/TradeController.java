@@ -1,8 +1,8 @@
 package com.icoin.trading.webui.trade;
 
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;

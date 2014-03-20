@@ -1,14 +1,11 @@
 package com.icoin.trading.api.tradeengine.command.admin;
 
 import com.homhon.base.command.CommandSupport;
-import com.icoin.trading.api.tradeengine.events.trade.ChangedReason;
+import com.icoin.trading.api.tradeengine.domain.ChangedReason;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-
-import static com.homhon.util.Asserts.hasLength;
-import static com.homhon.util.Asserts.notNull;
 
 /**
  * Created with IntelliJ IDEA.

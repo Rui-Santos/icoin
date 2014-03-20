@@ -16,20 +16,24 @@
 
 package com.icoin.trading.tradeengine.domain.model.coin;
 
-import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
-import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.homhon.base.domain.Identity;
+import com.icoin.axonsupport.domain.AxonAnnotatedAggregateRoot;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.events.coin.CoinCreatedEvent;
+import com.icoin.trading.api.tradeengine.events.coin.OrderBookAddedToCoinEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.joda.money.BigMoney;
 
 /**
  * @author Jettro Coenradie
  */
-public class Coin extends AbstractAnnotatedAggregateRoot {
-    private static final long serialVersionUID = 8723320580782813954L;
+public class Coin extends AxonAnnotatedAggregateRoot<Coin, CoinId> {
+    private static final long serialVersionUID = -3803633028358233820L;
 
+    @Identity
     @AggregateIdentifier
     private CoinId coinId;
 
@@ -53,22 +57,5 @@ public class Coin extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void handle(CoinCreatedEvent event) {
         this.coinId = event.getCoinIdentifier();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Coin coin = (Coin) o;
-
-        if (coinId != null ? !coinId.equals(coin.coinId) : coin.coinId != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return coinId != null ? coinId.hashCode() : 0;
     }
 }

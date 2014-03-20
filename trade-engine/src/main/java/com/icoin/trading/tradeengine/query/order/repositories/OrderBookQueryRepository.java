@@ -17,7 +17,7 @@
 package com.icoin.trading.tradeengine.query.order.repositories;
 
 import com.homhon.base.domain.repository.GenericCrudRepository;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

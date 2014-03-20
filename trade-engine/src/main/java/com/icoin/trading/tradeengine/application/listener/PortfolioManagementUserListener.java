@@ -16,9 +16,9 @@
 
 package com.icoin.trading.tradeengine.application.listener;
 
-import com.icoin.trading.tradeengine.application.command.portfolio.CreatePortfolioCommand;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.users.domain.event.UserCreatedEvent;
+import com.icoin.trading.api.tradeengine.command.portfolio.CreatePortfolioCommand;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.users.event.UserCreatedEvent;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.eventhandling.annotation.EventHandler;

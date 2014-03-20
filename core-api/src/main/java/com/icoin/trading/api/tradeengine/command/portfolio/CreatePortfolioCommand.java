@@ -18,8 +18,8 @@ package com.icoin.trading.api.tradeengine.command.portfolio;
 
 
 import com.homhon.base.command.CommandSupport;
-import com.icoin.trading.api.tradeengine.events.portfolio.PortfolioId;
-import com.icoin.trading.api.users.event.UserId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.users.domain.UserId;
 
 import java.util.Date;
 

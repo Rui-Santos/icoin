@@ -17,14 +17,14 @@
 package com.icoin.trading.users.query;
 
 import com.homhon.util.Strings;
-import com.icoin.trading.users.domain.event.NotificationSettingsUpdatedEvent;
-import com.icoin.trading.users.domain.event.PasswordChangedEvent;
-import com.icoin.trading.users.domain.event.UserAdminInfoChangedEvent;
-import com.icoin.trading.users.domain.event.UserCreatedEvent;
-import com.icoin.trading.users.domain.event.UserInfoChangedEvent;
-import com.icoin.trading.users.domain.event.WithdrawPasswordChangedEvent;
-import com.icoin.trading.users.domain.event.WithdrawPasswordCreatedEvent;
-import com.icoin.trading.users.domain.model.user.UserId;
+import com.icoin.trading.api.users.event.NotificationSettingsUpdatedEvent;
+import com.icoin.trading.api.users.event.PasswordChangedEvent;
+import com.icoin.trading.api.users.event.UserAdminInfoChangedEvent;
+import com.icoin.trading.api.users.event.UserCreatedEvent;
+import com.icoin.trading.api.users.event.UserInfoChangedEvent;
+import com.icoin.trading.api.users.event.WithdrawPasswordChangedEvent;
+import com.icoin.trading.api.users.event.WithdrawPasswordCreatedEvent;
+import com.icoin.trading.api.users.domain.UserId;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;

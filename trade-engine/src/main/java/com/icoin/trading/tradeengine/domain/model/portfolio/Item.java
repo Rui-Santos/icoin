@@ -1,7 +1,7 @@
 package com.icoin.trading.tradeengine.domain.model.portfolio;
 
 import com.homhon.base.domain.model.ValueObjectSupport;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.api.coin.domain.CoinId;
 import org.joda.money.BigMoney;
 
 import java.math.RoundingMode;

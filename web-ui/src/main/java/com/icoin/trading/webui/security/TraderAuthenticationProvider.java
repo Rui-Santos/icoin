@@ -16,12 +16,9 @@
 
 package com.icoin.trading.webui.security;
 
-import com.google.common.collect.Sets;
-import com.icoin.trading.users.application.command.AuthenticateUserCommand;
+import com.icoin.trading.api.users.command.AuthenticateUserCommand;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 import com.icoin.trading.webui.user.AuthUtils;
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -32,15 +29,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import static com.homhon.util.TimeUtils.currentTime;

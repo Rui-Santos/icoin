@@ -1,6 +1,6 @@
 package com.icoin.trading.webui.trade.facade.internal.assembler;
 
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import com.icoin.trading.webui.order.AbstractOrder;

@@ -17,7 +17,7 @@
 package com.icoin.trading.tradeengine.query.tradeexecuted;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -30,6 +30,8 @@ public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEnt
     private String sellOrderId;
     private String buyTransactionId;
     private String sellTransactionId;
+    private String  sellPortfolioId;
+    private String  buyPortfolioId;
     private BigMoney tradedAmount;
     private BigMoney tradedPrice;
     private BigMoney executedMoney;
@@ -126,5 +128,21 @@ public class TradeExecutedEntry extends AuditAwareEntitySupport<TradeExecutedEnt
 
     public void setTradeType(TradeType tradeType) {
         this.tradeType = tradeType;
+    }
+
+    public String getSellPortfolioId() {
+        return sellPortfolioId;
+    }
+
+    public void setSellPortfolioId(String sellPortfolioId) {
+        this.sellPortfolioId = sellPortfolioId;
+    }
+
+    public String getBuyPortfolioId() {
+        return buyPortfolioId;
+    }
+
+    public void setBuyPortfolioId(String buyPortfolioId) {
+        this.buyPortfolioId = buyPortfolioId;
     }
 }

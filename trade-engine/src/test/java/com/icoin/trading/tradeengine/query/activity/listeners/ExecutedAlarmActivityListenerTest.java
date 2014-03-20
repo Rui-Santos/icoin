@@ -1,9 +1,10 @@
 package com.icoin.trading.tradeengine.query.activity.listeners;
 
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.query.activity.ExecutedAlarmActivity;
 import com.icoin.trading.tradeengine.query.activity.ExecutedAlarmType;
 import com.icoin.trading.tradeengine.query.activity.repositories.ExecutedAlarmActivityQueryRepository;
@@ -29,7 +30,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,6 +50,8 @@ public class ExecutedAlarmActivityListenerTest {
         BigMoney highExecutedMoney = BigMoney.of(CurrencyUnit.CAD, 10000);
         BigMoney buyCommission = BigMoney.zero(CurrencyUnit.CAD);
         BigMoney sellCommission = BigMoney.zero(CurrencyUnit.of("BTC"));
+        PortfolioId buyPortfolioId = new PortfolioId();
+        PortfolioId sellPortfolioId = new PortfolioId();
 
         Date tradeTime = currentTime();
 
@@ -65,8 +67,10 @@ public class ExecutedAlarmActivityListenerTest {
                 sellCommission,
                 new TransactionId("buyTransactionId"),
                 new TransactionId("sellTransactionId"),
+                buyPortfolioId,
+                sellPortfolioId,
                 tradeTime,
-                com.icoin.trading.tradeengine.domain.model.order.TradeType.SELL
+                com.icoin.trading.api.tradeengine.domain.TradeType.SELL
         );
 
         final TradeExecutedEvent event2 = new TradeExecutedEvent(
@@ -81,12 +85,13 @@ public class ExecutedAlarmActivityListenerTest {
                 sellCommission,
                 new TransactionId("buyTransactionId"),
                 new TransactionId("sellTransactionId"),
+                buyPortfolioId,
+                sellPortfolioId,
                 tradeTime,
-                com.icoin.trading.tradeengine.domain.model.order.TradeType.SELL
+                com.icoin.trading.api.tradeengine.domain.TradeType.SELL
         );
 
         ExecutedAlarmActivityQueryRepository repository = mock(ExecutedAlarmActivityQueryRepository.class);
-        OrderQueryRepository orderRepository = mock(OrderQueryRepository.class);
         PortfolioQueryRepository portfolioRepository = mock(PortfolioQueryRepository.class);
 
         ExecutedAlarmActivityListener listener = new ExecutedAlarmActivityListener();
@@ -98,7 +103,6 @@ public class ExecutedAlarmActivityListenerTest {
         listener.setLowestPriceThreshold(BigDecimal.ONE);
 
         listener.setExecutedAlarmActivityRepository(repository);
-        listener.setOrderRepository(orderRepository);
         listener.setPortfolioRepository(portfolioRepository);
 
         listener.handleTradeExecuted(event1);
@@ -170,6 +174,8 @@ public class ExecutedAlarmActivityListenerTest {
         BigMoney executedMoney = BigMoney.of(CurrencyUnit.CAD, 1000);
         BigMoney buyCommission = BigMoney.zero(CurrencyUnit.CAD);
         BigMoney sellCommission = BigMoney.zero(CurrencyUnit.CAD);
+        PortfolioId buyPortfolioId = new PortfolioId();
+        PortfolioId sellPortfolioId = new PortfolioId();
 
         Date tradeTime = currentTime();
 
@@ -185,8 +191,10 @@ public class ExecutedAlarmActivityListenerTest {
                 sellCommission,
                 new TransactionId("buyTransactionId"),
                 new TransactionId("sellTransactionId"),
+                buyPortfolioId,
+                sellPortfolioId,
                 tradeTime,
-                com.icoin.trading.tradeengine.domain.model.order.TradeType.BUY
+                com.icoin.trading.api.tradeengine.domain.TradeType.BUY
         );
 
         final TradeExecutedEvent event2 = new TradeExecutedEvent(
@@ -201,12 +209,13 @@ public class ExecutedAlarmActivityListenerTest {
                 sellCommission,
                 new TransactionId("buyTransactionId"),
                 new TransactionId("sellTransactionId"),
+                buyPortfolioId,
+                sellPortfolioId,
                 tradeTime,
-                com.icoin.trading.tradeengine.domain.model.order.TradeType.BUY
+                com.icoin.trading.api.tradeengine.domain.TradeType.BUY
         );
 
         ExecutedAlarmActivityQueryRepository repository = mock(ExecutedAlarmActivityQueryRepository.class);
-        OrderQueryRepository orderRepository = mock(OrderQueryRepository.class);
         PortfolioQueryRepository portfolioRepository = mock(PortfolioQueryRepository.class);
 
         //order 
@@ -217,8 +226,6 @@ public class ExecutedAlarmActivityListenerTest {
         OrderEntry sellOrder = new OrderEntry();
         sellOrder.setPrimaryKey("sellOrderId");
         sellOrder.setPortfolioId("sellPortfolioId");
-        when(orderRepository.findOne(eq("buyOrderId"))).thenReturn(buyOrder);
-        when(orderRepository.findOne(eq("sellOrderId"))).thenReturn(sellOrder);
 
         //portfolio 
         PortfolioEntry buyPortfolio = new PortfolioEntry();
@@ -241,7 +248,6 @@ public class ExecutedAlarmActivityListenerTest {
         listener.setLowestPriceThreshold(BigDecimal.ONE);
         listener.setExecutedAlarmActivityRepository(repository);
         listener.setPortfolioRepository(portfolioRepository);
-        listener.setOrderRepository(orderRepository);
 
         listener.handleTradeExecuted(event1);
         listener.handleTradeExecuted(event2);
@@ -303,8 +309,6 @@ public class ExecutedAlarmActivityListenerTest {
         assertThat(high.getType(), is(ExecutedAlarmType.AMOUNT));
         assertThat(high.getTradeType(), is(TradeType.BUY));
 
-        verify(orderRepository, times(2)).findOne(eq("buyOrderId"));
-        verify(orderRepository, times(2)).findOne(eq("sellOrderId"));
         verify(portfolioRepository, times(2)).findOne(eq("buyPortfolioId"));
         verify(portfolioRepository, times(2)).findOne(eq("sellPortfolioId"));
     }
@@ -312,12 +316,14 @@ public class ExecutedAlarmActivityListenerTest {
     @Test
     public void testHandleTradeExecutedWithPriceViolation() throws Exception {
         BigMoney tradeAmount = BigMoney.of(CurrencyUnit.CAD, 200);
-        BigMoney tradedPrice = BigMoney.of(CurrencyUnit.CAD,100);
-        BigMoney lowTradedPrice = BigMoney.of(CurrencyUnit.CAD,1);
-        BigMoney highTradedPrice = BigMoney.of(CurrencyUnit.CAD,232487);
+        BigMoney tradedPrice = BigMoney.of(CurrencyUnit.CAD, 100);
+        BigMoney lowTradedPrice = BigMoney.of(CurrencyUnit.CAD, 1);
+        BigMoney highTradedPrice = BigMoney.of(CurrencyUnit.CAD, 232487);
         BigMoney executedMoney = BigMoney.of(CurrencyUnit.CAD, 100);
         BigMoney buyCommission = BigMoney.zero(CurrencyUnit.CAD);
         BigMoney sellCommission = BigMoney.zero(CurrencyUnit.CAD);
+        PortfolioId buyPortfolioId = new PortfolioId();
+        PortfolioId sellPortfolioId = new PortfolioId();
 
         Date tradeTime = currentTime();
 
@@ -333,8 +339,10 @@ public class ExecutedAlarmActivityListenerTest {
                 sellCommission,
                 new TransactionId("buyTransactionId"),
                 new TransactionId("sellTransactionId"),
+                buyPortfolioId,
+                sellPortfolioId,
                 tradeTime,
-                com.icoin.trading.tradeengine.domain.model.order.TradeType.BUY
+                com.icoin.trading.api.tradeengine.domain.TradeType.BUY
         );
 
         final TradeExecutedEvent event2 = new TradeExecutedEvent(
@@ -349,8 +357,10 @@ public class ExecutedAlarmActivityListenerTest {
                 sellCommission,
                 new TransactionId("buyTransactionId"),
                 new TransactionId("sellTransactionId"),
+                buyPortfolioId,
+                sellPortfolioId,
                 tradeTime,
-                com.icoin.trading.tradeengine.domain.model.order.TradeType.BUY
+                com.icoin.trading.api.tradeengine.domain.TradeType.BUY
         );
 
         final TradeExecutedEvent event3 = new TradeExecutedEvent(
@@ -365,13 +375,14 @@ public class ExecutedAlarmActivityListenerTest {
                 sellCommission,
                 new TransactionId("buyTransactionId"),
                 new TransactionId("sellTransactionId"),
+                buyPortfolioId,
+                sellPortfolioId,
                 tradeTime,
-                com.icoin.trading.tradeengine.domain.model.order.TradeType.BUY
+                com.icoin.trading.api.tradeengine.domain.TradeType.BUY
         );
 
         ExecutedAlarmActivityQueryRepository repository = mock(ExecutedAlarmActivityQueryRepository.class);
         PortfolioQueryRepository portfolioRepository = mock(PortfolioQueryRepository.class);
-        OrderQueryRepository orderRepository = mock(OrderQueryRepository.class);
 
         //order 
         OrderEntry buyOrder = new OrderEntry();
@@ -381,8 +392,6 @@ public class ExecutedAlarmActivityListenerTest {
         OrderEntry sellOrder = new OrderEntry();
         sellOrder.setPrimaryKey("sellOrderId");
         sellOrder.setPortfolioId("sellPortfolioId");
-        when(orderRepository.findOne(eq("buyOrderId"))).thenReturn(buyOrder);
-        when(orderRepository.findOne(eq("sellOrderId"))).thenReturn(sellOrder);
 
 //        when(portfolioRepository.findOne(eq("sellPortfolioId"))).thenReturn();
 
@@ -395,7 +404,6 @@ public class ExecutedAlarmActivityListenerTest {
         listener.setLowestPriceThreshold(BigDecimal.ONE);
         listener.setExecutedAlarmActivityRepository(repository);
         listener.setPortfolioRepository(portfolioRepository);
-        listener.setOrderRepository(orderRepository);
 
         listener.handleTradeExecuted(event1);
         listener.handleTradeExecuted(event2);
@@ -458,8 +466,6 @@ public class ExecutedAlarmActivityListenerTest {
         assertThat(high.getType(), is(ExecutedAlarmType.PRICE));
         assertThat(high.getTradeType(), is(TradeType.BUY));
 
-        verify(orderRepository, times(2)).findOne(eq("buyOrderId"));
-        verify(orderRepository, times(2)).findOne(eq("sellOrderId"));
         verify(portfolioRepository, times(2)).findOne(eq("buyPortfolioId"));
         verify(portfolioRepository, times(2)).findOne(eq("sellPortfolioId"));
     }

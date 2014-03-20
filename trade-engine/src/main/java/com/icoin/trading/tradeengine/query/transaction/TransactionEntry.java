@@ -17,7 +17,7 @@
 package com.icoin.trading.tradeengine.query.transaction;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
+import com.icoin.trading.api.tradeengine.domain.TransactionType;
 import org.joda.money.BigMoney;
 
 import java.util.Date;

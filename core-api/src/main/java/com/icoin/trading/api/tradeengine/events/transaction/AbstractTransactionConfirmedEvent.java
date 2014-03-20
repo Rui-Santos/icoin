@@ -18,7 +18,7 @@ package com.icoin.trading.api.tradeengine.events.transaction;
 
 
 import com.homhon.base.domain.event.EventSupport;
-import com.icoin.trading.api.tradeengine.events.transaction.TransactionId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 
 import java.util.Date;
 

@@ -18,8 +18,8 @@ package com.icoin.trading.api.tradeengine.command.order;
 
 
 import com.homhon.base.command.CommandSupport;
-import com.icoin.trading.api.coin.events.CurrencyPair;
-import com.icoin.trading.api.tradeengine.events.order.OrderBookId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 
 /**
  * <p>Create a new OrderBook for the Coin represented by the provided coinIdentifier.</p>

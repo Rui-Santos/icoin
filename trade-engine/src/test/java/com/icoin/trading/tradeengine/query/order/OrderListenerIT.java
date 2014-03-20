@@ -18,18 +18,18 @@ package com.icoin.trading.tradeengine.query.order;
 
 import com.google.common.collect.Lists;
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.api.tradeengine.events.order.BuyOrderPlacedEvent;
+import com.icoin.trading.api.tradeengine.events.order.SellOrderPlacedEvent;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
-import com.icoin.trading.tradeengine.domain.model.order.TradeType;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.api.tradeengine.domain.TradeType;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import org.hamcrest.Matchers;
 import org.joda.money.BigMoney;
@@ -75,7 +75,8 @@ public class OrderListenerIT {
 
     OrderId orderId = new OrderId();
     CoinId coinId = new CoinId();
-    PortfolioId portfolioId = new PortfolioId();
+    private PortfolioId buyPortfolioId = new PortfolioId();
+    private PortfolioId sellPortfolioId = new PortfolioId();
     TransactionId transactionId = new TransactionId();
     OrderBookId orderBookId = new OrderBookId();
 
@@ -100,7 +101,7 @@ public class OrderListenerIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(300)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(100)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(9)),
-                        portfolioId,
+                        buyPortfolioId,
                         currencyPair,
                         placeDate);
 
@@ -135,7 +136,7 @@ public class OrderListenerIT {
         assertThat(orderEntry.getItemPrice().isEqual(
                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(100))),
                 is(true));
-        assertThat(orderEntry.getPortfolioId(), equalTo(portfolioId.toString()));
+        assertThat(orderEntry.getPortfolioId(), equalTo(buyPortfolioId.toString()));
         assertThat(orderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(orderEntry.getType(), equalTo(OrderType.BUY));
         assertThat(orderEntry.getTotalCommission()
@@ -157,7 +158,7 @@ public class OrderListenerIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(300)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(15)),
-                        portfolioId,
+                        sellPortfolioId,
                         currencyPair,
                         placeDate);
 
@@ -188,7 +189,7 @@ public class OrderListenerIT {
         assertThat(orderEntry.getItemPrice().isEqual(
                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(100))),
                 is(true));
-        assertThat(orderEntry.getPortfolioId(), equalTo(portfolioId.toString()));
+        assertThat(orderEntry.getPortfolioId(), equalTo(sellPortfolioId.toString()));
         assertThat(orderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(orderEntry.getType(), equalTo(OrderType.SELL));
         assertThat(orderEntry.getTotalCommission()
@@ -211,7 +212,7 @@ public class OrderListenerIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(400)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(100)),
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(3)),
-                        portfolioId,
+                        sellPortfolioId,
                         currencyPair,
                         sellPlaceDate);
 
@@ -227,7 +228,7 @@ public class OrderListenerIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(300)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(150)),
                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(10)),
-                        portfolioId,
+                        buyPortfolioId,
                         currencyPair,
                         buyPlaceDate);
 
@@ -256,6 +257,8 @@ public class OrderListenerIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(3)),
                         buyTransactionId,
                         sellTransactionId,
+                        buyPortfolioId,
+                        sellPortfolioId,
                         tradeTime,
                         TradeType.BUY);
         orderListener.handleTradeExecuted(event);
@@ -282,7 +285,7 @@ public class OrderListenerIT {
                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100))),
                 is(true));
         assertThat(sellOrderEntry.getType(), equalTo(OrderType.SELL));
-        assertThat(sellOrderEntry.getPortfolioId(), equalTo(portfolioId.toString()));
+        assertThat(sellOrderEntry.getPortfolioId(), equalTo(sellPortfolioId.toString()));
         assertThat(sellOrderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(sellOrderEntry.getCompleteDate(), nullValue());
         assertThat(sellOrderEntry.getLastTradedTime(), equalTo(tradeTime));
@@ -313,7 +316,7 @@ public class OrderListenerIT {
                 BigMoney.zero(CurrencyUnit.of(Currencies.BTC))),
                 is(true));
         assertThat(buyOrderEntry.getType(), equalTo(OrderType.BUY));
-        assertThat(buyOrderEntry.getPortfolioId(), equalTo(portfolioId.toString()));
+        assertThat(buyOrderEntry.getPortfolioId(), equalTo(buyPortfolioId.toString()));
         assertThat(buyOrderEntry.getCurrencyPair(), equalTo(currencyPair));
         assertThat(buyOrderEntry.getCompleteDate(), equalTo(tradeTime));
         assertThat(buyOrderEntry.getLastTradedTime(), equalTo(tradeTime));

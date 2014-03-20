@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;

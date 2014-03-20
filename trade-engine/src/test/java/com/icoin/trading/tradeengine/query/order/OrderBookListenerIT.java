@@ -16,19 +16,20 @@
 
 package com.icoin.trading.tradeengine.query.order;
 
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
-import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
-import com.icoin.trading.tradeengine.domain.events.order.RefreshedHighestBuyPriceEvent;
-import com.icoin.trading.tradeengine.domain.events.order.RefreshedLowestSellPriceEvent;
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.api.tradeengine.events.coin.CoinCreatedEvent;
+import com.icoin.trading.api.tradeengine.events.coin.OrderBookAddedToCoinEvent;
+import com.icoin.trading.api.tradeengine.events.order.RefreshedHighestBuyPriceEvent;
+import com.icoin.trading.api.tradeengine.events.order.RefreshedLowestSellPriceEvent;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderId;
-import com.icoin.trading.tradeengine.domain.model.order.TradeType;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
+import com.icoin.trading.api.tradeengine.domain.TradeType;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.CoinListener;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
@@ -78,6 +79,9 @@ public class OrderBookListenerIT {
 
     OrderBookId orderBookId = new OrderBookId();
     CoinId coinId = new CoinId("LTC");
+
+    private PortfolioId buyPortfolioId = new PortfolioId();
+    private PortfolioId sellPortfolioId = new PortfolioId();
 
     @Before
     public void setUp() throws Exception {
@@ -139,6 +143,8 @@ public class OrderBookListenerIT {
                 BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(0.725)),
                 buyTransactionId,
                 sellTransactionId,
+                buyPortfolioId,
+                sellPortfolioId,
                 tradeTime,
                 TradeType.BUY);
 

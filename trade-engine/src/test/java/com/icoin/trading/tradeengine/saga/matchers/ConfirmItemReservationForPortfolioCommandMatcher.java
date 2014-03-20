@@ -16,9 +16,9 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.api.tradeengine.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import org.hamcrest.Description;
 import org.joda.money.BigMoney;
 

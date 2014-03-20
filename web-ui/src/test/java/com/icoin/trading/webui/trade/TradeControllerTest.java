@@ -1,9 +1,9 @@
 package com.icoin.trading.webui.trade;
 
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.OrderType;
@@ -15,7 +15,6 @@ import com.icoin.trading.webui.trade.facade.TradeServiceFacade;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;

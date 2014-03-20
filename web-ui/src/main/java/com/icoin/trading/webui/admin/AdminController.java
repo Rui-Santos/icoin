@@ -17,10 +17,10 @@
 package com.icoin.trading.webui.admin;
 
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.api.tradeengine.command.portfolio.cash.DepositCashCommand;
+import com.icoin.trading.api.tradeengine.command.portfolio.coin.AddAmountToPortfolioCommand;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;

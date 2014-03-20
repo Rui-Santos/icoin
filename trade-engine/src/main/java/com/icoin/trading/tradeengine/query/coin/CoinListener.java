@@ -8,7 +8,7 @@ package com.icoin.trading.tradeengine.query.coin;
  * To change this template use File | Settings | File Templates.
  */
 
-import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
+import com.icoin.trading.api.tradeengine.events.coin.CoinCreatedEvent;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;

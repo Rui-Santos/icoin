@@ -1,27 +1,29 @@
 package com.icoin.trading.tradeengine.application.command.order.handler;
 
 import com.google.common.collect.Lists;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.command.order.ExecuteBuyOrderCommand;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TradeType;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.tradeengine.events.order.OrderBookCreatedEvent;
+import com.icoin.trading.api.tradeengine.events.order.RefreshedHighestBuyPriceEvent;
+import com.icoin.trading.api.tradeengine.events.order.RefreshedLowestSellPriceEvent;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.application.command.order.ExecuteBuyOrderCommand;
-import com.icoin.trading.tradeengine.domain.events.order.OrderBookCreatedEvent;
-import com.icoin.trading.tradeengine.domain.events.order.RefreshedHighestBuyPriceEvent;
-import com.icoin.trading.tradeengine.domain.events.order.RefreshedLowestSellPriceEvent;
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
+import com.icoin.trading.tradeengine.application.command.order.BuyOrderExecutor;
+import com.icoin.trading.tradeengine.application.command.order.OrderExecutorHelper;
 import com.icoin.trading.tradeengine.domain.model.commission.Commission;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.domain.model.order.OrderType;
-import com.icoin.trading.tradeengine.domain.model.order.TradeType;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.joda.money.BigMoney;
@@ -67,7 +69,8 @@ public class BuyOrderExecutorIT {
     private BigMoney lowestSellPrice = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.03));
     private BigMoney highestBuyPrice = BigMoney.of(CurrencyUnit.AUD, BigDecimal.valueOf(100.01));
     private LocalDate placeDate = LocalDate.now();
-    private PortfolioId portfolioId = new PortfolioId();
+    private PortfolioId sellPortfolioId = new PortfolioId();
+    private PortfolioId buyPortfolioId = new PortfolioId();
     private TransactionId transactionId = new TransactionId();
     private Order buyOrder;
 
@@ -92,7 +95,7 @@ public class BuyOrderExecutorIT {
         buyOrder.setOrderBookId(orderBookId);
         buyOrder.setTransactionId(transactionId);
         buyOrder.setPrimaryKey(orderId.toString());
-        buyOrder.setPortfolioId(portfolioId);
+        buyOrder.setPortfolioId(buyPortfolioId);
         buyOrder.setPlaceDate(placeDate.toDate());
 
         helper.setOrderRepository(orderRepository);
@@ -109,7 +112,7 @@ public class BuyOrderExecutorIT {
         ExecuteBuyOrderCommand command =
                 new ExecuteBuyOrderCommand(
                         orderId,
-                        portfolioId,
+                        buyPortfolioId,
                         orderBookId,
                         transactionId,
                         tradeAmount,
@@ -140,7 +143,7 @@ public class BuyOrderExecutorIT {
         ExecuteBuyOrderCommand command =
                 new ExecuteBuyOrderCommand(
                         orderId,
-                        portfolioId,
+                        buyPortfolioId,
                         orderBookId,
                         transactionId,
                         tradeAmount,
@@ -181,7 +184,7 @@ public class BuyOrderExecutorIT {
         ExecuteBuyOrderCommand command =
                 new ExecuteBuyOrderCommand(
                         orderId,
-                        portfolioId,
+                        buyPortfolioId,
                         orderBookId,
                         transactionId,
                         tradeAmount,
@@ -280,7 +283,7 @@ public class BuyOrderExecutorIT {
         ExecuteBuyOrderCommand command =
                 new ExecuteBuyOrderCommand(
                         orderId,
-                        portfolioId,
+                        buyPortfolioId,
                         orderBookId,
                         transactionId,
                         tradeAmount,
@@ -315,6 +318,8 @@ public class BuyOrderExecutorIT {
                                 sellCommission1.getBigMoneyCommission(),
                                 buyOrder.getTransactionId(),
                                 sellOrder1.getTransactionId(),
+                                buyPortfolioId,
+                                sellPortfolioId,
                                 placeDate.toDate(),
                                 TradeType.BUY),
                         new TradeExecutedEvent(orderBookId,
@@ -328,6 +333,8 @@ public class BuyOrderExecutorIT {
                                 sellCommission2.getBigMoneyCommission(),
                                 buyOrder.getTransactionId(),
                                 sellOrder2.getTransactionId(),
+                                buyPortfolioId,
+                                sellPortfolioId,
                                 placeDate.toDate(),
                                 TradeType.BUY),
                         new RefreshedLowestSellPriceEvent(
@@ -420,7 +427,7 @@ public class BuyOrderExecutorIT {
         ExecuteBuyOrderCommand command =
                 new ExecuteBuyOrderCommand(
                         orderId,
-                        portfolioId,
+                        buyPortfolioId,
                         orderBookId,
                         transactionId,
                         tradeAmount,
@@ -455,6 +462,8 @@ public class BuyOrderExecutorIT {
                                 sellCommission.getBigMoneyCommission(),
                                 buyOrder.getTransactionId(),
                                 sellOrder1.getTransactionId(),
+                                buyPortfolioId,
+                                sellPortfolioId,
                                 placeDate.toDate(),
                                 TradeType.BUY),
                         new RefreshedLowestSellPriceEvent(
@@ -526,7 +535,7 @@ public class BuyOrderExecutorIT {
         ExecuteBuyOrderCommand command =
                 new ExecuteBuyOrderCommand(
                         orderId,
-                        portfolioId,
+                        buyPortfolioId,
                         orderBookId,
                         transactionId,
                         tradeAmount,
@@ -561,6 +570,8 @@ public class BuyOrderExecutorIT {
                                 sellCommission.getBigMoneyCommission(),
                                 buyOrder.getTransactionId(),
                                 sellOrder1.getTransactionId(),
+                                buyPortfolioId,
+                                sellPortfolioId,
                                 placeDate.toDate(),
                                 TradeType.BUY),
                         new RefreshedLowestSellPriceEvent(
@@ -607,15 +618,16 @@ public class BuyOrderExecutorIT {
                 RoundingMode.HALF_EVEN).toBigMoney();
     }
 
-    private Order createSellOrder(BigMoney price, BigMoney itemRemaining) {
-        Order sellOrder = new Order(OrderType.SELL);
-        sellOrder.setItemPrice(price);
-        sellOrder.setItemRemaining(itemRemaining);
-        sellOrder.setTransactionId(new TransactionId());
-        sellOrder.setPrimaryKey(new OrderId().toString());
-
-        return sellOrder;
-    }
+//    private Order createSellOrder(BigMoney price, BigMoney itemRemaining) {
+//        Order sellOrder = new Order(OrderType.SELL);
+//        sellOrder.setItemPrice(price);
+//        sellOrder.setItemRemaining(itemRemaining);
+//        sellOrder.setTransactionId(new TransactionId());
+//        sellOrder.setPrimaryKey(new OrderId().toString());
+//        sellOrder.setPortfolioId(sellPortfolioId);
+//
+//        return sellOrder;
+//    }
 
     private Order createSellOrder(BigMoney price, BigMoney itemRemaining, BigMoney commission) {
         Order sellOrder = new Order(OrderType.SELL);
@@ -624,6 +636,7 @@ public class BuyOrderExecutorIT {
         sellOrder.setLeftCommission(commission);
         sellOrder.setTransactionId(new TransactionId());
         sellOrder.setPrimaryKey(new OrderId().toString());
+        sellOrder.setPortfolioId(sellPortfolioId);
 
         return sellOrder;
     }

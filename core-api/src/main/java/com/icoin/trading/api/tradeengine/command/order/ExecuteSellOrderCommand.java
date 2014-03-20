@@ -17,10 +17,10 @@
 package com.icoin.trading.api.tradeengine.command.order;
 
 
-import com.icoin.trading.api.tradeengine.events.order.OrderBookId;
-import com.icoin.trading.api.tradeengine.events.order.OrderId;
-import com.icoin.trading.api.tradeengine.events.portfolio.PortfolioId;
-import com.icoin.trading.api.tradeengine.events.transaction.TransactionId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;

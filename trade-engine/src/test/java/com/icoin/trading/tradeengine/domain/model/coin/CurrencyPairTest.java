@@ -1,5 +1,6 @@
 package com.icoin.trading.tradeengine.domain.model.coin;
 
+import com.icoin.trading.api.coin.domain.CurrencyPair;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

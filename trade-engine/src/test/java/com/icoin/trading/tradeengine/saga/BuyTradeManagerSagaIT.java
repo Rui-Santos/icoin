@@ -9,24 +9,24 @@ package com.icoin.trading.tradeengine.saga;
  */
 
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationRejectedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedEvent;
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionCancelledEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionConfirmedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionPartiallyExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashReservationRejectedEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashReservedEvent;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionCancelledEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionConfirmedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionPartiallyExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionStartedEvent;
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.commission.FixedRateCommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderId;
-import com.icoin.trading.tradeengine.domain.model.order.TradeType;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
+import com.icoin.trading.api.tradeengine.domain.TradeType;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.tradeengine.saga.matchers.AddItemToPortfolioCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.CancelMoneyReservationFromPortfolioCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.ConfirmMoneyReservationFromPortfolionCommandMatcher;
@@ -64,7 +64,8 @@ public class BuyTradeManagerSagaIT {
     private TransactionId transactionIdentifier = new TransactionId();
     private CoinId coinId = new CoinId();
     private OrderBookId orderBookIdentifier = new OrderBookId();
-    private PortfolioId portfolioIdentifier = new PortfolioId();
+    private PortfolioId buyPortfolioId = new PortfolioId();
+    private PortfolioId sellPortfolioId = new PortfolioId();
 
     private AnnotatedSagaTestFixture fixture;
     private CommissionPolicyFactory commissionPolicyFactory = mock(CommissionPolicyFactory.class);
@@ -86,7 +87,7 @@ public class BuyTradeManagerSagaIT {
                 new BuyTransactionStartedEvent(transactionIdentifier,
                         coinId,
                         orderBookIdentifier,
-                        portfolioIdentifier,
+                        buyPortfolioId,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
@@ -95,7 +96,7 @@ public class BuyTradeManagerSagaIT {
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(new ReserveMoneyFromPortfolioCommandMatcher(
-                                portfolioIdentifier,
+                                buyPortfolioId,
                                 transactionIdentifier,
                                 TOTAL_MONEY,
                                 TOTAL_COMMISSION)));
@@ -108,14 +109,14 @@ public class BuyTradeManagerSagaIT {
                 new BuyTransactionStartedEvent(transactionIdentifier,
                         coinId,
                         orderBookIdentifier,
-                        portfolioIdentifier,
+                        buyPortfolioId,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
                         TOTAL_COMMISSION,
                         time))
-                .whenAggregate(portfolioIdentifier).publishes(
-                new CashReservedEvent(portfolioIdentifier,
+                .whenAggregate(buyPortfolioId).publishes(
+                new CashReservedEvent(buyPortfolioId,
                         transactionIdentifier,
                         TOTAL_MONEY,
                         TOTAL_COMMISSION,
@@ -133,15 +134,15 @@ public class BuyTradeManagerSagaIT {
                 new BuyTransactionStartedEvent(transactionIdentifier,
                         coinId,
                         orderBookIdentifier,
-                        portfolioIdentifier,
+                        buyPortfolioId,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
                         TOTAL_COMMISSION,
                         time))
-                .whenAggregate(portfolioIdentifier).publishes(
+                .whenAggregate(buyPortfolioId).publishes(
                 new CashReservationRejectedEvent(
-                        portfolioIdentifier,
+                        buyPortfolioId,
                         transactionIdentifier,
                         TOTAL_MONEY,
                         TOTAL_COMMISSION,
@@ -156,15 +157,15 @@ public class BuyTradeManagerSagaIT {
                 new BuyTransactionStartedEvent(transactionIdentifier,
                         coinId,
                         orderBookIdentifier,
-                        portfolioIdentifier,
+                        buyPortfolioId,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
                         TOTAL_COMMISSION,
                         time))
-                .andThenAggregate(portfolioIdentifier).published(
+                .andThenAggregate(buyPortfolioId).published(
                 new CashReservedEvent(
-                        portfolioIdentifier,
+                        buyPortfolioId,
                         transactionIdentifier,
                         TOTAL_MONEY,
                         TOTAL_COMMISSION,
@@ -172,7 +173,7 @@ public class BuyTradeManagerSagaIT {
                 .whenAggregate(transactionIdentifier).publishes(new BuyTransactionConfirmedEvent(transactionIdentifier, new Date()))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(
-                        new CreateBuyOrderCommandMatcher(portfolioIdentifier,
+                        new CreateBuyOrderCommandMatcher(buyPortfolioId,
                                 orderBookIdentifier,
                                 TOTAL_ITEMS,
                                 PRICE_PER_ITEM)));
@@ -184,7 +185,7 @@ public class BuyTradeManagerSagaIT {
         fixture.givenAggregate(transactionIdentifier).published(new BuyTransactionStartedEvent(transactionIdentifier,
                 coinId,
                 orderBookIdentifier,
-                portfolioIdentifier,
+                buyPortfolioId,
                 TOTAL_ITEMS,
                 PRICE_PER_ITEM,
                 TOTAL_MONEY,
@@ -197,7 +198,7 @@ public class BuyTradeManagerSagaIT {
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(new CancelMoneyReservationFromPortfolioCommandMatcher(
-                                portfolioIdentifier,
+                                buyPortfolioId,
                                 TOTAL_MONEY)));
     }
 
@@ -217,16 +218,16 @@ public class BuyTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                buyPortfolioId,
                                 TOTAL_ITEMS,
                                 PRICE_PER_ITEM,
                                 TOTAL_MONEY,
                                 TOTAL_COMMISSION,
                                 time))
-                .andThenAggregate(portfolioIdentifier)
+                .andThenAggregate(buyPortfolioId)
                 .published(
                         new CashReservedEvent(
-                                portfolioIdentifier,
+                                buyPortfolioId,
                                 transactionIdentifier,
                                 TOTAL_MONEY,
                                 TOTAL_COMMISSION,
@@ -247,6 +248,8 @@ public class BuyTradeManagerSagaIT {
                                 BigMoney.of(CurrencyUnit.of("BTC"), 10),
                                 transactionIdentifier,
                                 sellTransactionIdentifier,
+                                buyPortfolioId,
+                                sellPortfolioId,
                                 tradeTime,
                                 TradeType.SELL))
                 .expectActiveSagas(1)
@@ -275,16 +278,16 @@ public class BuyTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                buyPortfolioId,
                                 TOTAL_ITEMS,
                                 PRICE_PER_ITEM,
                                 TOTAL_MONEY,
                                 TOTAL_COMMISSION,
                                 time))
-                .andThenAggregate(portfolioIdentifier)
+                .andThenAggregate(buyPortfolioId)
                 .published(
                         new CashReservedEvent(
-                                portfolioIdentifier, transactionIdentifier,
+                                buyPortfolioId, transactionIdentifier,
                                 TOTAL_MONEY,
                                 TOTAL_COMMISSION,
                                 time))
@@ -304,6 +307,8 @@ public class BuyTradeManagerSagaIT {
                                 BigMoney.of(CurrencyUnit.of("BTC"), 10),
                                 transactionIdentifier,
                                 sellTransactionIdentifier,
+                                buyPortfolioId,
+                                sellPortfolioId,
                                 tradeTime,
                                 TradeType.SELL))
                 .whenAggregate(transactionIdentifier)
@@ -319,10 +324,10 @@ public class BuyTradeManagerSagaIT {
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
-                                new ConfirmMoneyReservationFromPortfolionCommandMatcher(portfolioIdentifier,
+                                new ConfirmMoneyReservationFromPortfolionCommandMatcher(buyPortfolioId,
                                         TOTAL_ITEMS.convertedTo(PRICE_PER_ITEM.getCurrencyUnit(), price),
                                         TOTAL_COMMISSION),
-                                new AddItemToPortfolioCommandMatcher(portfolioIdentifier,
+                                new AddItemToPortfolioCommandMatcher(buyPortfolioId,
                                         coinId,
                                         TOTAL_ITEMS)));
     }
@@ -340,16 +345,16 @@ public class BuyTradeManagerSagaIT {
                         transactionIdentifier,
                         coinId,
                         orderBookIdentifier,
-                        portfolioIdentifier,
+                        buyPortfolioId,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
                         TOTAL_COMMISSION,
                         time))
-                .andThenAggregate(portfolioIdentifier)
+                .andThenAggregate(buyPortfolioId)
                 .published(
                         new CashReservedEvent(
-                                portfolioIdentifier,
+                                buyPortfolioId,
                                 transactionIdentifier,
                                 TOTAL_MONEY,
                                 TOTAL_COMMISSION,
@@ -371,6 +376,8 @@ public class BuyTradeManagerSagaIT {
                                 TOTAL_COMMISSION,
                                 transactionIdentifier,
                                 sellTransactionIdentifier,
+                                buyPortfolioId,
+                                sellPortfolioId,
                                 tradeTime,
                                 TradeType.SELL))
                 .whenAggregate(transactionIdentifier)
@@ -388,11 +395,11 @@ public class BuyTradeManagerSagaIT {
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
                                 new ConfirmMoneyReservationFromPortfolionCommandMatcher(
-                                        portfolioIdentifier,
+                                        buyPortfolioId,
                                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99)),
                                         TOTAL_COMMISSION),
                                 new AddItemToPortfolioCommandMatcher(
-                                        portfolioIdentifier,
+                                        buyPortfolioId,
                                         coinId,
                                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)))));
     }
@@ -409,15 +416,15 @@ public class BuyTradeManagerSagaIT {
                 new BuyTransactionStartedEvent(transactionIdentifier,
                         coinId,
                         orderBookIdentifier,
-                        portfolioIdentifier,
+                        buyPortfolioId,
                         TOTAL_ITEMS,
                         PRICE_PER_ITEM,
                         TOTAL_MONEY,
                         TOTAL_COMMISSION,
                         time))
-                .andThenAggregate(portfolioIdentifier).published(
+                .andThenAggregate(buyPortfolioId).published(
                 new CashReservedEvent(
-                        portfolioIdentifier,
+                        buyPortfolioId,
                         transactionIdentifier,
                         TOTAL_MONEY,
                         TOTAL_COMMISSION,
@@ -437,6 +444,8 @@ public class BuyTradeManagerSagaIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(5)),
                         transactionIdentifier,
                         sellTransactionIdentifier,
+                        buyPortfolioId,
+                        sellPortfolioId,
                         tradeTime,
                         TradeType.SELL))
                 .whenAggregate(transactionIdentifier)
@@ -454,11 +463,11 @@ public class BuyTradeManagerSagaIT {
                 .expectDispatchedCommandsMatching(
                         exactSequenceOf(
                                 new ConfirmMoneyReservationFromPortfolionCommandMatcher(
-                                        portfolioIdentifier,
+                                        buyPortfolioId,
                                         BigMoney.of(Constants.DEFAULT_CURRENCY_UNIT, BigDecimal.valueOf(50 * 99)),
                                         TOTAL_COMMISSION.dividedBy(2, RoundingMode.HALF_EVEN)),
                                 new AddItemToPortfolioCommandMatcher(
-                                        portfolioIdentifier,
+                                        buyPortfolioId,
                                         coinId,
                                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)))));
     }

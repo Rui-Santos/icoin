@@ -1,5 +1,7 @@
 package com.icoin.trading.users.domain.model.user;
 
+import com.icoin.trading.api.users.domain.IdentityCard;
+import com.icoin.trading.api.users.domain.IdentityCardHelper;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

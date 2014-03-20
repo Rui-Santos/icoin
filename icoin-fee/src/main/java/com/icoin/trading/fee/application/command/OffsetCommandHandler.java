@@ -1,6 +1,8 @@
 package com.icoin.trading.fee.application.command;
 
+import com.icoin.trading.api.fee.command.offset.CancelOffsetCommand;
 import com.icoin.trading.api.fee.command.offset.CreateOffsetCommand;
+import com.icoin.trading.api.fee.command.offset.OffsetFeesCommand;
 import com.icoin.trading.fee.domain.offset.Offset;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
@@ -20,7 +22,7 @@ public class OffsetCommandHandler {
     private Repository<Offset> offsetRepository;
 
     @CommandHandler
-    public void handleCommission(CreateOffsetCommand command) {
+    public void handleCreateOffset(CreateOffsetCommand command) {
         offsetRepository.add(
                 new Offset(command.getOffsetId(),
                         command.getOffsetType(),
@@ -29,9 +31,22 @@ public class OffsetCommandHandler {
                         command.getReceivedPaidList(),
                         command.getOffsetAmount(),
                         command.getStartedDate()));
-
     }
 
+    @CommandHandler
+    public void handleOffsetFees(OffsetFeesCommand command) {
+        Offset offset = offsetRepository.load(command.getOffsetId());
+
+        offset.offset(command.getOffsetedDate());
+    }
+
+
+    @CommandHandler
+    public void handleCancelOffset(CancelOffsetCommand command) {
+        Offset offset = offsetRepository.load(command.getOffsetId());
+
+        offset.cancel(command.getCancelledReason(), command.getCancelledDate());
+    }
 
     @Resource(name = "offsetRepository")
     public void setOffsetRepository(Repository<Offset> offsetRepository) {

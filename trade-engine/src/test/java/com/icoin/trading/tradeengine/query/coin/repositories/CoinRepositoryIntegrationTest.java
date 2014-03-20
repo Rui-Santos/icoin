@@ -16,20 +16,14 @@
 
 package com.icoin.trading.tradeengine.query.coin.repositories;
 
-import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
-import org.joda.money.BigMoney;
-import org.joda.money.CurrencyUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.math.BigDecimal;
 
 /**
  * @author Jettro Coenradie

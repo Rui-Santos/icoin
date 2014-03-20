@@ -2,7 +2,7 @@ package com.icoin.trading.webui.user.facade;
 
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.users.domain.model.function.UserPasswordReset;
-import com.icoin.trading.users.domain.model.user.Identifier;
+import com.icoin.trading.api.users.domain.Identifier;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 import com.icoin.trading.users.query.UserEntry;
 

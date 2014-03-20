@@ -8,14 +8,16 @@ package com.icoin.trading.tradeengine.application.command.coin;
  * To change this template use File | Settings | File Templates.
  */
 
+import com.icoin.trading.api.tradeengine.command.coin.AddOrderBookToCoinCommand;
+import com.icoin.trading.api.tradeengine.command.coin.CreateCoinCommand;
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
-import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
+import com.icoin.trading.api.tradeengine.events.coin.CoinCreatedEvent;
+import com.icoin.trading.api.tradeengine.events.coin.OrderBookAddedToCoinEvent;
 import com.icoin.trading.tradeengine.domain.model.coin.Coin;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.joda.money.BigMoney;

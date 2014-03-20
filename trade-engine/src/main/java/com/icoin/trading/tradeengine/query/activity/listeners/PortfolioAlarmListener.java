@@ -2,11 +2,11 @@ package com.icoin.trading.tradeengine.query.activity.listeners;
 
 import com.homhon.base.domain.Specification;
 import com.icoin.money.specification.GreaterOrEqualSpecification;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashDepositedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashWithdrawnEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemAddedToPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemWithdrawnEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashDepositedEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashWithdrawnEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemAddedToPortfolioEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemWithdrawnEvent;
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.query.activity.PortfolioAlarmActivity;
 import com.icoin.trading.tradeengine.query.activity.PortfolioAlarmType;
 import com.icoin.trading.tradeengine.query.activity.repositories.PortfolioAlarmQueryRepository;

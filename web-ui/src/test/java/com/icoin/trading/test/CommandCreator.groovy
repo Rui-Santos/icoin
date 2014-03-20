@@ -16,11 +16,11 @@
 
 package com.icoin.trading.test
 
-import com.icoin.trading.tradeengine.application.command.transaction.command.StartBuyTransactionCommand
-import com.icoin.trading.tradeengine.application.command.transaction.command.StartSellTransactionCommand
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId
+import com.icoin.trading.api.tradeengine.command.transaction.StartBuyTransactionCommand
+import com.icoin.trading.api.tradeengine.command.transaction.StartSellTransactionCommand
+import com.icoin.trading.api.tradeengine.domain.OrderBookId
+import com.icoin.trading.api.tradeengine.domain.PortfolioId
+import com.icoin.trading.api.tradeengine.domain.TransactionId
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry
 import org.joda.money.BigMoney
 import org.joda.money.CurrencyUnit

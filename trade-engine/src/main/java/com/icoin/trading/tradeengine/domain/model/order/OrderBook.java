@@ -16,17 +16,22 @@
 
 package com.icoin.trading.tradeengine.domain.model.order;
 
+import com.homhon.base.domain.Identity;
+import com.icoin.axonsupport.domain.AxonAnnotatedAggregateRoot;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
+import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.order.OrderBookCreatedEvent;
-import com.icoin.trading.tradeengine.domain.events.order.RefreshedHighestBuyPriceEvent;
-import com.icoin.trading.tradeengine.domain.events.order.RefreshedLowestSellPriceEvent;
-import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.api.tradeengine.events.order.BuyOrderPlacedEvent;
+import com.icoin.trading.api.tradeengine.events.order.OrderBookCreatedEvent;
+import com.icoin.trading.api.tradeengine.events.order.RefreshedHighestBuyPriceEvent;
+import com.icoin.trading.api.tradeengine.events.order.RefreshedLowestSellPriceEvent;
+import com.icoin.trading.api.tradeengine.events.order.SellOrderPlacedEvent;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
@@ -38,10 +43,10 @@ import java.util.Date;
 /**
  * @author Allard Buijze
  */
-public class OrderBook extends AbstractAnnotatedAggregateRoot {
-    private static final long serialVersionUID = 6778782949492587631L;
+public class OrderBook extends AxonAnnotatedAggregateRoot<OrderBook, OrderBookId> {
+    private static final long serialVersionUID = 835246298595961746L;
 
-
+    @Identity
     @AggregateIdentifier
     private OrderBookId orderBookId;
     private CurrencyPair currencyPair;
@@ -149,6 +154,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                                BigMoney sellCommission,
                                TransactionId buyTransactionId,
                                TransactionId sellTransactionId,
+                               PortfolioId buyPortfolioId,
+                               PortfolioId sellPortfolioId,
                                Date tradedDate) {
         apply(new TradeExecutedEvent(orderBookId,
                 new CoinId(currencyPair.getBaseCurrency()),
@@ -161,6 +168,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 sellCommission,
                 buyTransactionId,
                 sellTransactionId,
+                buyPortfolioId,
+                sellPortfolioId,
                 tradedDate,
                 TradeType.SELL));
     }
@@ -174,6 +183,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                               BigMoney sellCommission,
                               TransactionId buyTransactionId,
                               TransactionId sellTransactionId,
+                              PortfolioId buyPortfolioId,
+                              PortfolioId sellPortfolioId,
                               Date tradedDate) {
         apply(new TradeExecutedEvent(
                 orderBookId,
@@ -187,6 +198,8 @@ public class OrderBook extends AbstractAnnotatedAggregateRoot {
                 sellCommission,
                 buyTransactionId,
                 sellTransactionId,
+                buyPortfolioId,
+                sellPortfolioId,
                 tradedDate,
                 TradeType.BUY));
     }

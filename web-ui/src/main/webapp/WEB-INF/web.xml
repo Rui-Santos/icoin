@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          id="WebApp_ID" version="2.5">
 
-    <display-name>Axon framework Trader sample</display-name>
+    <display-name>iCoin eXchange</display-name>
 
     <context-param>
         <param-name>spring.profiles.default</param-name>

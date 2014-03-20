@@ -1,7 +1,7 @@
 package com.icoin.trading.api.tradeengine.events.order;
 
 import com.homhon.base.domain.event.EventSupport;
-import com.icoin.trading.api.tradeengine.events.order.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import org.joda.money.BigMoney;
 
 /**

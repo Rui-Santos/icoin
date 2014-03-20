@@ -143,4 +143,16 @@ public class Offset extends AxonAnnotatedAggregateRoot<Offset, String> {
             this.offsetStatus = status;
         }
     }
+
+    public boolean isOffseted() {
+        return OffsetStatus.OFFSETED == offsetStatus;
+    }
+
+    public boolean isPending() {
+        return OffsetStatus.NOT_OFFSETED == offsetStatus;
+    }
+
+    public boolean isCancelled() {
+        return OffsetStatus.OFFSETED == offsetStatus;
+    }
 }

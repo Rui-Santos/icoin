@@ -17,7 +17,7 @@
 package com.icoin.trading.api.tradeengine.command.order;
 
 import com.homhon.base.command.CommandSupport;
-import com.icoin.trading.api.tradeengine.events.order.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 /**

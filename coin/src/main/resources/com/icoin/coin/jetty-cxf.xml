@@ -1,0 +1,88 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:beans="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sec="http://cxf.apache.org/configuration/security"
+       xmlns:http="http://cxf.apache.org/transports/http/configuration"
+       xmlns:httpj="http://cxf.apache.org/transports/http-jetty/configuration"
+       xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+       xsi:schemaLocation="http://cxf.apache.org/configuration/security
+              http://cxf.apache.org/schemas/configuration/security.xsd
+            http://cxf.apache.org/transports/http/configuration
+            http://cxf.apache.org/schemas/configuration/http-conf.xsd
+            http://cxf.apache.org/transports/http-jetty/configuration
+            http://cxf.apache.org/schemas/configuration/http-jetty.xsd
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    <!--<httpj:engine-factory bus="cxf">-->
+        <!--<httpj:identifiedTLSServerParameters id="secure">-->
+            <!--<httpj:tlsServerParameters>-->
+                <!--<sec:keyManagers keyPassword="skpass">-->
+                    <!--<sec:keyStore file="/var/products/icoin/coin/src/main/resources/com/icoin/coin/privatekeys/serviceKeystore.jks" password="sspass" type="JKS"/>-->
+                <!--</sec:keyManagers>-->
+                <!--<sec:trustManagers>-->
+                    <!--<sec:keyStore file="/var/products/icoin/coin/src/main/resources/com/icoin/coin/privatekeys/serviceKeystore.jks" password="sspass" type="JKS"/>-->
+                <!--</sec:trustManagers>-->
+                <!--<sec:cipherSuitesFilter>-->
+                    <!--<sec:include>.*_EXPORT_.*</sec:include>-->
+                    <!--<sec:include>.*_EXPORT1024_.*</sec:include>-->
+                    <!--<sec:include>.*_WITH_DES_.*</sec:include>-->
+                    <!--<sec:include>.*_WITH_AES_.*</sec:include>-->
+                    <!--<sec:include>.*_WITH_NULL_.*</sec:include>-->
+                    <!--<sec:exclude>.*_DH_anon_.*</sec:exclude>-->
+                <!--</sec:cipherSuitesFilter>-->
+                <!--<sec:clientAuthentication want="true" required="true"/>-->
+            <!--</httpj:tlsServerParameters>-->
+        <!--</httpj:identifiedTLSServerParameters>-->
+
+        <!--<httpj:engine port="9008">-->
+            <!--<httpj:tlsServerParametersRef id="secure" />-->
+            <!--<httpj:threadingParameters minThreads="5"-->
+                                       <!--maxThreads="15" />-->
+            <!--<httpj:connector>-->
+                <!--<beans:bean class="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">-->
+                <!--&lt;!&ndash;<beans:bean class="org.eclipse.jetty.server.nio.SelectChannelConnector">&ndash;&gt;-->
+                    <!--<beans:constructor-arg>-->
+                        <!--<beans:bean class="org.eclipse.jetty.util.ssl.SslContextFactory">-->
+                            <!--<beans:constructor-arg value="/var/products/icoin/coin/src/main/resources/com/icoin/coin/privatekeys/serviceKeystore.jks"/>-->
+                        <!--</beans:bean>-->
+                    <!--</beans:constructor-arg>-->
+                    <!--<beans:property name = "port" value="9008" />-->
+                    <!--<beans:property name = "password" value="sspass" />-->
+                    <!--<beans:property name = "trustPassword" value="skpass" />-->
+
+                <!--</beans:bean>-->
+            <!--</httpj:connector>-->
+            <!--<httpj:handlers>-->
+                <!--<beans:bean class="org.eclipse.jetty.server.handler.DefaultHandler"/>-->
+            <!--</httpj:handlers>-->
+            <!--<httpj:sessionSupport>false</httpj:sessionSupport>-->
+        <!--</httpj:engine>-->
+    <!--</httpj:engine-factory>-->
+
+
+    <httpj:engine-factory bus="cxf">
+        <httpj:engine port="9008">
+            <httpj:tlsServerParameters>
+                <sec:keyManagers keyPassword="skpass">
+                    <sec:keyStore file="/var/products/icoin/coin/src/main/resources/com/icoin/coin/privatekeys/serviceKeystore.jks" password="sspass" type="JKS"/>
+                </sec:keyManagers>
+                <sec:trustManagers>
+                    <sec:keyStore file="/var/products/icoin/coin/src/main/resources/com/icoin/coin/privatekeys/serviceKeystore.jks" password="sspass" type="JKS"/>
+                </sec:trustManagers>
+                <sec:cipherSuitesFilter>
+                    <!-- these filters ensure that a ciphersuite with
+          export-suitable or null encryption is used,
+          but exclude anonymous Diffie-Hellman key change as
+          this is vulnerable to man-in-the-middle attacks -->
+                    <sec:include>.*_EXPORT_.*</sec:include>
+                    <sec:include>.*_EXPORT1024_.*</sec:include>
+                    <sec:include>.*_WITH_DES_.*</sec:include>
+                    <sec:include>.*_WITH_AES_.*</sec:include>
+                    <sec:include>.*_WITH_NULL_.*</sec:include>
+                    <sec:exclude>.*_DH_anon_.*</sec:exclude>
+                </sec:cipherSuitesFilter>
+                <sec:clientAuthentication want="true" required="true"/>
+            </httpj:tlsServerParameters>
+        </httpj:engine>
+    </httpj:engine-factory>
+</beans>

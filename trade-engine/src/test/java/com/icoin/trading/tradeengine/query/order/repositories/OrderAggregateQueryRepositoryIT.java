@@ -2,7 +2,7 @@ package com.icoin.trading.tradeengine.query.order.repositories;
 
 import com.google.common.collect.Lists;
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderStatus;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;
 import com.icoin.trading.tradeengine.query.order.OrderType;
@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 

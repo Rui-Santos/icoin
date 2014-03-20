@@ -18,8 +18,8 @@ package com.icoin.trading.api.tradeengine.events.portfolio.cash;
 
 
 import com.homhon.base.domain.event.EventSupport;
-import com.icoin.trading.api.tradeengine.events.portfolio.PortfolioId;
-import com.icoin.trading.api.tradeengine.events.transaction.TransactionId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -33,7 +33,7 @@ public class CashReservedClearedEvent extends EventSupport<CashReservedClearedEv
     private BigMoney amountToClear;
     private Date time;
 
-    public CashReservedClearedEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier, BigMoney amountToClear,Date time) {
+    public CashReservedClearedEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier, BigMoney amountToClear, Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountToClear = amountToClear;

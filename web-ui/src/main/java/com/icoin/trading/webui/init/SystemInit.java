@@ -17,26 +17,25 @@
 package com.icoin.trading.webui.init;
 
 import com.google.common.collect.ImmutableList;
-import com.homhon.core.exception.IZookeyException;
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.application.command.admin.EnsureCqrsIndexesCommand;
-import com.icoin.trading.tradeengine.application.command.admin.ReinitializeOrderBookTradingExecutorsCommand;
-import com.icoin.trading.tradeengine.application.command.admin.ReinstallDataBaseCommand;
-import com.icoin.trading.tradeengine.application.command.coin.CreateCoinCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.AddAmountToPortfolioCommand;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.api.tradeengine.command.admin.EnsureCqrsIndexesCommand;
+import com.icoin.trading.api.tradeengine.command.admin.ReinitializeOrderBookTradingExecutorsCommand;
+import com.icoin.trading.api.tradeengine.command.admin.ReinstallDataBaseCommand;
+import com.icoin.trading.api.tradeengine.command.coin.CreateCoinCommand;
+import com.icoin.trading.api.tradeengine.command.portfolio.cash.DepositCashCommand;
+import com.icoin.trading.api.tradeengine.command.portfolio.coin.AddAmountToPortfolioCommand;
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.users.application.command.CreateUserCommand;
-import com.icoin.trading.users.domain.model.user.Identifier;
-import com.icoin.trading.users.domain.model.user.UserId;
+import com.icoin.trading.api.users.command.CreateUserCommand;
+import com.icoin.trading.api.users.domain.Identifier;
+import com.icoin.trading.api.users.domain.UserId;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
@@ -48,7 +47,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>Initializes the repository with a number of users, coins and order books</p>

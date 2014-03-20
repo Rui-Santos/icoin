@@ -18,8 +18,8 @@ package com.icoin.trading.api.tradeengine.command.portfolio.coin;
 
 
 import com.homhon.base.command.CommandSupport;
-import com.icoin.trading.api.coin.events.CoinId;
-import com.icoin.trading.api.tradeengine.events.portfolio.PortfolioId;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import org.joda.money.BigMoney;
 
 import javax.validation.constraints.NotNull;

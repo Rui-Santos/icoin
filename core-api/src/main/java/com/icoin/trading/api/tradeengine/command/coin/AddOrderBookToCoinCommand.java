@@ -17,9 +17,9 @@
 package com.icoin.trading.api.tradeengine.command.coin;
 
 import com.homhon.base.command.CommandSupport;
-import com.icoin.trading.api.coin.events.CoinId;
-import com.icoin.trading.api.coin.events.CurrencyPair;
-import com.icoin.trading.api.tradeengine.events.order.OrderBookId;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 
 /**
  * <p>Create the relation between a coin and an OrderBook</p>

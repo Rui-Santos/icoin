@@ -1,6 +1,7 @@
 package com.icoin.trading.tradeengine.domain.model.order;
 
 import com.homhon.base.domain.repository.GenericCrudRepository;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;

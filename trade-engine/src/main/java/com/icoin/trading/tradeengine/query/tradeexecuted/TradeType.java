@@ -24,7 +24,7 @@ public enum TradeType implements ValueObject<TradeType> {
     }
 
 
-    public static TradeType convert(com.icoin.trading.tradeengine.domain.model.order.TradeType tradeType) {
+    public static TradeType convert(com.icoin.trading.api.tradeengine.domain.TradeType tradeType) {
         switch (tradeType) {
             case BUY:
                 return BUY;

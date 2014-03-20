@@ -18,6 +18,11 @@
         </dependency>
 
         <dependency>
+            <groupId>homhon-base</groupId>
+            <artifactId>basedomain</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-core</artifactId>
         </dependency>

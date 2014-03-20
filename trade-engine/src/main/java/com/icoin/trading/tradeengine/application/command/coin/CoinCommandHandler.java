@@ -16,6 +16,8 @@
 
 package com.icoin.trading.tradeengine.application.command.coin;
 
+import com.icoin.trading.api.tradeengine.command.coin.AddOrderBookToCoinCommand;
+import com.icoin.trading.api.tradeengine.command.coin.CreateCoinCommand;
 import com.icoin.trading.tradeengine.domain.model.coin.Coin;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;

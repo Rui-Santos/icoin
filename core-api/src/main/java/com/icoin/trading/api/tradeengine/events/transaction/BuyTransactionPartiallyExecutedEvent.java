@@ -17,8 +17,8 @@
 package com.icoin.trading.api.tradeengine.events.transaction;
 
 
-import com.icoin.trading.api.coin.events.CoinId;
-import com.icoin.trading.api.tradeengine.events.transaction.TransactionId;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;

@@ -8,8 +8,8 @@ package com.icoin.trading.api.users.command;
  * To change this template use File | Settings | File Templates.
  */
 
-import com.icoin.trading.api.users.event.Identifier;
-import com.icoin.trading.api.users.event.UserId;
+import com.icoin.trading.api.users.domain.Identifier;
+import com.icoin.trading.api.users.domain.UserId;
 
 import java.util.List;
 

@@ -16,19 +16,23 @@
 
 package com.icoin.trading.tradeengine.domain.model.transaction;
 
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionCancelledEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionConfirmedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionPartiallyExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.BuyTransactionStartedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCancelledEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionConfirmedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionPartiallyExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
+import com.homhon.base.domain.Identity;
+import com.icoin.axonsupport.domain.AxonAnnotatedAggregateRoot;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionCancelledEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionConfirmedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionPartiallyExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionStartedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionCancelledEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionConfirmedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionPartiallyExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionStartedEvent;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.tradeengine.domain.TransactionType;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
@@ -39,9 +43,10 @@ import java.util.Date;
 /**
  * @author Jettro Coenradie
  */
-public class Transaction extends AbstractAnnotatedAggregateRoot {
-    private static final long serialVersionUID = 1299083385130634014L;
+public class Transaction extends AxonAnnotatedAggregateRoot<Transaction, TransactionId> {
+    private static final long serialVersionUID = 6321449194110602618L;
 
+    @Identity
     @AggregateIdentifier
     private TransactionId transactionId;
     private BigMoney amountOfItem;

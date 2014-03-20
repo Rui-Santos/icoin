@@ -1,31 +1,26 @@
 package com.icoin.trading.tradeengine.query.tradeexecuted.repositories;
 
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.tradeengine.query.tradeexecuted.OpenHighLowCloseVolume;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeType;
-import com.mongodb.DBObject;
 import org.joda.money.BigMoney;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;

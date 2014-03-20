@@ -1,7 +1,7 @@
 package com.icoin.trading.tradeengine.application;
 
+import com.icoin.trading.api.tradeengine.domain.ChangedReason;
 import com.icoin.trading.tradeengine.domain.TradingSystemService;
-import com.icoin.trading.tradeengine.domain.model.admin.ChangedReason;
 import com.icoin.trading.tradeengine.domain.model.admin.TradingSystemStatus;
 import com.icoin.trading.tradeengine.domain.model.admin.TradingSystemStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;

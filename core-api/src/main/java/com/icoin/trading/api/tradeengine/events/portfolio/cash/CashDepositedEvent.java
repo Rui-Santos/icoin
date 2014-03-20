@@ -18,7 +18,7 @@ package com.icoin.trading.api.tradeengine.events.portfolio.cash;
 
 
 import com.homhon.base.domain.event.EventSupport;
-import com.icoin.trading.api.tradeengine.events.portfolio.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -31,7 +31,7 @@ public class CashDepositedEvent extends EventSupport<CashDepositedEvent> {
     private BigMoney moneyAdded;
     private Date time;
 
-    public CashDepositedEvent(PortfolioId portfolioId, BigMoney moneyAdded,Date time) {
+    public CashDepositedEvent(PortfolioId portfolioId, BigMoney moneyAdded, Date time) {
         this.portfolioId = portfolioId;
         this.moneyAdded = moneyAdded;
         this.time = time;

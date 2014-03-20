@@ -1,17 +1,17 @@
 package com.icoin.trading.tradeengine.query.tradeexecuted;
 
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.events.coin.CoinCreatedEvent;
-import com.icoin.trading.tradeengine.domain.events.coin.OrderBookAddedToCoinEvent;
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.order.TradeType;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.api.tradeengine.events.coin.CoinCreatedEvent;
+import com.icoin.trading.api.tradeengine.events.coin.OrderBookAddedToCoinEvent;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
+import com.icoin.trading.api.tradeengine.domain.TradeType;
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.tradeengine.domain.model.coin.CurrencyPair;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderId;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.CoinListener;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
@@ -66,11 +66,12 @@ public class TradeExecutedListenerIT {
     @Autowired
     private CoinQueryRepository coinRepository;
 
-    CoinId coinId = new CoinId("XPM");
-    OrderId orderId = new OrderId();
-    PortfolioId portfolioId = new PortfolioId();
-    TransactionId transactionId = new TransactionId();
-    OrderBookId orderBookId = new OrderBookId();
+    private CoinId coinId = new CoinId("XPM");
+    private OrderId orderId = new OrderId();
+    private PortfolioId sellPortfolioId = new PortfolioId();
+    private PortfolioId buyPortfolioId = new PortfolioId();
+    private TransactionId transactionId = new TransactionId();
+    private OrderBookId orderBookId = new OrderBookId();
 
     @Before
     public void setUp() throws Exception {
@@ -119,6 +120,8 @@ public class TradeExecutedListenerIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(300)),
                         buyTransactionId,
                         sellTransactionId,
+                        buyPortfolioId,
+                        sellPortfolioId,
                         tradeTime,
                         TradeType.BUY);
         tradeExecutedListener.handleTradeExecuted(event);
@@ -131,7 +134,11 @@ public class TradeExecutedListenerIT {
         assertThat(tradeExecutedEntry.getOrderBookIdentifier(), equalTo(orderBookId.toString()));
         assertThat(tradeExecutedEntry.getCoinId(), equalTo("XPM"));
         assertThat(tradeExecutedEntry.getTradeTime(), equalTo(tradeTime));
+        assertThat(tradeExecutedEntry.getBuyPortfolioId(), equalTo(buyPortfolioId.toString()));
+        assertThat(tradeExecutedEntry.getSellPortfolioId(), equalTo(sellPortfolioId.toString()));
         assertThat(tradeExecutedEntry.getTradeType(), equalTo(com.icoin.trading.tradeengine.query.tradeexecuted.TradeType.BUY));
+
+
         assertThat(tradeExecutedEntry
                 .getTradedAmount()
                 .isEqual(BigMoney.of(

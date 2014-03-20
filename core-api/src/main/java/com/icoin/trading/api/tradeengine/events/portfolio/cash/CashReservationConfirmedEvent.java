@@ -18,8 +18,8 @@ package com.icoin.trading.api.tradeengine.events.portfolio.cash;
 
 
 import com.homhon.base.domain.event.EventSupport;
-import com.icoin.trading.api.tradeengine.events.portfolio.PortfolioId;
-import com.icoin.trading.api.tradeengine.events.transaction.TransactionId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;

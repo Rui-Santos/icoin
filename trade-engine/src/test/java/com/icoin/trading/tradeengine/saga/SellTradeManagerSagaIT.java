@@ -16,26 +16,26 @@
 
 package com.icoin.trading.tradeengine.saga;
 
-import com.icoin.trading.tradeengine.application.command.portfolio.cash.DepositCashCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
-import com.icoin.trading.tradeengine.application.command.portfolio.coin.ReserveAmountCommand;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemReservedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.ItemToReserveNotAvailableInPortfolioEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.coin.NotEnoughItemAvailableToReserveInPortfolio;
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionCancelledEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionConfirmedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionPartiallyExecutedEvent;
-import com.icoin.trading.tradeengine.domain.events.transaction.SellTransactionStartedEvent;
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
+import com.icoin.trading.api.tradeengine.command.portfolio.cash.DepositCashCommand;
+import com.icoin.trading.api.tradeengine.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
+import com.icoin.trading.api.tradeengine.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
+import com.icoin.trading.api.tradeengine.command.portfolio.coin.ReserveAmountCommand;
+import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservedEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemToReserveNotAvailableInPortfolioEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.coin.NotEnoughItemAvailableToReserveInPortfolio;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionCancelledEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionConfirmedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionPartiallyExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionStartedEvent;
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderId;
-import com.icoin.trading.tradeengine.domain.model.order.TradeType;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
+import com.icoin.trading.api.tradeengine.domain.TradeType;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.tradeengine.saga.matchers.ConfirmTransactionCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.CreateSellOrderCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.ExecutedTransactionCommandMatcher;
@@ -60,7 +60,8 @@ public class SellTradeManagerSagaIT {
     private TransactionId transactionIdentifier = new TransactionId();
     private CoinId coinId = new CoinId();
     private OrderBookId orderBookIdentifier = new OrderBookId();
-    private PortfolioId portfolioIdentifier = new PortfolioId();
+    private PortfolioId buyPortfolioId = new PortfolioId();
+    private PortfolioId sellPortfolioId = new PortfolioId();
 
     private AnnotatedSagaTestFixture fixture;
 
@@ -80,7 +81,7 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
@@ -88,7 +89,7 @@ public class SellTradeManagerSagaIT {
                                 time))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
-                        new ReserveAmountCommand(portfolioIdentifier,
+                        new ReserveAmountCommand(sellPortfolioId,
                                 coinId,
                                 transactionIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
@@ -97,7 +98,7 @@ public class SellTradeManagerSagaIT {
                 )
                 /*.expectDispatchedCommandsMatching(exactSequenceOf(
                         new ReservedItemCommandMatcher(orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)))))*/;
     }
 
@@ -110,16 +111,16 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                                 time))
-                .whenAggregate(portfolioIdentifier)
+                .whenAggregate(sellPortfolioId)
                 .publishes(
                         new ItemReservedEvent(
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 coinId,
                                 transactionIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
@@ -138,16 +139,16 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                                 time))
-                .andThenAggregate(portfolioIdentifier)
+                .andThenAggregate(sellPortfolioId)
                 .published(
                         new ItemReservedEvent(
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 coinId,
                                 transactionIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
@@ -157,7 +158,7 @@ public class SellTradeManagerSagaIT {
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsMatching(exactSequenceOf(
                         new CreateSellOrderCommandMatcher(
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 orderBookIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)))));
@@ -173,16 +174,16 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                                 time))
-                .whenAggregate(portfolioIdentifier)
+                .whenAggregate(sellPortfolioId)
                 .publishes(
                         new NotEnoughItemAvailableToReserveInPortfolio(
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 coinId,
                                 transactionIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
@@ -200,16 +201,16 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                                 time))
-                .whenAggregate(portfolioIdentifier)
+                .whenAggregate(sellPortfolioId)
                 .publishes(
                         new ItemToReserveNotAvailableInPortfolioEvent(
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 coinId,
                                 transactionIdentifier,
                                 time))
@@ -225,7 +226,7 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
@@ -237,7 +238,7 @@ public class SellTradeManagerSagaIT {
                                 time))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsEqualTo(new CancelAmountReservationForPortfolioCommand(
-                        portfolioIdentifier,
+                        sellPortfolioId,
                         coinId,
                         transactionIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
@@ -259,15 +260,15 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                                 time))
-                .andThenAggregate(portfolioIdentifier).published(
+                .andThenAggregate(sellPortfolioId).published(
                 new ItemReservedEvent(
-                        portfolioIdentifier,
+                        sellPortfolioId,
                         coinId,
                         transactionIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
@@ -287,6 +288,8 @@ public class SellTradeManagerSagaIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(2)),
                         buyTransactionIdentifier,
                         transactionIdentifier,
+                        buyPortfolioId,
+                        sellPortfolioId,
                         tradeTime,
                         TradeType.BUY))
                 .whenAggregate(transactionIdentifier)
@@ -295,7 +298,7 @@ public class SellTradeManagerSagaIT {
                                 time))
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsEqualTo(new CancelAmountReservationForPortfolioCommand(
-                        portfolioIdentifier,
+                        sellPortfolioId,
                         coinId,
                         transactionIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
@@ -317,15 +320,15 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                                 time))
-                .andThenAggregate(portfolioIdentifier).published(
+                .andThenAggregate(sellPortfolioId).published(
                 new ItemReservedEvent(
-                        portfolioIdentifier,
+                        sellPortfolioId,
                         coinId,
                         transactionIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
@@ -346,6 +349,8 @@ public class SellTradeManagerSagaIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1)),
                         buyTransactionIdentifier,
                         transactionIdentifier,
+                        buyPortfolioId,
+                        sellPortfolioId,
                         tradeTime,
                         TradeType.BUY))
                 .expectActiveSagas(1)
@@ -373,15 +378,15 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                                 time))
-                .andThenAggregate(portfolioIdentifier).published(
+                .andThenAggregate(sellPortfolioId).published(
                 new ItemReservedEvent(
-                        portfolioIdentifier,
+                        sellPortfolioId,
                         coinId,
                         transactionIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
@@ -404,6 +409,8 @@ public class SellTradeManagerSagaIT {
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(2)),
                                 buyTransactionIdentifier,
                                 transactionIdentifier,
+                                buyPortfolioId,
+                                sellPortfolioId,
                                 tradeTime,
                                 TradeType.BUY))
                 .whenAggregate(transactionIdentifier)
@@ -419,13 +426,13 @@ public class SellTradeManagerSagaIT {
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsEqualTo(
                         new ConfirmAmountReservationForPortfolioCommand(
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 coinId,
                                 transactionIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(1)),
                                 time),
-                        new DepositCashCommand(portfolioIdentifier,
+                        new DepositCashCommand(sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(100 * 102)),
                                 time));
     }
@@ -444,15 +451,15 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                                 time))
-                .andThenAggregate(portfolioIdentifier).published(
+                .andThenAggregate(sellPortfolioId).published(
                 new ItemReservedEvent(
-                        portfolioIdentifier,
+                        sellPortfolioId,
                         coinId,
                         transactionIdentifier,
                         BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(110)),
@@ -475,6 +482,8 @@ public class SellTradeManagerSagaIT {
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(2)),
                                 buyTransactionIdentifier,
                                 transactionIdentifier,
+                                buyPortfolioId,
+                                sellPortfolioId,
                                 tradeTime,
                                 TradeType.BUY))
                 .whenAggregate(transactionIdentifier)
@@ -490,13 +499,13 @@ public class SellTradeManagerSagaIT {
                 .expectActiveSagas(0)
                 .expectDispatchedCommandsEqualTo(
                         new ConfirmAmountReservationForPortfolioCommand(
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 coinId,
                                 transactionIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                                 time),
-                        new DepositCashCommand(portfolioIdentifier,
+                        new DepositCashCommand(sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(100 * 102)),
                                 time));
     }
@@ -515,16 +524,16 @@ public class SellTradeManagerSagaIT {
                                 transactionIdentifier,
                                 coinId,
                                 orderBookIdentifier,
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(10)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(1000)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(10)),
                                 time))
-                .andThenAggregate(portfolioIdentifier)
+                .andThenAggregate(sellPortfolioId)
                 .published(
                         new ItemReservedEvent(
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 coinId,
                                 transactionIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(100)),
@@ -544,6 +553,8 @@ public class SellTradeManagerSagaIT {
                         BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(2)),
                         buyTransactionIdentifier,
                         transactionIdentifier,
+                        buyPortfolioId,
+                        sellPortfolioId,
                         tradeTime,
                         TradeType.BUY))
                 .whenAggregate(transactionIdentifier)
@@ -561,13 +572,13 @@ public class SellTradeManagerSagaIT {
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
                         new ConfirmAmountReservationForPortfolioCommand(
-                                portfolioIdentifier,
+                                sellPortfolioId,
                                 coinId,
                                 transactionIdentifier,
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(50)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(2)),
                                 time),
-                        new DepositCashCommand(portfolioIdentifier,
+                        new DepositCashCommand(sellPortfolioId,
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(50 * 102)),
                                 time));
     }

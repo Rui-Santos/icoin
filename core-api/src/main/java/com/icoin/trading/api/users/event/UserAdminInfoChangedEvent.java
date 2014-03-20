@@ -15,6 +15,9 @@
 */
 package com.icoin.trading.api.users.event;
 
+import com.icoin.trading.api.users.domain.Identifier;
+import com.icoin.trading.api.users.domain.UserId;
+
 import java.util.List;
 
 

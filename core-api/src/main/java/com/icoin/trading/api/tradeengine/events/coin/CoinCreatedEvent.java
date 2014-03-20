@@ -17,7 +17,7 @@
 package com.icoin.trading.api.tradeengine.events.coin;
 
 import com.homhon.base.domain.event.EventSupport;
-import com.icoin.trading.api.coin.events.CoinId;
+import com.icoin.trading.api.coin.domain.CoinId;
 import org.joda.money.BigMoney;
 
 /**

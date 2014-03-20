@@ -54,17 +54,7 @@
 
         <dependency>
             <groupId>homhon-base</groupId>
-            <artifactId>core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>homhon-base</groupId>
             <artifactId>mongobase</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>homhon-base</groupId>
-            <artifactId>basedomain</artifactId>
         </dependency>
 
         <!--log-->
@@ -84,6 +74,12 @@
         <!--iCoin-->
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>icoin-trading-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>icoin-trading-users</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -91,6 +87,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>icoin-axon-support</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>icoin-trading-interfaces</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -170,16 +172,6 @@
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-jcache</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
         </dependency>
 
         <!-- Test dependencies -->

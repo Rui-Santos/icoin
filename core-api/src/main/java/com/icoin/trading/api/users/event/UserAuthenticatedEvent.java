@@ -17,7 +17,7 @@
 package com.icoin.trading.api.users.event;
 
 import com.homhon.base.domain.event.EventSupport;
-import com.icoin.trading.api.users.event.UserId;
+import com.icoin.trading.api.users.domain.UserId;
 
 import java.util.Date;
 

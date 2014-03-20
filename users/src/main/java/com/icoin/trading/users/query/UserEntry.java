@@ -18,7 +18,7 @@ package com.icoin.trading.users.query;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.AuditAwareEntitySupport;
 import com.homhon.util.Strings;
-import com.icoin.trading.users.domain.model.user.Identifier;
+import com.icoin.trading.api.users.domain.Identifier;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.springframework.data.mongodb.core.index.Indexed;
 

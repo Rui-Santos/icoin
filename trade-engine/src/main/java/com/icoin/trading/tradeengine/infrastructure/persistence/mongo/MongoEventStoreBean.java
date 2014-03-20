@@ -1,6 +1,6 @@
 package com.icoin.trading.tradeengine.infrastructure.persistence.mongo;
 
-import com.icoin.trading.tradeengine.infrastructure.persistence.mongo.converters.JodaMoneyConverter;
+import com.icoin.money.converter.JodaMoneyConverter;
 import com.thoughtworks.xstream.XStream;
 import org.axonframework.eventstore.mongo.MongoEventStore;
 import org.axonframework.eventstore.mongo.MongoTemplate;

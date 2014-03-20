@@ -1,5 +1,7 @@
 package com.icoin.trading.tradeengine.domain.model.admin;
 
+import com.icoin.trading.api.tradeengine.domain.ChangedReason;
+
 import java.util.Date;
 
 import static com.homhon.util.Asserts.hasLength;

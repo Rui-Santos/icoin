@@ -16,10 +16,10 @@
 
 package com.icoin.trading.tradeengine.saga;
 
-import com.icoin.trading.tradeengine.domain.model.coin.CoinId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.portfolio.PortfolioId;
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionId;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.saga.annotation.AbstractAnnotatedSaga;
 import org.joda.money.BigMoney;

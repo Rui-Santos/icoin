@@ -1,9 +1,6 @@
 package com.icoin.trading.tradeengine.query.tradeexecuted;
 
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
-import com.icoin.trading.tradeengine.domain.model.order.OrderBookId;
-import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
-import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.query.tradeexecuted.repositories.TradeExecutedQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +35,8 @@ public class TradeExecutedListener {
         tradeExecutedEntry.setTradedPrice(event.getTradedPrice());
         tradeExecutedEntry.setTradeTime(event.getTradeTime());
         tradeExecutedEntry.setTradeType(TradeType.convert(event.getTradeType()));
+        tradeExecutedEntry.setBuyPortfolioId(event.getBuyPortfolioId().toString());
+        tradeExecutedEntry.setSellPortfolioId(event.getSellPortfolioId().toString());
 
         tradeExecutedRepository.save(tradeExecutedEntry);
     }

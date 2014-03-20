@@ -1,10 +1,10 @@
 package com.icoin.trading.tradeengine.application.listener;
 
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.application.command.portfolio.CreatePortfolioCommand;
-import com.icoin.trading.users.domain.model.user.Identifier;
-import com.icoin.trading.users.domain.model.user.UserId;
-import com.icoin.trading.users.domain.event.UserCreatedEvent;
+import com.icoin.trading.api.tradeengine.command.portfolio.CreatePortfolioCommand;
+import com.icoin.trading.api.users.domain.Identifier;
+import com.icoin.trading.api.users.domain.UserId;
+import com.icoin.trading.api.users.event.UserCreatedEvent;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.junit.Test;

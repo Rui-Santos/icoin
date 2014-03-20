@@ -18,7 +18,7 @@ package com.icoin.trading.api.tradeengine.command.coin;
 
 
 import com.homhon.base.command.CommandSupport;
-import com.icoin.trading.api.coin.events.CoinId;
+import com.icoin.trading.api.coin.domain.CoinId;
 import org.joda.money.BigMoney;
 
 /**

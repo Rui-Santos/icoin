@@ -1,6 +1,7 @@
 package com.icoin.trading.tradeengine.domain.model.admin;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport;
+import com.icoin.trading.api.tradeengine.domain.ChangedReason;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -18,14 +18,13 @@ package com.icoin.trading.api.tradeengine.events.trade;
 
 
 import com.homhon.base.domain.event.EventSupport;
-import com.icoin.trading.api.coin.events.CoinId;
-import com.icoin.trading.api.tradeengine.events.order.OrderBookId;
-import com.icoin.trading.api.tradeengine.events.transaction.TransactionId;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TradeType;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.joda.money.BigMoney;
 
-import java.math.RoundingMode;
 import java.util.Date;
 
 /**
@@ -50,6 +49,8 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
     private final BigMoney buyCommission;
     private final BigMoney sellCommission;
     private final BigMoney executedMoney;
+    private final PortfolioId buyPortfolioId;
+    private final PortfolioId sellPortfolioId;
 
     public TradeExecutedEvent(OrderBookId orderBookId,
                               CoinId coinId,
@@ -62,6 +63,8 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
                               BigMoney sellCommission,
                               TransactionId buyTransactionId,
                               TransactionId sellTransactionId,
+                              PortfolioId buyPortfolioId,
+                              PortfolioId sellPortfolioId,
                               Date tradeTime,
                               TradeType tradeType) {
         this.orderBookId = orderBookId;
@@ -75,6 +78,8 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
         this.sellCommission = sellCommission;
         this.sellTransactionId = sellTransactionId;
         this.buyTransactionId = buyTransactionId;
+        this.buyPortfolioId = buyPortfolioId;
+        this.sellPortfolioId = sellPortfolioId;
         this.tradeTime = tradeTime;
         this.tradeType = tradeType;
     }
@@ -135,53 +140,19 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
         return tradeType;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null) {
-            return false;
-        }
-
-        if (!TradeExecutedEvent.class.isAssignableFrom(obj.getClass())) {
-            return false;
-        }
-
-        TradeExecutedEvent other = (TradeExecutedEvent) obj;
-
-        return new EqualsBuilder()
-                .append(tradeAmount.toMoney(RoundingMode.HALF_EVEN), other.tradeAmount.toMoney(RoundingMode.HALF_EVEN))
-                .append(tradedPrice.toMoney(RoundingMode.HALF_EVEN), other.tradedPrice.toMoney(RoundingMode.HALF_EVEN))
-                .append(buyOrderId, other.buyOrderId)
-                .append(sellOrderId, other.sellOrderId)
-                .append(sellTransactionId, other.sellTransactionId)
-                .append(buyTransactionId, other.buyTransactionId)
-                .append(orderBookId, other.orderBookId)
-                .append(coinId, other.coinId)
-                .append(tradeType, other.tradeType)
-                .build();
-
+    public PortfolioId getBuyPortfolioId() {
+        return buyPortfolioId;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .append(tradeAmount.toMoney(RoundingMode.HALF_EVEN))
-                .append(tradedPrice.toMoney(RoundingMode.HALF_EVEN))
-                .append(tradeType)
-                .append(buyOrderId)
-                .append(sellOrderId)
-                .append(sellTransactionId)
-                .append(buyTransactionId)
-                .append(orderBookId)
-                .append(coinId)
-                .build();
+    public PortfolioId getSellPortfolioId() {
+        return sellPortfolioId;
     }
 
     @Override
     public String toString() {
         return "TradeExecutedEvent{" +
-                "tradeAmount=" + tradeAmount.toMoney(RoundingMode.HALF_EVEN) +
-                ", tradedPrice=" + tradedPrice.toMoney(RoundingMode.HALF_EVEN) +
+                "tradeAmount=" + tradeAmount +
+                ", tradedPrice=" + tradedPrice +
                 ", buyOrderId='" + buyOrderId + '\'' +
                 ", coinId=" + coinId +
                 ", sellOrderId='" + sellOrderId + '\'' +
@@ -190,9 +161,11 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
                 ", orderBookId=" + orderBookId +
                 ", tradeTime=" + tradeTime +
                 ", tradeType=" + tradeType +
-                ", buyCommission=" + buyCommission.toMoney(RoundingMode.HALF_EVEN) +
-                ", sellCommission=" + sellCommission.toMoney(RoundingMode.HALF_EVEN) +
-                ", executedMoney=" + executedMoney.toMoney(RoundingMode.HALF_EVEN) +
+                ", buyCommission=" + buyCommission +
+                ", sellCommission=" + sellCommission +
+                ", executedMoney=" + executedMoney +
+                ", buyPortfolioId=" + buyPortfolioId +
+                ", sellPortfolioId=" + sellPortfolioId +
                 '}';
     }
 }

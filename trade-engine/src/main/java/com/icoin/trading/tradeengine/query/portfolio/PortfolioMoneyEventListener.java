@@ -17,12 +17,12 @@
 package com.icoin.trading.tradeengine.query.portfolio;
 
 import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.domain.events.portfolio.PortfolioCreatedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashDepositedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationCancelledEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservationConfirmedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashReservedEvent;
-import com.icoin.trading.tradeengine.domain.events.portfolio.cash.CashWithdrawnEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.PortfolioCreatedEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashDepositedEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashReservationCancelledEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashReservationConfirmedEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashReservedEvent;
+import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashWithdrawnEvent;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;

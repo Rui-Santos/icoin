@@ -2,7 +2,6 @@ package com.icoin.trading.fee.query.offset;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport;
 import com.icoin.trading.api.fee.domain.offset.FeeItem;
-import com.icoin.trading.api.fee.domain.offset.OffsetReason;
 import com.icoin.trading.api.fee.domain.offset.OffsetStatus;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
 import org.joda.money.BigMoney;
@@ -17,7 +16,7 @@ import java.util.List;
  * Time: PM9:09
  * To change this template use File | Settings | File Templates.
  */
-public class OffsetEntry  extends VersionedEntitySupport<OffsetEntry, String, Integer> {
+public class OffsetEntry extends VersionedEntitySupport<OffsetEntry, String, Integer> {
     private BigMoney offsetAmount;
 
     private String accountId;
@@ -25,7 +24,6 @@ public class OffsetEntry  extends VersionedEntitySupport<OffsetEntry, String, In
     private List<FeeItem> receivedPaidList;
     private OffsetType offsetType;
     private OffsetStatus offsetStatus = OffsetStatus.NOT_OFFSETED;
-    private OffsetReason offsetReason;
     private Date offsetDate;
     private Date cancelledDate;
 
@@ -75,14 +73,6 @@ public class OffsetEntry  extends VersionedEntitySupport<OffsetEntry, String, In
 
     public void setOffsetStatus(OffsetStatus offsetStatus) {
         this.offsetStatus = offsetStatus;
-    }
-
-    public OffsetReason getOffsetReason() {
-        return offsetReason;
-    }
-
-    public void setOffsetReason(OffsetReason offsetReason) {
-        this.offsetReason = offsetReason;
     }
 
     public Date getOffsetDate() {

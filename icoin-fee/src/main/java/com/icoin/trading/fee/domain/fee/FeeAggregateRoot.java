@@ -74,4 +74,36 @@ public abstract class FeeAggregateRoot<T extends FeeAggregateRoot> extends AxonA
         this.offseted = true;
         this.offsetDate = event.getOffsetedDate();
     }
+
+    public boolean isCancelled() {
+        return FeeStatus.CANCELLED == feeStatus;
+    }
+
+    public boolean isConfirmed() {
+        return FeeStatus.CONFIRMED == feeStatus;
+    }
+
+    public boolean isPending() {
+        return FeeStatus.PENDING == feeStatus;
+    }
+
+    public boolean isPosted() {
+        return posted;
+    }
+
+    public boolean isOffseted() {
+        return offseted;
+    }
+
+    public boolean isComplete() {
+        return isConfirmed() && isOffseted();
+    }
+
+    public boolean isFinished() {
+        return isComplete() || isCancelled();
+    }
+
+    public FeeStatus getFeeStatus() {
+        return feeStatus;
+    }
 }

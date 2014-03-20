@@ -17,8 +17,8 @@
 package com.icoin.trading.api.tradeengine.events.order;
 
 import com.homhon.base.domain.event.EventSupport;
-import com.icoin.trading.api.coin.events.CurrencyPair;
-import com.icoin.trading.api.tradeengine.events.order.OrderBookId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 
 /**
  * <p>A new OrderBook is created for the coin with the provided identifier.</p>

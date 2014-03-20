@@ -16,7 +16,7 @@
 
 package com.icoin.trading.tradeengine.query.transaction;
 
-import com.icoin.trading.tradeengine.domain.model.transaction.TransactionType;
+import com.icoin.trading.api.tradeengine.domain.TransactionType;
 import org.hamcrest.Description;
 import org.joda.money.BigMoney;
 import org.mockito.ArgumentMatcher;

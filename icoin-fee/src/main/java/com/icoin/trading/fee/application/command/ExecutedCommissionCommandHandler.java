@@ -1,13 +1,6 @@
 package com.icoin.trading.fee.application.command;
 
-/**
- * Created with IntelliJ IDEA.
- * User: liougehooa
- * Date: 14-3-18
- * Time: PM9:16
- * To change this template use File | Settings | File Templates.
- */
-
+import com.icoin.trading.api.fee.command.commission.StartBuyCommissionTransactionCommand;
 import com.icoin.trading.api.fee.command.commission.StartSellCommissionTransactionCommand;
 import com.icoin.trading.api.fee.domain.CommissionType;
 import com.icoin.trading.fee.domain.transaction.ExecutedCommissionTransaction;
@@ -30,7 +23,7 @@ public class ExecutedCommissionCommandHandler {
 
 
     @CommandHandler
-    public void handleStartSellCommissionTransaction(StartSellCommissionTransactionCommand command) {
+    public void handleStartToSell(StartSellCommissionTransactionCommand command) {
         ExecutedCommissionTransaction transaction = new ExecutedCommissionTransaction(
                 command.getFeeTransactionId(),
                 command.getReceivedFeeId(),
@@ -53,7 +46,32 @@ public class ExecutedCommissionCommandHandler {
         transactionRepository.add(transaction);
     }
 
-    @Resource(name = "portfolioRepository")
+    @CommandHandler
+    public void handleStartToBuy(StartBuyCommissionTransactionCommand command) {
+        ExecutedCommissionTransaction transaction =
+                new ExecutedCommissionTransaction(
+                        command.getFeeTransactionId(),
+                        command.getReceivedFeeId(),
+                        command.getAccountReceivableFeeId(),
+                        command.getOffsetId(),
+                        CommissionType.BUY,
+                        command.getCommissionAmount(),
+                        command.getOrderId(),
+                        command.getOrderTransactionId(),
+                        command.getPortfolioId(),
+                        command.getTradeTime(),
+                        command.getDueDate(),
+                        command.getTradeType(),
+                        command.getTradedPrice(),
+                        command.getTradeAmount(),
+                        command.getExecutedMoney(),
+                        command.getOrderBookId(),
+                        command.getCoinId());
+
+        transactionRepository.add(transaction);
+    }
+
+    @Resource(name = "executedCommissionTransactionRepository")
     public void setRepository(Repository<ExecutedCommissionTransaction> repository) {
         this.transactionRepository = repository;
     }

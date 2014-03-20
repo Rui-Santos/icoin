@@ -16,10 +16,10 @@
 
 package com.icoin.trading.tradeengine.query.order;
 
-import com.icoin.trading.tradeengine.domain.events.order.AbstractOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.order.BuyOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.order.SellOrderPlacedEvent;
-import com.icoin.trading.tradeengine.domain.events.trade.TradeExecutedEvent;
+import com.icoin.trading.api.tradeengine.events.order.AbstractOrderPlacedEvent;
+import com.icoin.trading.api.tradeengine.events.order.BuyOrderPlacedEvent;
+import com.icoin.trading.api.tradeengine.events.order.SellOrderPlacedEvent;
+import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.money.BigMoney;

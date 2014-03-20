@@ -1,7 +1,7 @@
 package com.icoin.trading.users.query;
 
-import com.icoin.trading.users.domain.model.user.Identifier;
-import com.icoin.trading.users.domain.model.user.UserId;
+import com.icoin.trading.api.users.domain.Identifier;
+import com.icoin.trading.api.users.domain.UserId;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.junit.Before;
 import org.junit.Test;
