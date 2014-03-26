@@ -1,16 +1,19 @@
 package com.icoin.trading.fee.application.listener;
 
+import com.icoin.trading.api.fee.command.commission.StartBuyCommissionTransactionCommand;
 import com.icoin.trading.api.fee.command.commission.StartSellCommissionTransactionCommand;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
+import com.icoin.trading.fee.domain.DueDateService;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -28,14 +31,15 @@ import static com.homhon.util.Asserts.notNull;
 @Component
 public class ExecutedCommissionApplicationListener {
     private final static Logger logger = LoggerFactory.getLogger(ExecutedCommissionApplicationListener.class);
-    private DateTimeZone zone = DateTimeZone.forID("Asia/Chongqing");
+//    private DateTimeZone zone = DateTimeZone.forID("Asia/Chongqing");
+    private DueDateService dueDateService;
     private CommandGateway commandGateway;
 
     @EventHandler
     public void handleSellCommission(TradeExecutedEvent event) {
         notNull(event.getTradeTime());
         logger.debug("About to create a sell commission with executed event {}", event);
-        Date dueDate = computeDueDate(event);
+        Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
 
         StartSellCommissionTransactionCommand command =
                 new StartSellCommissionTransactionCommand(
@@ -59,13 +63,32 @@ public class ExecutedCommissionApplicationListener {
         commandGateway.send(command);
     }
 
-    private Date computeDueDate(TradeExecutedEvent event) {
-        return new DateTime(event.getTradeTime(), zone).toDate();
-    }
-
     @EventHandler
     public void handleBuyCommission(TradeExecutedEvent event) {
+        notNull(event.getTradeTime());
         logger.debug("About to create a buy commission with executed event {}", event);
+        Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
+
+        StartBuyCommissionTransactionCommand command =
+                new StartBuyCommissionTransactionCommand(
+                        new FeeTransactionId(),
+                        new FeeId(),
+                        new FeeId(),
+                        new OffsetId(),
+                        event.getSellCommission(),
+                        event.getSellOrderId(),
+                        event.getSellTransactionId(),
+                        event.getSellPortfolioId(),
+                        event.getTradeTime(),
+                        dueDate,
+                        event.getTradeType(),
+                        event.getTradedPrice(),
+                        event.getTradeAmount(),
+                        event.getExecutedMoney(),
+                        event.getOrderBookId(),
+                        event.getCoinId());
+
+        commandGateway.send(command);
     }
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -74,8 +97,9 @@ public class ExecutedCommissionApplicationListener {
         this.commandGateway = commandGateway;
     }
 
-    public void setZone(String zone) {
-        this.zone = DateTimeZone.forID(zone);
+    @Autowired
+    public void setDueDateService(DueDateService dueDateService) {
+        this.dueDateService = dueDateService;
     }
 }
 
