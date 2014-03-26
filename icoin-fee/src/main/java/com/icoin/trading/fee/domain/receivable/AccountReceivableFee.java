@@ -23,6 +23,11 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class AccountReceivableFee extends FeeAggregateRoot<AccountReceivableFee> {
+
+    @SuppressWarnings("UnusedDeclaration")
+    protected AccountReceivableFee() {
+    }
+
     public AccountReceivableFee(FeeId feeId, FeeStatus feeStatus, BigMoney amount, FeeType feeType, Date dueDate, Date businessCreationTime, String userAccountId, BusinessType businessType, String businessReferenceId) {
         apply(new AccountReceivableFeeCreatedEvent(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, userAccountId, businessType, businessReferenceId));
     }
@@ -40,17 +45,22 @@ public class AccountReceivableFee extends FeeAggregateRoot<AccountReceivableFee>
     }
 
     @EventHandler
+    public void on(AccountReceivableFeeCreatedEvent event) {
+        onCreated(event);
+    }
+
+    @EventHandler
     public void on(AccountReceivableFeeConfirmedEvent event) {
-        onConfirm(event);
+        onConfirmed(event);
     }
 
     @EventHandler
     public void on(AccountReceivableFeeCancelledEvent event) {
-        onCancel(event);
+        onCancelled(event);
     }
 
     @EventHandler
     public void on(AccountReceivableFeeOffsetedEvent event) {
-        onOffset(event);
+        onOffseted(event);
     }
 }

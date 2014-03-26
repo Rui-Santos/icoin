@@ -11,4 +11,8 @@ import com.icoin.trading.fee.domain.fee.FeeAggregateRoot;
  */
 public class PaidFee extends FeeAggregateRoot<PaidFee> {
     private PaidMode paidMode;
+
+    @SuppressWarnings("UnusedDeclaration")
+    protected PaidFee() {
+    }
 }

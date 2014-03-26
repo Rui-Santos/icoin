@@ -8,6 +8,7 @@ import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.events.commission.BuyExecutedCommissionTransactionStartedEvent;
+import com.icoin.trading.api.fee.events.commission.ExecutedCommissionTransactionStartedEvent;
 import com.icoin.trading.api.fee.events.commission.SellExecutedCommissionTransactionStartedEvent;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
@@ -108,6 +109,15 @@ public class ExecutedCommissionTransaction extends AxonAnnotatedAggregateRoot<Ex
 
     @EventHandler
     public void on(SellExecutedCommissionTransactionStartedEvent event) {
+        onStart(event,CommissionType.SELL);
+    }
+
+    @EventHandler
+    public void on(BuyExecutedCommissionTransactionStartedEvent event) {
+        onStart(event,CommissionType.BUY);
+    }
+
+    private void onStart(ExecutedCommissionTransactionStartedEvent event, CommissionType type){
         feeTransactionId = event.getFeeTransactionId();
         commissionAmount = event.getCommissionAmount();
         orderId = event.getOrderId();
@@ -115,6 +125,6 @@ public class ExecutedCommissionTransaction extends AxonAnnotatedAggregateRoot<Ex
         portfolioId = event.getPortfolioId();
         tradeTime = event.getTradeTime();
         dueDate = event.getDueDate();
-        commissionType = CommissionType.SELL;
+        commissionType = type;
     }
 }

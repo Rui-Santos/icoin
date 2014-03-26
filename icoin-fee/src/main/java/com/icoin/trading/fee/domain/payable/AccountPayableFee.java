@@ -10,4 +10,7 @@ import com.icoin.trading.fee.domain.fee.FeeAggregateRoot;
  * To change this template use File | Settings | File Templates.
  */
 public class AccountPayableFee extends FeeAggregateRoot<AccountPayableFee> {
+    @SuppressWarnings("UnusedDeclaration")
+    protected AccountPayableFee() {
+    }
 }

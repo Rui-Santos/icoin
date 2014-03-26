@@ -59,18 +59,18 @@ public abstract class FeeAggregateRoot<T extends FeeAggregateRoot> extends AxonA
         this.businessReferenceId = event.getBusinessReferenceId();
     }
 
-    protected void onConfirm(FeeConfirmedEvent event) {
+    protected void onConfirmed(FeeConfirmedEvent event) {
         this.feeStatus = FeeStatus.CONFIRMED;
         this.confirmedDate = event.getConfirmedDate();
     }
 
-    protected void onCancel(FeeCancelledEvent event) {
+    protected void onCancelled(FeeCancelledEvent event) {
         this.feeStatus = FeeStatus.CANCELLED;
         this.cancelledDate = event.getCancelledDate();
         this.cancelledReason = event.getCancelledReason();
     }
 
-    protected void onOffset(FeeOffsetedEvent event) {
+    protected void onOffseted(FeeOffsetedEvent event) {
         this.offseted = true;
         this.offsetDate = event.getOffsetedDate();
     }

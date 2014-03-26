@@ -25,6 +25,11 @@ import java.util.Date;
 public class ReceivedFee extends FeeAggregateRoot<ReceivedFee> {
     private ReceivedSource receivedSource;
 
+    @SuppressWarnings("UnusedDeclaration")
+    protected ReceivedFee(){
+
+    }
+
     public ReceivedFee(FeeId feeId,
                        FeeStatus feeStatus,
                        BigMoney amount,
@@ -60,18 +65,23 @@ public class ReceivedFee extends FeeAggregateRoot<ReceivedFee> {
     }
 
     @EventHandler
+    public void on(ReceivedFeeCreatedEvent event) {
+        onCreated(event);
+    }
+
+    @EventHandler
     public void on(ReceivedFeeConfirmedEvent event) {
-        onConfirm(event);
+        onConfirmed(event);
     }
 
     @EventHandler
     public void on(ReceivedFeeCancelledEvent event) {
-        onCancel(event);
+        onCancelled(event);
     }
 
     @EventHandler
     public void on(ReceivedFeeOffsetedEvent event) {
-        onOffset(event);
+        onOffseted(event);
     }
 
 }
