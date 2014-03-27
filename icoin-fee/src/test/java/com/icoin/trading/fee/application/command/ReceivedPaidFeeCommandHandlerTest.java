@@ -12,10 +12,10 @@ import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeCancelledEvent;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeConfirmedEvent;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeCreatedEvent;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeOffsetedEvent;
+import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeCancelledEvent;
+import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeConfirmedEvent;
+import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeOffsetedEvent;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.fee.domain.paid.PaidFee;
@@ -59,6 +59,9 @@ public class ReceivedPaidFeeCommandHandlerTest {
 
         receivedFixture.registerAnnotatedCommandHandler(commandHandler);
         paidFixture.registerAnnotatedCommandHandler(commandHandler);
+
+        commandHandler.setReceivedFeeRepository(receivedFixture.getRepository());
+        commandHandler.setPaidFeeRepository(paidFixture.getRepository());
     }
 
     @Test

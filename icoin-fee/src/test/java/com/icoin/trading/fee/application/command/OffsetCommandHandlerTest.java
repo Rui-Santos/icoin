@@ -50,6 +50,7 @@ public class OffsetCommandHandlerTest {
         fixture = Fixtures.newGivenWhenThenFixture(Offset.class);
         commandHandler = new OffsetCommandHandler();
         fixture.registerAnnotatedCommandHandler(commandHandler);
+        commandHandler.setOffsetRepository(fixture.getRepository());
     }
 
     @Test

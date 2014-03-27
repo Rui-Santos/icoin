@@ -1,8 +1,8 @@
 package com.icoin.trading.fee.application.command;
 
 import com.icoin.trading.api.coin.domain.CoinId;
-import com.icoin.trading.api.fee.command.commission.StartBuyCommissionTransactionCommand;
-import com.icoin.trading.api.fee.command.commission.StartSellCommissionTransactionCommand;
+import com.icoin.trading.api.fee.command.commission.PayBuyCommissionTransactionCommand;
+import com.icoin.trading.api.fee.command.commission.PaySellCommissionTransactionCommand;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
@@ -12,7 +12,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
-import com.icoin.trading.fee.domain.transaction.ExecutedCommissionTransaction;
+import com.icoin.trading.fee.domain.transaction.ExecutedFeeTransaction;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.joda.money.BigMoney;
@@ -51,15 +51,17 @@ public class ExecutedCommissionCommandHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        fixture = Fixtures.newGivenWhenThenFixture(ExecutedCommissionTransaction.class);
+        fixture = Fixtures.newGivenWhenThenFixture(ExecutedFeeTransaction.class);
         commandHandler = new ExecutedCommissionCommandHandler();
         fixture.registerAnnotatedCommandHandler(commandHandler);
+
+        commandHandler.setRepository(fixture.getRepository());
     }
 
     @Test
     public void testHandleStartToSell() throws Exception {
-        StartSellCommissionTransactionCommand command =
-                new StartSellCommissionTransactionCommand(
+        PaySellCommissionTransactionCommand command =
+                new PaySellCommissionTransactionCommand(
                         feeTransactionId,
                         receivedFeeId,
                         accountReceivableFeeId,
@@ -102,13 +104,13 @@ public class ExecutedCommissionCommandHandlerTest {
 
     @Test
     public void testHandleStartToBuy() throws Exception {
-        StartBuyCommissionTransactionCommand command =
-                new StartBuyCommissionTransactionCommand(
+        PayBuyCommissionTransactionCommand command =
+                new PayBuyCommissionTransactionCommand(
                         feeTransactionId,
                         receivedFeeId,
                         accountReceivableFeeId,
                         offsetId,
-                        sellCommissionAmount,
+                        buyCommissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,

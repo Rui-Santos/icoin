@@ -10,9 +10,10 @@ import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeCancelledEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeConfirmedEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCancelledEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeConfirmedEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeOffsetedEvent;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.fee.domain.payable.AccountPayableFee;
@@ -56,6 +57,9 @@ public class ReceivablePayableCommandHandlerTest {
 
         receivableFixture.registerAnnotatedCommandHandler(commandHandler);
         payableFixture.registerAnnotatedCommandHandler(commandHandler);
+
+        commandHandler.setAccountReceivableFeeRepository(receivableFixture.getRepository());
+        commandHandler.setAccountPayableFeeRepository(payableFixture.getRepository());
     }
 
     @Test
@@ -128,7 +132,7 @@ public class ReceivablePayableCommandHandlerTest {
                         orderTransactionId.toString()))
                 .when(command)
                 .expectEvents(
-                        new AccountReceivableFeeConfirmedEvent(
+                        new AccountReceivableFeeOffsetedEvent(
                                 receivableFeeId,
                                 tradeTime));
     }
