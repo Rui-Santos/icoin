@@ -1,7 +1,7 @@
 package com.icoin.trading.fee.query.fee;
 
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeCreatedEvent;
 
 /**
  * Created with IntelliJ IDEA.

@@ -3,7 +3,7 @@ package com.icoin.trading.fee.cash.interceptor;
 import com.icoin.trading.fee.cash.Interceptor;
 import com.icoin.trading.fee.cash.Invocation;
 import com.icoin.trading.fee.cash.InvocationContext;
-import com.icoin.trading.fee.cash.ResultCode;
+import com.icoin.trading.fee.cash.ValidationCode;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,13 +19,13 @@ public abstract class ProfilingInterceptor implements Interceptor {
     }
 
     @Override
-    public ResultCode intercept(Invocation invocation) throws Exception {
+    public ValidationCode intercept(Invocation invocation) throws Exception {
         InvocationContext context = invocation.getInvocationContext();
         context.startProfiling("interceptor: " + getName());
-        ResultCode code;
+        ValidationCode code;
         try {
             code = doIntercept(invocation);
-            if (ResultCode.breakDown(code)) {
+            if (ValidationCode.breakDown(code)) {
                 return code;
             }
         } finally {
@@ -34,5 +34,5 @@ public abstract class ProfilingInterceptor implements Interceptor {
         return invocation.invoke();
     }
 
-    protected abstract ResultCode doIntercept(Invocation invocation) throws Exception ;
+    protected abstract ValidationCode doIntercept(Invocation invocation) throws Exception ;
 }

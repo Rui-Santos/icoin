@@ -2,38 +2,21 @@ package com.icoin.trading.fee.saga;
 
 import com.google.common.collect.ImmutableList;
 import com.icoin.trading.api.fee.command.offset.CreateOffsetCommand;
-import com.icoin.trading.api.fee.command.offset.OffsetFeesCommand;
-import com.icoin.trading.api.fee.command.receivable.ConfirmAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.CreateAccountReceivableFeeCommand;
-import com.icoin.trading.api.fee.command.receivable.OffsetAccountReceivableFeeCommand;
-import com.icoin.trading.api.fee.command.received.ConfirmReceivedFeeCommand;
 import com.icoin.trading.api.fee.command.received.CreateReceivedFeeCommand;
-import com.icoin.trading.api.fee.command.received.OffsetReceivedFeeCommand;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
-import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
 import com.icoin.trading.api.fee.domain.offset.FeeItem;
 import com.icoin.trading.api.fee.domain.offset.FeeItemType;
-import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
 import com.icoin.trading.api.fee.events.commission.BuyExecutedCommissionTransactionStartedEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeConfirmedEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeCreatedEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeOffsetedEvent;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeConfirmedEvent;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeCreatedEvent;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeOffsetedEvent;
-import com.icoin.trading.api.fee.events.offset.FeesOffsetedEvent;
-import com.icoin.trading.api.fee.events.offset.OffsetCreatedEvent;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,14 +25,14 @@ import java.util.Date;
  * Time: 4:52 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BuyExecutedCommissionManagerSaga extends ExecutedCommissionManagerSaga {
-    private static transient Logger logger = LoggerFactory.getLogger(BuyExecutedCommissionManagerSaga.class);
+public class BuyExecutedTransactionFeeManagerSaga extends ReceiveTransactionFeeManagerSaga {
+    private static transient Logger logger = LoggerFactory.getLogger(BuyExecutedTransactionFeeManagerSaga.class);
 
     @StartSaga
     @SagaEventHandler(associationProperty = "feeTransactionId")
     public void onTransactionStarted(final BuyExecutedCommissionTransactionStartedEvent event) {
         feeTransactionId = event.getFeeTransactionId();
-        accountReceivableId = new FeeId();
+        accountReceivableId = event.getAccountReceivableFeeId();
 
         associateWith("accountReceivableId", accountReceivableId.toString());
         commandGateway.send(
@@ -65,9 +48,9 @@ public class BuyExecutedCommissionManagerSaga extends ExecutedCommissionManagerS
                         event.getPortfolioId().toString(),
                         event.getOrderTransactionId().toString()));
 
-        receivedFeeId = new FeeId();
+        receivedFeeId = event.getReceivedFeeId();
 
-        associateWith("receivedFeeId", accountReceivableId.toString());
+        associateWith("receivedFeeId", receivedFeeId.toString());
         commandGateway.send(
                 new CreateReceivedFeeCommand(
                         feeTransactionId,
@@ -82,7 +65,7 @@ public class BuyExecutedCommissionManagerSaga extends ExecutedCommissionManagerS
                         event.getOrderTransactionId().toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, event.getPortfolioId().toString())));
 
-        offsetId = new OffsetId();
+        offsetId = event.getOffsetId();
         associateWith("offsetId", offsetId.toString());
         commandGateway.send(
                 new CreateOffsetCommand(

@@ -1,4 +1,4 @@
-package com.icoin.trading.fee.domain.coin;
+package com.icoin.trading.fee.domain.cash;
 
 import com.homhon.base.domain.ValueObject;
 
@@ -9,18 +9,18 @@ import com.homhon.base.domain.ValueObject;
  * Time: PM11:36
  * To change this template use File | Settings | File Templates.
  */
-public enum CoinStatus implements ValueObject<CoinStatus> {
+public enum CashStatus implements ValueObject<CashStatus> {
     CREATED,
     COMPLETE,
     CANCELLED;
 
     @Override
-    public boolean sameValueAs(CoinStatus other) {
+    public boolean sameValueAs(CashStatus other) {
         return other == this;
     }
 
     @Override
-    public CoinStatus copy() {
+    public CashStatus copy() {
         return this;
     }
 }

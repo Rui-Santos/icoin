@@ -1,9 +1,9 @@
 package com.icoin.trading.fee.application.command;
 
-import com.icoin.trading.api.fee.command.commission.StartBuyCommissionTransactionCommand;
-import com.icoin.trading.api.fee.command.commission.StartSellCommissionTransactionCommand;
-import com.icoin.trading.api.fee.domain.CommissionType;
-import com.icoin.trading.fee.domain.transaction.ExecutedCommissionTransaction;
+import com.icoin.trading.api.fee.command.commission.PayBuyCommissionTransactionCommand;
+import com.icoin.trading.api.fee.command.commission.PaySellCommissionTransactionCommand;
+import com.icoin.trading.api.fee.domain.ExecutedFeeType;
+import com.icoin.trading.fee.domain.transaction.ExecutedFeeTransaction;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.springframework.stereotype.Component;
@@ -19,17 +19,17 @@ import javax.annotation.Resource;
  */
 @Component
 public class ExecutedCommissionCommandHandler {
-    private Repository<ExecutedCommissionTransaction> transactionRepository;
+    private Repository<ExecutedFeeTransaction> transactionRepository;
 
 
     @CommandHandler
-    public void handleStartToSell(StartSellCommissionTransactionCommand command) {
-        ExecutedCommissionTransaction transaction = new ExecutedCommissionTransaction(
+    public void handleStartToSell(PaySellCommissionTransactionCommand command) {
+        ExecutedFeeTransaction transaction = new ExecutedFeeTransaction(
                 command.getFeeTransactionId(),
                 command.getReceivedFeeId(),
                 command.getAccountReceivableFeeId(),
                 command.getOffsetId(),
-                CommissionType.SELL,
+                ExecutedFeeType.SELL_COMMISSION,
                 command.getCommissionAmount(),
                 command.getOrderId(),
                 command.getOrderTransactionId(),
@@ -47,14 +47,14 @@ public class ExecutedCommissionCommandHandler {
     }
 
     @CommandHandler
-    public void handleStartToBuy(StartBuyCommissionTransactionCommand command) {
-        ExecutedCommissionTransaction transaction =
-                new ExecutedCommissionTransaction(
+    public void handleStartToBuy(PayBuyCommissionTransactionCommand command) {
+        ExecutedFeeTransaction transaction =
+                new ExecutedFeeTransaction(
                         command.getFeeTransactionId(),
                         command.getReceivedFeeId(),
                         command.getAccountReceivableFeeId(),
                         command.getOffsetId(),
-                        CommissionType.BUY,
+                        ExecutedFeeType.BUY_COMMISSION,
                         command.getCommissionAmount(),
                         command.getOrderId(),
                         command.getOrderTransactionId(),
@@ -72,7 +72,7 @@ public class ExecutedCommissionCommandHandler {
     }
 
     @Resource(name = "executedCommissionTransactionRepository")
-    public void setRepository(Repository<ExecutedCommissionTransaction> repository) {
+    public void setRepository(Repository<ExecutedFeeTransaction> repository) {
         this.transactionRepository = repository;
     }
 }

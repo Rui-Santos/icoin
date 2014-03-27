@@ -1,6 +1,6 @@
 package com.icoin.trading.fee.query.executed;
 
-import com.icoin.trading.api.fee.domain.CommissionType;
+import com.icoin.trading.api.fee.domain.ExecutedFeeType;
 import com.icoin.trading.api.fee.events.commission.BuyExecutedCommissionTransactionStartedEvent;
 import com.icoin.trading.api.fee.events.commission.SellExecutedCommissionTransactionStartedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -34,7 +34,7 @@ public class ExecutedCommissionListener {
         entry.setPortfolioId(event.getPortfolioId().toString());
         entry.setTradeAmount(event.getTradeAmount());
         entry.setTradeTime(event.getTradeTime());
-        entry.setType(CommissionType.SELL);
+        entry.setType(ExecutedFeeType.SELL_COMMISSION);
         entry.setOrderTransactionId(event.getOrderTransactionId().toString());
         entry.setTradedPrice(event.getTradedPrice());
         entry.setPrimaryKey(event.getFeeTransactionId().toString());
@@ -57,7 +57,7 @@ public class ExecutedCommissionListener {
         entry.setPortfolioId(event.getPortfolioId().toString());
         entry.setTradeAmount(event.getTradeAmount());
         entry.setTradeTime(event.getTradeTime());
-        entry.setType(CommissionType.BUY);
+        entry.setType(ExecutedFeeType.BUY_COMMISSION);
         entry.setOrderTransactionId(event.getOrderTransactionId().toString());
         entry.setTradedPrice(event.getTradedPrice());
         entry.setPrimaryKey(event.getFeeTransactionId().toString());

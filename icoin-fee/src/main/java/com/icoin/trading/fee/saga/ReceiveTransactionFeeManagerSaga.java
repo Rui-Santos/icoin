@@ -2,7 +2,6 @@ package com.icoin.trading.fee.saga;
 
 import com.icoin.trading.api.fee.command.offset.CancelOffsetCommand;
 import com.icoin.trading.api.fee.command.offset.OffsetFeesCommand;
-import com.icoin.trading.api.fee.command.receivable.CancelAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.ConfirmAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.OffsetAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.received.CancelReceivedFeeCommand;
@@ -12,14 +11,14 @@ import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.offset.CancelledReason;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeCancelledEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeConfirmedEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeCreatedEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeOffsetedEvent;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeCancelledEvent;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeConfirmedEvent;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeCreatedEvent;
-import com.icoin.trading.api.fee.events.fee.ReceivedFeeOffsetedEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCancelledEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeConfirmedEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeOffsetedEvent;
+import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeCancelledEvent;
+import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeConfirmedEvent;
+import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeOffsetedEvent;
 import com.icoin.trading.api.fee.events.offset.FeesOffsetedEvent;
 import com.icoin.trading.api.fee.events.offset.OffsetAmountNotMatchedEvent;
 import com.icoin.trading.api.fee.events.offset.OffsetCancelledEvent;
@@ -38,7 +37,7 @@ import java.util.Date;
  * Time: PM9:01
  * To change this template use File | Settings | File Templates.
  */
-public class ExecutedCommissionManagerSaga extends AbstractAnnotatedSaga {
+public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
     protected transient CommandGateway commandGateway;
 
     protected FeeTransactionId feeTransactionId;
@@ -137,8 +136,8 @@ public class ExecutedCommissionManagerSaga extends AbstractAnnotatedSaga {
     public void onOffsetCancelled(final OffsetCancelledEvent event) {
         offsetStatus = TransactionStatus.CANCELLED;
 
-        commandGateway.send(new CancelReceivedFeeCommand(accountReceivableId, CancelledReason.OFFSET_ERROR, event.getOffsetDate()));
-        commandGateway.send(new CancelReceivedFeeCommand(receivedFeeId, CancelledReason.OFFSET_ERROR, event.getOffsetDate()));
+        commandGateway.send(new CancelReceivedFeeCommand(accountReceivableId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, event.getCancelledDate()));
+        commandGateway.send(new CancelReceivedFeeCommand(receivedFeeId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, event.getCancelledDate()));
     }
 
     @SagaEventHandler(associationProperty = "feeId", keyName = "accountReceivableId")

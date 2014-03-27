@@ -1,7 +1,7 @@
 package com.icoin.trading.fee.query.executed;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport;
-import com.icoin.trading.api.fee.domain.CommissionType;
+import com.icoin.trading.api.fee.domain.ExecutedFeeType;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import org.joda.money.BigMoney;
 
@@ -23,7 +23,7 @@ public class ExecutedCommissionEntry extends VersionedEntitySupport<ExecutedComm
     private Date dueDate;
     private TradeType tradeType;
     private BigMoney tradedPrice;
-    private CommissionType type;
+    private ExecutedFeeType type;
     private BigMoney tradeAmount;
     private BigMoney executedMoney;
     private String orderBookId;
@@ -93,11 +93,11 @@ public class ExecutedCommissionEntry extends VersionedEntitySupport<ExecutedComm
         this.tradedPrice = tradedPrice;
     }
 
-    public CommissionType getType() {
+    public ExecutedFeeType getType() {
         return type;
     }
 
-    public void setType(CommissionType type) {
+    public void setType(ExecutedFeeType type) {
         this.type = type;
     }
 

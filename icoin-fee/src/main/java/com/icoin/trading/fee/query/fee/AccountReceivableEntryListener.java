@@ -1,10 +1,10 @@
 package com.icoin.trading.fee.query.fee;
 
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeCancelledEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeConfirmedEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeCreatedEvent;
-import com.icoin.trading.api.fee.events.fee.AccountReceivableFeeOffsetedEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCancelledEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeConfirmedEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeOffsetedEvent;
 import com.icoin.trading.fee.query.fee.repositories.AccountReceivableFeeEntryQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;

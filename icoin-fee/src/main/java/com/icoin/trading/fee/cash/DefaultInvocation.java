@@ -18,7 +18,7 @@ import static com.homhon.util.Collections.isEmpty;
  */
 public class DefaultInvocation implements Invocation {
     private static Logger logger = LoggerFactory.getLogger(DefaultInvocation.class);
-    protected ResultCode resultCode;
+    protected ValidationCode validationCode;
     protected Iterator<? extends Interceptor> interceptors = Collections.EMPTY_LIST.iterator();
     private boolean executed;
     protected InvocationContext invocationContext;
@@ -31,32 +31,32 @@ public class DefaultInvocation implements Invocation {
     }
 
     @Override
-    public ResultCode invoke() throws Exception {
+    public ValidationCode invoke() throws Exception {
         try {
             if (interceptors.hasNext() && !executed) {
                 Interceptor interceptor = interceptors.next();
-                ResultCode code = interceptor.intercept(this);
+                ValidationCode code = interceptor.intercept(this);
 
-                if (ResultCode.breakDown(code)) {
+                if (ValidationCode.breakDown(code)) {
                     executed = true;
-                    return resultCode;
+                    validationCode = code;
                 }
             } else {
                 executed = true;
-                resultCode = ResultCode.COMPLETE;
+                validationCode = ValidationCode.SUCCESSFUL;
             }
         } catch (Exception e) {
             executed = true;
-            resultCode = ResultCode.EXECUTION_ERROR;
+            validationCode = ValidationCode.EXECUTION_ERROR;
             logger.error("Invocation error with context {}", invocationContext, e);
         }
-        return resultCode;
+        return validationCode;
     }
 
 
     @Override
-    public ResultCode getResultCode() {
-        return resultCode;
+    public ValidationCode getValidationCode() {
+        return validationCode;
     }
 
     @Override

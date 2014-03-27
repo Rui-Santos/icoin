@@ -8,5 +8,5 @@ package com.icoin.trading.fee.cash;
  * To change this template use File | Settings | File Templates.
  */
 public interface Interceptor {
-    ResultCode intercept(Invocation invocation) throws Exception;
+    ValidationCode intercept(Invocation invocation) throws Exception;
 }

@@ -21,9 +21,9 @@ public class InvocationProxy {
         this.invocation = invocation;
     }
 
-    public ResultCode invoke() throws Exception {
+    public ValidationCode invoke() throws Exception {
         InvocationContext context = invocation.getInvocationContext();
-        ResultCode code;
+        ValidationCode code;
         try {
             code = invocation.invoke();
         } finally {

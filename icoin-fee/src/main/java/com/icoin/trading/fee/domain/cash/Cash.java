@@ -1,7 +1,6 @@
-package com.icoin.trading.fee.domain.coin;
+package com.icoin.trading.fee.domain.cash;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport;
-import com.icoin.trading.fee.domain.address.Address;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -13,13 +12,13 @@ import java.util.Date;
  * Time: PM8:57
  * To change this template use File | Settings | File Templates.
  */
-public class CoinCash extends VersionedEntitySupport<CoinCash, String, Integer> {
+public abstract class Cash<T extends Cash> extends VersionedEntitySupport<T, String, Integer> {
     private BigMoney amount;
     private Date dueDate;
     private Date executedDueTime;
     private String userId;
-    private CoinStatus status;
-    private Address address;
+    private CashStatus status;
+    private boolean approved;
 
     public String getUserId() {
         return userId;
@@ -29,11 +28,11 @@ public class CoinCash extends VersionedEntitySupport<CoinCash, String, Integer> 
         this.userId = userId;
     }
 
-    public CoinStatus getStatus() {
+    public CashStatus getStatus() {
         return status;
     }
 
-    public void setStatus(CoinStatus status) {
+    public void setStatus(CashStatus status) {
         this.status = status;
     }
 
@@ -59,5 +58,13 @@ public class CoinCash extends VersionedEntitySupport<CoinCash, String, Integer> 
 
     public void setExecutedDueTime(Date executedDueTime) {
         this.executedDueTime = executedDueTime;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 }

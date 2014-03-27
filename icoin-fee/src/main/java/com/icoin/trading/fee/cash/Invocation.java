@@ -8,11 +8,11 @@ package com.icoin.trading.fee.cash;
  * To change this template use File | Settings | File Templates.
  */
 public interface Invocation {
-    ResultCode invoke() throws Exception;
+    ValidationCode invoke() throws Exception;
 
     InvocationContext getInvocationContext();
 
-    ResultCode getResultCode();
+    ValidationCode getValidationCode();
 
     boolean isExecuted();
 }

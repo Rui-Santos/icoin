@@ -5,6 +5,8 @@ import org.springframework.util.StopWatch;
 
 import java.util.Date;
 
+import static com.homhon.util.Asserts.hasText;
+import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
 /**
  * Created with IntelliJ IDEA.
@@ -20,8 +22,9 @@ public class InvocationContext {
     private final StopWatch stopWatch = new StopWatch("invoke: ");
 
     public InvocationContext(String userId, BigMoney amount, Date occurringTime) {
-        notNull(userId);
+        hasText(userId);
         notNull(amount);
+        isTrue(amount.isPositive(),"Amount should be greater than zero!");
         notNull(occurringTime);
 
         this.userId = userId;

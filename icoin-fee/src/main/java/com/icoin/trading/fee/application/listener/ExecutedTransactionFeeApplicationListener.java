@@ -1,7 +1,7 @@
 package com.icoin.trading.fee.application.listener;
 
-import com.icoin.trading.api.fee.command.commission.StartBuyCommissionTransactionCommand;
-import com.icoin.trading.api.fee.command.commission.StartSellCommissionTransactionCommand;
+import com.icoin.trading.api.fee.command.commission.PayBuyCommissionTransactionCommand;
+import com.icoin.trading.api.fee.command.commission.PaySellCommissionTransactionCommand;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
@@ -9,8 +9,6 @@ import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
 import com.icoin.trading.fee.domain.DueDateService;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +27,8 @@ import static com.homhon.util.Asserts.notNull;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class ExecutedCommissionApplicationListener {
-    private final static Logger logger = LoggerFactory.getLogger(ExecutedCommissionApplicationListener.class);
+public class ExecutedTransactionFeeApplicationListener {
+    private final static Logger logger = LoggerFactory.getLogger(ExecutedTransactionFeeApplicationListener.class);
 //    private DateTimeZone zone = DateTimeZone.forID("Asia/Chongqing");
     private DueDateService dueDateService;
     private CommandGateway commandGateway;
@@ -41,8 +39,8 @@ public class ExecutedCommissionApplicationListener {
         logger.debug("About to create a sell commission with executed event {}", event);
         Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
 
-        StartSellCommissionTransactionCommand command =
-                new StartSellCommissionTransactionCommand(
+        PaySellCommissionTransactionCommand command =
+                new PaySellCommissionTransactionCommand(
                         new FeeTransactionId(),
                         new FeeId(),
                         new FeeId(),
@@ -69,8 +67,66 @@ public class ExecutedCommissionApplicationListener {
         logger.debug("About to create a buy commission with executed event {}", event);
         Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
 
-        StartBuyCommissionTransactionCommand command =
-                new StartBuyCommissionTransactionCommand(
+        PayBuyCommissionTransactionCommand command =
+                new PayBuyCommissionTransactionCommand(
+                        new FeeTransactionId(),
+                        new FeeId(),
+                        new FeeId(),
+                        new OffsetId(),
+                        event.getSellCommission(),
+                        event.getSellOrderId(),
+                        event.getSellTransactionId(),
+                        event.getSellPortfolioId(),
+                        event.getTradeTime(),
+                        dueDate,
+                        event.getTradeType(),
+                        event.getTradedPrice(),
+                        event.getTradeAmount(),
+                        event.getExecutedMoney(),
+                        event.getOrderBookId(),
+                        event.getCoinId());
+
+        commandGateway.send(command);
+    }
+
+    //lose coin amount add money amount
+    @EventHandler
+    public void handlePaySellCoin(TradeExecutedEvent event) {
+        notNull(event.getTradeTime());
+        logger.debug("About to create a sell fee with executed event {}", event);
+        Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
+
+        PaySellCommissionTransactionCommand command =
+                new PaySellCommissionTransactionCommand(
+                        new FeeTransactionId(),
+                        new FeeId(),
+                        new FeeId(),
+                        new OffsetId(),
+                        event.getSellCommission(),
+                        event.getSellOrderId(),
+                        event.getSellTransactionId(),
+                        event.getSellPortfolioId(),
+                        event.getTradeTime(),
+                        dueDate,
+                        event.getTradeType(),
+                        event.getTradedPrice(),
+                        event.getTradeAmount(),
+                        event.getExecutedMoney(),
+                        event.getOrderBookId(),
+                        event.getCoinId());
+
+        commandGateway.send(command);
+    }
+
+    //lose money amount add coin amount
+    @EventHandler
+    public void handlePayBuyMoney(TradeExecutedEvent event) {
+        notNull(event.getTradeTime());
+        logger.debug("About to create a buy fee with executed event {}", event);
+        Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
+
+        PayBuyCommissionTransactionCommand command =
+                new PayBuyCommissionTransactionCommand(
                         new FeeTransactionId(),
                         new FeeId(),
                         new FeeId(),

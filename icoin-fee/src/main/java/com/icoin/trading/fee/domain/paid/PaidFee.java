@@ -1,5 +1,6 @@
 package com.icoin.trading.fee.domain.paid;
 
+import com.icoin.trading.api.fee.domain.PaidMode;
 import com.icoin.trading.fee.domain.fee.FeeAggregateRoot;
 
 /**

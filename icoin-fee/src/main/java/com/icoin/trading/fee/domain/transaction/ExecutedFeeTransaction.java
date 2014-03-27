@@ -3,7 +3,7 @@ package com.icoin.trading.fee.domain.transaction;
 import com.homhon.base.domain.Identity;
 import com.icoin.axonsupport.domain.AxonAnnotatedAggregateRoot;
 import com.icoin.trading.api.coin.domain.CoinId;
-import com.icoin.trading.api.fee.domain.CommissionType;
+import com.icoin.trading.api.fee.domain.ExecutedFeeType;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
@@ -29,7 +29,7 @@ import static com.homhon.util.Asserts.notNull;
  * Time: PM9:01
  * To change this template use File | Settings | File Templates.
  */
-public class ExecutedCommissionTransaction extends AxonAnnotatedAggregateRoot<ExecutedCommissionTransaction, String> {
+public class ExecutedFeeTransaction extends AxonAnnotatedAggregateRoot<ExecutedFeeTransaction, String> {
 
     @AggregateIdentifier
     @Identity
@@ -40,33 +40,33 @@ public class ExecutedCommissionTransaction extends AxonAnnotatedAggregateRoot<Ex
     private PortfolioId portfolioId;
     private Date tradeTime;
     private Date dueDate;
-    private CommissionType commissionType;
+    private ExecutedFeeType executedFeeType;
 
     @SuppressWarnings("UnusedDeclaration")
-    protected ExecutedCommissionTransaction() {
+    protected ExecutedFeeTransaction() {
     }
 
-    public ExecutedCommissionTransaction(FeeTransactionId feeTransactionId,
-                                         FeeId receivedFeeId,
-                                         FeeId accountReceivableFeeId,
-                                         OffsetId offsetId,
-                                         CommissionType commissionType,
-                                         BigMoney commissionAmount,
-                                         String orderId,
-                                         TransactionId orderTransactionId,
-                                         PortfolioId portfolioId,
-                                         Date tradeTime,
-                                         Date dueDate,
-                                         TradeType tradeType,
-                                         BigMoney tradedPrice,
-                                         BigMoney tradeAmount,
-                                         BigMoney executedMoney,
-                                         OrderBookId orderBookId,
-                                         CoinId coinId) {
-        notNull(commissionType);
+    public ExecutedFeeTransaction(FeeTransactionId feeTransactionId,
+                                  FeeId receivedFeeId,
+                                  FeeId accountReceivableFeeId,
+                                  OffsetId offsetId,
+                                  ExecutedFeeType executedFeeType,
+                                  BigMoney commissionAmount,
+                                  String orderId,
+                                  TransactionId orderTransactionId,
+                                  PortfolioId portfolioId,
+                                  Date tradeTime,
+                                  Date dueDate,
+                                  TradeType tradeType,
+                                  BigMoney tradedPrice,
+                                  BigMoney tradeAmount,
+                                  BigMoney executedMoney,
+                                  OrderBookId orderBookId,
+                                  CoinId coinId) {
+        notNull(executedFeeType);
 
-        switch (commissionType) {
-            case SELL:
+        switch (executedFeeType) {
+            case SELL_COMMISSION:
                 apply(new SellExecutedCommissionTransactionStartedEvent(
                         feeTransactionId,
                         receivedFeeId,
@@ -85,7 +85,7 @@ public class ExecutedCommissionTransaction extends AxonAnnotatedAggregateRoot<Ex
                         orderBookId,
                         coinId));
                 break;
-            case BUY:
+            case BUY_COMMISSION:
                 apply(new BuyExecutedCommissionTransactionStartedEvent(
                         feeTransactionId,
                         receivedFeeId,
@@ -109,15 +109,15 @@ public class ExecutedCommissionTransaction extends AxonAnnotatedAggregateRoot<Ex
 
     @EventHandler
     public void on(SellExecutedCommissionTransactionStartedEvent event) {
-        onStart(event,CommissionType.SELL);
+        onStart(event, ExecutedFeeType.SELL_COMMISSION);
     }
 
     @EventHandler
     public void on(BuyExecutedCommissionTransactionStartedEvent event) {
-        onStart(event,CommissionType.BUY);
+        onStart(event, ExecutedFeeType.BUY_COMMISSION);
     }
 
-    private void onStart(ExecutedCommissionTransactionStartedEvent event, CommissionType type){
+    private void onStart(ExecutedCommissionTransactionStartedEvent event, ExecutedFeeType type){
         feeTransactionId = event.getFeeTransactionId();
         commissionAmount = event.getCommissionAmount();
         orderId = event.getOrderId();
@@ -125,6 +125,6 @@ public class ExecutedCommissionTransaction extends AxonAnnotatedAggregateRoot<Ex
         portfolioId = event.getPortfolioId();
         tradeTime = event.getTradeTime();
         dueDate = event.getDueDate();
-        commissionType = type;
+        executedFeeType = type;
     }
 }

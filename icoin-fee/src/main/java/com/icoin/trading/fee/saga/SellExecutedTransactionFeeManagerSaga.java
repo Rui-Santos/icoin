@@ -5,12 +5,10 @@ import com.icoin.trading.api.fee.command.offset.CreateOffsetCommand;
 import com.icoin.trading.api.fee.command.receivable.CreateAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.received.CreateReceivedFeeCommand;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
-import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
 import com.icoin.trading.api.fee.domain.offset.FeeItem;
 import com.icoin.trading.api.fee.domain.offset.FeeItemType;
-import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
@@ -27,12 +25,13 @@ import org.slf4j.LoggerFactory;
  * Time: 4:52 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SellExecutedCommissionManagerSaga extends ExecutedCommissionManagerSaga {
-    private static transient Logger logger = LoggerFactory.getLogger(SellExecutedCommissionManagerSaga.class);
+public class SellExecutedTransactionFeeManagerSaga extends ReceiveTransactionFeeManagerSaga {
+    private static transient Logger logger = LoggerFactory.getLogger(SellExecutedTransactionFeeManagerSaga.class);
 
     @StartSaga
     @SagaEventHandler(associationProperty = "feeTransactionId")
     public void onTransactionStarted(final SellExecutedCommissionTransactionStartedEvent event) {
+        logger.info("");
         feeTransactionId = event.getFeeTransactionId();
         accountReceivableId = event.getAccountReceivableFeeId();
 
@@ -52,7 +51,7 @@ public class SellExecutedCommissionManagerSaga extends ExecutedCommissionManager
 
         receivedFeeId = event.getReceivedFeeId();
 
-        associateWith("receivedFeeId", accountReceivableId.toString());
+        associateWith("receivedFeeId", receivedFeeId.toString());
         commandGateway.send(
                 new CreateReceivedFeeCommand(
                         feeTransactionId,
@@ -80,7 +79,7 @@ public class SellExecutedCommissionManagerSaga extends ExecutedCommissionManager
                         event.getTradeTime()));
     }
 
-//    @SagaEventHandler(associationProperty = "feeId", keyName = "accountReceivableId")
+//    @SagaEventHandler(associationProperty = "feeId", keyName = "accountPayableId")
 //    public void onReceivableCreated(final AccountReceivableFeeCreatedEvent event) {
 //        accountReceivableStatus = TransactionStatus.CREATED;
 //
@@ -112,12 +111,12 @@ public class SellExecutedCommissionManagerSaga extends ExecutedCommissionManager
 //        if (offsetStatus == TransactionStatus.OFFSETED
 //                && accountReceivableStatus == TransactionStatus.CONFIRMED
 //                && receivedFeeStatus == TransactionStatus.CONFIRMED) {
-//            commandGateway.send(new OffsetAccountReceivableFeeCommand(accountReceivableId, offsetDate));
+//            commandGateway.send(new OffsetAccountPayableFeeCommand(accountPayableId, offsetDate));
 //            commandGateway.send(new OffsetReceivedFeeCommand(receivedFeeId, offsetDate));
 //        }
 //    }
 //
-//    @SagaEventHandler(associationProperty = "feeId", keyName = "accountReceivableId")
+//    @SagaEventHandler(associationProperty = "feeId", keyName = "accountPayableId")
 //    public void onReceivableConfirmed(final AccountReceivableFeeConfirmedEvent event) {
 //        accountReceivableStatus = TransactionStatus.CONFIRMED;
 //
@@ -131,7 +130,7 @@ public class SellExecutedCommissionManagerSaga extends ExecutedCommissionManager
 //        offsetIfPossible(event.getConfirmedDate());
 //    }
 //
-//    @SagaEventHandler(associationProperty = "feeId", keyName = "accountReceivableId")
+//    @SagaEventHandler(associationProperty = "feeId", keyName = "accountPayableId")
 //    public void onReceivableOffseted(final AccountReceivableFeeOffsetedEvent event) {
 //        accountReceivableStatus = TransactionStatus.OFFSETED;
 //

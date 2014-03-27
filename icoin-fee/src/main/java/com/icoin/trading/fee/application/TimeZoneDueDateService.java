@@ -22,7 +22,7 @@ public class TimeZoneDueDateService implements DueDateService {
     @Override
     public Date computeDueDate(Date occurringTime) {
         notNull(occurringTime);
-        return new DateTime(occurringTime, zone).toDate();
+        return new DateTime(occurringTime, zone).toLocalDate().toDate();
     }
 
     public void setZone(String zone) {
