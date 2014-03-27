@@ -3,7 +3,6 @@ package com.icoin.trading.api.fee.command.commission;
 import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
-import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
@@ -22,59 +21,51 @@ import java.util.Date;
  * Time: 4:00 PM
  * To change this template use File | Settings | File Templates.
  */
-public class StartCommissionTransactionCommand<T extends StartCommissionTransactionCommand> extends CommandSupport<T> {
+public class ExecutionTransactionCommand<T extends ExecutionTransactionCommand> extends CommandSupport<T> {
     @NotNull
-    private final FeeTransactionId feeTransactionId;
+    protected final FeeTransactionId feeTransactionId;
     @NotNull
-    private final FeeId receivedFeeId;
+    protected final OffsetId offsetId;
     @NotNull
-    private final FeeId accountReceivableFeeId;
-    @NotNull
-    private final OffsetId offsetId;
-    @NotNull
-    private final BigMoney commissionAmount;
+    protected final BigMoney commissionAmount;
     @NotEmpty
-    private final String orderId;
+    protected final String orderId;
     @NotNull
-    private final TransactionId orderTransactionId;
+    protected final TransactionId orderTransactionId;
     @NotNull
-    private final PortfolioId portfolioId;
+    protected final PortfolioId portfolioId;
     @NotNull
-    private final Date tradeTime;
+    protected final Date tradeTime;
     @NotNull
-    private final Date dueDate;
+    protected final Date dueDate;
     @NotNull
-    private final TradeType tradeType;
+    protected final TradeType tradeType;
     @NotNull
-    private final BigMoney tradedPrice;
+    protected final BigMoney tradedPrice;
     @NotNull
-    private final BigMoney tradeAmount;
+    protected final BigMoney tradeAmount;
     @NotNull
-    private final BigMoney executedMoney;
+    protected final BigMoney executedMoney;
     @NotNull
-    private final OrderBookId orderBookId;
+    protected final OrderBookId orderBookId;
     @NotNull
-    private final CoinId coinId;
+    protected final CoinId coinId;
 
-    public StartCommissionTransactionCommand(FeeTransactionId feeTransactionId,
-                                             FeeId receivedFeeId,
-                                             FeeId accountReceivableFeeId,
-                                             OffsetId offsetId,
-                                             BigMoney commissionAmount,
-                                             String orderId,
-                                             TransactionId orderTransactionId,
-                                             PortfolioId portfolioId,
-                                             Date tradeTime,
-                                             Date dueDate,
-                                             TradeType tradeType,
-                                             BigMoney tradedPrice,
-                                             BigMoney tradeAmount,
-                                             BigMoney executedMoney,
-                                             OrderBookId orderBookId,
-                                             CoinId coinId) {
+    public ExecutionTransactionCommand(FeeTransactionId feeTransactionId,
+                                       OffsetId offsetId,
+                                       BigMoney commissionAmount,
+                                       String orderId,
+                                       TransactionId orderTransactionId,
+                                       PortfolioId portfolioId,
+                                       Date tradeTime,
+                                       Date dueDate,
+                                       TradeType tradeType,
+                                       BigMoney tradedPrice,
+                                       BigMoney tradeAmount,
+                                       BigMoney executedMoney,
+                                       OrderBookId orderBookId,
+                                       CoinId coinId) {
         this.feeTransactionId = feeTransactionId;
-        this.receivedFeeId = receivedFeeId;
-        this.accountReceivableFeeId = accountReceivableFeeId;
         this.offsetId = offsetId;
         this.commissionAmount = commissionAmount;
         this.orderId = orderId;
@@ -141,14 +132,6 @@ public class StartCommissionTransactionCommand<T extends StartCommissionTransact
 
     public CoinId getCoinId() {
         return coinId;
-    }
-
-    public FeeId getReceivedFeeId() {
-        return receivedFeeId;
-    }
-
-    public FeeId getAccountReceivableFeeId() {
-        return accountReceivableFeeId;
     }
 
     public OffsetId getOffsetId() {

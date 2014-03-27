@@ -9,17 +9,19 @@ import com.homhon.base.domain.ValueObject;
  * Time: PM9:32
  * To change this template use File | Settings | File Templates.
  */
-public enum CommissionType implements ValueObject<CommissionType> {
+public enum ExecutedFeeType implements ValueObject<ExecutedFeeType> {
+    BUY_COMMISSION,
+    SELL_COMMISSION,
     BUY,
     SELL;
 
     @Override
-    public boolean sameValueAs(CommissionType tradeType) {
+    public boolean sameValueAs(ExecutedFeeType tradeType) {
         return tradeType == this;
     }
 
     @Override
-    public CommissionType copy() {
+    public ExecutedFeeType copy() {
         return this;
     }
 }

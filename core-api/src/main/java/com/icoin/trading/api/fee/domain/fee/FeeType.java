@@ -10,22 +10,22 @@ import com.homhon.base.domain.ValueObject;
  * To change this template use File | Settings | File Templates.
  */
 public enum FeeType implements ValueObject<FeeType> {
-    RESERVED(FeeMovingDirection.MOVING_IN, "Reserve for traders"),
-    BUY_COMMISSION(FeeMovingDirection.MOVING_IN, "Commission for the execution"),
-    SELL_COMMISSION(FeeMovingDirection.MOVING_IN, "Commission for the execution"),
-    INTEREST(FeeMovingDirection.MOVING_IN, "Interest from bank"),
-    REFUND(FeeMovingDirection.MOVING_OUT, "Refund to traders"),
-    REPAY(FeeMovingDirection.MOVING_OUT, "Repay the commission to consumers");
+    RESERVED(AccountingType.CREDIT, "Reserve for traders"),
+    BUY_COMMISSION(AccountingType.CREDIT, "Commission for the execution"),
+    SELL_COMMISSION(AccountingType.CREDIT, "Commission for the execution"),
+    INTEREST(AccountingType.CREDIT, "Interest from bank"),
+    REFUND(AccountingType.DEBIT, "Refund to traders"),
+    REPAY(AccountingType.CREDIT, "Repay the commission to consumers");
 
-    private FeeMovingDirection movingDirection;
+    private AccountingType movingDirection;
     private String desc;
 
-    private FeeType(FeeMovingDirection movingDirection, String desc) {
+    private FeeType(AccountingType movingDirection, String desc) {
         this.movingDirection = movingDirection;
         this.desc = desc;
     }
 
-    public FeeMovingDirection getMovingDirection() {
+    public AccountingType getMovingDirection() {
         return movingDirection;
     }
 

@@ -21,24 +21,22 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class ExecutedCommissionTransactionStartedEvent<T extends ExecutedCommissionTransactionStartedEvent> extends EventSupport<T> {
-
-
-    private final FeeTransactionId feeTransactionId;
-    private final FeeId receivedFeeId;
-    private final FeeId accountReceivableFeeId;
-    private final OffsetId offsetId;
-    private final BigMoney commissionAmount;
-    private final String orderId;
-    private final TransactionId orderTransactionId;
-    private final PortfolioId portfolioId;
-    private final Date tradeTime;
-    private final Date dueDate;
-    private final TradeType tradeType;
-    private final BigMoney tradedPrice;
-    private final BigMoney tradeAmount;
-    private final BigMoney executedMoney;
-    private final OrderBookId orderBookId;
-    private final CoinId coinId;
+    protected final FeeTransactionId feeTransactionId;
+    protected final FeeId receivedFeeId;
+    protected final FeeId accountReceivableFeeId;
+    protected final OffsetId offsetId;
+    protected final BigMoney commissionAmount;
+    protected final String orderId;
+    protected final TransactionId orderTransactionId;
+    protected final PortfolioId portfolioId;
+    protected final Date tradeTime;
+    protected final Date dueDate;
+    protected final TradeType tradeType;
+    protected final BigMoney tradedPrice;
+    protected final BigMoney tradeAmount;
+    protected final BigMoney executedMoney;
+    protected final OrderBookId orderBookId;
+    protected final CoinId coinId;
 
     public ExecutedCommissionTransactionStartedEvent(FeeTransactionId feeTransactionId,
                                                      FeeId receivedFeeId,

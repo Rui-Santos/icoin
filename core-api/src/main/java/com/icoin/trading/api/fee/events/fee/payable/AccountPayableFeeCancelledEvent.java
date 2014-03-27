@@ -1,7 +1,8 @@
-package com.icoin.trading.api.fee.events.fee;
+package com.icoin.trading.api.fee.events.fee.payable;
 
 import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.events.fee.FeeCancelledEvent;
 
 import java.util.Date;
 
@@ -12,8 +13,8 @@ import java.util.Date;
  * Time: AM7:14
  * To change this template use File | Settings | File Templates.
  */
-public class AccountReceivableFeeCancelledEvent extends FeeCancelledEvent<AccountReceivableFeeCancelledEvent> {
-    public AccountReceivableFeeCancelledEvent(FeeId feeId, CancelledReason cancelledReason, Date cancelledDate) {
+public class AccountPayableFeeCancelledEvent extends FeeCancelledEvent<AccountPayableFeeCancelledEvent> {
+    public AccountPayableFeeCancelledEvent(FeeId feeId, CancelledReason cancelledReason, Date cancelledDate) {
         super(feeId, cancelledReason, cancelledDate);
     }
 }

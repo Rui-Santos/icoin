@@ -53,4 +53,26 @@ public class BuyExecutedCommissionTransactionStartedEvent extends ExecutedCommis
                 orderBookId,
                 coinId);
     }
+
+    @Override
+    public String toString() {
+        return "ExecutedCommissionTransactionStartedEvent{" +
+                "feeTransactionId=" + feeTransactionId +
+                ", receivedFeeId=" + receivedFeeId +
+                ", accountReceivableFeeId=" + accountReceivableFeeId +
+                ", offsetId=" + offsetId +
+                ", commissionAmount=" + commissionAmount +
+                ", orderId='" + orderId + '\'' +
+                ", orderTransactionId=" + orderTransactionId +
+                ", portfolioId=" + portfolioId +
+                ", tradeTime=" + tradeTime +
+                ", dueDate=" + dueDate +
+                ", tradeType=" + tradeType +
+                ", tradedPrice=" + tradedPrice +
+                ", tradeAmount=" + tradeAmount +
+                ", executedMoney=" + executedMoney +
+                ", orderBookId=" + orderBookId +
+                ", coinId=" + coinId +
+                '}';
+    }
 }

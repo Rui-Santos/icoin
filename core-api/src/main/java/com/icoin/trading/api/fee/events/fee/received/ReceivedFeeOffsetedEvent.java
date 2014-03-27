@@ -1,6 +1,7 @@
-package com.icoin.trading.api.fee.events.fee;
+package com.icoin.trading.api.fee.events.fee.received;
 
 import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.events.fee.FeeOffsetedEvent;
 
 import java.util.Date;
 
