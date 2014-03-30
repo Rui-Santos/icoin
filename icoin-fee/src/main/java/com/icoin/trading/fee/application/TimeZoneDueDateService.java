@@ -6,7 +6,8 @@ import org.joda.time.DateTimeZone;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import static com.homhon.util.Asserts.*;
+
+import static com.homhon.util.Asserts.notNull;
 
 /**
  * Created with IntelliJ IDEA.

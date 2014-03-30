@@ -1,6 +1,10 @@
 package com.icoin.trading.fee.application.listener;
 
+import com.icoin.trading.api.fee.command.commission.GainBuyCoinTransactionCommand;
+import com.icoin.trading.api.fee.command.commission.GainSoldMoneyTransactionCommand;
 import com.icoin.trading.api.fee.command.commission.PayBuyCommissionTransactionCommand;
+import com.icoin.trading.api.fee.command.commission.PayBuyMoneyTransactionCommand;
+import com.icoin.trading.api.fee.command.commission.PaySoldCoinTransactionCommand;
 import com.icoin.trading.api.fee.command.commission.PaySellCommissionTransactionCommand;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
@@ -29,14 +33,14 @@ import static com.homhon.util.Asserts.notNull;
 @Component
 public class ExecutedTransactionFeeApplicationListener {
     private final static Logger logger = LoggerFactory.getLogger(ExecutedTransactionFeeApplicationListener.class);
-//    private DateTimeZone zone = DateTimeZone.forID("Asia/Chongqing");
+    //    private DateTimeZone zone = DateTimeZone.forID("Asia/Chongqing");
     private DueDateService dueDateService;
     private CommandGateway commandGateway;
 
     @EventHandler
-    public void handleSellCommission(TradeExecutedEvent event) {
+    public void handlePaySellCommission(TradeExecutedEvent event) {
         notNull(event.getTradeTime());
-        logger.debug("About to create a sell commission with executed event {}", event);
+        logger.debug("About to pay sell commission with executed event {}", event);
         Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
 
         PaySellCommissionTransactionCommand command =
@@ -62,9 +66,9 @@ public class ExecutedTransactionFeeApplicationListener {
     }
 
     @EventHandler
-    public void handleBuyCommission(TradeExecutedEvent event) {
+    public void handlePayBuyCommission(TradeExecutedEvent event) {
         notNull(event.getTradeTime());
-        logger.debug("About to create a buy commission with executed event {}", event);
+        logger.debug("About to pay buy commission with executed event {}", event);
         Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
 
         PayBuyCommissionTransactionCommand command =
@@ -89,20 +93,19 @@ public class ExecutedTransactionFeeApplicationListener {
         commandGateway.send(command);
     }
 
-    //lose coin amount add money amount
+    //pay sold coins
     @EventHandler
-    public void handlePaySellCoin(TradeExecutedEvent event) {
+    public void handlePaySoldCoin(TradeExecutedEvent event) {
         notNull(event.getTradeTime());
-        logger.debug("About to create a sell fee with executed event {}", event);
+        logger.debug("About to pay sold coins with executed event {}", event);
         Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
 
-        PaySellCommissionTransactionCommand command =
-                new PaySellCommissionTransactionCommand(
+        PaySoldCoinTransactionCommand command =
+                new PaySoldCoinTransactionCommand(
                         new FeeTransactionId(),
                         new FeeId(),
                         new FeeId(),
                         new OffsetId(),
-                        event.getSellCommission(),
                         event.getSellOrderId(),
                         event.getSellTransactionId(),
                         event.getSellPortfolioId(),
@@ -118,23 +121,78 @@ public class ExecutedTransactionFeeApplicationListener {
         commandGateway.send(command);
     }
 
-    //lose money amount add coin amount
+    //receive money from sale
     @EventHandler
-    public void handlePayBuyMoney(TradeExecutedEvent event) {
+    public void handleReceiveMoneyFromSale(TradeExecutedEvent event) {
         notNull(event.getTradeTime());
-        logger.debug("About to create a buy fee with executed event {}", event);
+        logger.debug("About to receive money from sale with executed event {}", event);
         Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
 
-        PayBuyCommissionTransactionCommand command =
-                new PayBuyCommissionTransactionCommand(
+        GainSoldMoneyTransactionCommand command =
+                new GainSoldMoneyTransactionCommand(
                         new FeeTransactionId(),
                         new FeeId(),
                         new FeeId(),
                         new OffsetId(),
-                        event.getSellCommission(),
                         event.getSellOrderId(),
                         event.getSellTransactionId(),
                         event.getSellPortfolioId(),
+                        event.getTradeTime(),
+                        dueDate,
+                        event.getTradeType(),
+                        event.getTradedPrice(),
+                        event.getTradeAmount(),
+                        event.getExecutedMoney(),
+                        event.getOrderBookId(),
+                        event.getCoinId());
+
+        commandGateway.send(command);
+    }
+
+    //pay for buying coins
+    @EventHandler
+    public void handlePayForCoins(TradeExecutedEvent event) {
+        notNull(event.getTradeTime());
+        logger.debug("About to pay for buying coins with executed event {}", event);
+        Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
+
+        PayBuyMoneyTransactionCommand command =
+                new PayBuyMoneyTransactionCommand(
+                        new FeeTransactionId(),
+                        new FeeId(),
+                        new FeeId(),
+                        new OffsetId(),
+                        event.getBuyOrderId(),
+                        event.getBuyTransactionId(),
+                        event.getBuyPortfolioId(),
+                        event.getTradeTime(),
+                        dueDate,
+                        event.getTradeType(),
+                        event.getTradedPrice(),
+                        event.getTradeAmount(),
+                        event.getExecutedMoney(),
+                        event.getOrderBookId(),
+                        event.getCoinId());
+
+        commandGateway.send(command);
+    }
+
+    //receive coins from sale
+    @EventHandler
+    public void handleReceiveCoinsFromSale(TradeExecutedEvent event) {
+        notNull(event.getTradeTime());
+        logger.debug("About to receive coins from sale with executed event {}", event);
+        Date dueDate = dueDateService.computeDueDate(event.getTradeTime());
+
+        GainBuyCoinTransactionCommand command =
+                new GainBuyCoinTransactionCommand(
+                        new FeeTransactionId(),
+                        new FeeId(),
+                        new FeeId(),
+                        new OffsetId(),
+                        event.getBuyOrderId(),
+                        event.getBuyTransactionId(),
+                        event.getBuyPortfolioId(),
                         event.getTradeTime(),
                         dueDate,
                         event.getTradeType(),
