@@ -12,7 +12,8 @@ import com.icoin.trading.api.fee.domain.offset.FeeItemType;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
-import com.icoin.trading.api.fee.events.commission.BuyExecutedCommissionTransactionStartedEvent;
+import com.icoin.trading.api.fee.events.execution.ExecutedReceiveCoinTransactionStartedEvent;
+import com.icoin.trading.api.fee.events.execution.ExecutedReceiveMoneyTransactionStartedEvent;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
 import org.slf4j.Logger;
@@ -20,17 +21,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Created with IntelliJ IDEA.
- * User: jihual
- * Date: 3/18/14
- * Time: 4:52 PM
+ * User: liougehooa
+ * Date: 14-3-30
+ * Time: PM10:56
  * To change this template use File | Settings | File Templates.
  */
-public class BuyExecutedTransactionFeeManagerSaga extends ReceiveTransactionFeeManagerSaga {
-    private static transient Logger logger = LoggerFactory.getLogger(BuyExecutedTransactionFeeManagerSaga.class);
+public class ReceiveSoldCoinFeeManagerSaga extends ReceiveTransactionFeeManagerSaga {
+    private static transient Logger logger = LoggerFactory.getLogger(PaySellCommissionFeeManagerSaga.class);
 
     @StartSaga
     @SagaEventHandler(associationProperty = "feeTransactionId")
-    public void onTransactionStarted(final BuyExecutedCommissionTransactionStartedEvent event) {
+    public void onTransactionStarted(final ExecutedReceiveCoinTransactionStartedEvent event) {
+        logger.info("");
         feeTransactionId = event.getFeeTransactionId();
         accountReceivableId = event.getAccountReceivableFeeId();
 
@@ -40,9 +42,9 @@ public class BuyExecutedTransactionFeeManagerSaga extends ReceiveTransactionFeeM
                         feeTransactionId,
                         accountReceivableId,
                         FeeStatus.PENDING,
-                        event.getCommissionAmount(),
-                        FeeType.BUY_COMMISSION,
-                        BusinessType.BUY_COMMISSION,
+                        event.getTradeAmount(),
+                        FeeType.SOLD_COIN,
+                        BusinessType.TRADE_EXECUTED,
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
@@ -56,9 +58,9 @@ public class BuyExecutedTransactionFeeManagerSaga extends ReceiveTransactionFeeM
                         feeTransactionId,
                         receivedFeeId,
                         FeeStatus.PENDING,
-                        event.getCommissionAmount(),
-                        FeeType.BUY_COMMISSION,
-                        BusinessType.BUY_COMMISSION,
+                        event.getTradeAmount(),
+                        FeeType.SOLD_COIN,
+                        BusinessType.TRADE_EXECUTED,
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
@@ -72,9 +74,9 @@ public class BuyExecutedTransactionFeeManagerSaga extends ReceiveTransactionFeeM
                         offsetId,
                         OffsetType.RECEIVED_AR,
                         event.getPortfolioId().toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableId.toString(), FeeItemType.AR, event.getCommissionAmount())),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, event.getCommissionAmount())),
-                        event.getCommissionAmount(),
+                        ImmutableList.of(new FeeItem(accountReceivableId.toString(), FeeItemType.AR, event.getTradeAmount())),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, event.getTradeAmount())),
+                        event.getTradeAmount(),
                         event.getTradeTime()));
     }
 }

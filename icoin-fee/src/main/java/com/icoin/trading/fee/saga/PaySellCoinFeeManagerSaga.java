@@ -2,7 +2,7 @@ package com.icoin.trading.fee.saga;
 
 import com.google.common.collect.ImmutableList;
 import com.icoin.trading.api.fee.command.offset.CreateOffsetCommand;
-import com.icoin.trading.api.fee.command.receivable.CreateAccountReceivableFeeCommand;
+import com.icoin.trading.api.fee.command.payable.CreateAccountPayableFeeCommand;
 import com.icoin.trading.api.fee.command.received.CreateReceivedFeeCommand;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
@@ -12,7 +12,7 @@ import com.icoin.trading.api.fee.domain.offset.FeeItemType;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
-import com.icoin.trading.api.fee.events.commission.SellExecutedCommissionTransactionStartedEvent;
+import com.icoin.trading.api.fee.events.execution.SellExecutedCommissionTransactionStartedEvent;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
 import org.slf4j.Logger;
@@ -25,41 +25,40 @@ import org.slf4j.LoggerFactory;
  * Time: 4:52 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SellExecutedTransactionFeeManagerSaga extends ReceiveTransactionFeeManagerSaga {
-    private static transient Logger logger = LoggerFactory.getLogger(SellExecutedTransactionFeeManagerSaga.class);
+public class PaySellCoinFeeManagerSaga extends PayTransactionFeeManagerSaga {
+    private static transient Logger logger = LoggerFactory.getLogger(PaySellCoinFeeManagerSaga.class);
 
     @StartSaga
     @SagaEventHandler(associationProperty = "feeTransactionId")
     public void onTransactionStarted(final SellExecutedCommissionTransactionStartedEvent event) {
-        logger.info("");
         feeTransactionId = event.getFeeTransactionId();
-        accountReceivableId = event.getAccountReceivableFeeId();
+        accountPayableId = event.getAccountPayableFeeId();
 
-        associateWith("accountReceivableId", accountReceivableId.toString());
+        associateWith("accountPayableId", accountPayableId.toString());
         commandGateway.send(
-                new CreateAccountReceivableFeeCommand(
+                new CreateAccountPayableFeeCommand(
                         feeTransactionId,
-                        accountReceivableId,
+                        accountPayableId,
                         FeeStatus.PENDING,
                         event.getCommissionAmount(),
                         FeeType.SELL_COMMISSION,
-                        BusinessType.SELL_COMMISSION,
+                        BusinessType.TRADE_EXECUTED,
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
                         event.getOrderTransactionId().toString()));
 
-        receivedFeeId = event.getReceivedFeeId();
+        paidFeeId = event.getPaidFeeId();
 
-        associateWith("receivedFeeId", receivedFeeId.toString());
+        associateWith("paidFeeId", paidFeeId.toString());
         commandGateway.send(
                 new CreateReceivedFeeCommand(
                         feeTransactionId,
-                        receivedFeeId,
+                        paidFeeId,
                         FeeStatus.PENDING,
                         event.getCommissionAmount(),
                         FeeType.SELL_COMMISSION,
-                        BusinessType.SELL_COMMISSION,
+                        BusinessType.TRADE_EXECUTED,
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
@@ -73,8 +72,8 @@ public class SellExecutedTransactionFeeManagerSaga extends ReceiveTransactionFee
                         offsetId,
                         OffsetType.RECEIVED_AR,
                         event.getPortfolioId().toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableId.toString(), FeeItemType.AR, event.getCommissionAmount())),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, event.getCommissionAmount())),
+                        ImmutableList.of(new FeeItem(accountPayableId.toString(), FeeItemType.AR, event.getCommissionAmount())),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, event.getCommissionAmount())),
                         event.getCommissionAmount(),
                         event.getTradeTime()));
     }
@@ -86,7 +85,7 @@ public class SellExecutedTransactionFeeManagerSaga extends ReceiveTransactionFee
 //        commandGateway.send(new ConfirmAccountReceivableFeeCommand(event.getFeeId(), event.getBusinessCreationTime()));
 //    }
 //
-//    @SagaEventHandler(associationProperty = "feeId", keyName = "receivedFeeId")
+//    @SagaEventHandler(associationProperty = "feeId", keyName = "paidFeeId")
 //    public void onReceivedCreated(final ReceivedFeeCreatedEvent event) {
 //        receivedFeeStatus = TransactionStatus.CREATED;
 //
@@ -112,7 +111,7 @@ public class SellExecutedTransactionFeeManagerSaga extends ReceiveTransactionFee
 //                && accountReceivableStatus == TransactionStatus.CONFIRMED
 //                && receivedFeeStatus == TransactionStatus.CONFIRMED) {
 //            commandGateway.send(new OffsetAccountPayableFeeCommand(accountPayableId, offsetDate));
-//            commandGateway.send(new OffsetReceivedFeeCommand(receivedFeeId, offsetDate));
+//            commandGateway.send(new OffsetReceivedFeeCommand(paidFeeId, offsetDate));
 //        }
 //    }
 //
@@ -123,7 +122,7 @@ public class SellExecutedTransactionFeeManagerSaga extends ReceiveTransactionFee
 //        offsetIfPossible(event.getConfirmedDate());
 //    }
 //
-//    @SagaEventHandler(associationProperty = "feeId", keyName = "receivedFeeId")
+//    @SagaEventHandler(associationProperty = "feeId", keyName = "paidFeeId")
 //    public void onReceivedConfirmed(final ReceivedFeeConfirmedEvent event) {
 //        receivedFeeStatus = TransactionStatus.CONFIRMED;
 //
@@ -137,7 +136,7 @@ public class SellExecutedTransactionFeeManagerSaga extends ReceiveTransactionFee
 //        completeIfPossible();
 //    }
 //
-//    @SagaEventHandler(associationProperty = "feeId", keyName = "receivedFeeId")
+//    @SagaEventHandler(associationProperty = "feeId", keyName = "paidFeeId")
 //    public void onReceivedOffseted(final ReceivedFeeOffsetedEvent event) {
 //        receivedFeeStatus = TransactionStatus.OFFSETED;
 //

@@ -2,6 +2,7 @@ package com.icoin.trading.fee.saga;
 
 import com.icoin.trading.api.fee.command.offset.CancelOffsetCommand;
 import com.icoin.trading.api.fee.command.offset.OffsetFeesCommand;
+import com.icoin.trading.api.fee.command.receivable.CancelAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.ConfirmAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.OffsetAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.received.CancelReceivedFeeCommand;
@@ -136,7 +137,7 @@ public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
     public void onOffsetCancelled(final OffsetCancelledEvent event) {
         offsetStatus = TransactionStatus.CANCELLED;
 
-        commandGateway.send(new CancelReceivedFeeCommand(accountReceivableId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, event.getCancelledDate()));
+        commandGateway.send(new CancelAccountReceivableFeeCommand(accountReceivableId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, event.getCancelledDate()));
         commandGateway.send(new CancelReceivedFeeCommand(receivedFeeId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, event.getCancelledDate()));
     }
 

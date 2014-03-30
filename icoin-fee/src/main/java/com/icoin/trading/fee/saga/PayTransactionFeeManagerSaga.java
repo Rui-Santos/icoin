@@ -2,23 +2,24 @@ package com.icoin.trading.fee.saga;
 
 import com.icoin.trading.api.fee.command.offset.CancelOffsetCommand;
 import com.icoin.trading.api.fee.command.offset.OffsetFeesCommand;
-import com.icoin.trading.api.fee.command.payable.ConfirmAccountPayableFeeCommand;
-import com.icoin.trading.api.fee.command.payable.OffsetAccountPayableFeeCommand;
 import com.icoin.trading.api.fee.command.paid.CancelPaidFeeCommand;
 import com.icoin.trading.api.fee.command.paid.ConfirmPaidFeeCommand;
 import com.icoin.trading.api.fee.command.paid.OffsetPaidFeeCommand;
+import com.icoin.trading.api.fee.command.payable.CancelAccountPayableFeeCommand;
+import com.icoin.trading.api.fee.command.payable.ConfirmAccountPayableFeeCommand;
+import com.icoin.trading.api.fee.command.payable.OffsetAccountPayableFeeCommand;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.offset.CancelledReason;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
-import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCancelledEvent;
-import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeConfirmedEvent;
-import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCreatedEvent;
-import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeOffsetedEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCreatedEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeOffsetedEvent;
+import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCancelledEvent;
+import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeConfirmedEvent;
+import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeOffsetedEvent;
 import com.icoin.trading.api.fee.events.offset.FeesOffsetedEvent;
 import com.icoin.trading.api.fee.events.offset.OffsetAmountNotMatchedEvent;
 import com.icoin.trading.api.fee.events.offset.OffsetCancelledEvent;
@@ -136,7 +137,7 @@ public class PayTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
     public void onOffsetCancelled(final OffsetCancelledEvent event) {
         offsetStatus = TransactionStatus.CANCELLED;
 
-        commandGateway.send(new CancelPaidFeeCommand(accountPayableId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, event.getCancelledDate()));
+        commandGateway.send(new CancelAccountPayableFeeCommand(accountPayableId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, event.getCancelledDate()));
         commandGateway.send(new CancelPaidFeeCommand(paidFeeId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, event.getCancelledDate()));
     }
 
