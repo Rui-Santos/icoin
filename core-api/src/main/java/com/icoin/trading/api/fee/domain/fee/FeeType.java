@@ -12,6 +12,8 @@ import com.homhon.base.domain.ValueObject;
 public enum FeeType implements ValueObject<FeeType> {
     RESERVED(AccountingType.CREDIT, "Reserve for traders"),
     BUY_COMMISSION(AccountingType.CREDIT, "Commission for the execution"),
+    SOLD_MONEY(AccountingType.CREDIT, "Sold money"),
+    SOLD_COIN(AccountingType.CREDIT, "Sold coin"),
     SELL_COMMISSION(AccountingType.CREDIT, "Commission for the execution"),
     INTEREST(AccountingType.CREDIT, "Interest from bank"),
     REFUND(AccountingType.DEBIT, "Refund to traders"),

@@ -8,6 +8,7 @@ import java.util.Date;
 import static com.homhon.util.Asserts.hasText;
 import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Asserts.notNull;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -24,7 +25,7 @@ public class InvocationContext {
     public InvocationContext(String userId, BigMoney amount, Date occurringTime) {
         hasText(userId);
         notNull(amount);
-        isTrue(amount.isPositive(),"Amount should be greater than zero!");
+        isTrue(amount.isPositive(), "Amount should be greater than zero!");
         notNull(occurringTime);
 
         this.userId = userId;
@@ -48,7 +49,7 @@ public class InvocationContext {
         stopWatch.start(invocationName);
     }
 
-    public void stopProfiling(){
+    public void stopProfiling() {
         stopWatch.stop();
     }
 
@@ -56,7 +57,7 @@ public class InvocationContext {
         return stopWatch;
     }
 
-    public String printProfiling(){
+    public String printProfiling() {
         return stopWatch.prettyPrint();
     }
 

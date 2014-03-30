@@ -34,5 +34,5 @@ public abstract class ProfilingInterceptor implements Interceptor {
         return invocation.invoke();
     }
 
-    protected abstract ValidationCode doIntercept(Invocation invocation) throws Exception ;
+    protected abstract ValidationCode doIntercept(Invocation invocation) throws Exception;
 }

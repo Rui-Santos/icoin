@@ -42,8 +42,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         final BigMoney tradeAmount = BigMoney.of(CurrencyUnit.of("BTC"), 10000);
         final BigMoney tradedPrice = BigMoney.zero(CurrencyUnit.CAD);
         final BigMoney executedMoney = BigMoney.of(CurrencyUnit.CAD, 0.00001);
-        final BigMoney buyCommission = BigMoney.zero(CurrencyUnit.CAD);
-        final BigMoney sellCommission = BigMoney.zero(CurrencyUnit.of("BTC"));
+        final BigMoney buyCommission = BigMoney.parse("CAD 1");
+        final BigMoney sellCommission = BigMoney.parse("BTC 1");
         final Date tradeTime = currentTime();
         final String buyOrderId = "buyOrderId";
         final String sellOrderId = "sellOrderId";
@@ -53,7 +53,7 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         final CoinId coinId = new CoinId("XPM");
         final PortfolioId buyPortfolioId = new PortfolioId();
         final PortfolioId sellPortfolioId = new PortfolioId();
-        final DateTimeZone zone =  DateTimeZone.forID("America/New_York");
+        final DateTimeZone zone = DateTimeZone.forID("America/New_York");
         final Date dueDate = new DateTime(tradeTime, zone).toDate();
 
         final DueDateService dueDateService = mock(DueDateService.class);
@@ -65,7 +65,7 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         listener.setCommandGateway(gateway);
         listener.setDueDateService(dueDateService);
 
-        listener.handleSellCommission(
+        listener.handlePaySellCommission(
                 new TradeExecutedEvent(
                         orderbookId,
                         coinId,
@@ -89,10 +89,10 @@ public class ExecutedTransactionFeeApplicationListenerTest {
 
         assertThat(command, notNullValue());
         assertThat(command.getFeeTransactionId(), notNullValue());
-        assertThat(command.getReceivedFeeId(), notNullValue());
-        assertThat(command.getAccountReceivableFeeId(), notNullValue());
+        assertThat(command.getPaidFeeId(), notNullValue());
+        assertThat(command.getAccountPayableFeeId(), notNullValue());
         assertThat(command.getOffsetId(), notNullValue());
-        assertThat(command.getCommissionAmount(), equalTo(sellCommission));
+        assertThat(command.getCommission(), equalTo(sellCommission));
         assertThat(command.getOrderId(), equalTo(sellOrderId));
         assertThat(command.getOrderTransactionId(), equalTo(sellTransactionId));
         assertThat(command.getPortfolioId(), equalTo(sellPortfolioId));
@@ -112,8 +112,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         final BigMoney tradeAmount = BigMoney.of(CurrencyUnit.of("BTC"), 10000);
         final BigMoney tradedPrice = BigMoney.zero(CurrencyUnit.CAD);
         final BigMoney executedMoney = BigMoney.of(CurrencyUnit.CAD, 0.00001);
-        final BigMoney buyCommission = BigMoney.zero(CurrencyUnit.CAD);
-        final BigMoney sellCommission = BigMoney.zero(CurrencyUnit.of("BTC"));
+        final BigMoney buyCommission = BigMoney.parse("CAD 1");
+        final BigMoney sellCommission = BigMoney.parse("BTC 1");
         final Date tradeTime = currentTime();
         final String buyOrderId = "buyOrderId";
         final String sellOrderId = "sellOrderId";
@@ -123,7 +123,7 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         final CoinId coinId = new CoinId("XPM");
         final PortfolioId buyPortfolioId = new PortfolioId();
         final PortfolioId sellPortfolioId = new PortfolioId();
-        final DateTimeZone zone =  DateTimeZone.forID("America/New_York");
+        final DateTimeZone zone = DateTimeZone.forID("America/New_York");
         final Date dueDate = new DateTime(tradeTime, zone).toDate();
 
         final DueDateService dueDateService = mock(DueDateService.class);
@@ -135,7 +135,7 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         listener.setCommandGateway(gateway);
         listener.setDueDateService(dueDateService);
 
-        listener.handleBuyCommission(
+        listener.handlePayBuyCommission(
                 new TradeExecutedEvent(
                         orderbookId,
                         coinId,
@@ -159,10 +159,10 @@ public class ExecutedTransactionFeeApplicationListenerTest {
 
         assertThat(command, notNullValue());
         assertThat(command.getFeeTransactionId(), notNullValue());
-        assertThat(command.getReceivedFeeId(), notNullValue());
-        assertThat(command.getAccountReceivableFeeId(), notNullValue());
+        assertThat(command.getPaidFeeId(), notNullValue());
+        assertThat(command.getAccountPayableFeeId(), notNullValue());
         assertThat(command.getOffsetId(), notNullValue());
-        assertThat(command.getCommissionAmount(), equalTo(sellCommission));
+        assertThat(command.getCommission(), equalTo(sellCommission));
         assertThat(command.getOrderId(), equalTo(sellOrderId));
         assertThat(command.getOrderTransactionId(), equalTo(sellTransactionId));
         assertThat(command.getPortfolioId(), equalTo(sellPortfolioId));

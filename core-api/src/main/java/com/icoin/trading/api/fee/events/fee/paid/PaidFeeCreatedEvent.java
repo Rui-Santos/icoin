@@ -19,16 +19,17 @@ import java.util.Date;
  */
 public class PaidFeeCreatedEvent extends FeeCreatedEvent<PaidFeeCreatedEvent> {
     private final PaidMode paidMode;
+
     public PaidFeeCreatedEvent(FeeId feeId,
-                                   FeeStatus feeStatus,
-                                   BigMoney amount,
-                                   FeeType feeType,
-                                   Date dueDate,
-                                   Date businessCreationTime,
-                                   String userAccountId,
-                                   BusinessType businessType,
-                                   String businessReferenceId,
-                                   PaidMode paidMode) {
+                               FeeStatus feeStatus,
+                               BigMoney amount,
+                               FeeType feeType,
+                               Date dueDate,
+                               Date businessCreationTime,
+                               String userAccountId,
+                               BusinessType businessType,
+                               String businessReferenceId,
+                               PaidMode paidMode) {
         super(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, userAccountId, businessType, businessReferenceId);
         this.paidMode = paidMode;
     }

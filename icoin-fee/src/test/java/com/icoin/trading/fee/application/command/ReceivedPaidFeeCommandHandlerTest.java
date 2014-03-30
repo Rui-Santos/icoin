@@ -72,7 +72,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 FeeStatus.PENDING,
                 sellCommissionAmount,
                 FeeType.SELL_COMMISSION,
-                BusinessType.SELL_COMMISSION,
+                BusinessType.TRADE_EXECUTED,
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
@@ -90,7 +90,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
-                                BusinessType.SELL_COMMISSION,
+                                BusinessType.TRADE_EXECUTED,
                                 orderTransactionId.toString(),
                                 receivedSource));
     }
@@ -107,7 +107,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
-                BusinessType.SELL_COMMISSION,
+                BusinessType.TRADE_EXECUTED,
                 orderTransactionId.toString(),
                 receivedSource))
                 .when(command)
@@ -126,7 +126,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
-                BusinessType.SELL_COMMISSION,
+                BusinessType.TRADE_EXECUTED,
                 orderTransactionId.toString(),
                 receivedSource))
                 .when(command)
@@ -146,7 +146,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
-                BusinessType.SELL_COMMISSION,
+                BusinessType.TRADE_EXECUTED,
                 orderTransactionId.toString(),
                 receivedSource))
                 .when(command)

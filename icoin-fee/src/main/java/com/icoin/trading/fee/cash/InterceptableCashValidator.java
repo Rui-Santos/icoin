@@ -14,13 +14,13 @@ import java.util.List;
  * Time: PM9:33
  * To change this template use File | Settings | File Templates.
  */
-public abstract class InterceptableCashValidator implements CashValidator{
+public abstract class InterceptableCashValidator implements CashValidator {
     private static Logger logger = LoggerFactory.getLogger(InterceptableCashValidator.class);
 
     private List<Interceptor> interceptors;
 
     @Override
-    public ValidationCode canCreate(String userId, BigMoney amount, Date occurringTime) throws Exception{
+    public ValidationCode canCreate(String userId, BigMoney amount, Date occurringTime) throws Exception {
 
         InvocationProxy invocation = createInvocation(interceptors, userId, amount, occurringTime);
         ValidationCode resultCode = invocation.invoke();

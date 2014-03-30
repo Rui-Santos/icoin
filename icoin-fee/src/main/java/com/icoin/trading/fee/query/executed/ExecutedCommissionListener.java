@@ -1,8 +1,8 @@
 package com.icoin.trading.fee.query.executed;
 
 import com.icoin.trading.api.fee.domain.ExecutedFeeType;
-import com.icoin.trading.api.fee.events.commission.BuyExecutedCommissionTransactionStartedEvent;
-import com.icoin.trading.api.fee.events.commission.SellExecutedCommissionTransactionStartedEvent;
+import com.icoin.trading.api.fee.events.execution.BuyExecutedCommissionTransactionStartedEvent;
+import com.icoin.trading.api.fee.events.execution.SellExecutedCommissionTransactionStartedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -26,8 +26,6 @@ public class ExecutionTransactionCommand<T extends ExecutionTransactionCommand> 
     protected final FeeTransactionId feeTransactionId;
     @NotNull
     protected final OffsetId offsetId;
-    @NotNull
-    protected final BigMoney commissionAmount;
     @NotEmpty
     protected final String orderId;
     @NotNull
@@ -53,7 +51,6 @@ public class ExecutionTransactionCommand<T extends ExecutionTransactionCommand> 
 
     public ExecutionTransactionCommand(FeeTransactionId feeTransactionId,
                                        OffsetId offsetId,
-                                       BigMoney commissionAmount,
                                        String orderId,
                                        TransactionId orderTransactionId,
                                        PortfolioId portfolioId,
@@ -67,7 +64,6 @@ public class ExecutionTransactionCommand<T extends ExecutionTransactionCommand> 
                                        CoinId coinId) {
         this.feeTransactionId = feeTransactionId;
         this.offsetId = offsetId;
-        this.commissionAmount = commissionAmount;
         this.orderId = orderId;
         this.orderTransactionId = orderTransactionId;
         this.portfolioId = portfolioId;
@@ -84,10 +80,6 @@ public class ExecutionTransactionCommand<T extends ExecutionTransactionCommand> 
 
     public FeeTransactionId getFeeTransactionId() {
         return feeTransactionId;
-    }
-
-    public BigMoney getCommissionAmount() {
-        return commissionAmount;
     }
 
     public String getOrderId() {

@@ -30,7 +30,7 @@ public class ReceivedEntryListener {
     }
 
     @EventHandler
-     public void handleConfirmed(ReceivedFeeConfirmedEvent event) {
+    public void handleConfirmed(ReceivedFeeConfirmedEvent event) {
         final ReceivedFeeEntry entry = repository.findOne(event.getFeeId().toString());
 
         if (entry == null) {

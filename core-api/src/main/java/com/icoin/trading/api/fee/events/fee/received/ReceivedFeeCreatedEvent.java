@@ -19,6 +19,7 @@ import java.util.Date;
  */
 public class ReceivedFeeCreatedEvent extends FeeCreatedEvent<ReceivedFeeCreatedEvent> {
     private final ReceivedSource receivedSource;
+
     public ReceivedFeeCreatedEvent(FeeId feeId,
                                    FeeStatus feeStatus,
                                    BigMoney amount,

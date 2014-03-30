@@ -11,8 +11,10 @@ import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.joda.money.BigMoney;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+import static com.homhon.util.Asserts.isTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,11 +24,14 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class PayBuyCommissionTransactionCommand extends PayTransactionCommand<PayBuyCommissionTransactionCommand> {
+    @NotNull
+    private BigMoney commission;
+
     public PayBuyCommissionTransactionCommand(FeeTransactionId feeTransactionId,
                                               FeeId paidFeeId,
                                               FeeId accountPayableFeeId,
                                               OffsetId offsetId,
-                                              BigMoney commissionAmount,
+                                              BigMoney commission,
                                               String orderId,
                                               TransactionId orderTransactionId,
                                               PortfolioId portfolioId,
@@ -42,7 +47,6 @@ public class PayBuyCommissionTransactionCommand extends PayTransactionCommand<Pa
                 paidFeeId,
                 accountPayableFeeId,
                 offsetId,
-                commissionAmount,
                 orderId,
                 orderTransactionId,
                 portfolioId,
@@ -54,5 +58,11 @@ public class PayBuyCommissionTransactionCommand extends PayTransactionCommand<Pa
                 executedMoney,
                 orderBookId,
                 coinId);
+        isTrue(commission.isPositive());
+        this.commission = commission;
+    }
+
+    public BigMoney getCommission() {
+        return commission;
     }
 }

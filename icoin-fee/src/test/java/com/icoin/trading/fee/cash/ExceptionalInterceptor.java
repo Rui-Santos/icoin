@@ -1,6 +1,7 @@
 package com.icoin.trading.fee.cash;
 
 import com.icoin.trading.fee.cash.interceptor.ProfilingInterceptor;
+
 /**
  * Created with IntelliJ IDEA.
  * User: jihual

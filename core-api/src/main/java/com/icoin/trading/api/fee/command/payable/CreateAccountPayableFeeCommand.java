@@ -18,7 +18,7 @@ import java.util.Date;
  * Time: PM9:28
  * To change this template use File | Settings | File Templates.
  */
-public class CreateAccountPayableFeeCommand<T extends CreateAccountPayableFeeCommand> extends CreateFeeCommand<T> {
+public class CreateAccountPayableFeeCommand extends CreateFeeCommand<CreateAccountPayableFeeCommand> {
 
     public CreateAccountPayableFeeCommand(FeeTransactionId feeTransactionId,
                                           FeeId feeId,

@@ -63,6 +63,7 @@
         <module>interfaces</module>
         <module>core-api</module>
         <module>icoin-fee</module>
+        <module>bitcoin-client</module>
     </modules>
 
     <build>
@@ -425,6 +426,25 @@
                 <version>1.9.5</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.3.2</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.3.2</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.3.2</version>
+                <scope>compile</scope>
+            </dependency>
+
             <!--http-->
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -457,8 +477,9 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>1.4</version>
+                <version>2.4</version>
             </dependency>
+
 
             <!--logging-->
             <dependency>

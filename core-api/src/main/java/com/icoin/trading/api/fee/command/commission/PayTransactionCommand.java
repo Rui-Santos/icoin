@@ -30,7 +30,6 @@ public class PayTransactionCommand<T extends PayTransactionCommand> extends Exec
                                  FeeId paidFeeId,
                                  FeeId accountPayableFeeId,
                                  OffsetId offsetId,
-                                 BigMoney commissionAmount,
                                  String orderId,
                                  TransactionId orderTransactionId,
                                  PortfolioId portfolioId,
@@ -44,7 +43,6 @@ public class PayTransactionCommand<T extends PayTransactionCommand> extends Exec
                                  CoinId coinId) {
         super(feeTransactionId,
                 offsetId,
-                commissionAmount,
                 orderId,
                 orderTransactionId,
                 portfolioId,

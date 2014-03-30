@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BitcoinAddressService implements AddressService {
     private BitcoinRpcOperations operations;
+
     @Override
     public boolean validate(String address) {
         final ValidateAddressResponse response = operations.validateAddress(address);

@@ -10,8 +10,7 @@ import com.homhon.base.domain.ValueObject;
  * To change this template use File | Settings | File Templates.
  */
 public enum BusinessType implements ValueObject<BusinessType> {
-    SELL_COMMISSION,
-    BUY_COMMISSION,
+    TRADE_EXECUTED,
     CHARGE_COIN_COMMISSION,
     CHARGE_MONEY_COMMISSION,
     WITHDRAW_COIN_COMMISSION,

@@ -30,7 +30,6 @@ public class ReceiveTransactionCommand<T extends ReceiveTransactionCommand> exte
                                      FeeId receivedFeeId,
                                      FeeId accountReceivableFeeId,
                                      OffsetId offsetId,
-                                     BigMoney commissionAmount,
                                      String orderId,
                                      TransactionId orderTransactionId,
                                      PortfolioId portfolioId,
@@ -44,7 +43,6 @@ public class ReceiveTransactionCommand<T extends ReceiveTransactionCommand> exte
                                      CoinId coinId) {
         super(feeTransactionId,
                 offsetId,
-                commissionAmount,
                 orderId,
                 orderTransactionId,
                 portfolioId,

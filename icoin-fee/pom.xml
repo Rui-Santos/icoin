@@ -36,7 +36,11 @@
             <artifactId>mongobase</artifactId>
         </dependency>
 
-
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>icoin-trading-bitcoin-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!--test-->
         <dependency>
             <groupId>org.axonframework</groupId>

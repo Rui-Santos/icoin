@@ -8,6 +8,7 @@ import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -17,7 +18,7 @@ import static org.hamcrest.Matchers.is;
  */
 public class DefaultInvocationTest {
     @Test
-     public void testInvoke() throws Exception {
+    public void testInvoke() throws Exception {
         SleepInterceptor interceptor1 = new SleepInterceptor(100);
         SleepInterceptor interceptor2 = new SleepInterceptor(50);
         DefaultInvocation invocation =

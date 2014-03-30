@@ -8,7 +8,6 @@ import com.icoin.trading.api.fee.domain.fee.BusinessType;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
-import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import org.joda.money.BigMoney;
 
 import javax.validation.constraints.NotNull;

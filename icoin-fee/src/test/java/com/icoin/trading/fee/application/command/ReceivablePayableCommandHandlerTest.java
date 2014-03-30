@@ -70,7 +70,7 @@ public class ReceivablePayableCommandHandlerTest {
                 FeeStatus.PENDING,
                 sellCommissionAmount,
                 FeeType.SELL_COMMISSION,
-                BusinessType.SELL_COMMISSION,
+                BusinessType.TRADE_EXECUTED,
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
@@ -87,7 +87,7 @@ public class ReceivablePayableCommandHandlerTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
-                                BusinessType.SELL_COMMISSION,
+                                BusinessType.TRADE_EXECUTED,
                                 orderTransactionId.toString()));
     }
 
@@ -105,7 +105,7 @@ public class ReceivablePayableCommandHandlerTest {
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
-                        BusinessType.SELL_COMMISSION,
+                        BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .when(command)
                 .expectEvents(
@@ -128,7 +128,7 @@ public class ReceivablePayableCommandHandlerTest {
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
-                        BusinessType.SELL_COMMISSION,
+                        BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .when(command)
                 .expectEvents(
@@ -151,7 +151,7 @@ public class ReceivablePayableCommandHandlerTest {
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
-                        BusinessType.SELL_COMMISSION,
+                        BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .when(command)
                 .expectEvents(

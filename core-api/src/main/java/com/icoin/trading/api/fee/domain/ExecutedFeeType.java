@@ -12,8 +12,8 @@ import com.homhon.base.domain.ValueObject;
 public enum ExecutedFeeType implements ValueObject<ExecutedFeeType> {
     BUY_COMMISSION,
     SELL_COMMISSION,
-    BUY,
-    SELL;
+    PAY,
+    RECEIVE;
 
     @Override
     public boolean sameValueAs(ExecutedFeeType tradeType) {
