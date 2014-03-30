@@ -26,7 +26,7 @@ public class ReceivedFee extends FeeAggregateRoot<ReceivedFee> {
     private ReceivedSource receivedSource;
 
     @SuppressWarnings("UnusedDeclaration")
-    protected ReceivedFee(){
+    protected ReceivedFee() {
 
     }
 

@@ -9,7 +9,7 @@ import com.icoin.trading.fee.domain.address.Address;
  * Time: AM1:17
  * To change this template use File | Settings | File Templates.
  */
-public class CoinCash<T extends CoinCash> extends Cash<T>{
+public class CoinCash<T extends CoinCash> extends Cash<T> {
     private Address address;
 
     public Address getAddress() {

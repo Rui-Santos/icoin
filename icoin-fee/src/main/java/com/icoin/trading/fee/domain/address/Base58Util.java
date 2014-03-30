@@ -2,6 +2,7 @@ package com.icoin.trading.fee.domain.address;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa

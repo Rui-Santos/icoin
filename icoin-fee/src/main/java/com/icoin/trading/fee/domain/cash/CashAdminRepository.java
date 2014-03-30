@@ -12,8 +12,8 @@ import java.util.List;
  * Time: PM10:15
  * To change this template use File | Settings | File Templates.
  */
-public interface CashRepository<T extends Cash> extends GenericCrudRepository<T, String> {
-    List<T> findByUserId(String userId);
+public interface CashAdminRepository extends GenericCrudRepository<CashAdmin, String> {
+    List<CashAdmin> findByUserId(String userId);
 
-    List<T> findByUserId(String userId, Date date);
+    List<CashAdmin> findByUserId(String userId, Date date);
 }

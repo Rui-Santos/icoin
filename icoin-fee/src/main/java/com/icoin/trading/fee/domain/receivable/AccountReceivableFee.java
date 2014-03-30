@@ -36,7 +36,7 @@ public class AccountReceivableFee extends FeeAggregateRoot<AccountReceivableFee>
         apply(new AccountReceivableFeeConfirmedEvent(feeId, confirmedDate));
     }
 
-    public void cancel(CancelledReason cancelReason,Date cancelledDate) {
+    public void cancel(CancelledReason cancelReason, Date cancelledDate) {
         apply(new AccountReceivableFeeCancelledEvent(feeId, cancelReason, cancelledDate));
     }
 

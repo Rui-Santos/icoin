@@ -42,11 +42,11 @@ public class Address extends VersionedEntitySupport<Address, String, Integer> {
         this.account = account;
     }
 
-    public void pickUp(){
+    public void pickUp() {
         picked = true;
     }
 
-    public void release(){
+    public void release() {
         picked = false;
     }
 
