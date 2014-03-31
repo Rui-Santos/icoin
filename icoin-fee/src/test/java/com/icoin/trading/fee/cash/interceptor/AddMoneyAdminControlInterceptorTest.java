@@ -65,6 +65,5 @@ public class AddMoneyAdminControlInterceptorTest {
         final ValidationCode validationCode = interceptor.intercept(invocation);
 
         assertThat(validationCode, anyOf(nullValue(), is(ValidationCode.SYSTEM_DISALLOWED)));
-
     }
 }
