@@ -127,7 +127,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                                 new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, portfolioId.toString())),
                         new CreateOffsetCommand(
                                 offsetId,
-                                OffsetType.RECEIVED_AR,
+                                OffsetType.AP_PAID,
                                 portfolioId.toString(),
                                 ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                                 ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -238,7 +238,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                 .whenAggregate(offsetId).publishes(
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -272,7 +272,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -341,7 +341,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -410,7 +410,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -473,7 +473,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -538,7 +538,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -603,7 +603,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -674,7 +674,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -741,7 +741,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -813,7 +813,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -885,7 +885,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
@@ -957,7 +957,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
                         ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
                         ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
