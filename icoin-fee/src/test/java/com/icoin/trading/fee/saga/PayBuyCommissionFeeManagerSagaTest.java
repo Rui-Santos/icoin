@@ -129,8 +129,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                                 offsetId,
                                 OffsetType.AP_PAID,
                                 portfolioId.toString(),
-                                ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                                ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                                ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                                ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                                 commissionAmount,
                                 tradeTime));
 
@@ -240,8 +240,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime))
                 .expectActiveSagas(1)
@@ -274,8 +274,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
 
@@ -343,8 +343,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
 
@@ -412,8 +412,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
 
@@ -475,8 +475,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
                 new ReceivedFeeCreatedEvent(
@@ -540,8 +540,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
                 new ReceivedFeeCreatedEvent(
@@ -605,8 +605,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
 
@@ -676,8 +676,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
                 new ReceivedFeeCreatedEvent(
@@ -743,8 +743,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
 
@@ -815,8 +815,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
 
@@ -887,8 +887,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
 
@@ -959,8 +959,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         offsetId,
                         OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
+                        ImmutableList.of(new FeeItem(accountReceivableFeeId.toString(), FeeItemType.AP, commissionAmount)),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.PAID, commissionAmount)),
                         commissionAmount,
                         tradeTime),
 
