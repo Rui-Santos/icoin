@@ -157,7 +157,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderBookId,
                         coinId))
                 .whenAggregate(accountReceivableFeeId).publishes(
-                new AccountReceivableFeeCreatedEvent(
+                new AccountPayableFeeCreatedEvent(
                         accountReceivableFeeId,
                         FeeStatus.PENDING,
                         commissionAmount,
@@ -292,7 +292,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
 
 
-                new AccountReceivableFeeCreatedEvent(
+                new AccountPayableFeeCreatedEvent(
                         accountReceivableFeeId,
                         FeeStatus.PENDING,
                         commissionAmount,
@@ -360,7 +360,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.ALIPAY, orderTransactionId.toString())),
 
-                new AccountReceivableFeeCreatedEvent(
+                new AccountPayableFeeCreatedEvent(
                         accountReceivableFeeId,
                         FeeStatus.PENDING,
                         commissionAmount,
@@ -429,7 +429,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.ALIPAY, orderTransactionId.toString())),
 
-                new AccountReceivableFeeCreatedEvent(
+                new AccountPayableFeeCreatedEvent(
                         accountReceivableFeeId,
                         FeeStatus.PENDING,
                         commissionAmount,
@@ -555,7 +555,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
-                new AccountReceivableFeeCreatedEvent(
+                new AccountPayableFeeCreatedEvent(
                         accountReceivableFeeId,
                         FeeStatus.PENDING,
                         commissionAmount,
@@ -623,7 +623,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
 
 
-                new AccountReceivableFeeCreatedEvent(
+                new AccountPayableFeeCreatedEvent(
                         accountReceivableFeeId,
                         FeeStatus.PENDING,
                         commissionAmount,
@@ -693,7 +693,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
 
 
-                new AccountReceivableFeeCreatedEvent(
+                new AccountPayableFeeCreatedEvent(
                         accountReceivableFeeId,
                         FeeStatus.PENDING,
                         commissionAmount,
@@ -761,7 +761,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
 
 
-                new AccountReceivableFeeCreatedEvent(
+                new AccountPayableFeeCreatedEvent(
                         accountReceivableFeeId,
                         FeeStatus.PENDING,
                         commissionAmount,
