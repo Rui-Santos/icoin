@@ -1,7 +1,20 @@
 package com.icoin.trading.fee.domain.paid;
 
 import com.icoin.trading.api.fee.domain.PaidMode;
+import com.icoin.trading.api.fee.domain.fee.BusinessType;
+import com.icoin.trading.api.fee.domain.fee.CancelledReason;
+import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.domain.fee.FeeStatus;
+import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCancelledEvent;
+import com.icoin.trading.api.fee.events.fee.paid.PaidFeeConfirmedEvent;
+import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.paid.PaidFeeOffsetedEvent;
 import com.icoin.trading.fee.domain.fee.FeeAggregateRoot;
+import org.axonframework.eventhandling.annotation.EventHandler;
+import org.joda.money.BigMoney;
+
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,5 +28,61 @@ public class PaidFee extends FeeAggregateRoot<PaidFee> {
 
     @SuppressWarnings("UnusedDeclaration")
     protected PaidFee() {
+
+    }
+
+    public PaidFee(FeeId feeId,
+                   FeeStatus feeStatus,
+                   BigMoney amount,
+                   FeeType feeType,
+                   Date dueDate,
+                   Date businessCreationTime,
+                   String userAccountId,
+                   BusinessType businessType,
+                   String businessReferenceId,
+                   PaidMode paidSource) {
+        apply(new PaidFeeCreatedEvent(feeId,
+                feeStatus,
+                amount,
+                feeType,
+                dueDate,
+                businessCreationTime,
+                userAccountId,
+                businessType,
+                businessReferenceId,
+                paidSource));
+    }
+
+    public void confirm(Date confirmedDate) {
+        apply(new PaidFeeConfirmedEvent(feeId, confirmedDate));
+    }
+
+    public void cancel(CancelledReason cancelReason, Date cancelledDate) {
+        apply(new PaidFeeCancelledEvent(feeId, cancelReason, cancelledDate));
+    }
+
+    public void offset(Date offsetDate) {
+        apply(new PaidFeeOffsetedEvent(feeId, offsetDate));
+    }
+
+    @EventHandler
+    public void on(PaidFeeCreatedEvent event) {
+        onCreated(event);
+        paidMode = event.getPaidMode();
+    }
+
+    @EventHandler
+    public void on(PaidFeeConfirmedEvent event) {
+        onConfirmed(event);
+    }
+
+    @EventHandler
+    public void on(PaidFeeCancelledEvent event) {
+        onCancelled(event);
+    }
+
+    @EventHandler
+    public void on(PaidFeeOffsetedEvent event) {
+        onOffseted(event);
     }
 }

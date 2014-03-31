@@ -67,6 +67,7 @@ public class ReceivedFee extends FeeAggregateRoot<ReceivedFee> {
     @EventHandler
     public void on(ReceivedFeeCreatedEvent event) {
         onCreated(event);
+        receivedSource = event.getReceivedSource();
     }
 
     @EventHandler
@@ -83,5 +84,4 @@ public class ReceivedFee extends FeeAggregateRoot<ReceivedFee> {
     public void on(ReceivedFeeOffsetedEvent event) {
         onOffseted(event);
     }
-
 }

@@ -1,8 +1,12 @@
 package com.icoin.trading.fee.domain.address;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport;
+import org.joda.money.BigMoney;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.util.Date;
+
+import static com.homhon.util.Asserts.isTrue;
 import static com.homhon.util.Strings.hasText;
 
 /**
@@ -13,44 +17,36 @@ import static com.homhon.util.Strings.hasText;
  * To change this template use File | Settings | File Templates.
  */
 public class Address extends VersionedEntitySupport<Address, String, Integer> {
-    private boolean picked;
     @Indexed
     private String address;
-    private String account;
+    @Indexed
+    private String walletHostname;//wallet server 1/2/3
+    @Indexed
+    private String userId;
+    private String account;//same as userid now
+    //listreceivedbyaddress
+    //getnewaddress
+    private int confirmations;
+    private BigMoney amount;
+    private BigMoney confirmedAmount;
+    private boolean complete;
+    private Date created;
 
-    public boolean isPicked() {
-        return picked;
+
+    public String getTransactionId() {
+        return getPrimaryKey();
     }
 
-    private void setPicked(boolean picked) {
-        this.picked = picked;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
+    public Address(String address) {
+        isTrue(simpleCheck(), "the address is invalid");
         this.address = address;
     }
 
-    public String getAccount() {
-        return account;
+    public void validate() {
+
     }
 
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public void pickUp() {
-        picked = true;
-    }
-
-    public void release() {
-        picked = false;
-    }
-
-    public boolean isValid() {
+    private boolean simpleCheck() {
         if (!hasText(address)) {
             return false;
         }
