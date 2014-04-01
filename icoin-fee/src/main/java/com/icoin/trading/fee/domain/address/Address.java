@@ -24,6 +24,7 @@ public class Address extends VersionedEntitySupport<Address, String, Integer> {
     @Indexed
     private String userId;
     private String account;//same as userid now
+    private boolean valid;
     //listreceivedbyaddress
     //getnewaddress
     private int confirmations;
@@ -43,7 +44,15 @@ public class Address extends VersionedEntitySupport<Address, String, Integer> {
     }
 
     public void validate() {
+        valid = true;
+    }
 
+    public  boolean isValid(){
+        return valid;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     private boolean simpleCheck() {
