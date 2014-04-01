@@ -14,7 +14,7 @@ import com.icoin.trading.fee.domain.cash.CashAdmin;
 public class AddMoneyAdminControlInterceptor extends AbstractAdminControlInterceptor {
 
     @Override
-    protected ValidationCode doIntercept(Invocation invocation) throws Exception {
+    protected ValidationCode doIntercept(Invocation invocation) {
         final CashAdmin admin = retrieve();
         if (admin == null) {
             return null;

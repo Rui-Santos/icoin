@@ -18,14 +18,14 @@ import static com.homhon.util.Collections.isEmpty;
  * Time: AM1:10
  * To change this template use File | Settings | File Templates.
  */
-public class MaxTimesOfExucutingInterceptor extends ProfilingInterceptor {
+public class MaxTimesPerDayInterceptor extends ProfilingInterceptor {
     private CashRepository cashRepository;
     private DueDateService service;
     private int maxTime = 3;
 
     @SuppressWarnings("unchecked")
     @Override
-    protected ValidationCode doIntercept(Invocation invocation) throws Exception {
+    protected ValidationCode doIntercept(Invocation invocation) {
         final InvocationContext context = invocation.getInvocationContext();
         final List<Cash> list = cashRepository.findByUserId(context.getUserId(), service.computeDueDate(context.getOccurringTime()));
 
@@ -34,7 +34,7 @@ public class MaxTimesOfExucutingInterceptor extends ProfilingInterceptor {
         }
 
 
-        return ValidationCode.EXCEEDED_MAX_TIMES;
+        return ValidationCode.EXCEEDED_MAX_TIMES_PER_DAY;
     }
 
     public void setCashRepository(CashRepository cashRepository) {

@@ -1,5 +1,6 @@
 package com.icoin.trading.fee.cash;
 
+import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.joda.money.BigMoney;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,9 @@ public abstract class InterceptableCashValidator implements CashValidator {
     private List<Interceptor> interceptors;
 
     @Override
-    public ValidationCode canCreate(String userId, BigMoney amount, Date occurringTime) throws Exception {
+    public ValidationCode canCreate(UserAccount user, BigMoney amount, Date occurringTime){
 
-        InvocationProxy invocation = createInvocation(interceptors, userId, amount, occurringTime);
+        InvocationProxy invocation = createInvocation(interceptors, user, amount, occurringTime);
         ValidationCode resultCode = invocation.invoke();
 
         if (resultCode != ValidationCode.SUCCESSFUL) {
@@ -33,8 +34,11 @@ public abstract class InterceptableCashValidator implements CashValidator {
         return resultCode;
     }
 
-    private InvocationProxy createInvocation(List<Interceptor> interceptors, String userId, BigMoney amount, Date occurringTime) {
-        return null;
+    private InvocationProxy createInvocation(List<Interceptor> interceptors, UserAccount user, BigMoney amount, Date occurringTime) {
+        final InvocationProxy proxy = new InvocationProxy(new DefaultInvocation(
+                new InvocationContext(user, amount, occurringTime), interceptors));
+
+        return proxy;
     }
 
     public void setInterceptors(List<Interceptor> interceptors) {

@@ -19,7 +19,7 @@ public abstract class ProfilingInterceptor implements Interceptor {
     }
 
     @Override
-    public ValidationCode intercept(Invocation invocation) throws Exception {
+    public ValidationCode intercept(Invocation invocation) {
         InvocationContext context = invocation.getInvocationContext();
         context.startProfiling("interceptor: " + getName());
         ValidationCode code;
@@ -34,5 +34,5 @@ public abstract class ProfilingInterceptor implements Interceptor {
         return invocation.invoke();
     }
 
-    protected abstract ValidationCode doIntercept(Invocation invocation) throws Exception;
+    protected abstract ValidationCode doIntercept(Invocation invocation);
 }

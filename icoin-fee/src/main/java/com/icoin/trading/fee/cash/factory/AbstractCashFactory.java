@@ -35,7 +35,7 @@ public abstract class AbstractCashFactory<T extends Cash> implements CashFactory
     }
 
     private void computeExecutionTime(T cash, Date occurringTime) {
-        cash.setExecutedDueTime(futureMillis(occurringTime, spanMillis));
+        cash.setScheduledTime(futureMillis(occurringTime, spanMillis));
     }
 
     private void computeDueDate(Date occurringTime, T cash) {

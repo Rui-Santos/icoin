@@ -1,5 +1,6 @@
 package com.icoin.trading.fee.cash;
 
+import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.joda.money.BigMoney;
 import org.springframework.util.StopWatch;
 
@@ -17,24 +18,28 @@ import static com.homhon.util.Asserts.notNull;
  * To change this template use File | Settings | File Templates.
  */
 public class InvocationContext {
-    private final String userId;
+    private final UserAccount user;
     private final BigMoney amount;
     private final Date occurringTime;
     private final StopWatch stopWatch = new StopWatch("invoke: ");
 
-    public InvocationContext(String userId, BigMoney amount, Date occurringTime) {
-        hasText(userId);
+    public InvocationContext(UserAccount user, BigMoney amount, Date occurringTime) {
+        notNull(user);
         notNull(amount);
         isTrue(amount.isPositive(), "Amount should be greater than zero!");
         notNull(occurringTime);
 
-        this.userId = userId;
+        this.user = user;
         this.amount = amount;
         this.occurringTime = occurringTime;
     }
 
     public String getUserId() {
-        return userId;
+        return user.getPrimaryKey();
+    }
+
+    public UserAccount getUser() {
+        return user;
     }
 
     public BigMoney getAmount() {
@@ -64,7 +69,7 @@ public class InvocationContext {
     @Override
     public String toString() {
         return "InvocationContext{" +
-                "userId='" + userId + '\'' +
+                "user=" + user +
                 ", amount=" + amount +
                 ", occurringTime=" + occurringTime +
                 '}';

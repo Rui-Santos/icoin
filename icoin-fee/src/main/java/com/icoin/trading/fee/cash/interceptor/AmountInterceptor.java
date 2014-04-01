@@ -18,7 +18,7 @@ public class AmountInterceptor extends ProfilingInterceptor {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected ValidationCode doIntercept(Invocation invocation) throws Exception {
+    protected ValidationCode doIntercept(Invocation invocation) {
         final InvocationContext context = invocation.getInvocationContext();
 
         final BigMoney amount = context.getAmount();

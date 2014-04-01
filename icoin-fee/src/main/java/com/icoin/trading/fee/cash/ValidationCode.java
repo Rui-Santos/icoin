@@ -12,10 +12,13 @@ import com.homhon.base.domain.ValueObject;
 public enum ValidationCode implements ValueObject<ValidationCode> {
     SUCCESSFUL,
     EXECUTION_ERROR,
-    EXCEEDED_MAX_TIMES,
+    EXCEEDED_MAX_TIMES_PER_DAY,
     EXCEEDED_MAX_AMOUNT_PER_TIME,
     EXCEEDED_MIN_AMOUNT_PER_TIME,
     EXCEEDED_MAX_AMOUNT_PER_DAY,
+    EXCEEDED_GLOBAL_MAX_AMOUNT_PER_DAY,
+    USER_NOT_FOUND,
+    USER_LOCKED,
     SYSTEM_DISALLOWED;
 
     @Override

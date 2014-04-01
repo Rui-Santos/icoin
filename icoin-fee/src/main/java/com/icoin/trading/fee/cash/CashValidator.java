@@ -1,5 +1,6 @@
 package com.icoin.trading.fee.cash;
 
+import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -12,5 +13,5 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public interface CashValidator {
-    ValidationCode canCreate(String userId, BigMoney amount, Date occurringTime) throws Exception;
+    ValidationCode canCreate(UserAccount user, BigMoney amount, Date occurringTime);
 }
