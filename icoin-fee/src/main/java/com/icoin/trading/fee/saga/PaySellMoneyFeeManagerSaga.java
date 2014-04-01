@@ -2,17 +2,16 @@ package com.icoin.trading.fee.saga;
 
 import com.google.common.collect.ImmutableList;
 import com.icoin.trading.api.fee.command.offset.CreateOffsetCommand;
-import com.icoin.trading.api.fee.command.receivable.CreateAccountReceivableFeeCommand;
-import com.icoin.trading.api.fee.command.received.CreateReceivedFeeCommand;
+import com.icoin.trading.api.fee.command.paid.CreatePaidFeeCommand;
+import com.icoin.trading.api.fee.command.payable.CreateAccountPayableFeeCommand;
+import com.icoin.trading.api.fee.domain.PaidMode;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
 import com.icoin.trading.api.fee.domain.offset.FeeItem;
 import com.icoin.trading.api.fee.domain.offset.FeeItemType;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
-import com.icoin.trading.api.fee.domain.received.ReceivedSource;
-import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
-import com.icoin.trading.api.fee.events.execution.ExecutedReceiveCoinTransactionStartedEvent;
+import com.icoin.trading.api.fee.events.execution.ExecutedPayMoneyTransactionStartedEvent;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
 import org.slf4j.Logger;
@@ -21,61 +20,60 @@ import org.slf4j.LoggerFactory;
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
- * Date: 14-3-30
- * Time: PM10:56
+ * Date: 14-3-31
+ * Time: PM8:47
  * To change this template use File | Settings | File Templates.
  */
-public class ReceiveSoldCoinFeeManagerSaga extends ReceiveTransactionFeeManagerSaga {
-    private static transient Logger logger = LoggerFactory.getLogger(PaySellCommissionFeeManagerSaga.class);
+public class PaySellMoneyFeeManagerSaga extends PayTransactionFeeManagerSaga {
+    private static transient Logger logger = LoggerFactory.getLogger(PaySellMoneyFeeManagerSaga.class);
 
     @StartSaga
     @SagaEventHandler(associationProperty = "feeTransactionId")
-    public void onTransactionStarted(final ExecutedReceiveCoinTransactionStartedEvent event) {
-        logger.info("");
+    public void onTransactionStarted(final ExecutedPayMoneyTransactionStartedEvent event) {
         feeTransactionId = event.getFeeTransactionId();
-        accountReceivableId = event.getAccountReceivableFeeId();
+        accountPayableId = event.getAccountPayableFeeId();
 
-        associateWith("accountReceivableId", accountReceivableId.toString());
+        associateWith("accountPayableId", accountPayableId.toString());
         commandGateway.send(
-                new CreateAccountReceivableFeeCommand(
+                new CreateAccountPayableFeeCommand(
                         feeTransactionId,
-                        accountReceivableId,
+                        accountPayableId,
                         FeeStatus.PENDING,
-                        event.getTradeAmount(),
-                        FeeType.PAY_COIN,
+                        event.getExecutedMoney(),
+                        FeeType.PAY_MONEY,
                         BusinessType.TRADE_EXECUTED,
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
                         event.getOrderTransactionId().toString()));
 
-        receivedFeeId = event.getReceivedFeeId();
+        paidFeeId = event.getPaidFeeId();
 
-        associateWith("receivedFeeId", receivedFeeId.toString());
+        associateWith("paidFeeId", paidFeeId.toString());
         commandGateway.send(
-                new CreateReceivedFeeCommand(
+                new CreatePaidFeeCommand(
                         feeTransactionId,
-                        receivedFeeId,
+                        paidFeeId,
                         FeeStatus.PENDING,
-                        event.getTradeAmount(),
-                        FeeType.PAY_COIN,
+                        event.getExecutedMoney(),
+                        FeeType.PAY_MONEY,
                         BusinessType.TRADE_EXECUTED,
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
                         event.getOrderTransactionId().toString(),
-                        new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, event.getPortfolioId().toString())));
+                        PaidMode.INTERNAL));
 
         offsetId = event.getOffsetId();
         associateWith("offsetId", offsetId.toString());
         commandGateway.send(
                 new CreateOffsetCommand(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         event.getPortfolioId().toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableId.toString(), FeeItemType.AR, event.getTradeAmount())),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, event.getTradeAmount())),
-                        event.getTradeAmount(),
+                        ImmutableList.of(new FeeItem(accountPayableId.toString(), FeeItemType.AP, event.getExecutedMoney())),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, event.getExecutedMoney())),
+                        event.getExecutedMoney(),
                         event.getTradeTime()));
     }
 }

@@ -12,7 +12,7 @@ import com.icoin.trading.api.fee.domain.offset.FeeItemType;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
-import com.icoin.trading.api.fee.events.execution.ExecutedReceiveCoinTransactionStartedEvent;
+import com.icoin.trading.api.fee.events.transfer.in.TransferringInTransactionStartedEvent;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
 import org.slf4j.Logger;
@@ -21,17 +21,18 @@ import org.slf4j.LoggerFactory;
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
- * Date: 14-3-30
- * Time: PM10:56
+ * Date: 14-4-1
+ * Time: PM9:09
  * To change this template use File | Settings | File Templates.
  */
-public class ReceiveSoldCoinFeeManagerSaga extends ReceiveTransactionFeeManagerSaga {
+public class CoinTransferringInManagerSaga extends ReceiveTransactionFeeManagerSaga {
     private static transient Logger logger = LoggerFactory.getLogger(PaySellCommissionFeeManagerSaga.class);
+
 
     @StartSaga
     @SagaEventHandler(associationProperty = "feeTransactionId")
-    public void onTransactionStarted(final ExecutedReceiveCoinTransactionStartedEvent event) {
-        logger.info("");
+    public void onTransactionStarted(final TransferringInTransactionStartedEvent event) {
+        logger.info("An new adding coins action transaction started", event);
         feeTransactionId = event.getFeeTransactionId();
         accountReceivableId = event.getAccountReceivableFeeId();
 
@@ -41,13 +42,13 @@ public class ReceiveSoldCoinFeeManagerSaga extends ReceiveTransactionFeeManagerS
                         feeTransactionId,
                         accountReceivableId,
                         FeeStatus.PENDING,
-                        event.getTradeAmount(),
-                        FeeType.PAY_COIN,
-                        BusinessType.TRADE_EXECUTED,
-                        event.getTradeTime(),
+                        event.getAmount(),
+                        FeeType.RESERVE_COIN,
+                        BusinessType.RESERVE_COIN,
+                        event.getStartTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
-                        event.getOrderTransactionId().toString()));
+                        event.getReceivedId()));
 
         receivedFeeId = event.getReceivedFeeId();
 
@@ -57,14 +58,14 @@ public class ReceiveSoldCoinFeeManagerSaga extends ReceiveTransactionFeeManagerS
                         feeTransactionId,
                         receivedFeeId,
                         FeeStatus.PENDING,
-                        event.getTradeAmount(),
-                        FeeType.PAY_COIN,
-                        BusinessType.TRADE_EXECUTED,
-                        event.getTradeTime(),
+                        event.getAmount(),
+                        FeeType.RESERVE_COIN,
+                        BusinessType.RESERVE_COIN,
+                        event.getStartTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
-                        event.getOrderTransactionId().toString(),
-                        new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, event.getPortfolioId().toString())));
+                        event.getReceivedId(),
+                        event.getReceivedSource()));
 
         offsetId = event.getOffsetId();
         associateWith("offsetId", offsetId.toString());
@@ -73,9 +74,10 @@ public class ReceiveSoldCoinFeeManagerSaga extends ReceiveTransactionFeeManagerS
                         offsetId,
                         OffsetType.RECEIVED_AR,
                         event.getPortfolioId().toString(),
-                        ImmutableList.of(new FeeItem(accountReceivableId.toString(), FeeItemType.AR, event.getTradeAmount())),
-                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, event.getTradeAmount())),
-                        event.getTradeAmount(),
-                        event.getTradeTime()));
+                        ImmutableList.of(new FeeItem(accountReceivableId.toString(), FeeItemType.AR, event.getAmount())),
+                        ImmutableList.of(new FeeItem(receivedFeeId.toString(), FeeItemType.RECEIVED, event.getAmount())),
+                        event.getAmount(),
+                        event.getStartTime()));
     }
+
 }

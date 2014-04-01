@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
  * To change this template use File | Settings | File Templates.
  */
 public class AmountInterceptorTest {
-
     @Test
     public void testAllowed() throws Exception {
         final AmountInterceptor interceptor = new AmountInterceptor();

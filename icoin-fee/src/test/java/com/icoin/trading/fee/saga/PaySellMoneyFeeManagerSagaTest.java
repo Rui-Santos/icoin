@@ -24,7 +24,7 @@ import com.icoin.trading.api.fee.domain.offset.FeeItem;
 import com.icoin.trading.api.fee.domain.offset.FeeItemType;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
-import com.icoin.trading.api.fee.events.execution.SellExecutedCommissionTransactionStartedEvent;
+import com.icoin.trading.api.fee.events.execution.ExecutedPayMoneyTransactionStartedEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCreatedEvent;
@@ -54,11 +54,11 @@ import static com.homhon.util.TimeUtils.currentTime;
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
- * Date: 14-3-19
- * Time: AM9:04
+ * Date: 14-3-31
+ * Time: PM8:47
  * To change this template use File | Settings | File Templates.
  */
-public class PaySellCommissionFeeManagerSagaTest {
+public class PaySellMoneyFeeManagerSagaTest {
     private final FeeTransactionId feeTransactionId = new FeeTransactionId();
     private final String orderId = "orderId";
     private final CoinId coinId = new CoinId("BTC");
@@ -70,24 +70,24 @@ public class PaySellCommissionFeeManagerSagaTest {
     private final FeeId paidFeeId = new FeeId();
     private final FeeId accountPayableFeeId = new FeeId();
     private final OffsetId offsetId = new OffsetId();
+    private final BigMoney executedMoney = BigMoney.of(CurrencyUnit.EUR, 109);
     private AnnotatedSagaTestFixture fixture;
-    private BigMoney commissionAmount = BigMoney.of(CurrencyUnit.of("BTC"), 10);
+    private BigMoney tradeAmount = BigMoney.of(CurrencyUnit.of("BTC"), 120.23);
 
     @Before
     public void setUp() throws Exception {
-        fixture = new AnnotatedSagaTestFixture(PaySellCommissionFeeManagerSaga.class);
+        fixture = new AnnotatedSagaTestFixture(PaySellMoneyFeeManagerSaga.class);
     }
 
     @Test
     public void testStarted() throws Exception {
         fixture.givenAggregate(feeTransactionId).published()
                 .whenAggregate(feeTransactionId).publishes(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -95,8 +95,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                         dueDate,
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
-                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        tradeAmount,
+                        executedMoney,
                         orderBookId,
                         coinId))
                 .expectActiveSagas(1)
@@ -105,8 +105,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                                 feeTransactionId,
                                 accountPayableFeeId,
                                 FeeStatus.PENDING,
-                                commissionAmount,
-                                FeeType.SOLD_COIN_COMMISSION,
+                                executedMoney,
+                                FeeType.PAY_MONEY,
                                 BusinessType.TRADE_EXECUTED,
                                 tradeTime,
                                 dueDate,
@@ -116,8 +116,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                                 feeTransactionId,
                                 paidFeeId,
                                 FeeStatus.PENDING,
-                                commissionAmount,
-                                FeeType.SOLD_COIN_COMMISSION,
+                                executedMoney,
+                                FeeType.PAY_MONEY,
                                 BusinessType.TRADE_EXECUTED,
                                 tradeTime,
                                 dueDate,
@@ -128,9 +128,9 @@ public class PaySellCommissionFeeManagerSagaTest {
                                 offsetId,
                                 OffsetType.AP_PAID,
                                 portfolioId.toString(),
-                                ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, commissionAmount)),
-                                ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, commissionAmount)),
-                                commissionAmount,
+                                ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, executedMoney)),
+                                ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, executedMoney)),
+                                executedMoney ,
                                 tradeTime));
 
     }
@@ -138,12 +138,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testPayableCreated() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -151,16 +150,16 @@ public class PaySellCommissionFeeManagerSagaTest {
                         dueDate,
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
-                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        tradeAmount,
+                        executedMoney,
                         orderBookId,
                         coinId))
                 .whenAggregate(accountPayableFeeId).publishes(
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -177,12 +176,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testPaidCreated() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -191,15 +189,15 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId))
                 .whenAggregate(paidFeeId).publishes(
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -217,12 +215,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testOffsetCreated() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -231,17 +228,17 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId))
                 .whenAggregate(offsetId).publishes(
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, tradeAmount)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, tradeAmount)),
+                        tradeAmount,
                         tradeTime))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
@@ -252,12 +249,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testOffsetCreatedWithAllConfirmed() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -266,23 +262,23 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, tradeAmount)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, tradeAmount)),
+                        executedMoney,
                         tradeTime),
 
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -292,8 +288,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -319,12 +315,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testOffsetCreatedWithAllConfirmed2() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -333,34 +328,35 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, tradeAmount)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, tradeAmount)),
+                        executedMoney,
                         tradeTime),
 
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
+
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -387,12 +383,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testOffsetCreatedWithPartiallyConfirmed() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -401,34 +396,35 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, tradeAmount)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, tradeAmount)),
+                        tradeAmount,
                         tradeTime),
 
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
+
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -449,12 +445,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testPayableOffseted() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -463,22 +458,22 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, tradeAmount)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, tradeAmount)),
+                        tradeAmount,
                         tradeTime),
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -488,8 +483,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -514,12 +509,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testPaidOffseted() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -528,36 +522,33 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, executedMoney)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, executedMoney)),
+                        executedMoney,
                         tradeTime),
-
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        tradeAmount,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
-
-
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -582,12 +573,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testAllOffseted() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -596,23 +586,23 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, executedMoney)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, executedMoney)),
+                        executedMoney,
                         tradeTime),
 
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        tradeAmount,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -624,8 +614,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        tradeAmount,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -638,13 +628,12 @@ public class PaySellCommissionFeeManagerSagaTest {
                         offsetId,
                         tradeTime
                 ),
-                new AccountPayableFeeOffsetedEvent(
-                        accountPayableFeeId,
-                        tradeTime
-                ))
-                .whenAggregate(paidFeeId).publishes(
                 new PaidFeeOffsetedEvent(
                         paidFeeId,
+                        tradeTime))
+                .whenAggregate(accountPayableFeeId).publishes(
+                new AccountPayableFeeOffsetedEvent(
+                        accountPayableFeeId,
                         tradeTime
                 ))
                 .expectActiveSagas(0)
@@ -654,12 +643,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testOffsetAmountNotMatched() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -668,22 +656,22 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, executedMoney)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, executedMoney)),
+                        executedMoney,
                         tradeTime),
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        tradeAmount,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -695,8 +683,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -708,7 +696,7 @@ public class PaySellCommissionFeeManagerSagaTest {
                 .whenAggregate(offsetId).publishes(
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
-                        commissionAmount,
+                        executedMoney,
                         BigMoney.of(CurrencyUnit.EUR, 10),
                         BigMoney.of(CurrencyUnit.EUR, 10.6),
                         tradeTime))
@@ -721,12 +709,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testOffsetCancelled() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -735,23 +722,23 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, executedMoney)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, executedMoney)),
+                        executedMoney,
                         tradeTime),
 
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        tradeAmount,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -763,8 +750,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        tradeAmount,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -775,7 +762,7 @@ public class PaySellCommissionFeeManagerSagaTest {
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
-                        commissionAmount,
+                        executedMoney,
                         BigMoney.of(CurrencyUnit.EUR, 10),
                         BigMoney.of(CurrencyUnit.EUR, 10.6),
                         tradeTime))
@@ -793,12 +780,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testPaidCancelled() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -807,23 +793,23 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, executedMoney)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, executedMoney)),
+                        executedMoney,
                         tradeTime),
 
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -835,8 +821,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -847,7 +833,7 @@ public class PaySellCommissionFeeManagerSagaTest {
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
-                        commissionAmount,
+                        executedMoney,
                         BigMoney.of(CurrencyUnit.EUR, 10),
                         BigMoney.of(CurrencyUnit.EUR, 10.6),
                         tradeTime),
@@ -865,12 +851,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testPayableCancelled() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -879,23 +864,23 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, executedMoney)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, executedMoney)),
+                        executedMoney,
                         tradeTime),
 
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -907,8 +892,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -919,7 +904,7 @@ public class PaySellCommissionFeeManagerSagaTest {
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
-                        commissionAmount,
+                        executedMoney,
                         BigMoney.of(CurrencyUnit.EUR, 10),
                         BigMoney.of(CurrencyUnit.EUR, 10.6),
                         tradeTime),
@@ -937,12 +922,11 @@ public class PaySellCommissionFeeManagerSagaTest {
     @Test
     public void testAllCancelled() throws Exception {
         fixture.givenAggregate(feeTransactionId).published(
-                new SellExecutedCommissionTransactionStartedEvent(
+                new ExecutedPayMoneyTransactionStartedEvent(
                         feeTransactionId,
                         paidFeeId,
                         accountPayableFeeId,
                         offsetId,
-                        commissionAmount,
                         orderId,
                         orderTransactionId,
                         portfolioId,
@@ -951,23 +935,23 @@ public class PaySellCommissionFeeManagerSagaTest {
                         TradeType.BUY,
                         BigMoney.of(CurrencyUnit.EUR, 1009),
                         BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
-                        BigMoney.of(CurrencyUnit.EUR, 109),
+                        executedMoney,
                         orderBookId,
                         coinId),
                 new OffsetCreatedEvent(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         portfolioId.toString(),
-                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AR, commissionAmount)),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, commissionAmount)),
-                        commissionAmount,
+                        ImmutableList.of(new FeeItem(accountPayableFeeId.toString(), FeeItemType.AP, executedMoney)),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, executedMoney)),
+                        executedMoney,
                         tradeTime),
 
                 new PaidFeeCreatedEvent(
                         paidFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -978,8 +962,8 @@ public class PaySellCommissionFeeManagerSagaTest {
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
-                        commissionAmount,
-                        FeeType.SOLD_COIN_COMMISSION,
+                        executedMoney,
+                        FeeType.PAY_MONEY,
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
@@ -990,7 +974,7 @@ public class PaySellCommissionFeeManagerSagaTest {
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
-                        commissionAmount,
+                        executedMoney,
                         BigMoney.of(CurrencyUnit.EUR, 10),
                         BigMoney.of(CurrencyUnit.EUR, 10.6),
                         tradeTime),
@@ -998,8 +982,10 @@ public class PaySellCommissionFeeManagerSagaTest {
                         offsetId,
                         CancelledReason.AMOUNT_NOT_MATCHED,
                         tradeTime),
+                new PaidFeeCancelledEvent(paidFeeId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, tradeTime)
+        )
+                .whenAggregate(accountPayableFeeId).publishes(
                 new AccountPayableFeeCancelledEvent(accountPayableFeeId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, tradeTime))
-                .whenAggregate(paidFeeId).publishes(new PaidFeeCancelledEvent(paidFeeId, com.icoin.trading.api.fee.domain.fee.CancelledReason.OFFSET_ERROR, tradeTime))
                 .expectActiveSagas(0)
                 .expectNoDispatchedCommands();
     }

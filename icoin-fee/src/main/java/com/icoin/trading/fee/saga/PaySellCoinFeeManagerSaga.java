@@ -2,17 +2,16 @@ package com.icoin.trading.fee.saga;
 
 import com.google.common.collect.ImmutableList;
 import com.icoin.trading.api.fee.command.offset.CreateOffsetCommand;
+import com.icoin.trading.api.fee.command.paid.CreatePaidFeeCommand;
 import com.icoin.trading.api.fee.command.payable.CreateAccountPayableFeeCommand;
-import com.icoin.trading.api.fee.command.received.CreateReceivedFeeCommand;
+import com.icoin.trading.api.fee.domain.PaidMode;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
 import com.icoin.trading.api.fee.domain.offset.FeeItem;
 import com.icoin.trading.api.fee.domain.offset.FeeItemType;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
-import com.icoin.trading.api.fee.domain.received.ReceivedSource;
-import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
-import com.icoin.trading.api.fee.events.execution.SellExecutedCommissionTransactionStartedEvent;
+import com.icoin.trading.api.fee.events.execution.ExecutedPayCoinTransactionStartedEvent;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ public class PaySellCoinFeeManagerSaga extends PayTransactionFeeManagerSaga {
 
     @StartSaga
     @SagaEventHandler(associationProperty = "feeTransactionId")
-    public void onTransactionStarted(final SellExecutedCommissionTransactionStartedEvent event) {
+    public void onTransactionStarted(final ExecutedPayCoinTransactionStartedEvent event) {
         feeTransactionId = event.getFeeTransactionId();
         accountPayableId = event.getAccountPayableFeeId();
 
@@ -40,8 +39,8 @@ public class PaySellCoinFeeManagerSaga extends PayTransactionFeeManagerSaga {
                         feeTransactionId,
                         accountPayableId,
                         FeeStatus.PENDING,
-                        event.getCommissionAmount(),
-                        FeeType.SELL_COMMISSION,
+                        event.getTradeAmount(),
+                        FeeType.PAY_COIN,
                         BusinessType.TRADE_EXECUTED,
                         event.getTradeTime(),
                         event.getDueDate(),
@@ -52,29 +51,29 @@ public class PaySellCoinFeeManagerSaga extends PayTransactionFeeManagerSaga {
 
         associateWith("paidFeeId", paidFeeId.toString());
         commandGateway.send(
-                new CreateReceivedFeeCommand(
+                new CreatePaidFeeCommand(
                         feeTransactionId,
                         paidFeeId,
                         FeeStatus.PENDING,
-                        event.getCommissionAmount(),
-                        FeeType.SELL_COMMISSION,
+                        event.getTradeAmount(),
+                        FeeType.PAY_COIN,
                         BusinessType.TRADE_EXECUTED,
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
                         event.getOrderTransactionId().toString(),
-                        new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, event.getPortfolioId().toString())));
+                        PaidMode.INTERNAL));
 
         offsetId = event.getOffsetId();
         associateWith("offsetId", offsetId.toString());
         commandGateway.send(
                 new CreateOffsetCommand(
                         offsetId,
-                        OffsetType.RECEIVED_AR,
+                        OffsetType.AP_PAID,
                         event.getPortfolioId().toString(),
-                        ImmutableList.of(new FeeItem(accountPayableId.toString(), FeeItemType.AR, event.getCommissionAmount())),
-                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.RECEIVED, event.getCommissionAmount())),
-                        event.getCommissionAmount(),
+                        ImmutableList.of(new FeeItem(accountPayableId.toString(), FeeItemType.AP, event.getTradeAmount())),
+                        ImmutableList.of(new FeeItem(paidFeeId.toString(), FeeItemType.PAID, event.getTradeAmount())),
+                        event.getTradeAmount(),
                         event.getTradeTime()));
     }
 

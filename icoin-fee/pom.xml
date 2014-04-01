@@ -41,6 +41,12 @@
             <artifactId>icoin-trading-bitcoin-client</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>icoin-trading-users</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!--test-->
         <dependency>
             <groupId>org.axonframework</groupId>

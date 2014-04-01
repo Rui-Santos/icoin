@@ -1,5 +1,9 @@
 package com.icoin.trading.fee.application.command;
 
+import com.icoin.trading.api.fee.command.payable.CancelAccountPayableFeeCommand;
+import com.icoin.trading.api.fee.command.payable.ConfirmAccountPayableFeeCommand;
+import com.icoin.trading.api.fee.command.payable.CreateAccountPayableFeeCommand;
+import com.icoin.trading.api.fee.command.payable.OffsetAccountPayableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.CancelAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.ConfirmAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.CreateAccountReceivableFeeCommand;
@@ -56,7 +60,6 @@ public class ReceivablePayableCommandHandler {
         fee.offset(command.getOffsetedDate());
     }
 
-
     @CommandHandler
     public void handleCancelAccountReceivable(CancelAccountReceivableFeeCommand command) {
         AccountReceivableFee fee = accountReceivableFeeRepository.load(command.getFeeId());
@@ -64,6 +67,44 @@ public class ReceivablePayableCommandHandler {
         fee.cancel(command.getCancelledReason(), command.getCancelledDate());
     }
 
+    @CommandHandler
+    public void handleCreateAccountPayable(CreateAccountPayableFeeCommand command) {
+//         receivedEntryRepository.save(toReceivedEntry(command));
+
+        accountPayableFeeRepository.add(new AccountPayableFee(
+                command.getFeeId(),
+                command.getFeeStatus(),
+                command.getAmount(),
+                command.getFeeType(),
+                command.getDueDate(),
+                command.getCreatedTime(),
+                command.getUserAccountId(),
+                command.getBusinessType(),
+                command.getBusinessReferenceId()
+        ));
+
+    }
+
+    @CommandHandler
+    public void handleConfirmAccountPayable(ConfirmAccountPayableFeeCommand command) {
+        AccountPayableFee fee = accountPayableFeeRepository.load(command.getFeeId());
+
+        fee.confirm(command.getConfirmedDate());
+    }
+
+    @CommandHandler
+    public void handleOffsetAccountPayable(OffsetAccountPayableFeeCommand command) {
+        AccountPayableFee fee = accountPayableFeeRepository.load(command.getFeeId());
+
+        fee.offset(command.getOffsetedDate());
+    }
+
+    @CommandHandler
+    public void handleCancelAccountPayable(CancelAccountPayableFeeCommand command) {
+        AccountPayableFee fee = accountPayableFeeRepository.load(command.getFeeId());
+
+        fee.cancel(command.getCancelledReason(), command.getCancelledDate());
+    }
 
     @Resource(name = "accountReceivableFeeRepository")
     public void setAccountReceivableFeeRepository(Repository<AccountReceivableFee> accountReceivableFeeRepository) {

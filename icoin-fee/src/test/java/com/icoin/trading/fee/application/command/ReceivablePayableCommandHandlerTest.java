@@ -1,5 +1,9 @@
 package com.icoin.trading.fee.application.command;
 
+import com.icoin.trading.api.fee.command.payable.CancelAccountPayableFeeCommand;
+import com.icoin.trading.api.fee.command.payable.ConfirmAccountPayableFeeCommand;
+import com.icoin.trading.api.fee.command.payable.CreateAccountPayableFeeCommand;
+import com.icoin.trading.api.fee.command.payable.OffsetAccountPayableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.CancelAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.ConfirmAccountReceivableFeeCommand;
 import com.icoin.trading.api.fee.command.receivable.CreateAccountReceivableFeeCommand;
@@ -10,6 +14,10 @@ import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCancelledEvent;
+import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeConfirmedEvent;
+import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeOffsetedEvent;
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCreatedEvent;
@@ -69,7 +77,7 @@ public class ReceivablePayableCommandHandlerTest {
                 receivableFeeId,
                 FeeStatus.PENDING,
                 sellCommissionAmount,
-                FeeType.SELL_COMMISSION,
+                FeeType.RECEIVE_MONEY,
                 BusinessType.TRADE_EXECUTED,
                 tradeTime,
                 dueDate,
@@ -83,7 +91,7 @@ public class ReceivablePayableCommandHandlerTest {
                                 receivableFeeId,
                                 FeeStatus.PENDING,
                                 sellCommissionAmount,
-                                FeeType.SELL_COMMISSION,
+                                FeeType.RECEIVE_MONEY,
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
@@ -101,7 +109,7 @@ public class ReceivablePayableCommandHandlerTest {
                         receivableFeeId,
                         FeeStatus.PENDING,
                         sellCommissionAmount,
-                        FeeType.SELL_COMMISSION,
+                        FeeType.RECEIVE_MONEY,
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
@@ -124,7 +132,7 @@ public class ReceivablePayableCommandHandlerTest {
                         receivableFeeId,
                         FeeStatus.PENDING,
                         sellCommissionAmount,
-                        FeeType.SELL_COMMISSION,
+                        FeeType.RECEIVE_COIN,
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
@@ -147,7 +155,7 @@ public class ReceivablePayableCommandHandlerTest {
                         receivableFeeId,
                         FeeStatus.PENDING,
                         sellCommissionAmount,
-                        FeeType.SELL_COMMISSION,
+                        FeeType.RECEIVE_COIN,
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
@@ -157,6 +165,105 @@ public class ReceivablePayableCommandHandlerTest {
                 .expectEvents(
                         new AccountReceivableFeeCancelledEvent(
                                 receivableFeeId,
+                                CancelledReason.OFFSET_ERROR,
+                                tradeTime));
+    }
+
+    @Test
+    public void testHandleCreateAccountPayable() throws Exception {
+        CreateAccountPayableFeeCommand command = new CreateAccountPayableFeeCommand(
+                feeTransactionId,
+                payableFeeId,
+                FeeStatus.PENDING,
+                sellCommissionAmount,
+                FeeType.RECEIVE_MONEY,
+                BusinessType.TRADE_EXECUTED,
+                tradeTime,
+                dueDate,
+                portfolioId.toString(),
+                orderTransactionId.toString());
+
+        payableFixture.given()
+                .when(command)
+                .expectEvents(
+                        new AccountPayableFeeCreatedEvent(
+                                payableFeeId,
+                                FeeStatus.PENDING,
+                                sellCommissionAmount,
+                                FeeType.RECEIVE_MONEY,
+                                tradeTime,
+                                dueDate,
+                                portfolioId.toString(),
+                                BusinessType.TRADE_EXECUTED,
+                                orderTransactionId.toString()));
+    }
+
+    @Test
+    public void testHandleConfirmAccountPayable() throws Exception {
+        ConfirmAccountPayableFeeCommand command =
+                new ConfirmAccountPayableFeeCommand(payableFeeId, tradeTime);
+
+        payableFixture.given(
+                new AccountPayableFeeCreatedEvent(
+                        payableFeeId,
+                        FeeStatus.PENDING,
+                        sellCommissionAmount,
+                        FeeType.RECEIVE_MONEY,
+                        tradeTime,
+                        dueDate,
+                        portfolioId.toString(),
+                        BusinessType.TRADE_EXECUTED,
+                        orderTransactionId.toString()))
+                .when(command)
+                .expectEvents(
+                        new AccountPayableFeeConfirmedEvent(
+                                payableFeeId,
+                                tradeTime));
+    }
+
+    @Test
+    public void testHandleOffsetAccountPayable() throws Exception {
+        OffsetAccountPayableFeeCommand command =
+                new OffsetAccountPayableFeeCommand(payableFeeId, tradeTime);
+
+        payableFixture.given(
+                new AccountPayableFeeCreatedEvent(
+                        payableFeeId,
+                        FeeStatus.PENDING,
+                        sellCommissionAmount,
+                        FeeType.RECEIVE_COIN,
+                        tradeTime,
+                        dueDate,
+                        portfolioId.toString(),
+                        BusinessType.TRADE_EXECUTED,
+                        orderTransactionId.toString()))
+                .when(command)
+                .expectEvents(
+                        new AccountPayableFeeOffsetedEvent(
+                                payableFeeId,
+                                tradeTime));
+    }
+
+    @Test
+    public void testHandleCancelAccountPayable() throws Exception {
+        CancelAccountPayableFeeCommand command =
+                new CancelAccountPayableFeeCommand(payableFeeId, CancelledReason.OFFSET_ERROR, tradeTime);
+
+        payableFixture.given(
+                new AccountPayableFeeCreatedEvent(
+                        payableFeeId,
+                        FeeStatus.PENDING,
+                        sellCommissionAmount,
+                        FeeType.RECEIVE_COIN,
+                        tradeTime,
+                        dueDate,
+                        portfolioId.toString(),
+                        BusinessType.TRADE_EXECUTED,
+                        orderTransactionId.toString()))
+                .when(command)
+                .expectEvents(
+                        new AccountPayableFeeCancelledEvent(
+                                payableFeeId,
                                 CancelledReason.OFFSET_ERROR,
                                 tradeTime));
     }

@@ -4,8 +4,8 @@ import com.icoin.trading.api.fee.command.commission.GainBuyCoinTransactionComman
 import com.icoin.trading.api.fee.command.commission.GainSoldMoneyTransactionCommand;
 import com.icoin.trading.api.fee.command.commission.PayBuyCommissionTransactionCommand;
 import com.icoin.trading.api.fee.command.commission.PayBuyMoneyTransactionCommand;
-import com.icoin.trading.api.fee.command.commission.PaySoldCoinTransactionCommand;
 import com.icoin.trading.api.fee.command.commission.PaySellCommissionTransactionCommand;
+import com.icoin.trading.api.fee.command.commission.PaySoldCoinTransactionCommand;
 import com.icoin.trading.api.fee.domain.ExecutedFeeType;
 import com.icoin.trading.fee.domain.transaction.ExecutedCoinTransaction;
 import com.icoin.trading.fee.domain.transaction.ExecutedCommissionTransaction;

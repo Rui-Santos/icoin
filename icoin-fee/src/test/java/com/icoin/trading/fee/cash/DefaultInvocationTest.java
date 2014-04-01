@@ -1,6 +1,7 @@
 package com.icoin.trading.fee.cash;
 
 import com.google.common.collect.ImmutableList;
+import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.joda.money.BigMoney;
 import org.junit.Test;
 
@@ -8,6 +9,7 @@ import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,8 +23,9 @@ public class DefaultInvocationTest {
     public void testInvoke() throws Exception {
         SleepInterceptor interceptor1 = new SleepInterceptor(100);
         SleepInterceptor interceptor2 = new SleepInterceptor(50);
+        final UserAccount user = mock(UserAccount.class);
         DefaultInvocation invocation =
-                new DefaultInvocation(new InvocationContext("userId", BigMoney.parse("GBP 1.23"), new Date()),
+                new DefaultInvocation(new InvocationContext(user, BigMoney.parse("GBP 1.23"), new Date()),
                         ImmutableList.of(interceptor1, interceptor2));
 
         ValidationCode validationCode = invocation.invoke();
@@ -38,8 +41,9 @@ public class DefaultInvocationTest {
         SleepInterceptor interceptor1 = new SleepInterceptor(100);
         ExceptionalInterceptor interceptor2 = new ExceptionalInterceptor();
         SleepInterceptor interceptor3 = new SleepInterceptor(250);
+        final UserAccount user = mock(UserAccount.class);
         DefaultInvocation invocation =
-                new DefaultInvocation(new InvocationContext("userId", BigMoney.parse("GBP 1.23"), new Date()),
+                new DefaultInvocation(new InvocationContext(user, BigMoney.parse("GBP 1.23"), new Date()),
                         ImmutableList.of(interceptor1, interceptor2, interceptor3));
 
         ValidationCode validationCode = invocation.invoke();
@@ -55,8 +59,9 @@ public class DefaultInvocationTest {
         SleepInterceptor interceptor1 = new SleepInterceptor(100);
         ErrorCodeInterceptor interceptor2 = new ErrorCodeInterceptor();
         SleepInterceptor interceptor3 = new SleepInterceptor(250);
+        final UserAccount user = mock(UserAccount.class);
         DefaultInvocation invocation =
-                new DefaultInvocation(new InvocationContext("userId", BigMoney.parse("GBP 1.23"), new Date()),
+                new DefaultInvocation(new InvocationContext(user, BigMoney.parse("GBP 1.23"), new Date()),
                         ImmutableList.of(interceptor1, interceptor2, interceptor3));
 
         ValidationCode validationCode = invocation.invoke();

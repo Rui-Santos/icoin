@@ -11,7 +11,7 @@ import com.icoin.trading.fee.cash.interceptor.ProfilingInterceptor;
  */
 public class ErrorCodeInterceptor extends ProfilingInterceptor {
     @Override
-    protected ValidationCode doIntercept(Invocation invocation) throws Exception {
+    protected ValidationCode doIntercept(Invocation invocation) {
         return ValidationCode.SYSTEM_DISALLOWED;
     }
 }

@@ -1,5 +1,9 @@
 package com.icoin.trading.fee.application.command;
 
+import com.icoin.trading.api.fee.command.paid.CancelPaidFeeCommand;
+import com.icoin.trading.api.fee.command.paid.ConfirmPaidFeeCommand;
+import com.icoin.trading.api.fee.command.paid.CreatePaidFeeCommand;
+import com.icoin.trading.api.fee.command.paid.OffsetPaidFeeCommand;
 import com.icoin.trading.api.fee.command.received.CancelReceivedFeeCommand;
 import com.icoin.trading.api.fee.command.received.ConfirmReceivedFeeCommand;
 import com.icoin.trading.api.fee.command.received.CreateReceivedFeeCommand;
@@ -61,6 +65,45 @@ public class ReceivedPaidFeeCommandHandler {
     @CommandHandler
     public void handleCancelReceived(CancelReceivedFeeCommand command) {
         ReceivedFee fee = receivedFeeRepository.load(command.getFeeId());
+
+        fee.cancel(command.getCancelledReason(), command.getCancelledDate());
+    }
+
+    @CommandHandler
+    public void handleCreatePaid(CreatePaidFeeCommand command) {
+        paidFeeRepository.add(new PaidFee(
+                command.getFeeId(),
+                command.getFeeStatus(),
+                command.getAmount(),
+                command.getFeeType(),
+                command.getDueDate(),
+                command.getCreatedTime(),
+                command.getUserAccountId(),
+                command.getBusinessType(),
+                command.getBusinessReferenceId(),
+                command.getPaidMode()
+        ));
+
+    }
+
+    @CommandHandler
+    public void handleConfirmPaid(ConfirmPaidFeeCommand command) {
+        PaidFee fee = paidFeeRepository.load(command.getFeeId());
+
+        fee.confirm(command.getConfirmedDate());
+    }
+
+    @CommandHandler
+    public void handleOffsetPaid(OffsetPaidFeeCommand command) {
+        PaidFee fee = paidFeeRepository.load(command.getFeeId());
+
+        fee.offset(command.getOffsetedDate());
+    }
+
+
+    @CommandHandler
+    public void handleCancelPaid(CancelPaidFeeCommand command) {
+        PaidFee fee = paidFeeRepository.load(command.getFeeId());
 
         fee.cancel(command.getCancelledReason(), command.getCancelledDate());
     }

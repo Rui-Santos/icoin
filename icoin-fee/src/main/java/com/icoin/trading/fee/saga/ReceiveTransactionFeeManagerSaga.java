@@ -46,7 +46,7 @@ public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
     protected FeeId receivedFeeId;
     protected OffsetId offsetId;
     protected TransactionStatus accountReceivableStatus = TransactionStatus.NEW;
-    protected TransactionStatus receivedFeeStatus = TransactionStatus.NEW;
+    protected TransactionStatus paidFeeStatus = TransactionStatus.NEW;
     protected TransactionStatus offsetStatus = TransactionStatus.NEW;
 
     @SagaEventHandler(associationProperty = "feeId", keyName = "accountReceivableId")
@@ -58,7 +58,7 @@ public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
 
     @SagaEventHandler(associationProperty = "feeId", keyName = "receivedFeeId")
     public void onReceivedCreated(final ReceivedFeeCreatedEvent event) {
-        receivedFeeStatus = TransactionStatus.CREATED;
+        paidFeeStatus = TransactionStatus.CREATED;
 
         commandGateway.send(new ConfirmReceivedFeeCommand(event.getFeeId(), event.getBusinessCreationTime()));
     }
@@ -80,7 +80,7 @@ public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
     private void offsetIfPossible(Date offsetDate) {
         if (offsetStatus == TransactionStatus.OFFSETED
                 && accountReceivableStatus == TransactionStatus.CONFIRMED
-                && receivedFeeStatus == TransactionStatus.CONFIRMED) {
+                && paidFeeStatus == TransactionStatus.CONFIRMED) {
             commandGateway.send(new OffsetAccountReceivableFeeCommand(accountReceivableId, offsetDate));
             commandGateway.send(new OffsetReceivedFeeCommand(receivedFeeId, offsetDate));
         }
@@ -95,7 +95,7 @@ public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
 
     @SagaEventHandler(associationProperty = "feeId", keyName = "receivedFeeId")
     public void onReceivedConfirmed(final ReceivedFeeConfirmedEvent event) {
-        receivedFeeStatus = TransactionStatus.CONFIRMED;
+        paidFeeStatus = TransactionStatus.CONFIRMED;
 
         offsetIfPossible(event.getConfirmedDate());
     }
@@ -109,7 +109,7 @@ public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
 
     @SagaEventHandler(associationProperty = "feeId", keyName = "receivedFeeId")
     public void onReceivedOffseted(final ReceivedFeeOffsetedEvent event) {
-        receivedFeeStatus = TransactionStatus.OFFSETED;
+        paidFeeStatus = TransactionStatus.OFFSETED;
 
         completeIfPossible();
     }
@@ -117,13 +117,13 @@ public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
     private void completeIfPossible() {
         if (offsetStatus == TransactionStatus.OFFSETED
                 && accountReceivableStatus == TransactionStatus.OFFSETED
-                && receivedFeeStatus == TransactionStatus.OFFSETED) {
+                && paidFeeStatus == TransactionStatus.OFFSETED) {
             end();
         }
 
         if (offsetStatus == TransactionStatus.CANCELLED
                 && accountReceivableStatus == TransactionStatus.CANCELLED
-                && receivedFeeStatus == TransactionStatus.CANCELLED) {
+                && paidFeeStatus == TransactionStatus.CANCELLED) {
             end();
         }
     }
@@ -150,7 +150,7 @@ public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
 
     @SagaEventHandler(associationProperty = "feeId", keyName = "receivedFeeId")
     public void onReceivedCancelled(final ReceivedFeeCancelledEvent event) {
-        receivedFeeStatus = TransactionStatus.CANCELLED;
+        paidFeeStatus = TransactionStatus.CANCELLED;
 
         completeIfPossible();
     }

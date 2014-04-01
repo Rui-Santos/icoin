@@ -20,8 +20,12 @@ public class SleepInterceptor extends ProfilingInterceptor {
     }
 
     @Override
-    protected ValidationCode doIntercept(Invocation invocation) throws Exception {
-        TimeUnit.MILLISECONDS.sleep(time);
+    protected ValidationCode doIntercept(Invocation invocation) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(time);
+        } catch (InterruptedException e) {
+
+        }
         ran = true;
         return null;
     }

@@ -1,6 +1,7 @@
 package com.icoin.trading.fee.cash;
 
 import com.google.common.collect.ImmutableList;
+import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.joda.money.BigMoney;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class InvocationProxyTest {
         InvocationContext context = mock(InvocationContext.class);
 
         Invocation invocation = mock(Invocation.class);
-        when(invocation.invoke()).thenThrow(new Exception());
+        when(invocation.invoke()).thenThrow(new RuntimeException());
         when(invocation.getInvocationContext()).thenReturn(context);
 
         InvocationProxy proxy = new InvocationProxy(invocation);
@@ -63,8 +64,9 @@ public class InvocationProxyTest {
     public void testIntegration() throws Exception {
         SleepInterceptor interceptor1 = new SleepInterceptor(100);
         SleepInterceptor interceptor2 = new SleepInterceptor(50);
+        final UserAccount user = mock(UserAccount.class);
         DefaultInvocation invocation =
-                new DefaultInvocation(new InvocationContext("userId", BigMoney.parse("GBP 1.23"), new Date()),
+                new DefaultInvocation(new InvocationContext(user, BigMoney.parse("GBP 1.23"), new Date()),
                         ImmutableList.of(interceptor1, interceptor2));
 
         InvocationProxy proxy = new InvocationProxy(invocation);

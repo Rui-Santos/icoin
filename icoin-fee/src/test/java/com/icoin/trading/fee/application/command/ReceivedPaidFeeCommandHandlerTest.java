@@ -1,10 +1,15 @@
 package com.icoin.trading.fee.application.command;
 
+import com.icoin.trading.api.fee.command.paid.CancelPaidFeeCommand;
+import com.icoin.trading.api.fee.command.paid.ConfirmPaidFeeCommand;
+import com.icoin.trading.api.fee.command.paid.CreatePaidFeeCommand;
+import com.icoin.trading.api.fee.command.paid.OffsetPaidFeeCommand;
 import com.icoin.trading.api.fee.command.received.CancelReceivedFeeCommand;
 import com.icoin.trading.api.fee.command.received.ConfirmReceivedFeeCommand;
 import com.icoin.trading.api.fee.command.received.CreateReceivedFeeCommand;
 import com.icoin.trading.api.fee.command.received.OffsetReceivedFeeCommand;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
+import com.icoin.trading.api.fee.domain.PaidMode;
 import com.icoin.trading.api.fee.domain.fee.BusinessType;
 import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
@@ -12,6 +17,10 @@ import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
+import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCancelledEvent;
+import com.icoin.trading.api.fee.events.fee.paid.PaidFeeConfirmedEvent;
+import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCreatedEvent;
+import com.icoin.trading.api.fee.events.fee.paid.PaidFeeOffsetedEvent;
 import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeCreatedEvent;
@@ -71,7 +80,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 receivedFeeId,
                 FeeStatus.PENDING,
                 sellCommissionAmount,
-                FeeType.SELL_COMMISSION,
+                FeeType.RECEIVE_COIN,
                 BusinessType.TRADE_EXECUTED,
                 tradeTime,
                 dueDate,
@@ -86,7 +95,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                                 receivedFeeId,
                                 FeeStatus.PENDING,
                                 sellCommissionAmount,
-                                FeeType.SELL_COMMISSION,
+                                FeeType.RECEIVE_COIN,
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
@@ -103,7 +112,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 receivedFeeId,
                 FeeStatus.PENDING,
                 sellCommissionAmount,
-                FeeType.SELL_COMMISSION,
+                FeeType.RECEIVE_MONEY,
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
@@ -122,7 +131,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 receivedFeeId,
                 FeeStatus.PENDING,
                 sellCommissionAmount,
-                FeeType.SELL_COMMISSION,
+                FeeType.RECEIVE_MONEY,
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
@@ -142,7 +151,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 receivedFeeId,
                 FeeStatus.PENDING,
                 sellCommissionAmount,
-                FeeType.SELL_COMMISSION,
+                FeeType.RECEIVE_MONEY,
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
@@ -151,5 +160,94 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 receivedSource))
                 .when(command)
                 .expectEvents(new ReceivedFeeCancelledEvent(receivedFeeId, CancelledReason.DUPLICATED, tradeTime));
+    }
+
+    @Test
+    public void testHandleCreatePaid() throws Exception {
+        CreatePaidFeeCommand command = new CreatePaidFeeCommand(
+                feeTransactionId,
+                paidFeeId,
+                FeeStatus.PENDING,
+                sellCommissionAmount,
+                FeeType.PAY_COIN,
+                BusinessType.TRADE_EXECUTED,
+                tradeTime,
+                dueDate,
+                portfolioId.toString(),
+                orderTransactionId.toString(),
+                PaidMode.INTERNAL);
+
+        paidFixture.given()
+                .when(command)
+                .expectEvents(
+                        new PaidFeeCreatedEvent(
+                                paidFeeId,
+                                FeeStatus.PENDING,
+                                sellCommissionAmount,
+                                FeeType.PAY_COIN,
+                                tradeTime,
+                                dueDate,
+                                portfolioId.toString(),
+                                BusinessType.TRADE_EXECUTED,
+                                orderTransactionId.toString(),
+                                PaidMode.INTERNAL));
+    }
+
+    @Test
+    public void testHandleConfirmPaid() throws Exception {
+        ConfirmPaidFeeCommand command = new ConfirmPaidFeeCommand(paidFeeId, tradeTime);
+
+        paidFixture.given(new PaidFeeCreatedEvent(
+                paidFeeId,
+                FeeStatus.PENDING,
+                sellCommissionAmount,
+                FeeType.PAY_COIN,
+                tradeTime,
+                dueDate,
+                portfolioId.toString(),
+                BusinessType.TRADE_EXECUTED,
+                orderTransactionId.toString(),
+                PaidMode.INTERNAL))
+                .when(command)
+                .expectEvents(new PaidFeeConfirmedEvent(paidFeeId, tradeTime));
+    }
+
+    @Test
+    public void testHandleOffsetPaid() throws Exception {
+        OffsetPaidFeeCommand command = new OffsetPaidFeeCommand(paidFeeId, tradeTime);
+
+        paidFixture.given(new PaidFeeCreatedEvent(
+                paidFeeId,
+                FeeStatus.PENDING,
+                sellCommissionAmount,
+                FeeType.PAY_COIN,
+                tradeTime,
+                dueDate,
+                portfolioId.toString(),
+                BusinessType.TRADE_EXECUTED,
+                orderTransactionId.toString(),
+                PaidMode.INTERNAL))
+                .when(command)
+                .expectEvents(new PaidFeeOffsetedEvent(paidFeeId, tradeTime));
+    }
+
+    @Test
+    public void testHandleCancelPaid() throws Exception {
+        CancelPaidFeeCommand command =
+                new CancelPaidFeeCommand(paidFeeId, CancelledReason.DUPLICATED, tradeTime);
+
+        paidFixture.given(new PaidFeeCreatedEvent(
+                paidFeeId,
+                FeeStatus.PENDING,
+                sellCommissionAmount,
+                FeeType.PAY_COIN,
+                tradeTime,
+                dueDate,
+                portfolioId.toString(),
+                BusinessType.TRADE_EXECUTED,
+                orderTransactionId.toString(),
+                PaidMode.INTERNAL))
+                .when(command)
+                .expectEvents(new PaidFeeCancelledEvent(paidFeeId, CancelledReason.DUPLICATED, tradeTime));
     }
 }
