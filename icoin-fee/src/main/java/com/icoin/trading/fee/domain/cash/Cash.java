@@ -12,10 +12,11 @@ import java.util.Date;
  * Time: PM8:57
  * To change this template use File | Settings | File Templates.
  */
-public abstract class Cash<T extends Cash> extends VersionedEntitySupport<T, String, Integer> {
+public abstract class Cash<T extends Cash> extends VersionedEntitySupport<T, String, Integer> implements SchedulableEntity<T, String> {
     private BigMoney amount;
+    private Date confirmedDate;
     private Date dueDate;
-    private Date executedDueTime;
+    private Date scheduledTime;
     private String userId;
     private CashStatus status;
     private boolean approved;
@@ -40,7 +41,7 @@ public abstract class Cash<T extends Cash> extends VersionedEntitySupport<T, Str
         return amount;
     }
 
-    public void setAmount(BigMoney amount) {
+    private void setAmount(BigMoney amount) {
         this.amount = amount;
     }
 
@@ -52,12 +53,12 @@ public abstract class Cash<T extends Cash> extends VersionedEntitySupport<T, Str
         this.dueDate = dueDate;
     }
 
-    public Date getExecutedDueTime() {
-        return executedDueTime;
+    public Date getScheduledTime() {
+        return scheduledTime;
     }
 
-    public void setExecutedDueTime(Date executedDueTime) {
-        this.executedDueTime = executedDueTime;
+    public void setScheduledTime(Date executedDueTime) {
+        this.scheduledTime = executedDueTime;
     }
 
     public boolean isApproved() {
@@ -66,5 +67,18 @@ public abstract class Cash<T extends Cash> extends VersionedEntitySupport<T, Str
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public Date getConfirmedDate() {
+        return confirmedDate;
+    }
+
+    private void setConfirmedDate(Date confirmedDate) {
+        this.confirmedDate = confirmedDate;
+    }
+
+    public void confirmed(BigMoney amount, Date confirmedDate) {
+        this.amount = amount;
+        this.confirmedDate = confirmedDate;
     }
 }
