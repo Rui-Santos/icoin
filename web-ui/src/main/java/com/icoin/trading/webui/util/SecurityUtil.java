@@ -45,7 +45,7 @@ public class SecurityUtil {
 
     public static String obtainLoggedinUserIdentifierSafely() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!authentication.isAuthenticated()){
+        if (!authentication.isAuthenticated()) {
             return null;
         }
 

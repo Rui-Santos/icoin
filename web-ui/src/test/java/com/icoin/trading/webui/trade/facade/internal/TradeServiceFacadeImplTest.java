@@ -1,9 +1,9 @@
 package com.icoin.trading.webui.trade.facade.internal;
 
-import com.icoin.trading.api.tradeengine.command.transaction.StartBuyTransactionCommand;
-import com.icoin.trading.api.tradeengine.command.transaction.StartSellTransactionCommand;
 import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.command.transaction.StartBuyTransactionCommand;
+import com.icoin.trading.api.tradeengine.command.transaction.StartSellTransactionCommand;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
@@ -337,7 +337,6 @@ public class TradeServiceFacadeImplTest {
         portfolioEntry.addItemInPossession(coinId, BigMoney.of(balance));
 
 
-
         CoinQueryRepository coinRepository = mock(CoinQueryRepository.class);
         when(coinRepository.findOne(eq(coinId))).thenReturn(coin);
 
@@ -381,7 +380,6 @@ public class TradeServiceFacadeImplTest {
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         portfolioEntry.createItem(coinId, coinName);
         portfolioEntry.addItemInPossession(coinId, BigMoney.of(balance));
-
 
 
         CoinQueryRepository coinRepository = mock(CoinQueryRepository.class);
@@ -429,7 +427,6 @@ public class TradeServiceFacadeImplTest {
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         portfolioEntry.createItem(coinId, coinName);
         portfolioEntry.addItemInPossession(coinId, BigMoney.of(balance));
-
 
 
         CoinQueryRepository coinRepository = mock(CoinQueryRepository.class);

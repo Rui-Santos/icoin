@@ -69,6 +69,11 @@
             <artifactId>icoin-trading-users</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>icoin-trading-icoin-fee</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>com.icoin.trading</groupId>-->

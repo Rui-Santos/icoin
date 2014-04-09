@@ -3,7 +3,6 @@ package com.icoin.trading.webui.user.form;
 import com.homhon.util.Strings;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**

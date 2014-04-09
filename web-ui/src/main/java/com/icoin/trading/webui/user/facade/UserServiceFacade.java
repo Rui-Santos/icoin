@@ -1,8 +1,8 @@
 package com.icoin.trading.webui.user.facade;
 
+import com.icoin.trading.api.users.domain.Identifier;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.users.domain.model.function.UserPasswordReset;
-import com.icoin.trading.api.users.domain.Identifier;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 import com.icoin.trading.users.query.UserEntry;
 
@@ -36,14 +36,14 @@ public interface UserServiceFacade {
     int findPasswordResetCount(String username, String ip, Date currentDate);
 
     UserAccount resetPasswordWithToken(String token,
-                                String password,
-                                String confirmedPassword,
-                                String operatingIp,
-                                Date resetTime);
+                                       String password,
+                                       String confirmedPassword,
+                                       String operatingIp,
+                                       Date resetTime);
 
     boolean generateForgetPasswordToken(String email,
-                                       String operatingIp,
-                                       Date currentTime);
+                                        String operatingIp,
+                                        Date currentTime);
 
     boolean matchPreviousPassword(String previousPassword);
 
@@ -73,9 +73,9 @@ public interface UserServiceFacade {
                         Date changedTime);
 
     boolean createWithdrawPassword(String withdrawPassword,
-                                String confirmedWithdrawPassword,
-                                String operatingIp,
-                                Date changedTime);
+                                   String confirmedWithdrawPassword,
+                                   String operatingIp,
+                                   Date changedTime);
 
     boolean matchPreviousWithdrawPassword(String previousPassword);
 

@@ -15,12 +15,12 @@
  */
 package com.icoin.trading.webui.user;
 
-import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.api.users.command.CreateUserCommand;
 import com.icoin.trading.api.users.domain.Identifier;
 import com.icoin.trading.api.users.domain.IdentityCard;
 import com.icoin.trading.api.users.domain.IdentityCardHelper;
 import com.icoin.trading.api.users.domain.UserId;
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.users.domain.model.user.UsernameAlreadyInUseException;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;

@@ -43,7 +43,7 @@ commandSender.obtainOrderBooks().each() {
     coinNames.put(it.primaryKey, it.coinIdentifier)
     coinToOrderBooks.put(it.coinIdentifier, it.primaryKey)
 }
-def commandCreator = new com.icoin.trading.test.CommandCreator(orderBooks,coinNames,coinToOrderBooks)
+def commandCreator = new com.icoin.trading.test.CommandCreator(orderBooks, coinNames, coinToOrderBooks)
 
 def numUsers = portfolios.size()
 def numUser = 1;
@@ -69,5 +69,5 @@ for (int i = 0; i < 1000; i++) {
 //    Thread.sleep(100)
 }
 
-time = System.currentTimeMillis() - time ;
+time = System.currentTimeMillis() - time;
 println "time is ${time}"

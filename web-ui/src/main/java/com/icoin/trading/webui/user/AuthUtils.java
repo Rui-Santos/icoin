@@ -34,7 +34,7 @@ public abstract class AuthUtils {
         return authorities;
     }
 
-    public static Authentication getAuthentication(UserAccount account,Object credentials, Object details) {
+    public static Authentication getAuthentication(UserAccount account, Object credentials, Object details) {
         final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(account, credentials, getAuthorities(account));
         token.setDetails(details);
         return token;

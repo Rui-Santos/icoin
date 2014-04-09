@@ -48,20 +48,20 @@ class CommandCreator {
         if (portfolio.amountOfMoney.isGreaterThan(portfolio.reservedAmountOfMoney.plus(100))) {
             def orderBookId = obtainRandomOrderBook()
             command = new StartBuyTransactionCommand(
-					new TransactionId(),
+                    new TransactionId(),
                     new OrderBookId(orderBookId),
                     new PortfolioId(portfolio.identifier),
-                    BigMoney.of(CurrencyUnit.of(coinNames[orderBookId]),randomFactory.nextInt(50) + 1),
-                    BigMoney.of(portfolio.amountOfMoney.getCurrencyUnit(),randomFactory.nextInt(10) + 1))
+                    BigMoney.of(CurrencyUnit.of(coinNames[orderBookId]), randomFactory.nextInt(50) + 1),
+                    BigMoney.of(portfolio.amountOfMoney.getCurrencyUnit(), randomFactory.nextInt(10) + 1))
         } else {
             def availableOrderBook = obtainAvailableOrderBook(portfolio)
             if (availableOrderBook) {
                 command = new StartSellTransactionCommand(
-						new TransactionId(),
+                        new TransactionId(),
                         new OrderBookId(availableOrderBook[0]),
                         new PortfolioId(portfolio.identifier),
                         availableOrderBook[1],
-                        BigMoney.of(portfolio.amountOfMoney.getCurrencyUnit(),randomFactory.nextInt(10) + 1))
+                        BigMoney.of(portfolio.amountOfMoney.getCurrencyUnit(), randomFactory.nextInt(10) + 1))
             }
         }
 
@@ -80,7 +80,7 @@ class CommandCreator {
             def amountAvailable = portfolioEntry.itemsInPossession[identifier].amountInPossession
             def reserved = (portfolioEntry.itemsReserved[identifier]) ? portfolioEntry.itemsReserved[identifier].amountInPossession : BigMoney.zero(amountAvailable.getCurrencyUnit())
             if (amountAvailable.isGreaterThan(reserved)) {
-                def amountToSell = amountAvailable.isGreaterThan(reserved.plus(50)) ? BigMoney.of(amountAvailable.getCurrencyUnit(),randomFactory.nextInt(50) + 1)  : amountAvailable.minus(reserved)
+                def amountToSell = amountAvailable.isGreaterThan(reserved.plus(50)) ? BigMoney.of(amountAvailable.getCurrencyUnit(), randomFactory.nextInt(50) + 1) : amountAvailable.minus(reserved)
                 return [coinToOrderBooks[identifier], amountToSell]
             }
             counterOrderBook++
