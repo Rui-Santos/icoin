@@ -16,5 +16,6 @@ public interface CashRepository<T extends Cash> extends GenericCrudRepository<T,
     List<T> findByUserId(String userId);
 
     List<T> findByUserId(String userId, Date dueDate);
+
     List<T> findByDueDate(Date dueDate);
 }

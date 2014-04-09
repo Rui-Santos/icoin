@@ -4,6 +4,8 @@ import com.homhon.base.domain.repository.GenericCrudRepository;
 import com.icoin.trading.fee.query.fee.AccountReceivableFeeEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -14,5 +16,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface AccountReceivableFeeEntryQueryRepository
         extends GenericCrudRepository<AccountReceivableFeeEntry, String>,
         PagingAndSortingRepository<AccountReceivableFeeEntry, String> {
-
+    //today's total money for pay
+    List<AccountReceivableFeeEntry> findConfirmedByUserAccountId(String userAccountId);
 }

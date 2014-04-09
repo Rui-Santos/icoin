@@ -1,8 +1,7 @@
 package com.icoin.trading.fee.domain.transaction;
 
+import com.homhon.base.domain.Identity;
 import com.icoin.axonsupport.domain.AxonAnnotatedAggregateRoot;
-import com.icoin.trading.api.coin.domain.CoinId;
-import com.icoin.trading.api.fee.domain.ExecutedFeeType;
 import com.icoin.trading.api.fee.domain.FeeTransactionId;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.offset.OffsetId;
@@ -10,11 +9,9 @@ import com.icoin.trading.api.fee.domain.transfer.TransferTransactionType;
 import com.icoin.trading.api.fee.domain.transfer.TransferType;
 import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.transfer.in.TransferringInTransactionStartedEvent;
-import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
-import com.icoin.trading.api.tradeengine.domain.TradeType;
-import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -27,6 +24,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class TransferringInTransaction<T extends TransferringInTransaction> extends AxonAnnotatedAggregateRoot<T, String> {
+    @AggregateIdentifier
+    @Identity
     protected FeeTransactionId feeTransactionId;
     protected OffsetId offsetId;
     protected PortfolioId portfolioId;

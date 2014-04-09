@@ -19,17 +19,20 @@ import static com.homhon.util.Asserts.notNull;
  */
 public class InvocationContext {
     private final UserAccount user;
+    private final String portfolioId;
     private final BigMoney amount;
     private final Date occurringTime;
     private final StopWatch stopWatch = new StopWatch("invoke: ");
 
-    public InvocationContext(UserAccount user, BigMoney amount, Date occurringTime) {
+    public InvocationContext(UserAccount user, String portfolioId, BigMoney amount, Date occurringTime) {
         notNull(user);
+        hasText(portfolioId);
         notNull(amount);
         isTrue(amount.isPositive(), "Amount should be greater than zero!");
         notNull(occurringTime);
 
         this.user = user;
+        this.portfolioId = portfolioId;
         this.amount = amount;
         this.occurringTime = occurringTime;
     }
@@ -66,10 +69,15 @@ public class InvocationContext {
         return stopWatch.prettyPrint();
     }
 
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
     @Override
     public String toString() {
         return "InvocationContext{" +
                 "user=" + user +
+                "portfolioId=" + portfolioId +
                 ", amount=" + amount +
                 ", occurringTime=" + occurringTime +
                 '}';

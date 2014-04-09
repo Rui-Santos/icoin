@@ -90,7 +90,7 @@ public class ReceivedPaidFeeCommandHandler {
     public void handleConfirmPaid(ConfirmPaidFeeCommand command) {
         PaidFee fee = paidFeeRepository.load(command.getFeeId());
 
-        fee.confirm(command.getConfirmedDate());
+        fee.confirm(command.getSequenceNumber() ,command.getConfirmedDate());
     }
 
     @CommandHandler

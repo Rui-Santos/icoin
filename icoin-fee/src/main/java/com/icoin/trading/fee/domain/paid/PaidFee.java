@@ -25,6 +25,7 @@ import java.util.Date;
  */
 public class PaidFee extends FeeAggregateRoot<PaidFee> {
     private PaidMode paidMode;
+    private String sequenceNumber;
 
     @SuppressWarnings("UnusedDeclaration")
     protected PaidFee() {
@@ -53,8 +54,8 @@ public class PaidFee extends FeeAggregateRoot<PaidFee> {
                 paidSource));
     }
 
-    public void confirm(Date confirmedDate) {
-        apply(new PaidFeeConfirmedEvent(feeId, confirmedDate));
+    public void confirm(String sequenceNumber,Date confirmedDate) {
+        apply(new PaidFeeConfirmedEvent(feeId, sequenceNumber, confirmedDate));
     }
 
     public void cancel(CancelledReason cancelReason, Date cancelledDate) {
@@ -74,6 +75,7 @@ public class PaidFee extends FeeAggregateRoot<PaidFee> {
     @EventHandler
     public void on(PaidFeeConfirmedEvent event) {
         onConfirmed(event);
+        this.sequenceNumber = event.getSequenceNumber();
     }
 
     @EventHandler

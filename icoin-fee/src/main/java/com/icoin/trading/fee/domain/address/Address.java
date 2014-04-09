@@ -39,23 +39,24 @@ public class Address extends VersionedEntitySupport<Address, String, Integer> {
     }
 
     public Address(String address) {
-        isTrue(simpleCheck(), "the address is invalid");
+        isTrue(simpleCheck(address), "the address is invalid");
         this.address = address;
     }
 
     public void validate() {
-        valid = true;
+
     }
 
-    public  boolean isValid(){
-        return valid;
+
+    public void use(String userId) {
+        this.userId = userId;
     }
 
     public String getAddress() {
         return address;
     }
 
-    private boolean simpleCheck() {
+    private boolean simpleCheck(String address) {
         if (!hasText(address)) {
             return false;
         }
@@ -67,7 +68,7 @@ public class Address extends VersionedEntitySupport<Address, String, Integer> {
             return false;
         }
 
-        if (!address.startsWith("1") || !address.startsWith("3")) {
+        if (!address.startsWith("1") && !address.startsWith("3")) {
             return false;
         }
 

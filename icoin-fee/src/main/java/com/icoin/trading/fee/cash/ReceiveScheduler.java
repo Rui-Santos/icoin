@@ -2,6 +2,7 @@ package com.icoin.trading.fee.cash;
 
 import com.icoin.trading.fee.domain.cash.Cash;
 import com.icoin.trading.fee.domain.cash.PendingCashRepository;
+import com.icoin.trading.fee.domain.cash.ReceiveCash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.homhon.util.Asserts.notNull;
 import static com.homhon.util.TimeUtils.currentTime;
@@ -22,15 +24,16 @@ import static com.homhon.util.TimeUtils.currentTime;
  * Time: PM9:24
  * To change this template use File | Settings | File Templates.
  */
-public abstract class Scheduler<T extends Cash> {
-    private static Logger logger = LoggerFactory.getLogger(Scheduler.class);
+public abstract class ReceiveScheduler<T extends ReceiveCash> {
+    private static Logger logger = LoggerFactory.getLogger(ReceiveScheduler.class);
     private ScheduledExecutorService scheduler;
     protected PendingCashRepository<T> pendingCashRepository;
     private int initialDelay = 10;
     private int period = 500;
+    private AtomicBoolean stop = new AtomicBoolean(false);
 
-    //    <bean class="com.icoin.trading.fee.application.command.Scheduler" init-method="start">
-    public Scheduler() {
+    //    <bean class="com.icoin.trading.fee.application.command.ReceiveScheduler" init-method="start">
+    public ReceiveScheduler() {
         scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
@@ -40,6 +43,10 @@ public abstract class Scheduler<T extends Cash> {
                 initialDelay,
                 period,
                 TimeUnit.MILLISECONDS);
+    }
+
+    public void stop() {
+        stop.set(true);
     }
 
     public void setPendingCashRepository(PendingCashRepository<T> pendingRepository) {
@@ -61,17 +68,24 @@ public abstract class Scheduler<T extends Cash> {
 
         @Override
         public void run() {
-            List<T> pendingEntities = repository.findPending(currentTime(), 0, 100);
+            if (stop.get()) {
+                return;
+            }
             Date currentTime = currentTime();
+            List<T> pendingEntities = repository.findPending(currentTime, 0, 100);
             for (T entity : pendingEntities) {
-                try {
-                    final BigDecimal received = getReceivedAmount(entity, currentTime);
-                    if (received != null && received.compareTo(BigDecimal.ZERO) > 0) {
-                        complete(entity, received, currentTime);
-                    }
-                } catch (Exception e) {
-                    logger.error("cannot handle entity {}: {}", entity, entity.describe());
+                handle(currentTime, entity);
+            }
+        }
+
+        private void handle(Date currentTime, T entity) {
+            try {
+                final BigDecimal received = getReceivedAmount(entity, currentTime);
+                if (received != null && received.compareTo(BigDecimal.ZERO) > 0) {
+                    complete(entity, received, currentTime);
                 }
+            } catch (Exception e) {
+                logger.error("cannot handle entity {}: {}", entity, entity.describe(), e);
             }
         }
     }

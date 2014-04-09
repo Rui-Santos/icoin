@@ -2,7 +2,6 @@ package com.icoin.trading.fee.domain.cash;
 
 import com.homhon.base.domain.repository.GenericCrudRepository;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 

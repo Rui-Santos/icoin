@@ -10,8 +10,6 @@ import com.icoin.trading.api.fee.domain.fee.FeeType;
 import com.icoin.trading.api.fee.domain.offset.FeeItem;
 import com.icoin.trading.api.fee.domain.offset.FeeItemType;
 import com.icoin.trading.api.fee.domain.offset.OffsetType;
-import com.icoin.trading.api.fee.domain.received.ReceivedSource;
-import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
 import com.icoin.trading.api.fee.events.transfer.in.TransferringInTransactionStartedEvent;
 import org.axonframework.saga.annotation.SagaEventHandler;
 import org.axonframework.saga.annotation.StartSaga;

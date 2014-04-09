@@ -6,7 +6,7 @@ import com.icoin.trading.fee.cash.InvocationContext;
 import com.icoin.trading.fee.cash.ValidationCode;
 import com.icoin.trading.fee.domain.DueDateService;
 import com.icoin.trading.fee.domain.cash.CashRepository;
-import com.icoin.trading.fee.domain.cash.CoinWithdrawCash;
+import com.icoin.trading.fee.domain.cash.CoinReceiveCash;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.junit.Test;
@@ -41,10 +41,10 @@ public class GlobalMaxAmountPerDayExecutingInterceptorTest {
         when(invocation.getInvocationContext()).thenReturn(context);
 
         CashRepository cashRepository = mock(CashRepository.class);
-        final CoinWithdrawCash cash1 = new CoinWithdrawCash();
-        cash1.confirmed(BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.TEN), new Date());
-        final CoinWithdrawCash cash2 = new CoinWithdrawCash();
-        cash2.confirmed(BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.ONE), new Date());
+        final CoinReceiveCash cash1 = new CoinReceiveCash();
+        cash1.confirm(BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.TEN), new Date());
+        final CoinReceiveCash cash2 = new CoinReceiveCash();
+        cash2.confirm(BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.ONE), new Date());
         when(cashRepository.findByDueDate(any(Date.class))).
                 thenReturn(ImmutableList.of(cash1), ImmutableList.of(cash2));
 
@@ -75,10 +75,10 @@ public class GlobalMaxAmountPerDayExecutingInterceptorTest {
         when(invocation.getInvocationContext()).thenReturn(context);
 
         CashRepository cashRepository = mock(CashRepository.class);
-        final CoinWithdrawCash cash1 = new CoinWithdrawCash();
-        cash1.confirmed(BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.TEN), new Date());
-        final CoinWithdrawCash cash2 = new CoinWithdrawCash();
-        cash2.confirmed(BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.ONE), new Date());
+        final CoinReceiveCash cash1 = new CoinReceiveCash();
+        cash1.confirm(BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.TEN), new Date());
+        final CoinReceiveCash cash2 = new CoinReceiveCash();
+        cash2.confirm(BigMoney.of(CurrencyUnit.of("BTC"), BigDecimal.ONE), new Date());
         when(cashRepository.findByDueDate(any(Date.class))).
                 thenReturn(ImmutableList.of(cash1, cash2));
 

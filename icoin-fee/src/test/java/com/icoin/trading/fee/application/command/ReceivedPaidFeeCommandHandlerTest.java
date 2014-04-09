@@ -195,7 +195,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
 
     @Test
     public void testHandleConfirmPaid() throws Exception {
-        ConfirmPaidFeeCommand command = new ConfirmPaidFeeCommand(paidFeeId, tradeTime);
+        ConfirmPaidFeeCommand command = new ConfirmPaidFeeCommand(paidFeeId, "1223123sequenceNumber", tradeTime);
 
         paidFixture.given(new PaidFeeCreatedEvent(
                 paidFeeId,
@@ -209,7 +209,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 orderTransactionId.toString(),
                 PaidMode.INTERNAL))
                 .when(command)
-                .expectEvents(new PaidFeeConfirmedEvent(paidFeeId, tradeTime));
+                .expectEvents(new PaidFeeConfirmedEvent(paidFeeId, "1223123sequenceNumber", tradeTime));
     }
 
     @Test

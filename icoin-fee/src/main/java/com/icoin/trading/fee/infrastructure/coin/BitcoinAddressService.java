@@ -1,6 +1,7 @@
 package com.icoin.trading.fee.infrastructure.coin;
 
 import com.icoin.trading.bitcoin.client.BitcoinRpcOperations;
+import com.icoin.trading.bitcoin.client.response.GetInfoResponse;
 import com.icoin.trading.bitcoin.client.response.ValidateAddressResponse;
 import com.icoin.trading.fee.domain.AddressService;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,17 @@ public class BitcoinAddressService implements AddressService {
     @Override
     public String generate(String account) {
         return operations.getNewAddress(account).getResult();
+    }
+
+    @Override
+    public void changeAccount(String address, String account) {
+        operations.setAccount(address, account);
+    }
+
+    @Override
+    public boolean isServerAvailable() {
+        final GetInfoResponse info = operations.getInfo();
+        return info == null;
     }
 
     public void setOperations(BitcoinRpcOperations operations) {

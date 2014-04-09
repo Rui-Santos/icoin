@@ -13,5 +13,5 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public interface CashValidator {
-    ValidationCode canCreate(UserAccount user, BigMoney amount, Date occurringTime);
+    ValidationCode canCreate(UserAccount user, String portfolioId, BigMoney amount, Date occurringTime);
 }

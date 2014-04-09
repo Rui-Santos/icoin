@@ -12,11 +12,11 @@ import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.bitcoin.client.BitcoinRpcOperations;
 import com.icoin.trading.bitcoin.client.response.BigDecimalResponse;
 import com.icoin.trading.fee.cash.CashValidator;
-import com.icoin.trading.fee.cash.Scheduler;
+import com.icoin.trading.fee.cash.ReceiveScheduler;
 import com.icoin.trading.fee.cash.ValidationCode;
 import com.icoin.trading.fee.domain.DueDateService;
 import com.icoin.trading.fee.domain.address.Address;
-import com.icoin.trading.fee.domain.cash.CoinCash;
+import com.icoin.trading.fee.domain.cash.CoinReceiveCash;
 import com.icoin.trading.fee.domain.transaction.CoinTransferringInTransaction;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
@@ -32,6 +32,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 
+import static com.homhon.util.Strings.hasText;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -39,7 +41,7 @@ import java.util.Date;
  * Time: PM9:26
  * To change this template use File | Settings | File Templates.
  */
-public class ReceivedCoinScheduler extends Scheduler<CoinCash> {
+public class ReceivedCoinScheduler extends ReceiveScheduler<CoinReceiveCash> {
     private static Logger logger = LoggerFactory.getLogger(ReceivedCoinScheduler.class);
     private BitcoinRpcOperations operations;
     private int minConfirmations = 6;
@@ -49,25 +51,28 @@ public class ReceivedCoinScheduler extends Scheduler<CoinCash> {
     private DueDateService dueDateService;
 
     @Override
-    protected BigDecimal getReceivedAmount(CoinCash entity, Date occurringTime) {
+    protected BigDecimal getReceivedAmount(CoinReceiveCash entity, Date occurringTime) {
+        if (entity.getAddress() == null || !hasText(entity.getAddress().getAddress())) {
+            return null;
+        }
         BigDecimalResponse response = operations.getReceivedByAddress(entity.getAddress().getAddress(), minConfirmations);
         return response == null ? null : response.getResult();
     }
 
     @Override
-    protected void complete(CoinCash entity, BigDecimal received, Date occurringTime) {
+    protected void complete(CoinReceiveCash entity, BigDecimal received, Date occurringTime) {
         final BigMoney amount = BigMoney.of(CurrencyUnit.of("BTC"), received);
 
         UserEntry user = userQueryRepository.findOne(entity.getUserId());
-        ValidationCode validationCode = cashValidator.canCreate(user, amount, occurringTime);
+        ValidationCode validationCode = cashValidator.canCreate(user, entity.getPortfolioId(), amount, occurringTime);
 
         if (ValidationCode.breakDown(validationCode)) {
-            logger.error("validation failed  for entity {} with error: {}", entity, validationCode, entity.describe());
+            logger.warn("Validation failed for entity {} with error: {}", entity, validationCode, entity.describe());
             return;
         }
 
 
-        entity.confirmed(amount.toMoney(RoundingMode.HALF_EVEN).toBigMoney(), occurringTime);
+        entity.confirm(amount.toMoney(RoundingMode.HALF_EVEN).toBigMoney(), occurringTime);
 
         pendingCashRepository.save(entity);
 
@@ -88,6 +93,7 @@ public class ReceivedCoinScheduler extends Scheduler<CoinCash> {
                 entity.getPrimaryKey()));
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public void setOperations(BitcoinRpcOperations operations) {
         this.operations = operations;
@@ -100,6 +106,10 @@ public class ReceivedCoinScheduler extends Scheduler<CoinCash> {
     @Resource(name = "coinTransferringInTransactionRepository")
     public void setRepository(Repository<CoinTransferringInTransaction> repository) {
         this.repository = repository;
+    }
+
+    public void setUserQueryRepository(UserQueryRepository userQueryRepository) {
+        this.userQueryRepository = userQueryRepository;
     }
 
     @Resource(name = "coinTransferringInCashValidator")

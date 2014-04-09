@@ -31,7 +31,7 @@ public class DefaultInvocation implements Invocation {
     }
 
     @Override
-    public ValidationCode invoke(){
+    public ValidationCode invoke() {
         try {
             if (interceptors.hasNext() && !executed) {
                 Interceptor interceptor = interceptors.next();

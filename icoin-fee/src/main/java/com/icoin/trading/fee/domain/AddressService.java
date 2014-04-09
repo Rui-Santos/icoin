@@ -11,4 +11,8 @@ public interface AddressService {
     boolean validate(String address);
 
     String generate(String account);
+
+    void changeAccount(String address, String account);
+
+    boolean isServerAvailable();
 }

@@ -30,8 +30,6 @@ import com.icoin.trading.api.fee.events.fee.paid.PaidFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCreatedEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeOffsetedEvent;
 import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCancelledEvent;
-import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCreatedEvent;
-import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCreatedEvent;
 import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeOffsetedEvent;
@@ -209,10 +207,12 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL))
                 .expectActiveSagas(1)
-                .expectDispatchedCommandsEqualTo(
-                        new ConfirmPaidFeeCommand(
-                                paidFeeId,
-                                tradeTime));
+                .expectNoDispatchedCommands();
+
+//        new ConfirmPaidFeeCommand(
+//                paidFeeId,
+//                "1223123sequenceNumber",
+//                tradeTime)
 
     }
 
@@ -308,6 +308,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         tradeTime),
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime))
                 .whenAggregate(offsetId).publishes(
                 new FeesOffsetedEvent(
@@ -381,6 +382,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                 .whenAggregate(paidFeeId).publishes(
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
@@ -442,6 +444,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime))
                 .whenAggregate(offsetId).publishes(
                 new FeesOffsetedEvent(
@@ -503,6 +506,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime),
                 new FeesOffsetedEvent(
                         offsetId,
@@ -568,6 +572,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime),
                 new FeesOffsetedEvent(
                         offsetId,
@@ -636,6 +641,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime),
                 new FeesOffsetedEvent(
                         offsetId,
@@ -706,6 +712,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime))
                 .whenAggregate(offsetId).publishes(
                 new OffsetAmountNotMatchedEvent(
@@ -774,6 +781,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
@@ -846,6 +854,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
@@ -918,6 +927,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
@@ -989,6 +999,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
                         paidFeeId,
+                        "1223123sequenceNumber",
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,

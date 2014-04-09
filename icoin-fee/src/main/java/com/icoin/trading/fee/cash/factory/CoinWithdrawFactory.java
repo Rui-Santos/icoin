@@ -1,6 +1,6 @@
 package com.icoin.trading.fee.cash.factory;
 
-import com.icoin.trading.fee.domain.cash.CoinWithdrawCash;
+import com.icoin.trading.fee.domain.cash.CoinPayCash;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -12,11 +12,11 @@ import java.util.Date;
  * Time: PM9:14
  * To change this template use File | Settings | File Templates.
  */
-public class CoinWithdrawFactory extends AbstractCashFactory<CoinWithdrawCash> {
+public class CoinWithdrawFactory extends AbstractCashFactory<CoinPayCash> {
 
     @Override
-    protected CoinWithdrawCash doCreate(String userId, BigMoney amount, Date occurringTime) {
-        CoinWithdrawCash cash = new CoinWithdrawCash();
+    protected CoinPayCash doCreate(String userId, BigMoney amount, Date occurringTime) {
+        CoinPayCash cash = new CoinPayCash();
         return cash;
     }
 

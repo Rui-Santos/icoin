@@ -13,20 +13,22 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class Cash<T extends Cash> extends VersionedEntitySupport<T, String, Integer> implements SchedulableEntity<T, String> {
-    private BigMoney amount;
-    private Date confirmedDate;
-    private Date dueDate;
-    private Date scheduledTime;
-    private String userId;
-    private CashStatus status;
-    private boolean approved;
+    protected BigMoney amount;
+    protected Date confirmedDate;
+    protected Date cancelledDate;
+    protected Date dueDate;
+    protected Date scheduledTime;
+    protected String userId;
+    protected String portfolioId;
+    protected CashStatus status = CashStatus.CREATED;
+    protected boolean approved;
 
-    public String getUserId() {
-        return userId;
+    public String getPortfolioId() {
+        return portfolioId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
     }
 
     public CashStatus getStatus() {
@@ -53,6 +55,7 @@ public abstract class Cash<T extends Cash> extends VersionedEntitySupport<T, Str
         this.dueDate = dueDate;
     }
 
+    @Override
     public Date getScheduledTime() {
         return scheduledTime;
     }
@@ -77,8 +80,26 @@ public abstract class Cash<T extends Cash> extends VersionedEntitySupport<T, Str
         this.confirmedDate = confirmedDate;
     }
 
-    public void confirmed(BigMoney amount, Date confirmedDate) {
-        this.amount = amount;
-        this.confirmedDate = confirmedDate;
+    public Date getCancelledDate() {
+        return cancelledDate;
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    private void setCancelledDate(Date cancelledDate) {
+        this.cancelledDate = cancelledDate;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void cancel(Date cancelledDate) {
+        this.cancelledDate = cancelledDate;
+        this.status = CashStatus.CANCELLED;
+    }
+
+
 }

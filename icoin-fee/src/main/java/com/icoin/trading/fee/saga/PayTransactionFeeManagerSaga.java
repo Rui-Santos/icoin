@@ -60,7 +60,7 @@ public class PayTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
     public void onPaidCreated(final PaidFeeCreatedEvent event) {
         paidFeeStatus = TransactionStatus.CREATED;
 
-        commandGateway.send(new ConfirmPaidFeeCommand(event.getFeeId(), event.getBusinessCreationTime()));
+//        commandGateway.send(new ConfirmPaidFeeCommand(event.getFeeId(), event.getBusinessCreationTime()));
     }
 
     @SagaEventHandler(associationProperty = "offsetId")

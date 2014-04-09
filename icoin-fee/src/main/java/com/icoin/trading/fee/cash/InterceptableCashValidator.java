@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
+import static com.homhon.util.Asserts.hasText;
+import static com.homhon.util.Asserts.notNull;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -21,9 +24,10 @@ public abstract class InterceptableCashValidator implements CashValidator {
     private List<Interceptor> interceptors;
 
     @Override
-    public ValidationCode canCreate(UserAccount user, BigMoney amount, Date occurringTime){
-
-        InvocationProxy invocation = createInvocation(interceptors, user, amount, occurringTime);
+    public ValidationCode canCreate(UserAccount user, String portfolioId, BigMoney amount, Date occurringTime) {
+        notNull(user);
+        hasText(portfolioId);
+        InvocationProxy invocation = createInvocation(interceptors, user, portfolioId, amount, occurringTime);
         ValidationCode resultCode = invocation.invoke();
 
         if (resultCode != ValidationCode.SUCCESSFUL) {
@@ -34,9 +38,9 @@ public abstract class InterceptableCashValidator implements CashValidator {
         return resultCode;
     }
 
-    private InvocationProxy createInvocation(List<Interceptor> interceptors, UserAccount user, BigMoney amount, Date occurringTime) {
+    private InvocationProxy createInvocation(List<Interceptor> interceptors, UserAccount user, String portfolioId, BigMoney amount, Date occurringTime) {
         final InvocationProxy proxy = new InvocationProxy(new DefaultInvocation(
-                new InvocationContext(user, amount, occurringTime), interceptors));
+                new InvocationContext(user, portfolioId, amount, occurringTime), interceptors));
 
         return proxy;
     }

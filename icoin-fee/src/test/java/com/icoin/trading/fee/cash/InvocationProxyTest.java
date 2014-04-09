@@ -66,7 +66,7 @@ public class InvocationProxyTest {
         SleepInterceptor interceptor2 = new SleepInterceptor(50);
         final UserAccount user = mock(UserAccount.class);
         DefaultInvocation invocation =
-                new DefaultInvocation(new InvocationContext(user, BigMoney.parse("GBP 1.23"), new Date()),
+                new DefaultInvocation(new InvocationContext(user, "portfolioId", BigMoney.parse("GBP 1.23"), new Date()),
                         ImmutableList.of(interceptor1, interceptor2));
 
         InvocationProxy proxy = new InvocationProxy(invocation);
