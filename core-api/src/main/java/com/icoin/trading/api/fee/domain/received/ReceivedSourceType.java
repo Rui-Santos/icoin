@@ -15,6 +15,7 @@ public enum ReceivedSourceType implements ValueObject<ReceivedSourceType> {
     CASH,
     ALIPAY,
     PAYPAL,
+    COIN_ADDRESS,
     INTERNAL_ACCOUNT;
 
     @Override

@@ -20,7 +20,7 @@ import java.util.Date;
  * Time: 5:40 PM
  * To change this template use File | Settings | File Templates.
  */
-public class CreatePaidFeeCommand<T extends CreatePaidFeeCommand> extends CreateFeeCommand<T> {
+public class CreatePaidFeeCommand extends CreateFeeCommand<CreatePaidFeeCommand> {
     @NotNull
     private final PaidMode paidMode;
 

@@ -13,8 +13,13 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class PaidFeeConfirmedEvent extends FeeConfirmedEvent<PaidFeeConfirmedEvent> {
+    private String sequenceNumber;
 
-    public PaidFeeConfirmedEvent(FeeId feeId, Date confirmedDate) {
+    public PaidFeeConfirmedEvent(FeeId feeId, String sequenceNumber, Date confirmedDate) {
         super(feeId, confirmedDate);
+    }
+
+    public String getSequenceNumber() {
+        return sequenceNumber;
     }
 }

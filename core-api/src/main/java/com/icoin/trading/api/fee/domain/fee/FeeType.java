@@ -2,6 +2,9 @@ package com.icoin.trading.api.fee.domain.fee;
 
 import com.homhon.base.domain.ValueObject;
 
+import static com.homhon.util.Asserts.hasText;
+import static com.homhon.util.Asserts.notNull;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa
@@ -11,24 +14,34 @@ import com.homhon.base.domain.ValueObject;
  */
 public enum FeeType implements ValueObject<FeeType> {
     RESERVED(AccountingType.CREDIT, "Reserve for traders"),
-    BUY_COMMISSION(AccountingType.CREDIT, "Commission for the execution"),
-    SOLD_MONEY(AccountingType.CREDIT, "Sold money"),
-    SOLD_COIN(AccountingType.CREDIT, "Sold coin"),
-    SELL_COMMISSION(AccountingType.CREDIT, "Commission for the execution"),
-    INTEREST(AccountingType.CREDIT, "Interest from bank"),
-    REFUND(AccountingType.DEBIT, "Refund to traders"),
-    REPAY(AccountingType.CREDIT, "Repay the commission to consumers");
+    BOUGHT_MONEY_COMMISSION(AccountingType.CREDIT, "Commission for the execution"),
+    SOLD_COIN_COMMISSION(AccountingType.CREDIT, "Commission for the execution"),
+    PAY_MONEY(AccountingType.CREDIT, "Pay money"),
+    PAY_COIN(AccountingType.CREDIT, "Pay coin"),
+    RECEIVE_MONEY(AccountingType.DEBIT, "Sold money"),
+    RECEIVE_COIN(AccountingType.DEBIT, "Sold coin"),
+    RESERVE_MONEY(AccountingType.DEBIT, "Reserve money"),
+    RESERVE_COIN(AccountingType.DEBIT, "Reserve coin"),
+    //    INTEREST(AccountingType.CREDIT, "Interest from bank"),
+//    REFUND(AccountingType.DEBIT, "Refund to traders"),
+    REPAY(AccountingType.DEBIT, "Repay the commission to consumers");
 
-    private AccountingType movingDirection;
+    private AccountingType accountType;
     private String desc;
 
-    private FeeType(AccountingType movingDirection, String desc) {
-        this.movingDirection = movingDirection;
+    private FeeType(AccountingType accountType, String desc) {
+        notNull(accountType);
+        hasText(desc);
+        this.accountType = accountType;
         this.desc = desc;
     }
 
-    public AccountingType getMovingDirection() {
-        return movingDirection;
+    public AccountingType getAccountType() {
+        return accountType;
+    }
+
+    public String getDesc() {
+        return desc;
     }
 
     public boolean sameValueAs(FeeType other) {
