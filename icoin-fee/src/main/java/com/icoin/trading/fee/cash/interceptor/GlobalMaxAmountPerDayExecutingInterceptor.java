@@ -30,8 +30,8 @@ public class GlobalMaxAmountPerDayExecutingInterceptor extends ProfilingIntercep
     private DueDateService service;
     private final Money maxAmount;
 
-    public GlobalMaxAmountPerDayExecutingInterceptor(String currencyUnit, BigDecimal amount) {
-        this.maxAmount = BigMoney.of(CurrencyUnit.of(currencyUnit), amount).toMoney(RoundingMode.HALF_EVEN);
+    public GlobalMaxAmountPerDayExecutingInterceptor(String amount) {
+        this.maxAmount = BigMoney.parse(amount);
     }
 
     @SuppressWarnings("unchecked")
