@@ -1,4 +1,6 @@
-package com.icoin.trading.fee.query.fee;
+package com.icoin.trading.fee.query.fee.receivable;
+
+import com.icoin.trading.fee.query.fee.FeeEntry;
 
 /**
  * Created with IntelliJ IDEA.

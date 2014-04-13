@@ -6,6 +6,7 @@ import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCreatedEvent;
@@ -38,7 +39,8 @@ public class PaidFee extends FeeAggregateRoot<PaidFee> {
                    FeeType feeType,
                    Date dueDate,
                    Date businessCreationTime,
-                   String userAccountId,
+                   String portfolioId,
+                   String userId,
                    BusinessType businessType,
                    String businessReferenceId,
                    PaidMode paidSource) {
@@ -48,7 +50,8 @@ public class PaidFee extends FeeAggregateRoot<PaidFee> {
                 feeType,
                 dueDate,
                 businessCreationTime,
-                userAccountId,
+                portfolioId,
+                userId,
                 businessType,
                 businessReferenceId,
                 paidSource));
@@ -62,8 +65,8 @@ public class PaidFee extends FeeAggregateRoot<PaidFee> {
         apply(new PaidFeeCancelledEvent(feeId, cancelReason, cancelledDate));
     }
 
-    public void offset(Date offsetDate) {
-        apply(new PaidFeeOffsetedEvent(feeId, offsetDate));
+    public void offset(OffsetId offsetId,Date offsetDate) {
+        apply(new PaidFeeOffsetedEvent(feeId, offsetId, offsetDate));
     }
 
     @EventHandler
@@ -86,5 +89,9 @@ public class PaidFee extends FeeAggregateRoot<PaidFee> {
     @EventHandler
     public void on(PaidFeeOffsetedEvent event) {
         onOffseted(event);
+    }
+
+    public String getSequenceNumber() {
+        return sequenceNumber;
     }
 }

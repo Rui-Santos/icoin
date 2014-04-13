@@ -39,7 +39,8 @@ public class ReceivedPaidFeeCommandHandler {
                 command.getFeeType(),
                 command.getDueDate(),
                 command.getCreatedTime(),
-                command.getUserAccountId(),
+                command.getPortfolioId(),
+                command.getUserId(),
                 command.getBusinessType(),
                 command.getBusinessReferenceId(),
                 command.getReceivedSource()
@@ -51,14 +52,14 @@ public class ReceivedPaidFeeCommandHandler {
     public void handleConfirmReceived(ConfirmReceivedFeeCommand command) {
         ReceivedFee fee = receivedFeeRepository.load(command.getFeeId());
 
-        fee.confirm(command.getConfirmedDate());
+        fee.confirm(command.getAmount(), command.getConfirmedDate());
     }
 
     @CommandHandler
     public void handleOffsetReceived(OffsetReceivedFeeCommand command) {
         ReceivedFee fee = receivedFeeRepository.load(command.getFeeId());
 
-        fee.offset(command.getOffsetedDate());
+        fee.offset(command.getOffsetId(), command.getOffsetedDate());
     }
 
 
@@ -78,7 +79,8 @@ public class ReceivedPaidFeeCommandHandler {
                 command.getFeeType(),
                 command.getDueDate(),
                 command.getCreatedTime(),
-                command.getUserAccountId(),
+                command.getPortfolioId(),
+                command.getUserId(),
                 command.getBusinessType(),
                 command.getBusinessReferenceId(),
                 command.getPaidMode()
@@ -90,14 +92,14 @@ public class ReceivedPaidFeeCommandHandler {
     public void handleConfirmPaid(ConfirmPaidFeeCommand command) {
         PaidFee fee = paidFeeRepository.load(command.getFeeId());
 
-        fee.confirm(command.getSequenceNumber() ,command.getConfirmedDate());
+        fee.confirm(command.getSequenceNumber(), command.getConfirmedDate());
     }
 
     @CommandHandler
     public void handleOffsetPaid(OffsetPaidFeeCommand command) {
         PaidFee fee = paidFeeRepository.load(command.getFeeId());
 
-        fee.offset(command.getOffsetedDate());
+        fee.offset(command.getOffsetId(), command.getOffsetedDate());
     }
 
 

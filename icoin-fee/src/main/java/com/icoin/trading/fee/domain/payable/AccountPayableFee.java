@@ -5,6 +5,7 @@ import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCreatedEvent;
@@ -27,8 +28,17 @@ public class AccountPayableFee extends FeeAggregateRoot<AccountPayableFee> {
     protected AccountPayableFee() {
     }
 
-    public AccountPayableFee(FeeId feeId, FeeStatus feeStatus, BigMoney amount, FeeType feeType, Date dueDate, Date businessCreationTime, String userAccountId, BusinessType businessType, String businessReferenceId) {
-        apply(new AccountPayableFeeCreatedEvent(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, userAccountId, businessType, businessReferenceId));
+    public AccountPayableFee(FeeId feeId,
+                             FeeStatus feeStatus,
+                             BigMoney amount,
+                             FeeType feeType,
+                             Date dueDate,
+                             Date businessCreationTime,
+                             String portfolioId,
+                             String userId,
+                             BusinessType businessType,
+                             String businessReferenceId) {
+        apply(new AccountPayableFeeCreatedEvent(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, portfolioId, userId, businessType, businessReferenceId));
     }
 
     public void confirm(Date confirmedDate) {
@@ -39,8 +49,8 @@ public class AccountPayableFee extends FeeAggregateRoot<AccountPayableFee> {
         apply(new AccountPayableFeeCancelledEvent(feeId, cancelReason, cancelledDate));
     }
 
-    public void offset(Date offsetDate) {
-        apply(new AccountPayableFeeOffsetedEvent(feeId, offsetDate));
+    public void offset(OffsetId offsetId, Date offsetDate) {
+        apply(new AccountPayableFeeOffsetedEvent(feeId, offsetId, offsetDate));
     }
 
     @EventHandler

@@ -45,6 +45,7 @@ public class PaySellCommissionFeeManagerSaga extends PayTransactionFeeManagerSag
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
+                        event.getUserId().toString(),
                         event.getOrderTransactionId().toString()));
 
         paidFeeId = event.getPaidFeeId();
@@ -61,6 +62,7 @@ public class PaySellCommissionFeeManagerSaga extends PayTransactionFeeManagerSag
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
+                        event.getUserId().toString(),
                         event.getOrderTransactionId().toString(),
                         PaidMode.INTERNAL));
 

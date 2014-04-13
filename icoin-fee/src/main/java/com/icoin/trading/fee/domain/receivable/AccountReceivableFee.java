@@ -5,6 +5,7 @@ import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCreatedEvent;
@@ -28,8 +29,17 @@ public class AccountReceivableFee extends FeeAggregateRoot<AccountReceivableFee>
     protected AccountReceivableFee() {
     }
 
-    public AccountReceivableFee(FeeId feeId, FeeStatus feeStatus, BigMoney amount, FeeType feeType, Date dueDate, Date businessCreationTime, String userAccountId, BusinessType businessType, String businessReferenceId) {
-        apply(new AccountReceivableFeeCreatedEvent(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, userAccountId, businessType, businessReferenceId));
+    public AccountReceivableFee(FeeId feeId,
+                                FeeStatus feeStatus,
+                                BigMoney amount,
+                                FeeType feeType,
+                                Date dueDate,
+                                Date businessCreationTime,
+                                String portfolioId,
+                                String userId,
+                                BusinessType businessType,
+                                String businessReferenceId) {
+        apply(new AccountReceivableFeeCreatedEvent(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, portfolioId, userId, businessType, businessReferenceId));
     }
 
     public void confirm(Date confirmedDate) {
@@ -40,8 +50,8 @@ public class AccountReceivableFee extends FeeAggregateRoot<AccountReceivableFee>
         apply(new AccountReceivableFeeCancelledEvent(feeId, cancelReason, cancelledDate));
     }
 
-    public void offset(Date offsetDate) {
-        apply(new AccountReceivableFeeOffsetedEvent(feeId, offsetDate));
+    public void offset(OffsetId offsetId, Date offsetDate) {
+        apply(new AccountReceivableFeeOffsetedEvent(feeId, offsetId, offsetDate));
     }
 
     @EventHandler

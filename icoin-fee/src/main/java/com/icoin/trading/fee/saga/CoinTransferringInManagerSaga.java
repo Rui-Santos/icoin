@@ -46,6 +46,7 @@ public class CoinTransferringInManagerSaga extends ReceiveTransactionFeeManagerS
                         event.getStartTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
+                        event.getUserId().toString(),
                         event.getReceivedId()));
 
         receivedFeeId = event.getReceivedFeeId();
@@ -62,6 +63,7 @@ public class CoinTransferringInManagerSaga extends ReceiveTransactionFeeManagerS
                         event.getStartTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
+                        event.getUserId().toString(),
                         event.getReceivedId(),
                         event.getReceivedSource()));
 

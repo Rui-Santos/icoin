@@ -56,14 +56,17 @@ public abstract class PayScheduler<T extends PayCash> {
         this.pendingCashRepository = pendingRepository;
     }
 
+    public void setPaidFeeRepository(Repository<PaidFee> paidFeeRepository) {
+        this.paidFeeRepository = paidFeeRepository;
+    }
+
     protected abstract String pay(T entity, Date occurringTime);
 
     protected void complete(T entity, String sequenceNumber, Date occurringTime) {
-        entity.confirm(sequenceNumber, occurringTime);
-        pendingCashRepository.save(entity);
-
         PaidFee paidFee = paidFeeRepository.load(entity.getPrimaryKey());
         paidFee.confirm(sequenceNumber, occurringTime);
+
+        entity.confirm(sequenceNumber, occurringTime);
         pendingCashRepository.save(entity);
     }
 
@@ -97,8 +100,15 @@ public abstract class PayScheduler<T extends PayCash> {
                 if (paidFee.isOffseted() && paidFee.isPending()) {
                     final String sequenceNumber = pay(entity, currentTime);
                     if (!hasText(sequenceNumber)) {
-                        complete(entity, sequenceNumber, currentTime);
+                        logger.error("Cannot get sequence number from pay at {} : {}", currentTime, entity.describe());
+                        return;
                     }
+
+                    complete(entity, sequenceNumber, currentTime);
+                }
+                if (paidFee.isOffseted() && paidFee.isConfirmed()) {
+                    entity.confirm(paidFee.getSequenceNumber(), paidFee.getConfirmedDate());
+                    pendingCashRepository.save(entity);
                 }
             } catch (Exception e) {
                 logger.error("cannot handle entity {}: {}", entity, entity.describe());

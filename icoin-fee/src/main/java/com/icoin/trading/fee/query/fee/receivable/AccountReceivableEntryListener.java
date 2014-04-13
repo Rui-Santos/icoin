@@ -1,11 +1,10 @@
-package com.icoin.trading.fee.query.fee;
+package com.icoin.trading.fee.query.fee.receivable;
 
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCreatedEvent;
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeOffsetedEvent;
-import com.icoin.trading.fee.query.fee.repositories.AccountReceivableFeeEntryQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class AccountReceivableEntryListener {
     private AccountReceivableFeeEntryQueryRepository repository;
 
     @EventHandler
-    public void handleSellOrderPlaced(AccountReceivableFeeCreatedEvent event) {
+    public void handleCreated(AccountReceivableFeeCreatedEvent event) {
         AccountReceivableFeeEntry entry = new AccountReceivableFeeEntry();
         entry.copy(event);
         repository.save(entry);
@@ -52,6 +51,7 @@ public class AccountReceivableEntryListener {
 
         entry.setOffsetDate(event.getOffsetedDate());
         entry.setOffseted(true);
+        entry.setOffsetId(event.getOffsetId().toString());
         repository.save(entry);
     }
 
@@ -64,6 +64,7 @@ public class AccountReceivableEntryListener {
         }
 
         entry.setCancelledDate(event.getCancelledDate());
+        entry.setCancelledReason(event.getCancelledReason());
         entry.setFeeStatus(FeeStatus.CANCELLED);
         repository.save(entry);
     }

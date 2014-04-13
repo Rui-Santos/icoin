@@ -9,6 +9,7 @@ import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
 import com.icoin.trading.api.fee.domain.transfer.TransferTransactionType;
 import com.icoin.trading.api.fee.domain.transfer.TransferType;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.users.domain.UserId;
 import com.icoin.trading.bitcoin.client.BitcoinRpcOperations;
 import com.icoin.trading.bitcoin.client.response.BigDecimalResponse;
 import com.icoin.trading.fee.cash.CashValidator;
@@ -80,7 +81,8 @@ public class ReceivedCoinScheduler extends ReceiveScheduler<CoinReceiveCash> {
         repository.add(new CoinTransferringInTransaction(
                 new FeeTransactionId(),
                 new OffsetId(),
-                new PortfolioId(),
+                new PortfolioId(entity.getPortfolioId()),
+                new UserId(entity.getUserId()),
                 occurringTime,
                 dueDateService.computeDueDate(occurringTime),
                 new FeeId(),

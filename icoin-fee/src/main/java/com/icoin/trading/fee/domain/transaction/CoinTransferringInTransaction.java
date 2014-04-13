@@ -10,6 +10,7 @@ import com.icoin.trading.api.fee.domain.transfer.TransferType;
 import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.transfer.in.CoinTransferringInTransactionStartedEvent;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.money.BigMoney;
 
@@ -32,6 +33,7 @@ public class CoinTransferringInTransaction extends TransferringInTransaction<Coi
     public CoinTransferringInTransaction(FeeTransactionId feeTransactionId,
                                          OffsetId offsetId,
                                          PortfolioId portfolioId,
+                                         UserId userId,
                                          Date startTime,
                                          Date dueDate,
                                          FeeId receivedFeeId,
@@ -46,6 +48,7 @@ public class CoinTransferringInTransaction extends TransferringInTransaction<Coi
         apply(new CoinTransferringInTransactionStartedEvent(feeTransactionId,
                 offsetId,
                 portfolioId,
+                userId,
                 startTime,
                 dueDate,
                 receivedFeeId,
@@ -66,7 +69,7 @@ public class CoinTransferringInTransaction extends TransferringInTransaction<Coi
     }
 
 
-    public void received(Date receivedDate) {
-        apply(new ReceivedFeeConfirmedEvent(receivedFeeId, receivedDate));
+    public void received(BigMoney amount, Date receivedDate) {
+        apply(new ReceivedFeeConfirmedEvent(receivedFeeId, amount, receivedDate));
     }
 }

@@ -13,6 +13,7 @@ import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
+import com.icoin.trading.api.users.domain.UserId;
 import com.icoin.trading.fee.domain.DueDateService;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.money.BigMoney;
@@ -57,6 +58,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         final CoinId coinId = new CoinId("XPM");
         final PortfolioId buyPortfolioId = new PortfolioId();
         final PortfolioId sellPortfolioId = new PortfolioId();
+        final UserId buyUserId = new UserId();
+        final UserId sellUserId = new UserId();
         final DateTimeZone zone = DateTimeZone.forID("America/New_York");
         final Date dueDate = new DateTime(tradeTime, zone).toDate();
 
@@ -84,6 +87,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
                         sellTransactionId,
                         buyPortfolioId,
                         sellPortfolioId,
+                        buyUserId,
+                        sellUserId,
                         tradeTime,
                         TradeType.SELL));
 
@@ -127,6 +132,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         final CoinId coinId = new CoinId("XPM");
         final PortfolioId buyPortfolioId = new PortfolioId();
         final PortfolioId sellPortfolioId = new PortfolioId();
+        final UserId buyUserId = new UserId();
+        final UserId sellUserId = new UserId();
         final DateTimeZone zone = DateTimeZone.forID("America/New_York");
         final Date dueDate = new DateTime(tradeTime, zone).toDate();
 
@@ -154,6 +161,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
                         sellTransactionId,
                         buyPortfolioId,
                         sellPortfolioId,
+                        buyUserId,
+                        sellUserId,
                         tradeTime,
                         TradeType.BUY));
 
@@ -197,6 +206,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         final CoinId coinId = new CoinId("XPM");
         final PortfolioId buyPortfolioId = new PortfolioId();
         final PortfolioId sellPortfolioId = new PortfolioId();
+        final UserId buyUserId = new UserId();
+        final UserId sellUserId = new UserId();
         final DateTimeZone zone = DateTimeZone.forID("America/New_York");
         final Date dueDate = new DateTime(tradeTime, zone).toDate();
 
@@ -224,6 +235,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
                         sellTransactionId,
                         buyPortfolioId,
                         sellPortfolioId,
+                        buyUserId,
+                        sellUserId,
                         tradeTime,
                         TradeType.BUY));
 
@@ -267,6 +280,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         final CoinId coinId = new CoinId("XPM");
         final PortfolioId buyPortfolioId = new PortfolioId();
         final PortfolioId sellPortfolioId = new PortfolioId();
+        final UserId buyUserId = new UserId();
+        final UserId sellUserId = new UserId();
         final DateTimeZone zone = DateTimeZone.forID("America/New_York");
         final Date dueDate = new DateTime(tradeTime, zone).toDate();
 
@@ -294,6 +309,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
                         sellTransactionId,
                         buyPortfolioId,
                         sellPortfolioId,
+                        buyUserId,
+                        sellUserId,
                         tradeTime,
                         TradeType.BUY));
 
@@ -338,6 +355,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         final CoinId coinId = new CoinId("XPM");
         final PortfolioId buyPortfolioId = new PortfolioId();
         final PortfolioId sellPortfolioId = new PortfolioId();
+        final UserId buyUserId = new UserId();
+        final UserId sellUserId = new UserId();
         final DateTimeZone zone = DateTimeZone.forID("America/New_York");
         final Date dueDate = new DateTime(tradeTime, zone).toDate();
 
@@ -365,6 +384,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
                         sellTransactionId,
                         buyPortfolioId,
                         sellPortfolioId,
+                        buyUserId,
+                        sellUserId,
                         tradeTime,
                         TradeType.BUY));
 
@@ -408,6 +429,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
         final CoinId coinId = new CoinId("XPM");
         final PortfolioId buyPortfolioId = new PortfolioId();
         final PortfolioId sellPortfolioId = new PortfolioId();
+        final UserId buyUserId = new UserId();
+        final UserId sellUserId = new UserId();
         final DateTimeZone zone = DateTimeZone.forID("America/New_York");
         final Date dueDate = new DateTime(tradeTime, zone).toDate();
 
@@ -435,6 +458,8 @@ public class ExecutedTransactionFeeApplicationListenerTest {
                         sellTransactionId,
                         buyPortfolioId,
                         sellPortfolioId,
+                        buyUserId,
+                        sellUserId,
                         tradeTime,
                         TradeType.BUY));
 

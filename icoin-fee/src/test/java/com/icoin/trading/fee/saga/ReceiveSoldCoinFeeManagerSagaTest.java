@@ -42,6 +42,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
@@ -65,6 +66,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
     private final CoinId coinId = new CoinId("BTC");
     private final TransactionId orderTransactionId = new TransactionId();
     private final PortfolioId portfolioId = new PortfolioId();
+    private final UserId userId = new UserId();
     private final Date tradeTime = currentTime();
     private final Date dueDate = new Date();
     private final OrderBookId orderBookId = new OrderBookId();
@@ -92,6 +94,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -112,6 +115,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 orderTransactionId.toString()),
                         new CreateReceivedFeeCommand(
                                 feeTransactionId,
@@ -123,6 +127,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 orderTransactionId.toString(),
                                 new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, portfolioId.toString())),
                         new CreateOffsetCommand(
@@ -147,6 +152,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -164,6 +170,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .expectActiveSagas(1)
@@ -185,6 +192,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -202,6 +210,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())))
@@ -209,6 +218,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                 .expectDispatchedCommandsEqualTo(
                         new ConfirmReceivedFeeCommand(
                                 receivedFeeId,
+                                BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                                 tradeTime));
 
     }
@@ -224,6 +234,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -258,6 +269,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -283,6 +295,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -296,6 +309,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new AccountReceivableFeeConfirmedEvent(
@@ -303,6 +317,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         tradeTime),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime))
                 .whenAggregate(offsetId).publishes(
                 new FeesOffsetedEvent(
@@ -311,8 +326,8 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                 ))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
-                        new OffsetAccountReceivableFeeCommand(accountReceivableFeeId, tradeTime),
-                        new OffsetReceivedFeeCommand(receivedFeeId, tradeTime));
+                        new OffsetAccountReceivableFeeCommand(accountReceivableFeeId, offsetId, tradeTime),
+                        new OffsetReceivedFeeCommand(receivedFeeId, offsetId, tradeTime));
     }
 
     @Test
@@ -326,6 +341,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -351,6 +367,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.ALIPAY, orderTransactionId.toString())),
@@ -363,6 +380,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new FeesOffsetedEvent(
@@ -375,11 +393,12 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                 .whenAggregate(receivedFeeId).publishes(
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
-                        new OffsetAccountReceivableFeeCommand(accountReceivableFeeId, tradeTime),
-                        new OffsetReceivedFeeCommand(receivedFeeId, tradeTime));
+                        new OffsetAccountReceivableFeeCommand(accountReceivableFeeId, offsetId, tradeTime),
+                        new OffsetReceivedFeeCommand(receivedFeeId, offsetId, tradeTime));
     }
 
 
@@ -394,6 +413,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -419,6 +439,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.ALIPAY, orderTransactionId.toString())),
@@ -431,10 +452,12 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime))
                 .whenAggregate(offsetId).publishes(
                 new FeesOffsetedEvent(
@@ -456,6 +479,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -481,6 +505,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.ALIPAY, orderTransactionId.toString())),
@@ -493,10 +518,12 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime),
                 new FeesOffsetedEvent(
                         offsetId,
@@ -505,6 +532,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                 .whenAggregate(accountReceivableFeeId).publishes(
                 new AccountReceivableFeeOffsetedEvent(
                         accountReceivableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(1)
@@ -522,6 +550,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -547,6 +576,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -560,10 +590,12 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime),
                 new FeesOffsetedEvent(
                         offsetId,
@@ -572,6 +604,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                 .whenAggregate(accountReceivableFeeId).publishes(
                 new ReceivedFeeOffsetedEvent(
                         accountReceivableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(1)
@@ -589,6 +622,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -614,6 +648,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -627,10 +662,12 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime),
                 new FeesOffsetedEvent(
                         offsetId,
@@ -638,11 +675,13 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                 ),
                 new AccountReceivableFeeOffsetedEvent(
                         accountReceivableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .whenAggregate(receivedFeeId).publishes(
                 new ReceivedFeeOffsetedEvent(
                         receivedFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(0)
@@ -660,6 +699,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -684,6 +724,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -697,10 +738,12 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime))
                 .whenAggregate(offsetId).publishes(
                 new OffsetAmountNotMatchedEvent(
@@ -726,6 +769,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -751,6 +795,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -764,10 +809,12 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
@@ -797,6 +844,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -822,11 +870,10 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
-
-
                 new AccountReceivableFeeCreatedEvent(
                         accountReceivableFeeId,
                         FeeStatus.PENDING,
@@ -835,10 +882,12 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
@@ -868,6 +917,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -893,6 +943,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -906,10 +957,12 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
@@ -939,6 +992,7 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -964,10 +1018,10 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
-
                 new AccountReceivableFeeCreatedEvent(
                         accountReceivableFeeId,
                         FeeStatus.PENDING,
@@ -976,10 +1030,12 @@ public class ReceiveSoldCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        BigMoney.of(CurrencyUnit.of("BTC"), 120.23),
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,

@@ -1,7 +1,8 @@
-package com.icoin.trading.fee.query.fee;
+package com.icoin.trading.fee.query.fee.paid;
 
 import com.icoin.trading.api.fee.domain.PaidMode;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCreatedEvent;
+import com.icoin.trading.fee.query.fee.FeeEntry;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,6 +13,7 @@ import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCreatedEvent;
  */
 public class PaidFeeEntry extends FeeEntry<PaidFeeEntry> {
     private PaidMode paidMode;
+    private String sequenceNumber;
 
     public void copy(PaidFeeCreatedEvent event) {
         super.copy(event);
@@ -24,5 +26,13 @@ public class PaidFeeEntry extends FeeEntry<PaidFeeEntry> {
 
     public void setPaidMode(PaidMode paidMode) {
         this.paidMode = paidMode;
+    }
+
+    public String getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(String sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 }

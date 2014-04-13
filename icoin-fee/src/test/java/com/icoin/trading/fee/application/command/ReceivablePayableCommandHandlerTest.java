@@ -14,6 +14,7 @@ import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.payable.AccountPayableFeeCreatedEvent;
@@ -24,6 +25,7 @@ import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeCreat
 import com.icoin.trading.api.fee.events.fee.receivable.AccountReceivableFeeOffsetedEvent;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import com.icoin.trading.fee.domain.payable.AccountPayableFee;
 import com.icoin.trading.fee.domain.receivable.AccountReceivableFee;
 import org.axonframework.test.FixtureConfiguration;
@@ -46,6 +48,8 @@ public class ReceivablePayableCommandHandlerTest {
     private final FeeTransactionId feeTransactionId = new FeeTransactionId();
     private final TransactionId orderTransactionId = new TransactionId();
     private final PortfolioId portfolioId = new PortfolioId();
+    private final OffsetId offsetId = new OffsetId();
+    private final UserId userId = new UserId();
     private final Date tradeTime = new Date();
     private final Date dueDate = new Date();
     private final BigMoney sellCommissionAmount = BigMoney.of(CurrencyUnit.of("BTC"), 10);
@@ -82,6 +86,7 @@ public class ReceivablePayableCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
+                userId.toString(),
                 orderTransactionId.toString());
 
         receivableFixture.given()
@@ -95,6 +100,7 @@ public class ReceivablePayableCommandHandlerTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 BusinessType.TRADE_EXECUTED,
                                 orderTransactionId.toString()));
     }
@@ -113,6 +119,7 @@ public class ReceivablePayableCommandHandlerTest {
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .when(command)
@@ -125,7 +132,7 @@ public class ReceivablePayableCommandHandlerTest {
     @Test
     public void testHandleOffsetAccountReceivable() throws Exception {
         OffsetAccountReceivableFeeCommand command =
-                new OffsetAccountReceivableFeeCommand(receivableFeeId, tradeTime);
+                new OffsetAccountReceivableFeeCommand(receivableFeeId, offsetId, tradeTime);
 
         receivableFixture.given(
                 new AccountReceivableFeeCreatedEvent(
@@ -136,12 +143,14 @@ public class ReceivablePayableCommandHandlerTest {
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .when(command)
                 .expectEvents(
                         new AccountReceivableFeeOffsetedEvent(
                                 receivableFeeId,
+                                offsetId,
                                 tradeTime));
     }
 
@@ -159,6 +168,7 @@ public class ReceivablePayableCommandHandlerTest {
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .when(command)
@@ -181,6 +191,7 @@ public class ReceivablePayableCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
+                userId.toString(),
                 orderTransactionId.toString());
 
         payableFixture.given()
@@ -194,6 +205,7 @@ public class ReceivablePayableCommandHandlerTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 BusinessType.TRADE_EXECUTED,
                                 orderTransactionId.toString()));
     }
@@ -212,6 +224,7 @@ public class ReceivablePayableCommandHandlerTest {
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .when(command)
@@ -224,7 +237,7 @@ public class ReceivablePayableCommandHandlerTest {
     @Test
     public void testHandleOffsetAccountPayable() throws Exception {
         OffsetAccountPayableFeeCommand command =
-                new OffsetAccountPayableFeeCommand(payableFeeId, tradeTime);
+                new OffsetAccountPayableFeeCommand(payableFeeId, offsetId, tradeTime);
 
         payableFixture.given(
                 new AccountPayableFeeCreatedEvent(
@@ -235,12 +248,14 @@ public class ReceivablePayableCommandHandlerTest {
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .when(command)
                 .expectEvents(
                         new AccountPayableFeeOffsetedEvent(
                                 payableFeeId,
+                                offsetId,
                                 tradeTime));
     }
 
@@ -258,6 +273,7 @@ public class ReceivablePayableCommandHandlerTest {
                         tradeTime,
                         dueDate,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .when(command)

@@ -14,6 +14,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.joda.money.BigMoney;
@@ -56,6 +57,7 @@ public class ExecutedCoinTransaction extends AxonAnnotatedAggregateRoot<Executed
                                    String orderId,
                                    TransactionId orderTransactionId,
                                    PortfolioId portfolioId,
+                                   UserId userId,
                                    Date tradeTime,
                                    Date dueDate,
                                    TradeType tradeType,
@@ -76,6 +78,7 @@ public class ExecutedCoinTransaction extends AxonAnnotatedAggregateRoot<Executed
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         tradeType,
@@ -94,6 +97,7 @@ public class ExecutedCoinTransaction extends AxonAnnotatedAggregateRoot<Executed
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         tradeType,

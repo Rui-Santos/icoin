@@ -3,7 +3,6 @@ package com.icoin.trading.fee.saga;
 import com.icoin.trading.api.fee.command.offset.CancelOffsetCommand;
 import com.icoin.trading.api.fee.command.offset.OffsetFeesCommand;
 import com.icoin.trading.api.fee.command.paid.CancelPaidFeeCommand;
-import com.icoin.trading.api.fee.command.paid.ConfirmPaidFeeCommand;
 import com.icoin.trading.api.fee.command.paid.OffsetPaidFeeCommand;
 import com.icoin.trading.api.fee.command.payable.CancelAccountPayableFeeCommand;
 import com.icoin.trading.api.fee.command.payable.ConfirmAccountPayableFeeCommand;
@@ -81,8 +80,8 @@ public class PayTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
         if (offsetStatus == TransactionStatus.OFFSETED
                 && accountPayableStatus == TransactionStatus.CONFIRMED
                 && paidFeeStatus == TransactionStatus.CONFIRMED) {
-            commandGateway.send(new OffsetAccountPayableFeeCommand(accountPayableId, offsetDate));
-            commandGateway.send(new OffsetPaidFeeCommand(paidFeeId, offsetDate));
+            commandGateway.send(new OffsetAccountPayableFeeCommand(accountPayableId, offsetId, offsetDate));
+            commandGateway.send(new OffsetPaidFeeCommand(paidFeeId, offsetId, offsetDate));
         }
     }
 

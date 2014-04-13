@@ -30,7 +30,8 @@ public abstract class FeeEntry<T extends FeeEntry> extends VersionedEntitySuppor
     protected Date offsetDate;
     protected Date postedDate;
     protected boolean posted;
-    protected String userAccountId;
+    protected String portfolioId;
+    protected String userId;
     protected String offsetId;
     protected BusinessType businessType;
     //like order id, like interest rates from back
@@ -132,12 +133,12 @@ public abstract class FeeEntry<T extends FeeEntry> extends VersionedEntitySuppor
         this.posted = posted;
     }
 
-    public String getUserAccountId() {
-        return userAccountId;
+    public String getPortfolioId() {
+        return portfolioId;
     }
 
-    public void setUserAccountId(String userAccountId) {
-        this.userAccountId = userAccountId;
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
     }
 
     public String getOffsetId() {
@@ -164,6 +165,13 @@ public abstract class FeeEntry<T extends FeeEntry> extends VersionedEntitySuppor
         this.businessReferenceId = businessReferenceId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public void copy(FeeCreatedEvent event) {
         setPrimaryKey(event.getFeeId().toString());
@@ -174,6 +182,7 @@ public abstract class FeeEntry<T extends FeeEntry> extends VersionedEntitySuppor
         setDueDate(event.getDueDate());
         setFeeStatus(event.getFeeStatus());
         setFeeType(event.getFeeType());
-        setUserAccountId(event.getUserAccountId());
+        setPortfolioId(event.getPortfolioId());
+        setUserId(event.getUserId());
     }
 }

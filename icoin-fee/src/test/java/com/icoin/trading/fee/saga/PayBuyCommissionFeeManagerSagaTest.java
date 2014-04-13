@@ -6,7 +6,6 @@ import com.icoin.trading.api.fee.command.offset.CancelOffsetCommand;
 import com.icoin.trading.api.fee.command.offset.CreateOffsetCommand;
 import com.icoin.trading.api.fee.command.offset.OffsetFeesCommand;
 import com.icoin.trading.api.fee.command.paid.CancelPaidFeeCommand;
-import com.icoin.trading.api.fee.command.paid.ConfirmPaidFeeCommand;
 import com.icoin.trading.api.fee.command.paid.CreatePaidFeeCommand;
 import com.icoin.trading.api.fee.command.paid.OffsetPaidFeeCommand;
 import com.icoin.trading.api.fee.command.payable.CancelAccountPayableFeeCommand;
@@ -41,6 +40,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
@@ -64,6 +64,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
     private final CoinId coinId = new CoinId("BTC");
     private final TransactionId orderTransactionId = new TransactionId();
     private final PortfolioId portfolioId = new PortfolioId();
+    private final UserId userId = new UserId();
     private final Date tradeTime = currentTime();
     private final Date dueDate = new Date();
     private final OrderBookId orderBookId = new OrderBookId();
@@ -91,6 +92,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -111,6 +113,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 orderTransactionId.toString()),
                         new CreatePaidFeeCommand(
                                 feeTransactionId,
@@ -122,6 +125,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 orderTransactionId.toString(),
                                 PaidMode.INTERNAL),
                         new CreateOffsetCommand(
@@ -147,6 +151,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -164,6 +169,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .expectActiveSagas(1)
@@ -186,6 +192,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -203,6 +210,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL))
@@ -228,6 +236,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -263,6 +272,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -288,6 +298,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -301,6 +312,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new AccountPayableFeeConfirmedEvent(
@@ -317,8 +329,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                 ))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
-                        new OffsetAccountPayableFeeCommand(accountPayableFeeId, tradeTime),
-                        new OffsetPaidFeeCommand(paidFeeId, tradeTime));
+                        new OffsetAccountPayableFeeCommand(accountPayableFeeId, offsetId, tradeTime),
+                        new OffsetPaidFeeCommand(paidFeeId, offsetId, tradeTime));
     }
 
     @Test
@@ -333,6 +345,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -358,6 +371,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -370,6 +384,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new FeesOffsetedEvent(
@@ -386,8 +401,8 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         tradeTime))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
-                        new OffsetAccountPayableFeeCommand(accountPayableFeeId, tradeTime),
-                        new OffsetPaidFeeCommand(paidFeeId, tradeTime));
+                        new OffsetAccountPayableFeeCommand(accountPayableFeeId, offsetId, tradeTime),
+                        new OffsetPaidFeeCommand(paidFeeId, offsetId, tradeTime));
     }
 
 
@@ -403,6 +418,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -428,6 +444,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -440,6 +457,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -467,6 +485,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -491,6 +510,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -502,6 +522,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -515,6 +536,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                 .whenAggregate(accountPayableFeeId).publishes(
                 new AccountPayableFeeOffsetedEvent(
                         accountPayableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(1)
@@ -533,6 +555,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -557,6 +580,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -568,6 +592,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -581,6 +606,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                 .whenAggregate(accountPayableFeeId).publishes(
                 new PaidFeeOffsetedEvent(
                         accountPayableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(1)
@@ -599,6 +625,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -624,6 +651,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -637,6 +665,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -649,10 +678,12 @@ public class PayBuyCommissionFeeManagerSagaTest {
                 ),
                 new PaidFeeOffsetedEvent(
                         paidFeeId,
+                        offsetId,
                         tradeTime))
                 .whenAggregate(accountPayableFeeId).publishes(
                 new AccountPayableFeeOffsetedEvent(
                         accountPayableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(0)
@@ -671,6 +702,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -695,6 +727,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -708,6 +741,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -739,6 +773,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -764,6 +799,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -777,6 +813,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -812,6 +849,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -837,6 +875,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -850,6 +889,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -885,6 +925,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -910,6 +951,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -923,6 +965,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -958,6 +1001,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -983,6 +1027,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -995,6 +1040,7 @@ public class PayBuyCommissionFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(

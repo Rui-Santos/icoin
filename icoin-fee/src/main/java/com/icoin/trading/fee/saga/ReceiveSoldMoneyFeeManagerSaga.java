@@ -47,6 +47,7 @@ public class ReceiveSoldMoneyFeeManagerSaga extends ReceiveTransactionFeeManager
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
+                        event.getUserId().toString(),
                         event.getOrderTransactionId().toString()));
 
         receivedFeeId = event.getReceivedFeeId();
@@ -63,6 +64,7 @@ public class ReceiveSoldMoneyFeeManagerSaga extends ReceiveTransactionFeeManager
                         event.getTradeTime(),
                         event.getDueDate(),
                         event.getPortfolioId().toString(),
+                        event.getUserId().toString(),
                         event.getOrderTransactionId().toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, event.getPortfolioId().toString())));
 

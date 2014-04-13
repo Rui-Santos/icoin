@@ -1,7 +1,6 @@
-package com.icoin.trading.fee.query.fee.repositories;
+package com.icoin.trading.fee.query.fee.payable;
 
 import com.homhon.base.domain.repository.GenericCrudRepository;
-import com.icoin.trading.fee.query.fee.AccountPayableFeeEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;

@@ -7,6 +7,7 @@ import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.events.fee.FeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.FeeConfirmedEvent;
 import com.icoin.trading.api.fee.events.fee.FeeCreatedEvent;
@@ -41,7 +42,7 @@ public abstract class FeeAggregateRoot<T extends FeeAggregateRoot> extends AxonA
     protected Date postedDate;
     protected boolean posted;
     protected String userAccountId;
-    protected String offsetId;
+    protected OffsetId offsetId;
     protected BusinessType businessType;
     //like order id, like interest rates from back
     protected String businessReferenceId;
@@ -54,7 +55,7 @@ public abstract class FeeAggregateRoot<T extends FeeAggregateRoot> extends AxonA
         this.feeType = event.getFeeType();
         this.dueDate = event.getDueDate();
         this.businessCreationTime = event.getBusinessCreationTime();
-        this.userAccountId = event.getUserAccountId();
+        this.userAccountId = event.getPortfolioId();
         this.businessType = event.getBusinessType();
         this.businessReferenceId = event.getBusinessReferenceId();
     }
@@ -73,6 +74,7 @@ public abstract class FeeAggregateRoot<T extends FeeAggregateRoot> extends AxonA
     protected void onOffseted(FeeOffsetedEvent event) {
         this.offseted = true;
         this.offsetDate = event.getOffsetedDate();
+        this.offsetId = event.getOffsetId();
     }
 
     public boolean isCancelled() {
@@ -105,5 +107,9 @@ public abstract class FeeAggregateRoot<T extends FeeAggregateRoot> extends AxonA
 
     public FeeStatus getFeeStatus() {
         return feeStatus;
+    }
+
+    public Date getConfirmedDate() {
+        return confirmedDate;
     }
 }

@@ -39,7 +39,8 @@ public class ReceivablePayableCommandHandler {
                 command.getFeeType(),
                 command.getDueDate(),
                 command.getCreatedTime(),
-                command.getUserAccountId(),
+                command.getPortfolioId(),
+                command.getUserId(),
                 command.getBusinessType(),
                 command.getBusinessReferenceId()
         ));
@@ -57,7 +58,7 @@ public class ReceivablePayableCommandHandler {
     public void handleOffsetAccountReceivable(OffsetAccountReceivableFeeCommand command) {
         AccountReceivableFee fee = accountReceivableFeeRepository.load(command.getFeeId());
 
-        fee.offset(command.getOffsetedDate());
+        fee.offset(command.getOffsetId(), command.getOffsetedDate());
     }
 
     @CommandHandler
@@ -78,7 +79,8 @@ public class ReceivablePayableCommandHandler {
                 command.getFeeType(),
                 command.getDueDate(),
                 command.getCreatedTime(),
-                command.getUserAccountId(),
+                command.getPortfolioId(),
+                command.getUserId(),
                 command.getBusinessType(),
                 command.getBusinessReferenceId()
         ));
@@ -96,7 +98,7 @@ public class ReceivablePayableCommandHandler {
     public void handleOffsetAccountPayable(OffsetAccountPayableFeeCommand command) {
         AccountPayableFee fee = accountPayableFeeRepository.load(command.getFeeId());
 
-        fee.offset(command.getOffsetedDate());
+        fee.offset(command.getOffsetId(), command.getOffsetedDate());
     }
 
     @CommandHandler

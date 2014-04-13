@@ -42,6 +42,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
@@ -65,6 +66,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
     private final CoinId coinId = new CoinId("BTC");
     private final TransactionId orderTransactionId = new TransactionId();
     private final PortfolioId portfolioId = new PortfolioId();
+    private final UserId userId = new UserId();
     private final Date tradeTime = currentTime();
     private final Date dueDate = new Date();
     private final OrderBookId orderBookId = new OrderBookId();
@@ -91,6 +93,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -111,6 +114,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 orderTransactionId.toString()),
                         new CreateReceivedFeeCommand(
                                 feeTransactionId,
@@ -122,6 +126,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 orderTransactionId.toString(),
                                 new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, portfolioId.toString())),
                         new CreateOffsetCommand(
@@ -146,6 +151,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -163,6 +169,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .expectActiveSagas(1)
@@ -184,6 +191,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -201,6 +209,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())))
@@ -208,6 +217,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                 .expectDispatchedCommandsEqualTo(
                         new ConfirmReceivedFeeCommand(
                                 receivedFeeId,
+                                soldMoney,
                                 tradeTime));
 
     }
@@ -223,6 +233,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -257,6 +268,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -282,6 +294,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -295,6 +308,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new AccountReceivableFeeConfirmedEvent(
@@ -302,6 +316,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         tradeTime),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime))
                 .whenAggregate(offsetId).publishes(
                 new FeesOffsetedEvent(
@@ -310,8 +325,8 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                 ))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
-                        new OffsetAccountReceivableFeeCommand(accountReceivableFeeId, tradeTime),
-                        new OffsetReceivedFeeCommand(receivedFeeId, tradeTime));
+                        new OffsetAccountReceivableFeeCommand(accountReceivableFeeId, offsetId, tradeTime),
+                        new OffsetReceivedFeeCommand(receivedFeeId, offsetId, tradeTime));
     }
 
     @Test
@@ -325,6 +340,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -350,6 +366,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.ALIPAY, orderTransactionId.toString())),
@@ -362,6 +379,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new FeesOffsetedEvent(
@@ -374,11 +392,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                 .whenAggregate(receivedFeeId).publishes(
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
-                        new OffsetAccountReceivableFeeCommand(accountReceivableFeeId, tradeTime),
-                        new OffsetReceivedFeeCommand(receivedFeeId, tradeTime));
+                        new OffsetAccountReceivableFeeCommand(accountReceivableFeeId, offsetId, tradeTime),
+                        new OffsetReceivedFeeCommand(receivedFeeId, offsetId, tradeTime));
     }
 
 
@@ -393,6 +412,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -418,6 +438,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.ALIPAY, orderTransactionId.toString())),
@@ -430,10 +451,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime))
                 .whenAggregate(offsetId).publishes(
                 new FeesOffsetedEvent(
@@ -455,6 +478,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -479,6 +503,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.ALIPAY, orderTransactionId.toString())),
@@ -490,10 +515,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime),
                 new FeesOffsetedEvent(
                         offsetId,
@@ -502,6 +529,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                 .whenAggregate(accountReceivableFeeId).publishes(
                 new AccountReceivableFeeOffsetedEvent(
                         accountReceivableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(1)
@@ -519,6 +547,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -543,6 +572,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -554,10 +584,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime),
                 new FeesOffsetedEvent(
                         offsetId,
@@ -566,6 +598,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                 .whenAggregate(accountReceivableFeeId).publishes(
                 new ReceivedFeeOffsetedEvent(
                         accountReceivableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(1)
@@ -583,6 +616,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -608,6 +642,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -621,10 +656,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime),
                 new FeesOffsetedEvent(
                         offsetId,
@@ -632,10 +669,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                 ),
                 new ReceivedFeeOffsetedEvent(
                         receivedFeeId,
+                        offsetId,
                         tradeTime))
                 .whenAggregate(accountReceivableFeeId).publishes(
                 new AccountReceivableFeeOffsetedEvent(
                         accountReceivableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(0)
@@ -653,6 +692,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -677,6 +717,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -690,10 +731,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime))
                 .whenAggregate(offsetId).publishes(
                 new OffsetAmountNotMatchedEvent(
@@ -719,6 +762,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -744,6 +788,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -757,10 +802,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
@@ -790,6 +837,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -815,6 +863,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -828,10 +877,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
@@ -861,6 +912,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -886,6 +938,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -899,10 +952,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,
@@ -932,6 +987,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -957,6 +1013,7 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         new ReceivedSource(ReceivedSourceType.INTERNAL_ACCOUNT, orderTransactionId.toString())),
@@ -969,10 +1026,12 @@ public class ReceiveSoldMoneyFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new ReceivedFeeConfirmedEvent(
                         receivedFeeId,
+                        soldMoney,
                         tradeTime),
                 new OffsetAmountNotMatchedEvent(
                         offsetId,

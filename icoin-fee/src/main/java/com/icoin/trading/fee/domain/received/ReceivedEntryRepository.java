@@ -13,12 +13,12 @@ import java.util.List;
  * Time: PM5:49
  * To change this template use File | Settings | File Templates.
  */
-public interface ReceivedEntryRepository extends GenericCrudRepository<ReceivedEntry, String> {
-    ReceivedEntry findReceivedEntry(BusinessType businessType,
+public interface ReceivedEntryRepository extends GenericCrudRepository<ReceivedFee, String> {
+    ReceivedFee findReceivedEntry(BusinessType businessType,
                                     String businessReferenceId,
                                     ReceivedSource receivedSource);
 
-    List<ReceivedEntry> findReceivedForOrder(String orderId);
+    List<ReceivedFee> findReceivedForOrder(String orderId);
 
     void deleteReceivedForOrder(String orderId);
 }

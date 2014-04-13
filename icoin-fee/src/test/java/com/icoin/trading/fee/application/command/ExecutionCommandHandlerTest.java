@@ -20,6 +20,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import com.icoin.trading.fee.domain.transaction.ExecutedCoinTransaction;
 import com.icoin.trading.fee.domain.transaction.ExecutedCommissionTransaction;
 import com.icoin.trading.fee.domain.transaction.ExecutedMoneyTransaction;
@@ -43,6 +44,7 @@ public class ExecutionCommandHandlerTest {
     private final String orderId = "orderId";
     private final TransactionId orderTransactionId = new TransactionId();
     private final PortfolioId portfolioId = new PortfolioId();
+    private final UserId userId = new UserId();
     private final Date tradeTime = new Date();
     private final Date dueDate = new Date();
     private final BigMoney sellCommissionAmount = BigMoney.of(CurrencyUnit.of("BTC"), 10);
@@ -77,6 +79,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -98,6 +101,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -127,6 +131,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -148,6 +153,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -176,6 +182,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -196,6 +203,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -224,6 +232,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -244,6 +253,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -272,6 +282,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -292,6 +303,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -320,6 +332,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -340,6 +353,7 @@ public class ExecutionCommandHandlerTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,

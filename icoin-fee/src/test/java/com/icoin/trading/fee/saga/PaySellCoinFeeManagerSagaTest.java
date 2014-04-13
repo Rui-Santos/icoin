@@ -41,6 +41,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.axonframework.test.saga.AnnotatedSagaTestFixture;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
@@ -64,6 +65,7 @@ public class PaySellCoinFeeManagerSagaTest {
     private final CoinId coinId = new CoinId("BTC");
     private final TransactionId orderTransactionId = new TransactionId();
     private final PortfolioId portfolioId = new PortfolioId();
+    private final UserId userId = new UserId();
     private final Date tradeTime = currentTime();
     private final Date dueDate = new Date();
     private final OrderBookId orderBookId = new OrderBookId();
@@ -90,6 +92,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -110,6 +113,7 @@ public class PaySellCoinFeeManagerSagaTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 orderTransactionId.toString()),
                         new CreatePaidFeeCommand(
                                 feeTransactionId,
@@ -121,6 +125,7 @@ public class PaySellCoinFeeManagerSagaTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 orderTransactionId.toString(),
                                 PaidMode.INTERNAL),
                         new CreateOffsetCommand(
@@ -145,6 +150,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -162,6 +168,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()))
                 .expectActiveSagas(1)
@@ -183,6 +190,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -200,6 +208,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL))
@@ -219,6 +228,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -253,6 +263,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -278,6 +289,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -289,6 +301,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new AccountPayableFeeConfirmedEvent(
@@ -305,8 +318,8 @@ public class PaySellCoinFeeManagerSagaTest {
                 ))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
-                        new OffsetAccountPayableFeeCommand(accountPayableFeeId, tradeTime),
-                        new OffsetPaidFeeCommand(paidFeeId, tradeTime));
+                        new OffsetAccountPayableFeeCommand(accountPayableFeeId, offsetId, tradeTime),
+                        new OffsetPaidFeeCommand(paidFeeId, offsetId, tradeTime));
     }
 
     @Test
@@ -320,6 +333,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -345,6 +359,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -357,6 +372,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new FeesOffsetedEvent(
@@ -373,8 +389,8 @@ public class PaySellCoinFeeManagerSagaTest {
                         tradeTime))
                 .expectActiveSagas(1)
                 .expectDispatchedCommandsEqualTo(
-                        new OffsetAccountPayableFeeCommand(accountPayableFeeId, tradeTime),
-                        new OffsetPaidFeeCommand(paidFeeId, tradeTime));
+                        new OffsetAccountPayableFeeCommand(accountPayableFeeId, offsetId, tradeTime),
+                        new OffsetPaidFeeCommand(paidFeeId, offsetId, tradeTime));
     }
 
 
@@ -389,6 +405,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -414,10 +431,10 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
-
                 new AccountPayableFeeCreatedEvent(
                         accountPayableFeeId,
                         FeeStatus.PENDING,
@@ -426,6 +443,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -452,6 +470,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -476,6 +495,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -487,6 +507,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -500,6 +521,7 @@ public class PaySellCoinFeeManagerSagaTest {
                 .whenAggregate(accountPayableFeeId).publishes(
                 new AccountPayableFeeOffsetedEvent(
                         accountPayableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(1)
@@ -517,6 +539,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -541,6 +564,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -552,6 +576,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -565,6 +590,7 @@ public class PaySellCoinFeeManagerSagaTest {
                 .whenAggregate(accountPayableFeeId).publishes(
                 new PaidFeeOffsetedEvent(
                         accountPayableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(1)
@@ -582,6 +608,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -607,6 +634,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -618,6 +646,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -630,10 +659,12 @@ public class PaySellCoinFeeManagerSagaTest {
                 ),
                 new PaidFeeOffsetedEvent(
                         paidFeeId,
+                        offsetId,
                         tradeTime))
                 .whenAggregate(accountPayableFeeId).publishes(
                 new AccountPayableFeeOffsetedEvent(
                         accountPayableFeeId,
+                        offsetId,
                         tradeTime
                 ))
                 .expectActiveSagas(0)
@@ -651,6 +682,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -675,6 +707,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -688,6 +721,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -718,6 +752,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -743,6 +778,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -756,6 +792,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -790,6 +827,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -815,6 +853,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -828,6 +867,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -862,6 +902,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -887,6 +928,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -900,6 +942,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(
@@ -934,6 +977,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         orderId,
                         orderTransactionId,
                         portfolioId,
+                        userId,
                         tradeTime,
                         dueDate,
                         TradeType.BUY,
@@ -959,6 +1003,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString(),
                         PaidMode.INTERNAL),
@@ -971,6 +1016,7 @@ public class PaySellCoinFeeManagerSagaTest {
                         dueDate,
                         tradeTime,
                         portfolioId.toString(),
+                        userId.toString(),
                         BusinessType.TRADE_EXECUTED,
                         orderTransactionId.toString()),
                 new PaidFeeConfirmedEvent(

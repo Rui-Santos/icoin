@@ -5,6 +5,7 @@ import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeCancelledEvent;
 import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeConfirmedEvent;
@@ -36,7 +37,8 @@ public class ReceivedFee extends FeeAggregateRoot<ReceivedFee> {
                        FeeType feeType,
                        Date dueDate,
                        Date businessCreationTime,
-                       String userAccountId,
+                       String portfolioId,
+                       String userId,
                        BusinessType businessType,
                        String businessReferenceId,
                        ReceivedSource receivedSource) {
@@ -46,22 +48,23 @@ public class ReceivedFee extends FeeAggregateRoot<ReceivedFee> {
                 feeType,
                 dueDate,
                 businessCreationTime,
-                userAccountId,
+                portfolioId,
+                userId,
                 businessType,
                 businessReferenceId,
                 receivedSource));
     }
 
-    public void confirm(Date confirmedDate) {
-        apply(new ReceivedFeeConfirmedEvent(feeId, confirmedDate));
+    public void confirm(BigMoney amount, Date confirmedDate) {
+        apply(new ReceivedFeeConfirmedEvent(feeId, amount, confirmedDate));
     }
 
     public void cancel(CancelledReason cancelReason, Date cancelledDate) {
         apply(new ReceivedFeeCancelledEvent(feeId, cancelReason, cancelledDate));
     }
 
-    public void offset(Date offsetDate) {
-        apply(new ReceivedFeeOffsetedEvent(feeId, offsetDate));
+    public void offset(OffsetId offsetId, Date offsetDate) {
+        apply(new ReceivedFeeOffsetedEvent(feeId, offsetId, offsetDate));
     }
 
     @EventHandler

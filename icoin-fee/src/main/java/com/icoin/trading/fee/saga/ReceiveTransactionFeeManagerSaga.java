@@ -60,7 +60,7 @@ public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
     public void onReceivedCreated(final ReceivedFeeCreatedEvent event) {
         paidFeeStatus = TransactionStatus.CREATED;
 
-        commandGateway.send(new ConfirmReceivedFeeCommand(event.getFeeId(), event.getBusinessCreationTime()));
+        commandGateway.send(new ConfirmReceivedFeeCommand(event.getFeeId(), event.getAmount(), event.getBusinessCreationTime()));
     }
 
     @SagaEventHandler(associationProperty = "offsetId")
@@ -81,8 +81,8 @@ public class ReceiveTransactionFeeManagerSaga extends AbstractAnnotatedSaga {
         if (offsetStatus == TransactionStatus.OFFSETED
                 && accountReceivableStatus == TransactionStatus.CONFIRMED
                 && paidFeeStatus == TransactionStatus.CONFIRMED) {
-            commandGateway.send(new OffsetAccountReceivableFeeCommand(accountReceivableId, offsetDate));
-            commandGateway.send(new OffsetReceivedFeeCommand(receivedFeeId, offsetDate));
+            commandGateway.send(new OffsetAccountReceivableFeeCommand(accountReceivableId, offsetId, offsetDate));
+            commandGateway.send(new OffsetReceivedFeeCommand(receivedFeeId, offsetId, offsetDate));
         }
     }
 

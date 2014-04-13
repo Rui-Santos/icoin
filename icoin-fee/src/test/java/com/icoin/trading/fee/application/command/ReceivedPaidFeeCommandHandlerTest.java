@@ -15,6 +15,7 @@ import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
 import com.icoin.trading.api.fee.domain.fee.FeeStatus;
 import com.icoin.trading.api.fee.domain.fee.FeeType;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.domain.received.ReceivedSourceType;
 import com.icoin.trading.api.fee.events.fee.paid.PaidFeeCancelledEvent;
@@ -27,6 +28,7 @@ import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeCreatedEvent;
 import com.icoin.trading.api.fee.events.fee.received.ReceivedFeeOffsetedEvent;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import com.icoin.trading.fee.domain.paid.PaidFee;
 import com.icoin.trading.fee.domain.received.ReceivedFee;
 import org.axonframework.test.FixtureConfiguration;
@@ -49,6 +51,8 @@ public class ReceivedPaidFeeCommandHandlerTest {
     private final FeeTransactionId feeTransactionId = new FeeTransactionId();
     private final TransactionId orderTransactionId = new TransactionId();
     private final PortfolioId portfolioId = new PortfolioId();
+    private final UserId userId = new UserId();
+    private final OffsetId offsetId = new OffsetId();
     private final Date tradeTime = new Date();
     private final Date dueDate = new Date();
     private final BigMoney sellCommissionAmount = BigMoney.of(CurrencyUnit.of("BTC"), 10);
@@ -85,6 +89,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
+                userId.toString(),
                 orderTransactionId.toString(),
                 receivedSource);
 
@@ -99,6 +104,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 BusinessType.TRADE_EXECUTED,
                                 orderTransactionId.toString(),
                                 receivedSource));
@@ -106,7 +112,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
 
     @Test
     public void testHandleConfirmReceived() throws Exception {
-        ConfirmReceivedFeeCommand command = new ConfirmReceivedFeeCommand(receivedFeeId, tradeTime);
+        ConfirmReceivedFeeCommand command = new ConfirmReceivedFeeCommand(receivedFeeId, sellCommissionAmount, tradeTime);
 
         receivedFixture.given(new ReceivedFeeCreatedEvent(
                 receivedFeeId,
@@ -116,16 +122,17 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
+                userId.toString(),
                 BusinessType.TRADE_EXECUTED,
                 orderTransactionId.toString(),
                 receivedSource))
                 .when(command)
-                .expectEvents(new ReceivedFeeConfirmedEvent(receivedFeeId, tradeTime));
+                .expectEvents(new ReceivedFeeConfirmedEvent(receivedFeeId, sellCommissionAmount, tradeTime));
     }
 
     @Test
     public void testHandleOffsetReceived() throws Exception {
-        OffsetReceivedFeeCommand command = new OffsetReceivedFeeCommand(receivedFeeId, tradeTime);
+        OffsetReceivedFeeCommand command = new OffsetReceivedFeeCommand(receivedFeeId, offsetId, tradeTime);
 
         receivedFixture.given(new ReceivedFeeCreatedEvent(
                 receivedFeeId,
@@ -135,11 +142,12 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
+                userId.toString(),
                 BusinessType.TRADE_EXECUTED,
                 orderTransactionId.toString(),
                 receivedSource))
                 .when(command)
-                .expectEvents(new ReceivedFeeOffsetedEvent(receivedFeeId, tradeTime));
+                .expectEvents(new ReceivedFeeOffsetedEvent(receivedFeeId, offsetId, tradeTime));
     }
 
     @Test
@@ -155,6 +163,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
+                userId.toString(),
                 BusinessType.TRADE_EXECUTED,
                 orderTransactionId.toString(),
                 receivedSource))
@@ -174,6 +183,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
+                userId.toString(),
                 orderTransactionId.toString(),
                 PaidMode.INTERNAL);
 
@@ -188,6 +198,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                                 tradeTime,
                                 dueDate,
                                 portfolioId.toString(),
+                                userId.toString(),
                                 BusinessType.TRADE_EXECUTED,
                                 orderTransactionId.toString(),
                                 PaidMode.INTERNAL));
@@ -205,6 +216,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
+                userId.toString(),
                 BusinessType.TRADE_EXECUTED,
                 orderTransactionId.toString(),
                 PaidMode.INTERNAL))
@@ -214,7 +226,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
 
     @Test
     public void testHandleOffsetPaid() throws Exception {
-        OffsetPaidFeeCommand command = new OffsetPaidFeeCommand(paidFeeId, tradeTime);
+        OffsetPaidFeeCommand command = new OffsetPaidFeeCommand(paidFeeId, offsetId, tradeTime);
 
         paidFixture.given(new PaidFeeCreatedEvent(
                 paidFeeId,
@@ -224,11 +236,12 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
+                userId.toString(),
                 BusinessType.TRADE_EXECUTED,
                 orderTransactionId.toString(),
                 PaidMode.INTERNAL))
                 .when(command)
-                .expectEvents(new PaidFeeOffsetedEvent(paidFeeId, tradeTime));
+                .expectEvents(new PaidFeeOffsetedEvent(paidFeeId, offsetId, tradeTime));
     }
 
     @Test
@@ -244,6 +257,7 @@ public class ReceivedPaidFeeCommandHandlerTest {
                 tradeTime,
                 dueDate,
                 portfolioId.toString(),
+                userId.toString(),
                 BusinessType.TRADE_EXECUTED,
                 orderTransactionId.toString(),
                 PaidMode.INTERNAL))

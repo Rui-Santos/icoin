@@ -1,5 +1,6 @@
 package com.icoin.trading.fee.cash.scheduler;
 
+import com.icoin.trading.api.fee.domain.fee.CancelledReason;
 import com.icoin.trading.bitcoin.client.BitcoinRpcOperations;
 import com.icoin.trading.bitcoin.client.response.StringResponse;
 import com.icoin.trading.bitcoin.client.response.ValidateAddressResponse;
@@ -9,8 +10,10 @@ import com.icoin.trading.fee.cash.ValidationCode;
 import com.icoin.trading.fee.domain.DueDateService;
 import com.icoin.trading.fee.domain.address.Address;
 import com.icoin.trading.fee.domain.cash.CoinPayCash;
+import com.icoin.trading.fee.domain.paid.PaidFee;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
+import org.axonframework.repository.Repository;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.slf4j.Logger;
@@ -36,7 +39,6 @@ public class PayCoinScheduler extends PayScheduler<CoinPayCash> {
     private int minConfirmations = 3;
     private CashValidator cashValidator;
     private UserQueryRepository userQueryRepository;
-    private DueDateService dueDateService;
     private BigMoney minAmount = BigMoney.of(CurrencyUnit.of("BTC"), 0.01);
 
 //    @Override
@@ -60,10 +62,25 @@ public class PayCoinScheduler extends PayScheduler<CoinPayCash> {
             return null;
         }
 
+
+
+        PaidFee paidFee = paidFeeRepository.load(entity.getPrimaryKey());
+
         ValidateAddressResponse response = operations.validateAddress(address.getAddress());
 
-        if (response == null || response.getResult() == null || response.getResult().getValid() != Boolean.TRUE) {
+        if(response == null){
+            logger.error("Server unavailable when doing payment for {}", entity.describe());
+            return null;
+        }
+
+        if(response.getResult() == null){
+            logger.error("Response result is null {}", entity.describe());
+            return null;
+        }
+
+        if (response.getResult().getValid() != Boolean.FALSE) {
             logger.warn("address {} is incorrect", address.getAddress());
+            paidFee.cancel(CancelledReason.INVALID_ADDRESS,occurringTime);
             return null;
         }
 
@@ -96,6 +113,7 @@ public class PayCoinScheduler extends PayScheduler<CoinPayCash> {
         this.minConfirmations = minConfirmations;
     }
 
+
     public void setUserQueryRepository(UserQueryRepository userQueryRepository) {
         this.userQueryRepository = userQueryRepository;
     }
@@ -104,11 +122,5 @@ public class PayCoinScheduler extends PayScheduler<CoinPayCash> {
     @Resource(name = "coinTransferringInCashValidator")
     public void setCashValidator(CashValidator cashValidator) {
         this.cashValidator = cashValidator;
-    }
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    public void setDueDateService(DueDateService dueDateService) {
-        this.dueDateService = dueDateService;
     }
 }
