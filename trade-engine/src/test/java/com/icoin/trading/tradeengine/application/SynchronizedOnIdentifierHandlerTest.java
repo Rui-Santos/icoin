@@ -38,7 +38,7 @@ public class SynchronizedOnIdentifierHandlerTest {
         final SynchronizedOnIdentifierHandler handler = new SynchronizedOnIdentifierHandler();
 
 
-       handler.perform(new Callback<Void>() {
+        handler.perform(new Callback<Void>() {
             @Override
             public String getIdentifier() {
                 return "1";

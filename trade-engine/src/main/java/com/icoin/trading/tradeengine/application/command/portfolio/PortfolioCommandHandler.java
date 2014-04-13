@@ -17,8 +17,6 @@
 package com.icoin.trading.tradeengine.application.command.portfolio;
 
 import com.icoin.trading.api.tradeengine.command.portfolio.CreatePortfolioCommand;
-import com.icoin.trading.tradeengine.application.Callback;
-import com.icoin.trading.tradeengine.application.SynchronizedOnIdentifierHandler;
 import com.icoin.trading.api.tradeengine.command.portfolio.cash.CancelCashReservationCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.cash.ClearReservedCashCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.cash.ConfirmCashReservationCommand;
@@ -29,6 +27,8 @@ import com.icoin.trading.api.tradeengine.command.portfolio.coin.AddAmountToPortf
 import com.icoin.trading.api.tradeengine.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.coin.ReserveAmountCommand;
+import com.icoin.trading.tradeengine.application.Callback;
+import com.icoin.trading.tradeengine.application.SynchronizedOnIdentifierHandler;
 import com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;

@@ -31,7 +31,7 @@ public class CashDepositedEvent extends EventSupport<CashDepositedEvent> {
     private BigMoney moneyAdded;
     private Date time;
 
-    public CashDepositedEvent(PortfolioId portfolioId, BigMoney moneyAdded,Date time) {
+    public CashDepositedEvent(PortfolioId portfolioId, BigMoney moneyAdded, Date time) {
         this.portfolioId = portfolioId;
         this.moneyAdded = moneyAdded;
         this.time = time;

@@ -2,13 +2,13 @@ package com.icoin.trading.users.infrastructure.listener;
 
 import com.google.common.collect.ImmutableMap;
 import com.homhon.util.Strings;
-import com.icoin.trading.infrastructure.mail.VelocityEmailSender;
+import com.icoin.trading.api.users.domain.UserId;
 import com.icoin.trading.api.users.event.PasswordChangedEvent;
 import com.icoin.trading.api.users.event.UserAuthenticatedEvent;
 import com.icoin.trading.api.users.event.UserCreatedEvent;
 import com.icoin.trading.api.users.event.WithdrawPasswordChangedEvent;
 import com.icoin.trading.api.users.event.WithdrawPasswordCreatedEvent;
-import com.icoin.trading.api.users.domain.UserId;
+import com.icoin.trading.infrastructure.mail.VelocityEmailSender;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;

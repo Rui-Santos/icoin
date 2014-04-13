@@ -53,7 +53,7 @@
     <bean id="users.mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="users.mongoDbFactory"/>
         <constructor-arg name="mongoConverter" ref="users.mappingConverter"/>
-        <property name="writeConcern" value="SAFE" />
+        <property name="writeConcern" value="SAFE"/>
     </bean>
 
     <bean id="users.mappingConverter"
@@ -84,7 +84,7 @@
         <context:property-placeholder
                 location="classpath:META-INF/spring/mongo-db.dev.properties"/>
         <!--<bean id="trade.userService" class="com.icoin.trading.tradeengine.application.FakeUserService"/>-->
-        
+
     </beans>
     <beans profile="prod">
         <context:property-placeholder

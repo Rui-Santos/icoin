@@ -22,5 +22,7 @@ import java.math.BigDecimal;
  * Common response object used for methods returning a simple numeric response.
  */
 public class BigDecimalResponse extends BitcoinJsonRpcResponse<BigDecimal> {
-
+    public BigDecimalResponse(BigDecimal result, BitcoinError error, String id) {
+        super(result, error, id);
+    }
 }

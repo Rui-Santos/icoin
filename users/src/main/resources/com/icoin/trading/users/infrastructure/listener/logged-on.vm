@@ -8,6 +8,7 @@ You have recently logged on iCoin with following info:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip: <b>${ip}</b>
 <br/>
 Datetime: <b>${time}</b>
+
 <p/>
 Regards,
 <br/>

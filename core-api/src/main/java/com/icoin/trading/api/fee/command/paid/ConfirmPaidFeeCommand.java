@@ -16,7 +16,8 @@ import java.util.Date;
 public class ConfirmPaidFeeCommand extends ConfirmFeeCommand<ConfirmPaidFeeCommand> {
     @NotEmpty
     private String sequenceNumber;
-    public ConfirmPaidFeeCommand(FeeId feeId,String sequenceNumber ,Date confirmedDate) {
+
+    public ConfirmPaidFeeCommand(FeeId feeId, String sequenceNumber, Date confirmedDate) {
         super(feeId, confirmedDate);
         this.sequenceNumber = sequenceNumber;
     }

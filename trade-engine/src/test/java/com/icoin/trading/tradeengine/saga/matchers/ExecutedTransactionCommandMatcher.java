@@ -16,8 +16,8 @@
 
 package com.icoin.trading.tradeengine.saga.matchers;
 
-import com.icoin.trading.api.tradeengine.command.transaction.ExecutedTransactionCommand;
 import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.command.transaction.ExecutedTransactionCommand;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.hamcrest.Description;
 import org.joda.money.BigMoney;

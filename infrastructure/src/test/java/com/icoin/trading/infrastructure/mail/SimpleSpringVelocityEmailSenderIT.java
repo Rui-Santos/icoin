@@ -36,7 +36,7 @@ public class SimpleSpringVelocityEmailSenderIT {
         sender.setMailSender(mailSender);
         sender.setVelocityEngine(ve);
 
-        Map<String,Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<String, Object>();
         model.put("username", "iCoin");
 
         sender.sendEmail("Test",

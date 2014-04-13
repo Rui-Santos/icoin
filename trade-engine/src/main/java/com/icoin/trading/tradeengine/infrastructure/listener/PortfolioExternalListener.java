@@ -18,11 +18,11 @@ package com.icoin.trading.tradeengine.infrastructure.listener;
 
 import com.google.common.collect.ImmutableMap;
 import com.homhon.util.Strings;
-import com.icoin.trading.infrastructure.mail.VelocityEmailSender;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashWithdrawnEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemWithdrawnEvent;
 import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
-import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.infrastructure.mail.VelocityEmailSender;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
@@ -44,7 +44,6 @@ import java.util.Map;
 import static com.homhon.util.Strings.hasLength;
 
 /**
- *
  * @author Jettro Coenradie
  */
 @Component

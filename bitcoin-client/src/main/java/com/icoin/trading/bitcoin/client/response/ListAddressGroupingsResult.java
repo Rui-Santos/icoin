@@ -19,7 +19,6 @@ package com.icoin.trading.bitcoin.client.response;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.icoin.trading.bitcoin.client.BitcoinRpcOperations;
 import com.icoin.trading.bitcoin.client.ValueObject;

@@ -2,14 +2,14 @@ package com.icoin.trading.tradeengine.application.command.order.handler;
 
 
 import com.google.common.collect.Lists;
-import com.icoin.trading.tradeengine.application.command.order.QueuedTradeExecutor;
-import com.icoin.trading.tradeengine.domain.TradingSystemService;
-import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.OrderId;
+import com.icoin.trading.tradeengine.application.command.order.QueuedTradeExecutor;
+import com.icoin.trading.tradeengine.domain.TradingSystemService;
+import com.icoin.trading.tradeengine.domain.model.admin.TradingSystemStatus;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
 import com.icoin.trading.tradeengine.domain.model.order.OrderType;
-import com.icoin.trading.tradeengine.domain.model.admin.TradingSystemStatus;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -395,7 +395,7 @@ public class QueuedTradeExecutorTest {
                 .thenReturn(reinitializedOrderBook);
 
         when(orderRepository.findPlacedPendingOrdersAfter(eq(lastTradedTime), eq(orderBookId), eq(100)))
-                .thenReturn(createOrders(100, orderBookId), createOrders(1, orderBookId),createOrders(4, orderBookId), null);
+                .thenReturn(createOrders(100, orderBookId), createOrders(1, orderBookId), createOrders(4, orderBookId), null);
 
 
         when(tradingSystemService.currentStatus()).thenReturn(status);

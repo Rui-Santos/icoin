@@ -6,7 +6,6 @@ import com.icoin.trading.api.fee.command.offset.CancelOffsetCommand;
 import com.icoin.trading.api.fee.command.offset.CreateOffsetCommand;
 import com.icoin.trading.api.fee.command.offset.OffsetFeesCommand;
 import com.icoin.trading.api.fee.command.paid.CancelPaidFeeCommand;
-import com.icoin.trading.api.fee.command.paid.ConfirmPaidFeeCommand;
 import com.icoin.trading.api.fee.command.paid.CreatePaidFeeCommand;
 import com.icoin.trading.api.fee.command.paid.OffsetPaidFeeCommand;
 import com.icoin.trading.api.fee.command.payable.CancelAccountPayableFeeCommand;

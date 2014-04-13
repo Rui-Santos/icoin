@@ -2,7 +2,8 @@
 <body>
 Hi ${username},
 <p/>
-We're pleased that you have become part of iCoin community. Your iCoin ID is :${username}. If you need further assistance, please contact us.
+We're pleased that you have become part of iCoin community. Your iCoin ID is :${username}. If you need further
+assistance, please contact us.
 <p/>
 Regards,
 <br/>

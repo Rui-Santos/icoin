@@ -180,10 +180,10 @@ public class SocialConnectionRepositoryAdapter implements ConnectionRepository {
 
     public void removeConnections(String providerId) {
         socialConnectionRepository.remove(userId, providerId);
-        }
+    }
 
     public void removeConnection(ConnectionKey connectionKey) {
-       socialConnectionRepository.remove(userId, connectionKey.getProviderId(), connectionKey.getProviderUserId());
+        socialConnectionRepository.remove(userId, connectionKey.getProviderId(), connectionKey.getProviderUserId());
     }
 
     // internal helpers

@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-@Resource(name= "users.usersConnectionRepository")
+@Resource(name = "users.usersConnectionRepository")
 public class SocialUsersConnectionRepository implements UsersConnectionRepository {
 
     private final SocialConnectionRepositoryMongo userSocialConnectionRepository;

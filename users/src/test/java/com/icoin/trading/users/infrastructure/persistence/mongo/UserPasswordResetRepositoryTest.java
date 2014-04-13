@@ -47,10 +47,10 @@ public class UserPasswordResetRepositoryTest {
     public void setUp() throws Exception {
         repository.deleteAll();
 
-        reset1 = create("12@12.cn", "120.90.98.1", "token1", "name1",futureMinute(currentTime, 30));
-        reset2 = create("12@12.cn", "120.90.98.1", "token2", "name1",futureMinute(currentTime, 1));
-        reset3 = create("12@12.cn", "120.90.98.1", "token3", "name2",futureMinute(currentTime, 100));
-        reset4 = create("234567@12.cn", "120.90.98.1", "token4", "name2",futureMinute(currentTime, 100));
+        reset1 = create("12@12.cn", "120.90.98.1", "token1", "name1", futureMinute(currentTime, 30));
+        reset2 = create("12@12.cn", "120.90.98.1", "token2", "name1", futureMinute(currentTime, 1));
+        reset3 = create("12@12.cn", "120.90.98.1", "token3", "name2", futureMinute(currentTime, 100));
+        reset4 = create("234567@12.cn", "120.90.98.1", "token4", "name2", futureMinute(currentTime, 100));
         reset5 = create("12@12.cn", "120.90.98.1", "token5", "name2", futureMinute(currentTime, 89));
 
         repository.save(Lists.newArrayList(reset1, reset2, reset3, reset4, reset5));
@@ -94,7 +94,7 @@ public class UserPasswordResetRepositoryTest {
                 repository.findByUsername("name1");
 
         assertThat(resets, hasSize(2));
-        assertThat(resets, hasItems(reset1,reset2));
+        assertThat(resets, hasItems(reset1, reset2));
     }
 
     @Test

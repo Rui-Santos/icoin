@@ -138,7 +138,6 @@ public class BitcoindClientIntegrationTest {
     }
 
 
-
     @Test
     public void testGetAccountAddress() throws Exception {
         StringResponse accountAddressResponse = bc.getAccountAddress("cocoo");

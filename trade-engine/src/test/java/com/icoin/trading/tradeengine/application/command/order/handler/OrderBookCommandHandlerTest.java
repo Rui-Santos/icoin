@@ -16,25 +16,25 @@
 
 package com.icoin.trading.tradeengine.application.command.order.handler;
 
-import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
 import com.icoin.trading.api.tradeengine.command.order.CreateBuyOrderCommand;
 import com.icoin.trading.api.tradeengine.command.order.CreateOrderBookCommand;
 import com.icoin.trading.api.tradeengine.command.order.CreateSellOrderCommand;
 import com.icoin.trading.api.tradeengine.command.order.RefreshOrderBookPriceCommand;
-import com.icoin.trading.tradeengine.application.command.order.OrderBookCommandHandler;
-import com.icoin.trading.tradeengine.application.command.order.OrderExecutorHelper;
-import com.icoin.trading.tradeengine.application.command.order.TradeExecutor;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.api.tradeengine.events.order.BuyOrderPlacedEvent;
 import com.icoin.trading.api.tradeengine.events.order.OrderBookCreatedEvent;
 import com.icoin.trading.api.tradeengine.events.order.SellOrderPlacedEvent;
+import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.application.command.order.OrderBookCommandHandler;
+import com.icoin.trading.tradeengine.application.command.order.OrderExecutorHelper;
+import com.icoin.trading.tradeengine.application.command.order.TradeExecutor;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.api.coin.domain.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
-import com.icoin.trading.api.tradeengine.domain.OrderBookId;
-import com.icoin.trading.api.tradeengine.domain.OrderId;
 import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
-import com.icoin.trading.api.tradeengine.domain.PortfolioId;
-import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.joda.money.BigMoney;

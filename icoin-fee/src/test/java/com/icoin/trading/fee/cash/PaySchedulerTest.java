@@ -112,7 +112,7 @@ public class PaySchedulerTest {
 
 
         verify(cashRepository, times(CONFIRMED_COUNT)).save(any(Cash.class));
-        verify(fee, times(CONFIRMED_COUNT)).confirm(eq("paid123"),any(Date.class));
+        verify(fee, times(CONFIRMED_COUNT)).confirm(eq("paid123"), any(Date.class));
     }
 
 

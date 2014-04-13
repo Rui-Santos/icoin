@@ -16,12 +16,12 @@
 
 package com.icoin.trading.tradeengine.application.command.order;
 
+import com.icoin.trading.api.coin.domain.CurrencyPair;
 import com.icoin.trading.api.tradeengine.command.order.CreateBuyOrderCommand;
 import com.icoin.trading.api.tradeengine.command.order.CreateOrderBookCommand;
 import com.icoin.trading.api.tradeengine.command.order.CreateOrderCommand;
 import com.icoin.trading.api.tradeengine.command.order.CreateSellOrderCommand;
 import com.icoin.trading.api.tradeengine.command.order.RefreshOrderBookPriceCommand;
-import com.icoin.trading.api.coin.domain.CurrencyPair;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderBook;
 import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;

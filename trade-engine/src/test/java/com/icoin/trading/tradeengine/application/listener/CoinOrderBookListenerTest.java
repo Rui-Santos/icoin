@@ -1,13 +1,13 @@
 package com.icoin.trading.tradeengine.application.listener;
 
 import com.homhon.base.command.CommandSupport;
-import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.api.tradeengine.command.coin.AddOrderBookToCoinCommand;
-import com.icoin.trading.api.tradeengine.command.order.CreateOrderBookCommand;
-import com.icoin.trading.api.tradeengine.events.coin.CoinCreatedEvent;
 import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.command.coin.AddOrderBookToCoinCommand;
+import com.icoin.trading.api.tradeengine.command.order.CreateOrderBookCommand;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.events.coin.CoinCreatedEvent;
+import com.icoin.trading.tradeengine.Constants;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.money.BigMoney;
 import org.junit.Test;
@@ -16,7 +16,6 @@ import org.mockito.ArgumentCaptor;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;

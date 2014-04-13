@@ -3,7 +3,6 @@ package com.icoin.trading.users.domain.model.social;
 import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * The Mongodb collection for the spring social connections.

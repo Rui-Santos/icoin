@@ -16,11 +16,11 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemAddedToPortfolioEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservationCancelledForPortfolioEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservedEvent;
-import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;

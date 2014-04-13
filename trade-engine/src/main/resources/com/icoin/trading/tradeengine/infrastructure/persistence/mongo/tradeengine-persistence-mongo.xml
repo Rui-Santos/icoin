@@ -37,8 +37,8 @@
 
     <!--config the user query here-->
     <!--<mongo:repositories base-package="com.icoin.trading.users.query.repositories"-->
-                        <!--mongo-template-ref="trade.mongoTemplate"-->
-                        <!--factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean"/>-->
+    <!--mongo-template-ref="trade.mongoTemplate"-->
+    <!--factory-class="com.homhon.mongo.core.IZookeyMongoRepositoryFactoryBean"/>-->
 
     <!--domain query here-->
     <mongo:repositories base-package="com.icoin.trading.tradeengine.infrastructure.persistence.mongo"
@@ -54,7 +54,7 @@
     <bean id="trade.mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="trade.mongoDbFactory"/>
         <constructor-arg name="mongoConverter" ref="trade.mappingConverter"/>
-        <property name="writeConcern" value="SAFE" />
+        <property name="writeConcern" value="SAFE"/>
     </bean>
 
     <bean id="trade.mappingConverter"
@@ -89,14 +89,14 @@
     <bean class="com.homhon.mongo.audit.AuditingEventListener">
         <constructor-arg ref="trade.userService"/>
     </bean>
-    
+
     <bean id="trade.userService" class="com.icoin.trading.tradeengine.infrastructure.auth.UserServiceImpl"/>
 
     <beans profile="dev">
         <context:property-placeholder
                 location="classpath:com/icoin/trading/tradeengine/infrastructure/persistence/mongo/mongo-db.dev.properties"/>
         <!--<bean id="trade.userService" class="com.icoin.trading.tradeengine.application.FakeUserService"/>-->
-        
+
     </beans>
     <beans profile="prod">
         <context:property-placeholder

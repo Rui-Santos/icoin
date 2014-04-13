@@ -1,19 +1,19 @@
 package com.icoin.trading.tradeengine.query.portfolio;
 
-import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.api.tradeengine.events.portfolio.PortfolioCreatedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashDepositedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashReservationCancelledEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashReservationConfirmedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashReservedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashWithdrawnEvent;
-import com.icoin.trading.api.coin.domain.CoinId;
-import com.icoin.trading.api.tradeengine.domain.OrderBookId;
-import com.icoin.trading.api.tradeengine.domain.PortfolioId;
-import com.icoin.trading.api.tradeengine.domain.TransactionId;
-import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.api.users.domain.Identifier;
 import com.icoin.trading.api.users.domain.UserId;
+import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.users.query.UserEntry;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.joda.money.BigMoney;

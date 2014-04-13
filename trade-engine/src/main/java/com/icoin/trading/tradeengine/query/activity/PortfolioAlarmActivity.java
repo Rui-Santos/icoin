@@ -1,8 +1,6 @@
 package com.icoin.trading.tradeengine.query.activity;
 
 import com.homhon.mongo.domainsupport.modelsupport.entity.VersionedEntitySupport;
-import com.icoin.trading.tradeengine.query.tradeexecuted.TradeType;
-import org.joda.money.BigMoney;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;

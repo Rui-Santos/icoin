@@ -16,20 +16,20 @@
 
 package com.icoin.trading.tradeengine.query.order;
 
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
-import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.api.tradeengine.domain.TradeType;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.api.tradeengine.events.coin.CoinCreatedEvent;
 import com.icoin.trading.api.tradeengine.events.coin.OrderBookAddedToCoinEvent;
 import com.icoin.trading.api.tradeengine.events.order.RefreshedHighestBuyPriceEvent;
 import com.icoin.trading.api.tradeengine.events.order.RefreshedLowestSellPriceEvent;
 import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
-import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.api.coin.domain.CurrencyPair;
-import com.icoin.trading.api.tradeengine.domain.OrderBookId;
-import com.icoin.trading.api.tradeengine.domain.OrderId;
-import com.icoin.trading.api.tradeengine.domain.TradeType;
-import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.CoinListener;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;

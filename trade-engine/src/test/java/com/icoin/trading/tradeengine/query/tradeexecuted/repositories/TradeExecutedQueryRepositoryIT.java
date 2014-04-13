@@ -1,17 +1,13 @@
 package com.icoin.trading.tradeengine.query.tradeexecuted.repositories;
 
-import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.query.tradeexecuted.OpenHighLowCloseVolume;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeExecutedEntry;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeType;
 import org.joda.money.BigMoney;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
-
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created with IntelliJ IDEA.
@@ -163,7 +157,7 @@ public class TradeExecutedQueryRepositoryIT {
         return year1;
     }
 
-//    @Ignore
+    //    @Ignore
     @Test
     public void testOhlc() throws Exception {
 

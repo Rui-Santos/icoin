@@ -32,11 +32,11 @@ import static org.mockito.Mockito.when;
 
 /**
  * BitcoindClient configuration for isolated unit testing.
- * <p>
+ * <p/>
  * RestTemplate is mocked out, so no calls are actually made to bitcoind when
  * using this configuration, but requests are captured so that tests can verify
  * if bitcoind is called as expected.
- * 
+ *
  * @author Claus Nielsen
  */
 @Configuration
@@ -50,19 +50,19 @@ public class BitcoindClientTestConfig {
     //test3:mubYt7BdSsm37yFkMbhn2PZcCnkGemqV3p
     //to:mnrFZqV5pdyQAjyRXDWYmXbWppvAcQZEcv
 
-	private static final String BITCOIND_HOST = "192.168.1.102";
-	private static final int BITCOIND_PORT = 8333;
+    private static final String BITCOIND_HOST = "192.168.1.102";
+    private static final int BITCOIND_PORT = 8333;
     private String url;
 
     @Bean
-	public BitcoinRpcOperations getBitcoindClient() {
+    public BitcoinRpcOperations getBitcoindClient() {
         url = "http://" + BITCOIND_HOST + ":" + BITCOIND_PORT;
         BitcoinRpcOperations bitcoinRpcOperations = new BitcoinRpcTemplate(url, getRestTemplate());
-		return bitcoinRpcOperations;
-	}
+        return bitcoinRpcOperations;
+    }
 
-	@Bean
-	public RestTemplate getRestTemplate() {
+    @Bean
+    public RestTemplate getRestTemplate() {
         final RestTemplate restTemplate = Mockito.mock(RestTemplate.class);
 
         final ListUnspentResult[] result = new ListUnspentResult[2];
@@ -78,6 +78,6 @@ public class BitcoindClientTestConfig {
                 eq(ListUnspentResponse.class))).thenReturn(response);
 
         return restTemplate;
-	}
+    }
 
 }

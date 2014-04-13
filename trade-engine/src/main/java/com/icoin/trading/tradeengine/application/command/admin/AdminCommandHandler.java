@@ -40,19 +40,19 @@ import java.util.List;
 @Component
 public class AdminCommandHandler {
     private static List<Class> queryEntityClasses = ImmutableList.<Class>of(
-                UserEntry.class,
-                OrderBookEntry.class,
-                OrderEntry.class,
-                CoinEntry.class,
-                TradeExecutedEntry.class,
-                PortfolioEntry.class,
-                TransactionEntry.class,
-                Order.class,
-                PortfolioActivity.class,
-                ExecutedAlarmActivity.class,
-                TradingSystemStatus.class,
-                UserPasswordReset.class,
-                SocialConnection.class);
+            UserEntry.class,
+            OrderBookEntry.class,
+            OrderEntry.class,
+            CoinEntry.class,
+            TradeExecutedEntry.class,
+            PortfolioEntry.class,
+            TransactionEntry.class,
+            Order.class,
+            PortfolioActivity.class,
+            ExecutedAlarmActivity.class,
+            TradingSystemStatus.class,
+            UserPasswordReset.class,
+            SocialConnection.class);
 
     private MongoEventStore eventStore;
 

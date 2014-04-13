@@ -57,7 +57,7 @@ public class PaidFee extends FeeAggregateRoot<PaidFee> {
                 paidSource));
     }
 
-    public void confirm(String sequenceNumber,Date confirmedDate) {
+    public void confirm(String sequenceNumber, Date confirmedDate) {
         apply(new PaidFeeConfirmedEvent(feeId, sequenceNumber, confirmedDate));
     }
 
@@ -65,7 +65,7 @@ public class PaidFee extends FeeAggregateRoot<PaidFee> {
         apply(new PaidFeeCancelledEvent(feeId, cancelReason, cancelledDate));
     }
 
-    public void offset(OffsetId offsetId,Date offsetDate) {
+    public void offset(OffsetId offsetId, Date offsetDate) {
         apply(new PaidFeeOffsetedEvent(feeId, offsetId, offsetDate));
     }
 

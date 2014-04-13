@@ -15,8 +15,8 @@ import java.util.List;
  */
 public interface ReceivedEntryRepository extends GenericCrudRepository<ReceivedFee, String> {
     ReceivedFee findReceivedEntry(BusinessType businessType,
-                                    String businessReferenceId,
-                                    ReceivedSource receivedSource);
+                                  String businessReferenceId,
+                                  ReceivedSource receivedSource);
 
     List<ReceivedFee> findReceivedForOrder(String orderId);
 

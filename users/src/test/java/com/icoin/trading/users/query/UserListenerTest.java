@@ -1,13 +1,13 @@
 package com.icoin.trading.users.query;
 
-import com.icoin.trading.users.application.command.UserCommandHandler;
+import com.icoin.trading.api.users.domain.Identifier;
+import com.icoin.trading.api.users.domain.UserId;
 import com.icoin.trading.api.users.event.NotificationSettingsUpdatedEvent;
 import com.icoin.trading.api.users.event.PasswordChangedEvent;
 import com.icoin.trading.api.users.event.UserCreatedEvent;
 import com.icoin.trading.api.users.event.WithdrawPasswordChangedEvent;
 import com.icoin.trading.api.users.event.WithdrawPasswordCreatedEvent;
-import com.icoin.trading.api.users.domain.Identifier;
-import com.icoin.trading.api.users.domain.UserId;
+import com.icoin.trading.users.application.command.UserCommandHandler;
 import com.icoin.trading.users.query.repositories.UserQueryRepository;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;

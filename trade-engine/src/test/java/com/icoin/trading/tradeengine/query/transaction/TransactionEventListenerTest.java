@@ -16,7 +16,11 @@
 
 package com.icoin.trading.tradeengine.query.transaction;
 
-import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.tradeengine.domain.TransactionType;
 import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionCancelledEvent;
 import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionConfirmedEvent;
 import com.icoin.trading.api.tradeengine.events.transaction.BuyTransactionExecutedEvent;
@@ -27,12 +31,8 @@ import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionConfi
 import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionExecutedEvent;
 import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionPartiallyExecutedEvent;
 import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionStartedEvent;
-import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.api.tradeengine.domain.OrderBookId;
-import com.icoin.trading.api.tradeengine.domain.PortfolioId;
-import com.icoin.trading.api.tradeengine.domain.TransactionId;
-import com.icoin.trading.api.tradeengine.domain.TransactionType;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.transaction.repositories.TransactionQueryRepository;
@@ -162,7 +162,7 @@ public class TransactionEventListenerTest {
         SellTransactionCancelledEvent event =
                 new SellTransactionCancelledEvent(
                         transactionIdentifier,
-                        coinIdentifier,time);
+                        coinIdentifier, time);
         listener.handleEvent(event);
         Mockito.verify(transactionQueryRepository).save(Matchers.argThat(new TransactionEntryMatcher(
                 DEFAULT_TOTAL_ITEMS,
@@ -182,7 +182,7 @@ public class TransactionEventListenerTest {
         when(transactionQueryRepository.findOne(eq(transactionIdentifier.toString())))
                 .thenReturn(entry);
 
-        final BuyTransactionCancelledEvent event = new BuyTransactionCancelledEvent(transactionIdentifier, coinIdentifier,time);
+        final BuyTransactionCancelledEvent event = new BuyTransactionCancelledEvent(transactionIdentifier, coinIdentifier, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -201,7 +201,7 @@ public class TransactionEventListenerTest {
         when(transactionQueryRepository.findOne(eq(transactionIdentifier.toString())))
                 .thenReturn(entry);
 
-        final SellTransactionCancelledEvent event = new SellTransactionCancelledEvent(transactionIdentifier, coinIdentifier,time);
+        final SellTransactionCancelledEvent event = new SellTransactionCancelledEvent(transactionIdentifier, coinIdentifier, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -270,7 +270,7 @@ public class TransactionEventListenerTest {
 
         final BuyTransactionExecutedEvent event =
                 new BuyTransactionExecutedEvent(transactionIdentifier, coinIdentifier,
-                        amount, price, money, commission,time);
+                        amount, price, money, commission, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -306,7 +306,7 @@ public class TransactionEventListenerTest {
 
         final SellTransactionExecutedEvent event =
                 new SellTransactionExecutedEvent(transactionIdentifier, coinIdentifier,
-                        item, price, money, commission,time);
+                        item, price, money, commission, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -342,7 +342,7 @@ public class TransactionEventListenerTest {
 
         final BuyTransactionPartiallyExecutedEvent event =
                 new BuyTransactionPartiallyExecutedEvent(transactionIdentifier, coinIdentifier,
-                        item, item.plus(executed), price, money, commission,time);
+                        item, item.plus(executed), price, money, commission, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);
@@ -378,7 +378,7 @@ public class TransactionEventListenerTest {
 
         final SellTransactionPartiallyExecutedEvent event =
                 new SellTransactionPartiallyExecutedEvent(transactionIdentifier, coinIdentifier,
-                        item, item.plus(executed), price, money, commission,time);
+                        item, item.plus(executed), price, money, commission, time);
         listener.handleEvent(event);
 
         ArgumentCaptor<TransactionEntry> captor = ArgumentCaptor.forClass(TransactionEntry.class);

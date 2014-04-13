@@ -7,6 +7,7 @@ package com.icoin.axonsupport.domain;
  * Time: PM9:08
  * To change this template use File | Settings | File Templates.
  */
+
 import com.homhon.base.domain.Entity;
 import com.homhon.base.domain.utils.Domains;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

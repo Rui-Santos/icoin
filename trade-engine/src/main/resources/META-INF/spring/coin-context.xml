@@ -21,7 +21,7 @@
        http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd">
 
     <!--<bean class="com.icoin.trading.tradeengine.application.command.coin.CoinCommandHandler">-->
-        <!--<property name="repository" ref="coinRepository"/>-->
+    <!--<property name="repository" ref="coinRepository"/>-->
     <!--</bean>-->
 
     <axon:event-sourcing-repository id="coinRepository"

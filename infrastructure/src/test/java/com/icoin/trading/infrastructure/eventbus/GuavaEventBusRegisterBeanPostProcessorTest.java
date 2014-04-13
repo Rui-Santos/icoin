@@ -8,6 +8,7 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa

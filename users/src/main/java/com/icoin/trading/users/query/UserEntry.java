@@ -22,7 +22,10 @@ import com.icoin.trading.api.users.domain.Identifier;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.util.Date;
 import java.util.List;
+
+import static com.homhon.util.Asserts.notNull;
 
 
 /**
@@ -41,6 +44,7 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
     @Indexed(unique = true)
     private String email;
     private Identifier identifier;
+    private Date lockedTo;
 
     private boolean logonAlert = true;
     private boolean changePasswordAlert = true;
@@ -181,6 +185,20 @@ public class UserEntry extends AuditAwareEntitySupport<UserEntry, String, Long> 
 
     public void setWithdrawItemAlert(boolean withdrawItemAlert) {
         this.withdrawItemAlert = withdrawItemAlert;
+    }
+
+    public void lock(Date date) {
+        notNull(date);
+    }
+
+    public void unlock() {
+        lockedTo = null;
+    }
+
+    @Override
+    public boolean isLocked(Date currentTime) {
+        notNull(currentTime);
+        return lockedTo == null ? false : lockedTo.compareTo(currentTime) >= 0;
     }
 
     @Override

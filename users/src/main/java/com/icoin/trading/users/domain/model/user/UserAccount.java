@@ -16,6 +16,7 @@
 
 package com.icoin.trading.users.domain.model.user;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +29,8 @@ public interface UserAccount<T extends UserAccount> extends com.homhon.base.doma
     String getPrimaryKey();
 
     String getUsername();
+
+    boolean isLocked(Date currentTime);
 
     String getFullName();
 

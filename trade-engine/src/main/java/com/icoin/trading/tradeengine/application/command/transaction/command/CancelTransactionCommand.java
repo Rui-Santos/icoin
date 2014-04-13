@@ -30,7 +30,7 @@ public class CancelTransactionCommand extends CommandSupport<CancelTransactionCo
     private TransactionId transactionIdentifier;
     private Date time;
 
-    public CancelTransactionCommand(TransactionId transactionIdentifier,Date time) {
+    public CancelTransactionCommand(TransactionId transactionIdentifier, Date time) {
         this.transactionIdentifier = transactionIdentifier;
         this.time = time;
     }

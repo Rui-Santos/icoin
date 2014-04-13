@@ -1,7 +1,7 @@
 package com.icoin.trading.tradeengine.infrastructure.persistence.mongo;
 
-import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.tradeengine.domain.model.order.BuyOrder;
 import org.joda.money.BigMoney;
 
 import java.util.Date;

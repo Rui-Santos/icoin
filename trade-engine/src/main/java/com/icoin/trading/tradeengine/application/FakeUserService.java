@@ -6,6 +6,7 @@ import com.homhon.base.domain.service.UserService;
 import com.icoin.trading.users.domain.model.user.UserAccount;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,9 +19,7 @@ import java.util.List;
 public class FakeUserService implements UserService {
     @Override
     public User getCurrentUser() {
-        return new FakeUser() {
-
-        };
+        return new FakeUser();
     }
 
 
@@ -43,6 +42,11 @@ public class FakeUserService implements UserService {
         @Override
         public String getUsername() {
             return getId();
+        }
+
+        @Override
+        public boolean isLocked(Date currentTime) {
+            return false;
         }
 
         @Override

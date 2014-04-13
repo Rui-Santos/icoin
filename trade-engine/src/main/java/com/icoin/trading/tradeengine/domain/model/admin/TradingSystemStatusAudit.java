@@ -6,7 +6,6 @@ import java.util.Date;
 
 import static com.homhon.util.Asserts.hasLength;
 import static com.homhon.util.Asserts.notNull;
-import static com.homhon.util.TimeUtils.negativeInfinityTime;
 
 /**
  * Created with IntelliJ IDEA.

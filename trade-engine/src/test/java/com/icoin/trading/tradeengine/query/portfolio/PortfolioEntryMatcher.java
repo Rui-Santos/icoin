@@ -42,7 +42,7 @@ public class PortfolioEntryMatcher extends ArgumentMatcher<PortfolioEntry> {
         }
         PortfolioEntry portfolioEntry = (PortfolioEntry) argument;
 
-        return  amountOfItemInPossession.minus(portfolioEntry.findItemByIdentifier(coinIdentifier).getAmountInPossession()).isZero()
+        return amountOfItemInPossession.minus(portfolioEntry.findItemByIdentifier(coinIdentifier).getAmountInPossession()).isZero()
                 && amountOfItemInReservation.minus(portfolioEntry.findItemByIdentifier(coinIdentifier).getReservedAmount()).isZero();
     }
 

@@ -33,7 +33,7 @@ public class CashReservedClearedEvent extends EventSupport<CashReservedClearedEv
     private BigMoney amountToClear;
     private Date time;
 
-    public CashReservedClearedEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier, BigMoney amountToClear,Date time) {
+    public CashReservedClearedEvent(PortfolioId portfolioIdentifier, TransactionId transactionIdentifier, BigMoney amountToClear, Date time) {
         this.portfolioIdentifier = portfolioIdentifier;
         this.transactionIdentifier = transactionIdentifier;
         this.amountToClear = amountToClear;

@@ -16,11 +16,11 @@
 
 package com.icoin.trading.tradeengine.query.order;
 
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.events.coin.OrderBookAddedToCoinEvent;
 import com.icoin.trading.api.tradeengine.events.order.RefreshedHighestBuyPriceEvent;
 import com.icoin.trading.api.tradeengine.events.order.RefreshedLowestSellPriceEvent;
 import com.icoin.trading.api.tradeengine.events.trade.TradeExecutedEvent;
-import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;

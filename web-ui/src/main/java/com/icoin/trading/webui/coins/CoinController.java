@@ -103,7 +103,7 @@ public class CoinController {
             return "transferCoin/failed";
         }
 
-        PortfolioEntry portfolio = getPortfolio( user);
+        PortfolioEntry portfolio = getPortfolio(user);
         if (portfolio == null) {
             logger.error("Cannot find portfolio via user account {}", user.getPrimaryKey());
             return null;
@@ -115,7 +115,7 @@ public class CoinController {
         return "transferCoin/withdraw/wait";
     }
 
-    private PortfolioEntry getPortfolio(UserAccount user){
+    private PortfolioEntry getPortfolio(UserAccount user) {
         return portfolioRepository.findByUserIdentifier(user.getPrimaryKey());
     }
 

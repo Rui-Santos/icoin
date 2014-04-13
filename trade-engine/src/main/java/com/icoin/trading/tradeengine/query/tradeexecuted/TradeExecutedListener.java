@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TradeExecutedListener {
-//    private OrderBookQueryRepository orderBookRepository;
+    //    private OrderBookQueryRepository orderBookRepository;
     private TradeExecutedQueryRepository tradeExecutedRepository;
 
     @EventHandler

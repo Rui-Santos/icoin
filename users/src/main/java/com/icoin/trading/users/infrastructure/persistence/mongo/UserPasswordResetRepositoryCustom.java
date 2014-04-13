@@ -1,9 +1,6 @@
 package com.icoin.trading.users.infrastructure.persistence.mongo;
 
-import com.homhon.base.domain.repository.GenericCrudRepository;
 import com.icoin.trading.users.domain.model.function.UserPasswordReset;
-import com.icoin.trading.users.domain.model.function.UserPasswordResetRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.Date;
 import java.util.List;

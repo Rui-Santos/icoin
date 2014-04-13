@@ -18,7 +18,7 @@ package com.icoin.trading.users.domain.model.user;
 import com.homhon.core.exception.IZookeyException;
 
 public class UsernameAlreadyInUseException extends IZookeyException {
-	public UsernameAlreadyInUseException(String username) {
-		super("The username '" + username + "' is already in use.");
-	}
+    public UsernameAlreadyInUseException(String username) {
+        super("The username '" + username + "' is already in use.");
+    }
 }

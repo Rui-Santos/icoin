@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
  */
 public class JodaMoneyConverterTest {
     private final XStream xs = new XStream();
+
     @Before
     public void setUp() throws Exception {
         xs.registerConverter(new JodaMoneyConverter());

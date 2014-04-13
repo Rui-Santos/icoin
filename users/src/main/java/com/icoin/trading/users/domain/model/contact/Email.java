@@ -27,12 +27,12 @@ public class Email extends VerifiedAwareValueObject<Email> {
     }
 
     public String getCompanySuffix() {
-        if(!hasLength(name)){
+        if (!hasLength(name)) {
             return "";
         }
 
         int index = name.lastIndexOf("@");
-        if(index ==-1){
+        if (index == -1) {
             return "";
         }
         return name.substring(index);

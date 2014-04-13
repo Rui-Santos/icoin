@@ -16,10 +16,16 @@
 
 package com.icoin.trading.tradeengine.saga;
 
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.tradeengine.command.portfolio.cash.DepositCashCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.coin.ReserveAmountCommand;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.OrderId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TradeType;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemToReserveNotAvailableInPortfolioEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.NotEnoughItemAvailableToReserveInPortfolio;
@@ -29,13 +35,7 @@ import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionConfi
 import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionExecutedEvent;
 import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionPartiallyExecutedEvent;
 import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionStartedEvent;
-import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.api.tradeengine.domain.OrderBookId;
-import com.icoin.trading.api.tradeengine.domain.OrderId;
-import com.icoin.trading.api.tradeengine.domain.TradeType;
-import com.icoin.trading.api.tradeengine.domain.PortfolioId;
-import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.tradeengine.saga.matchers.ConfirmTransactionCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.CreateSellOrderCommandMatcher;
 import com.icoin.trading.tradeengine.saga.matchers.ExecutedTransactionCommandMatcher;
@@ -566,7 +566,7 @@ public class SellTradeManagerSagaIT {
                                 BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(75)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(102)),
                                 BigMoney.of(CurrencyUnit.of(Currencies.CNY), BigDecimal.valueOf(50 * 102)),
-                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(2)) ,
+                                BigMoney.of(CurrencyUnit.of(Currencies.BTC), BigDecimal.valueOf(2)),
                                 time
                         ))
                 .expectActiveSagas(1)

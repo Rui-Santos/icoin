@@ -1,8 +1,7 @@
 package com.icoin.trading.tradeengine.application.command.portfolio;
 
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.tradeengine.command.portfolio.CreatePortfolioCommand;
-import com.icoin.trading.tradeengine.Constants;
-import com.icoin.trading.tradeengine.EqualsWithMoneyFieldMatcher;
 import com.icoin.trading.api.tradeengine.command.portfolio.cash.CancelCashReservationCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.cash.ClearReservedCashCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.cash.ConfirmCashReservationCommand;
@@ -13,6 +12,9 @@ import com.icoin.trading.api.tradeengine.command.portfolio.coin.AddAmountToPortf
 import com.icoin.trading.api.tradeengine.command.portfolio.coin.CancelAmountReservationForPortfolioCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.coin.ConfirmAmountReservationForPortfolioCommand;
 import com.icoin.trading.api.tradeengine.command.portfolio.coin.ReserveAmountCommand;
+import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.api.tradeengine.events.portfolio.PortfolioCreatedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashDepositedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashReservationCancelledEvent;
@@ -27,13 +29,11 @@ import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservationCo
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemToReserveNotAvailableInPortfolioEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.NotEnoughItemAvailableToReserveInPortfolio;
-import com.icoin.trading.api.coin.domain.CoinId;
-import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.api.tradeengine.domain.OrderBookId;
-import com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio;
-import com.icoin.trading.api.tradeengine.domain.PortfolioId;
-import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.api.users.domain.UserId;
+import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.tradeengine.EqualsWithMoneyFieldMatcher;
+import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
+import com.icoin.trading.tradeengine.domain.model.portfolio.Portfolio;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.joda.money.BigMoney;

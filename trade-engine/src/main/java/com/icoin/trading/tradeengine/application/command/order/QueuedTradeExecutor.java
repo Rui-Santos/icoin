@@ -4,12 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.icoin.trading.api.tradeengine.command.order.ExecuteBuyOrderCommand;
 import com.icoin.trading.api.tradeengine.command.order.ExecuteSellOrderCommand;
-import com.icoin.trading.tradeengine.domain.TradingSystemService;
-import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.OrderId;
-import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
+import com.icoin.trading.tradeengine.domain.TradingSystemService;
 import com.icoin.trading.tradeengine.domain.model.admin.TradingSystemStatus;
+import com.icoin.trading.tradeengine.domain.model.order.Order;
+import com.icoin.trading.tradeengine.domain.model.order.OrderRepository;
 import com.icoin.trading.tradeengine.query.order.OrderBookEntry;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -155,12 +155,12 @@ public class QueuedTradeExecutor implements TradeExecutor {
         execute0(order);
     }
 
-    private void execute0(Order order){
+    private void execute0(Order order) {
         TradingSystemStatus tradingSystemStatus = tradingSystemService.currentStatus();
         if (tradingSystemStatus != null && !tradingSystemStatus.allowedToTrade(order.getPlaceDate())) {
             logger.info("System is waiting to revive trading");
             if (!needToExecuteNotExecuted.get()) { // stop the buying and selling execution,
-                                                   // need to reinitialize the old ones once wake up
+                // need to reinitialize the old ones once wake up
                 needToExecuteNotExecuted.set(true);
             }
             return;

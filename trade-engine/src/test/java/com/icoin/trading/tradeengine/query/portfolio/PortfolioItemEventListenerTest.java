@@ -16,19 +16,19 @@
 
 package com.icoin.trading.tradeengine.query.portfolio;
 
-import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemAddedToPortfolioEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservationCancelledForPortfolioEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservationConfirmedForPortfolioEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservedEvent;
-import com.icoin.trading.api.coin.domain.CoinId;
+import com.icoin.trading.api.users.domain.UserId;
+import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.tradeengine.domain.model.coin.Currencies;
-import com.icoin.trading.api.tradeengine.domain.PortfolioId;
-import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.tradeengine.query.coin.CoinEntry;
 import com.icoin.trading.tradeengine.query.coin.repositories.CoinQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
-import com.icoin.trading.api.users.domain.UserId;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;
 import org.junit.Before;

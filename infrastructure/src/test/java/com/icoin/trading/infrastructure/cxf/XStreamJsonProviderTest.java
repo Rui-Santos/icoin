@@ -1,21 +1,5 @@
 package com.icoin.trading.infrastructure.cxf;
 
-import org.apache.cxf.jaxrs.impl.MetadataMap;
-import org.joda.money.BigMoney;
-import org.joda.money.CurrencyUnit;
-import org.junit.Test;
-
-import javax.ws.rs.core.MediaType;
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
 /**
  * Created with IntelliJ IDEA.
  * User: liougehooa

@@ -71,7 +71,7 @@ public class OrderQueryRepositoryIT {
 //
 //        System.out.println(orderAggregatedPrice);
     }
-    
+
     @Test
     public void testFindUserActiveOrders() throws Exception {
         List<OrderEntry> list = repository.findUserActiveOrders("buyer1", orderBookId.toString());

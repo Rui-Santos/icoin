@@ -16,12 +16,12 @@
 
 package com.icoin.trading.tradeengine.application.listener;
 
-import com.icoin.trading.api.tradeengine.command.coin.AddOrderBookToCoinCommand;
-import com.icoin.trading.api.tradeengine.command.order.CreateOrderBookCommand;
-import com.icoin.trading.api.tradeengine.events.coin.CoinCreatedEvent;
 import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.coin.domain.CurrencyPair;
+import com.icoin.trading.api.tradeengine.command.coin.AddOrderBookToCoinCommand;
+import com.icoin.trading.api.tradeengine.command.order.CreateOrderBookCommand;
 import com.icoin.trading.api.tradeengine.domain.OrderBookId;
+import com.icoin.trading.api.tradeengine.events.coin.CoinCreatedEvent;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;

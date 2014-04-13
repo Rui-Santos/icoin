@@ -1,10 +1,10 @@
 package com.icoin.trading.tradeengine.query.activity.listeners;
 
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashDepositedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashWithdrawnEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemAddedToPortfolioEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemWithdrawnEvent;
-import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.tradeengine.query.activity.Activity;
 import com.icoin.trading.tradeengine.query.activity.ActivityItem;
 import com.icoin.trading.tradeengine.query.activity.PortfolioActivity;

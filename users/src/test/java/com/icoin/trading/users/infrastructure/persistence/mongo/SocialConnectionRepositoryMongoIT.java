@@ -70,10 +70,10 @@ public class SocialConnectionRepositoryMongoIT {
     }
 
     private SocialConnection create(String userId,
-                                         String providerId,
-                                         String providerUserId,
-                                         String displayName,
-                                         int rank) {
+                                    String providerId,
+                                    String providerUserId,
+                                    String displayName,
+                                    int rank) {
 
         SocialConnection c = new SocialConnection();
         c.setUserId(userId);

@@ -1,9 +1,6 @@
 package com.icoin.trading.fee.domain.cash;
 
 import com.icoin.trading.fee.domain.address.Address;
-import org.joda.money.BigMoney;
-
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,7 +10,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class CoinReceiveCash extends ReceiveCash<CoinReceiveCash> {
-     private Address address;
+    private Address address;
 
     public Address getAddress() {
         return address;

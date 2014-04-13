@@ -1,1 +1,4 @@
-{"result":null,"error":{"code":-4,"message":"Error adding key to wallet"},"id":null}
+{"result": null, "error": {
+    "code": -4,
+    "message": "Error adding key to wallet"
+}, "id": null}

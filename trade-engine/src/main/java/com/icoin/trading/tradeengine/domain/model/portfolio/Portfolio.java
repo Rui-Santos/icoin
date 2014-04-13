@@ -18,8 +18,9 @@ package com.icoin.trading.tradeengine.domain.model.portfolio;
 
 import com.homhon.base.domain.Identity;
 import com.icoin.axonsupport.domain.AxonAnnotatedAggregateRoot;
+import com.icoin.trading.api.coin.domain.CoinId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
-import com.icoin.trading.tradeengine.Constants;
+import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.api.tradeengine.events.portfolio.PortfolioCreatedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashDepositedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.cash.CashReservationCancelledEvent;
@@ -34,11 +35,9 @@ import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservationCo
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemReservedEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.ItemToReserveNotAvailableInPortfolioEvent;
 import com.icoin.trading.api.tradeengine.events.portfolio.coin.NotEnoughItemAvailableToReserveInPortfolio;
-import com.icoin.trading.api.coin.domain.CoinId;
-import com.icoin.trading.api.tradeengine.domain.TransactionId;
 import com.icoin.trading.api.users.domain.UserId;
+import com.icoin.trading.tradeengine.Constants;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.joda.money.BigMoney;
 import org.joda.money.CurrencyUnit;

@@ -9,7 +9,6 @@ import com.icoin.trading.tradeengine.query.activity.ExecutedAlarmActivity;
 import com.icoin.trading.tradeengine.query.activity.ExecutedAlarmType;
 import com.icoin.trading.tradeengine.query.activity.repositories.ExecutedAlarmActivityQueryRepository;
 import com.icoin.trading.tradeengine.query.order.OrderEntry;
-import com.icoin.trading.tradeengine.query.order.repositories.OrderQueryRepository;
 import com.icoin.trading.tradeengine.query.portfolio.PortfolioEntry;
 import com.icoin.trading.tradeengine.query.portfolio.repositories.PortfolioQueryRepository;
 import com.icoin.trading.tradeengine.query.tradeexecuted.TradeType;

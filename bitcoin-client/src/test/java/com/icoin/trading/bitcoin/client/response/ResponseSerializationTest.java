@@ -7,39 +7,22 @@ package com.icoin.trading.bitcoin.client.response;
  * Time: PM11:12
  * To change this template use File | Settings | File Templates.
  */
-import static com.icoin.trading.bitcoin.client.Tests.jsonResource;
-import static com.icoin.trading.bitcoin.client.Tests.mockServer;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-
-import com.icoin.trading.bitcoin.client.JsonExtra;
-import com.icoin.trading.bitcoin.client.Tests;
-import org.apache.commons.io.IOUtils;
-import org.hamcrest.Matcher;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.icoin.trading.bitcoin.client.JsonExtra;
+import org.apache.commons.io.IOUtils;
+import org.hamcrest.Matcher;
+import org.junit.Test;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.http.MediaType;
-import static org.springframework.http.HttpMethod.*;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+
+import java.util.Map;
+
+import static com.icoin.trading.bitcoin.client.Tests.jsonResource;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * Tests json serialization and deserialization of response objects.
@@ -54,17 +37,16 @@ public class ResponseSerializationTest {
     /**
      * Reveals a bug in Jackson.
      *
+     * @throws Exception
      * @JsonUnwrapped conflicts with @JsonAnySetter/@JsonAnyGetter.
      * See https://github.com/FasterXML/jackson-annotations/issues/10
-     * <p>
+     * <p/>
      * Some serialization tests have been disabled by prefixing some
      * of the sample file names with an underscore.
-     * <p>
+     * <p/>
      * When the Jackson bug has been fixed remove this test and it's
      * resource file "_DOUBLE_UNWRAP.json" and re-enable other tests
      * by removing the underscore prefix from sample file names.
-     *
-     * @throws Exception
      */
     @Test
     public void testDoubleUnwrapped() throws Exception {
@@ -80,21 +62,21 @@ public class ResponseSerializationTest {
         String roundtrippedJson = objectMapper.writeValueAsString(obj);
         ListUnspentResult obj2 = objectMapper.readValue(roundtrippedJson, ListUnspentResult.class);
         assertThat("json -> obj -> json roundtrip serialization failed for " + resource.getFilename() + ".",
-                obj, (Matcher)equalTo(obj2));
+                obj, (Matcher) equalTo(obj2));
     }
 
     /**
      * Performs serializatio test for all json sample files in
      * src/test/resources/sampleResponse/.
-     * <p>
+     * <p/>
      * Tests that each json sample can be deserialized to the type also given in
      * the file name, and serialized back to the original.<br>
      * Also checks that all fields are mapped explicitly (ie. that "otherFilds"
      * isn't used).
-     * <p>
+     * <p/>
      * Skips files with a name beginning with an underscore are skipped, making
      * it possible to (temporarily) disable serialization tests of some samples.
-     * <p>
+     * <p/>
      * Following response samples are currently skipped:
      * <dl>
      * <dt>_DOUBLE_UNWRAP.json</dt>
@@ -136,10 +118,9 @@ public class ResponseSerializationTest {
     /**
      * Perform serialization roundtrip testing of the given file.
      *
-     * @param resource
-     *            - file with sample data in json format. The file name must
-     *            follow a fixed format including the respons class name - see
-     *            {@link #extractResponseClassName(Resource)}.
+     * @param resource - file with sample data in json format. The file name must
+     *                 follow a fixed format including the respons class name - see
+     *                 {@link #extractResponseClassName(Resource)}.
      * @throws Exception
      */
     private void doSerializationRoundtrip(Resource resource) throws Exception {
@@ -154,7 +135,7 @@ public class ResponseSerializationTest {
         String roundtrippedJson = objectMapper.writeValueAsString(response);
         BitcoinJsonRpcResponse<?> response2 = objectMapper.readValue(roundtrippedJson, responseType);
         assertThat("json -> obj -> json roundtrip serialization failed for " + resource.getFilename() + ".",
-                response, (Matcher)equalTo(response2));
+                response, (Matcher) equalTo(response2));
 
         // Check that all fields are explicitly mapped.
         assertThat("Some fields in response not explicitly mapped (see otherFields): " + response.toString(), response.getOtherFields().size(), equalTo(0));
@@ -187,7 +168,7 @@ public class ResponseSerializationTest {
      * @param resource
      * @return String - response class name
      */
-    private String extractResponseClassName(Resource resource ) {
+    private String extractResponseClassName(Resource resource) {
         String fileName = resource.getFilename();
         int endIndex = fileName.indexOf("_");
         if (endIndex == -1) endIndex = fileName.indexOf(".");

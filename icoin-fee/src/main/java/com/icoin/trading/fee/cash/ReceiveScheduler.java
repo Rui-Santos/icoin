@@ -1,6 +1,5 @@
 package com.icoin.trading.fee.cash;
 
-import com.icoin.trading.fee.domain.cash.Cash;
 import com.icoin.trading.fee.domain.cash.PendingCashRepository;
 import com.icoin.trading.fee.domain.cash.ReceiveCash;
 import org.slf4j.Logger;

@@ -5,7 +5,6 @@ import org.joda.money.BigMoney;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
 
 @XmlRootElement(name = "ExecutedTrade")
@@ -15,12 +14,12 @@ public class ExecutedTrade {
     private BigMoney tradeAmount;
     private BigMoney tradedPrice;
     private String buyOrderId;
-    private String  coinId;
+    private String coinId;
     private String sellOrderId;
-    private String  buyTransactionId;
-    private String  sellTransactionId;
+    private String buyTransactionId;
+    private String sellTransactionId;
     private String orderBookId;
-    private Date tradeTime ;
+    private Date tradeTime;
     private TradeType tradeType;
     private BigMoney buyCommission;
     private BigMoney sellCommission;

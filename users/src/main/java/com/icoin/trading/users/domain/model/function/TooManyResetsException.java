@@ -11,6 +11,7 @@ import com.homhon.core.exception.IZookeyException;
  */
 public class TooManyResetsException extends IZookeyException {
     private String operatingIp;
+
     public TooManyResetsException(String operatingIp) {
         super(String.format("Too many resets with ip %s", operatingIp));
         this.operatingIp = operatingIp;

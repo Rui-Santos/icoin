@@ -22,7 +22,6 @@ import com.icoin.trading.bitcoin.client.JsonExtra;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Data returned by BitcoindClient's getBlock method

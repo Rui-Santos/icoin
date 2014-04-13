@@ -1,1 +1,4 @@
-{"result":null,"error":{"code":-1,"message":"value is type null, expected str"},"id":null}
+{"result": null, "error": {
+    "code": -1,
+    "message": "value is type null, expected str"
+}, "id": null}

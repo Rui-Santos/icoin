@@ -32,7 +32,7 @@ public class SimplePasswordResetTokenGeneratorTest {
             Date newDate = new Date(time);
             String token = generator.generate("userName", "ip", newDate);
             assertThat(token, not(isEmptyOrNullString()));
-            if(generated.equalsIgnoreCase(token)){
+            if (generated.equalsIgnoreCase(token)) {
                 conflicted++;
             }
         }

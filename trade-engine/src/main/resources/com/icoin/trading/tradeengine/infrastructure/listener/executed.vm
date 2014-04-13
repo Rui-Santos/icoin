@@ -3,7 +3,7 @@
 
 Hi ${username},
 <p/>
-${money} executed with price ${price} at ${time}.
+    ${money} executed with price ${price} at ${time}.
 <p/>
 Regards,
 <br/>

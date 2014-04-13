@@ -7,9 +7,6 @@ import com.icoin.trading.tradeengine.query.activity.PortfolioAlarmActivity;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created with IntelliJ IDEA.
  * User: jihual

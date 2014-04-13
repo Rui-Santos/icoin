@@ -1,10 +1,10 @@
 package com.icoin.trading.tradeengine.application.listener;
 
-import com.icoin.trading.tradeengine.Constants;
 import com.icoin.trading.api.tradeengine.command.portfolio.CreatePortfolioCommand;
 import com.icoin.trading.api.users.domain.Identifier;
 import com.icoin.trading.api.users.domain.UserId;
 import com.icoin.trading.api.users.event.UserCreatedEvent;
+import com.icoin.trading.tradeengine.Constants;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class PortfolioManagementUserListenerTest {
                         "testuser",
                         "Test",
                         "User",
-                         identifier,
+                        identifier,
                         "email@163.com",
                         "testpassword",
                         Constants.DEFAULT_ROLES,

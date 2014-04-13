@@ -16,21 +16,21 @@
 
 package com.icoin.trading.tradeengine.application.command.transaction;
 
-import com.icoin.trading.tradeengine.application.Callback;
-import com.icoin.trading.tradeengine.application.SynchronizedOnIdentifierHandler;
 import com.icoin.trading.api.tradeengine.command.transaction.AbstractStartTransactionCommand;
 import com.icoin.trading.api.tradeengine.command.transaction.CancelTransactionCommand;
 import com.icoin.trading.api.tradeengine.command.transaction.ConfirmTransactionCommand;
 import com.icoin.trading.api.tradeengine.command.transaction.ExecutedTransactionCommand;
 import com.icoin.trading.api.tradeengine.command.transaction.StartBuyTransactionCommand;
 import com.icoin.trading.api.tradeengine.command.transaction.StartSellTransactionCommand;
+import com.icoin.trading.api.tradeengine.domain.TransactionType;
+import com.icoin.trading.tradeengine.application.Callback;
+import com.icoin.trading.tradeengine.application.SynchronizedOnIdentifierHandler;
 import com.icoin.trading.tradeengine.domain.model.commission.Commission;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicy;
 import com.icoin.trading.tradeengine.domain.model.commission.CommissionPolicyFactory;
 import com.icoin.trading.tradeengine.domain.model.order.Order;
 import com.icoin.trading.tradeengine.domain.model.order.OrderType;
 import com.icoin.trading.tradeengine.domain.model.transaction.Transaction;
-import com.icoin.trading.api.tradeengine.domain.TransactionType;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.joda.money.BigMoney;

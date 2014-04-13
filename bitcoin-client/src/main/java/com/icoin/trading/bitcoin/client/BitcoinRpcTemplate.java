@@ -21,6 +21,7 @@ import com.icoin.trading.bitcoin.client.request.AddNodeAction;
 import com.icoin.trading.bitcoin.client.request.BitcoinJsonRpcRequest;
 import com.icoin.trading.bitcoin.client.request.TemplateRequest;
 import com.icoin.trading.bitcoin.client.response.*;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -37,6 +38,7 @@ import static java.util.Collections.EMPTY_LIST;
  *
  * @author Claus Nielsen
  */
+@Component
 public class BitcoinRpcTemplate implements BitcoinRpcOperations {
 
 

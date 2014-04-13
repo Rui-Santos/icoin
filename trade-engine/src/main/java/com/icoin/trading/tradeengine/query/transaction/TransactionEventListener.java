@@ -16,6 +16,7 @@
 
 package com.icoin.trading.tradeengine.query.transaction;
 
+import com.icoin.trading.api.tradeengine.domain.TransactionType;
 import com.icoin.trading.api.tradeengine.events.transaction.AbstractTransactionExecutedEvent;
 import com.icoin.trading.api.tradeengine.events.transaction.AbstractTransactionPartiallyExecutedEvent;
 import com.icoin.trading.api.tradeengine.events.transaction.AbstractTransactionStartedEvent;
@@ -29,7 +30,6 @@ import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionConfi
 import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionExecutedEvent;
 import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionPartiallyExecutedEvent;
 import com.icoin.trading.api.tradeengine.events.transaction.SellTransactionStartedEvent;
-import com.icoin.trading.api.tradeengine.domain.TransactionType;
 import com.icoin.trading.tradeengine.query.order.repositories.OrderBookQueryRepository;
 import com.icoin.trading.tradeengine.query.transaction.repositories.TransactionQueryRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;

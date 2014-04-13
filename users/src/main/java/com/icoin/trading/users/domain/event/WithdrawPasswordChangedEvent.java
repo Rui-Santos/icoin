@@ -1,6 +1,6 @@
 package com.icoin.trading.users.domain.event;
 
-import com.icoin.trading.users.domain.model.user.UserId;
+import com.icoin.trading.api.users.domain.UserId;
 
 import java.util.Date;
 

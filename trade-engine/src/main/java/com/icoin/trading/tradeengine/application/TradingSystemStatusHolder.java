@@ -53,7 +53,7 @@ public class TradingSystemStatusHolder implements TradingSystemService {
     }
 
     //
-    public void reviveTrading(String changedBy, Date changedTime, ChangedReason reason){
+    public void reviveTrading(String changedBy, Date changedTime, ChangedReason reason) {
         try {
             writeLock.lock();
             status.reviveTrading(changedBy, changedTime, reason);
@@ -63,7 +63,7 @@ public class TradingSystemStatusHolder implements TradingSystemService {
         }
     }
 
-    public void disableTrading(Date allowedToTradeStartTime, String changedBy, Date changedTime, ChangedReason reason){
+    public void disableTrading(Date allowedToTradeStartTime, String changedBy, Date changedTime, ChangedReason reason) {
         try {
             writeLock.lock();
             status.disableTrading(allowedToTradeStartTime, changedBy, changedTime, reason);

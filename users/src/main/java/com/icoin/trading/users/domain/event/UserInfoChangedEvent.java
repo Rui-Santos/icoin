@@ -1,7 +1,7 @@
 package com.icoin.trading.users.domain.event;
 
 import com.homhon.base.domain.event.EventSupport;
-import com.icoin.trading.users.domain.model.user.UserId;
+import com.icoin.trading.api.users.domain.UserId;
 
 
 public class UserInfoChangedEvent<T extends UserInfoChangedEvent> extends EventSupport<T> {
