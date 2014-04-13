@@ -9,6 +9,6 @@ package com.icoin.trading.coin.domain.events.admin;
  */
 
 //RevivedAddingMoneyEvent
-    //RevivedWithdrawingCoinEvent
+//RevivedWithdrawingCoinEvent
 public class DisabledWithdrawingCoinEvent {
 }

@@ -57,7 +57,7 @@ public final class CommissionServiceTest {
 //        httpclient.getConnectionManager().shutdown();
 
 	        /*
-	         *  Send HTTP PUT request to update customer info, using CXF WebClient method
+             *  Send HTTP PUT request to update customer info, using CXF WebClient method
 	         *  Note: if need to use basic authentication, use the WebClient.create(baseAddress,
 	         *  username,password,configFile) variant, where configFile can be null if you're
 	         *  not using certificates.
