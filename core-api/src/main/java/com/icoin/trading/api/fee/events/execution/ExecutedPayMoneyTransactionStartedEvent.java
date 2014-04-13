@@ -8,6 +8,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -30,6 +31,7 @@ public class ExecutedPayMoneyTransactionStartedEvent extends ExecutedTransaction
                                                    String orderId,
                                                    TransactionId orderTransactionId,
                                                    PortfolioId portfolioId,
+                                                   UserId userId,
                                                    Date tradeTime,
                                                    Date dueDate,
                                                    TradeType tradeType,
@@ -43,6 +45,7 @@ public class ExecutedPayMoneyTransactionStartedEvent extends ExecutedTransaction
                 orderId,
                 orderTransactionId,
                 portfolioId,
+                userId,
                 tradeTime,
                 dueDate,
                 tradeType,

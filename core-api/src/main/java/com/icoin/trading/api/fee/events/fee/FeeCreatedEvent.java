@@ -23,18 +23,29 @@ public class FeeCreatedEvent<T extends FeeCreatedEvent> extends EventSupport<T> 
     private final FeeType feeType;
     private final Date dueDate;
     private final Date businessCreationTime;
-    private final String userAccountId;
+    private final String portfolioId;
+    private final String userId;
     private final BusinessType businessType;
     private final String businessReferenceId;
 
-    protected FeeCreatedEvent(FeeId feeId, FeeStatus feeStatus, BigMoney amount, FeeType feeType, Date dueDate, Date businessCreationTime, String userAccountId, BusinessType businessType, String businessReferenceId) {
+    protected FeeCreatedEvent(FeeId feeId,
+                              FeeStatus feeStatus,
+                              BigMoney amount,
+                              FeeType feeType,
+                              Date dueDate,
+                              Date businessCreationTime,
+                              String portfolioId,
+                              String userId,
+                              BusinessType businessType,
+                              String businessReferenceId) {
         this.feeId = feeId;
         this.feeStatus = feeStatus;
         this.amount = amount;
         this.feeType = feeType;
         this.dueDate = dueDate;
         this.businessCreationTime = businessCreationTime;
-        this.userAccountId = userAccountId;
+        this.portfolioId = portfolioId;
+        this.userId = userId;
         this.businessType = businessType;
         this.businessReferenceId = businessReferenceId;
     }
@@ -63,8 +74,12 @@ public class FeeCreatedEvent<T extends FeeCreatedEvent> extends EventSupport<T> 
         return businessCreationTime;
     }
 
-    public String getUserAccountId() {
-        return userAccountId;
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public BusinessType getBusinessType() {

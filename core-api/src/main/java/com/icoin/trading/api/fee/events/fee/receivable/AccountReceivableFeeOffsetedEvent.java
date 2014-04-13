@@ -1,6 +1,7 @@
 package com.icoin.trading.api.fee.events.fee.receivable;
 
 import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 import com.icoin.trading.api.fee.events.fee.FeeOffsetedEvent;
 
 import java.util.Date;
@@ -14,7 +15,7 @@ import java.util.Date;
  */
 public class AccountReceivableFeeOffsetedEvent extends FeeOffsetedEvent<AccountReceivableFeeOffsetedEvent> {
 
-    public AccountReceivableFeeOffsetedEvent(FeeId feeId, Date offsetedDate) {
-        super(feeId, offsetedDate);
+    public AccountReceivableFeeOffsetedEvent(FeeId feeId, OffsetId offsetId, Date offsetedDate) {
+        super(feeId, offsetId, offsetedDate);
     }
 }

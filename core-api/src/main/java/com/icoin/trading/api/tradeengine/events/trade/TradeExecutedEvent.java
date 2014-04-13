@@ -23,6 +23,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -51,6 +52,8 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
     private final BigMoney executedMoney;
     private final PortfolioId buyPortfolioId;
     private final PortfolioId sellPortfolioId;
+    private final UserId buyUserId;
+    private final UserId sellUserId;
 
     public TradeExecutedEvent(OrderBookId orderBookId,
                               CoinId coinId,
@@ -65,6 +68,8 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
                               TransactionId sellTransactionId,
                               PortfolioId buyPortfolioId,
                               PortfolioId sellPortfolioId,
+                              UserId buyUserId,
+                              UserId sellUserId,
                               Date tradeTime,
                               TradeType tradeType) {
         this.orderBookId = orderBookId;
@@ -80,6 +85,8 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
         this.buyTransactionId = buyTransactionId;
         this.buyPortfolioId = buyPortfolioId;
         this.sellPortfolioId = sellPortfolioId;
+        this.buyUserId = buyUserId;
+        this.sellUserId = sellUserId;
         this.tradeTime = tradeTime;
         this.tradeType = tradeType;
     }
@@ -148,6 +155,14 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
         return sellPortfolioId;
     }
 
+    public UserId getSellUserId() {
+        return sellUserId;
+    }
+
+    public UserId getBuyUserId() {
+        return buyUserId;
+    }
+
     @Override
     public String toString() {
         return "TradeExecutedEvent{" +
@@ -166,6 +181,8 @@ public class TradeExecutedEvent extends EventSupport<TradeExecutedEvent> {
                 ", executedMoney=" + executedMoney +
                 ", buyPortfolioId=" + buyPortfolioId +
                 ", sellPortfolioId=" + sellPortfolioId +
+                ", buyUserId=" + buyUserId +
+                ", sellUserId=" + sellUserId +
                 '}';
     }
 }

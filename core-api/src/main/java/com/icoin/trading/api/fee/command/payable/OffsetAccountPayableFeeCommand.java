@@ -2,6 +2,7 @@ package com.icoin.trading.api.fee.command.payable;
 
 import com.icoin.trading.api.fee.command.OffsetFeeCommand;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 
 import java.util.Date;
 
@@ -13,7 +14,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class OffsetAccountPayableFeeCommand extends OffsetFeeCommand<OffsetAccountPayableFeeCommand> {
-    public OffsetAccountPayableFeeCommand(FeeId feeId, Date offsetedDate) {
-        super(feeId, offsetedDate);
+    public OffsetAccountPayableFeeCommand(FeeId feeId, OffsetId offsetId, Date offsetedDate) {
+        super(feeId, offsetId, offsetedDate);
     }
 }

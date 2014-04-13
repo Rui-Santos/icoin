@@ -17,6 +17,7 @@ public class PaidFeeConfirmedEvent extends FeeConfirmedEvent<PaidFeeConfirmedEve
 
     public PaidFeeConfirmedEvent(FeeId feeId, String sequenceNumber, Date confirmedDate) {
         super(feeId, confirmedDate);
+        this.sequenceNumber = sequenceNumber;
     }
 
     public String getSequenceNumber() {

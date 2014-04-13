@@ -11,6 +11,7 @@ import com.homhon.base.domain.ValueObject;
  */
 public enum CancelledReason implements ValueObject<CancelledReason> {
     DUPLICATED("Duplicated fee found"),
+    INVALID_ADDRESS("Payee address not corrected"),
     OFFSET_ERROR("Error When offset");
 
     private final String desc;

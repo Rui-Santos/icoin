@@ -26,11 +26,12 @@ public class PaidFeeCreatedEvent extends FeeCreatedEvent<PaidFeeCreatedEvent> {
                                FeeType feeType,
                                Date dueDate,
                                Date businessCreationTime,
-                               String userAccountId,
+                               String portfolioId,
+                               String userId,
                                BusinessType businessType,
                                String businessReferenceId,
                                PaidMode paidMode) {
-        super(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, userAccountId, businessType, businessReferenceId);
+        super(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, portfolioId, userId, businessType, businessReferenceId);
         this.paidMode = paidMode;
     }
 

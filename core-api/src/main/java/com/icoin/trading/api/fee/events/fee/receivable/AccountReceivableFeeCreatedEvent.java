@@ -24,9 +24,10 @@ public class AccountReceivableFeeCreatedEvent extends FeeCreatedEvent<AccountRec
                                             FeeType feeType,
                                             Date dueDate,
                                             Date businessCreationTime,
-                                            String userAccountId,
+                                            String portfolioId,
+                                            String userId,
                                             BusinessType businessType,
                                             String businessReferenceId) {
-        super(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, userAccountId, businessType, businessReferenceId);
+        super(feeId, feeStatus, amount, feeType, dueDate, businessCreationTime, portfolioId, userId, businessType, businessReferenceId);
     }
 }

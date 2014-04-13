@@ -8,6 +8,7 @@ import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.domain.transfer.TransferTransactionType;
 import com.icoin.trading.api.fee.domain.transfer.TransferType;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -23,6 +24,7 @@ public class TransferringInTransactionStartedEvent<T extends TransferringInTrans
     protected final FeeTransactionId feeTransactionId;
     protected final OffsetId offsetId;
     protected final PortfolioId portfolioId;
+    protected final UserId userId;
     protected final Date startTime;
     protected final Date dueDate;
     protected final FeeId receivedFeeId;
@@ -36,6 +38,7 @@ public class TransferringInTransactionStartedEvent<T extends TransferringInTrans
     public TransferringInTransactionStartedEvent(FeeTransactionId feeTransactionId,
                                                  OffsetId offsetId,
                                                  PortfolioId portfolioId,
+                                                 UserId userId,
                                                  Date startTime,
                                                  Date dueDate,
                                                  FeeId receivedFeeId,
@@ -48,6 +51,7 @@ public class TransferringInTransactionStartedEvent<T extends TransferringInTrans
         this.feeTransactionId = feeTransactionId;
         this.offsetId = offsetId;
         this.portfolioId = portfolioId;
+        this.userId = userId;
         this.startTime = startTime;
         this.dueDate = dueDate;
         this.receivedFeeId = receivedFeeId;
@@ -69,6 +73,10 @@ public class TransferringInTransactionStartedEvent<T extends TransferringInTrans
 
     public PortfolioId getPortfolioId() {
         return portfolioId;
+    }
+
+    public UserId getUserId() {
+        return userId;
     }
 
     public Date getStartTime() {

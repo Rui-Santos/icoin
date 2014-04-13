@@ -21,7 +21,6 @@ import java.util.Date;
 public class CreateFeeCommand<T extends CreateFeeCommand> extends AbstractFeeCommand<T> {
     @NotNull
     private FeeStatus feeStatus;
-    @NotNull
     private BigMoney amount;
     @NotNull
     private FeeType feeType;
@@ -33,7 +32,9 @@ public class CreateFeeCommand<T extends CreateFeeCommand> extends AbstractFeeCom
     @NotNull
     private Date dueDate;
     @NotEmpty
-    private String userAccountId;
+    private String portfolioId;
+    @NotEmpty
+    private String userId;
     @NotNull
     private String businessReferenceId;
 
@@ -45,7 +46,8 @@ public class CreateFeeCommand<T extends CreateFeeCommand> extends AbstractFeeCom
                             BusinessType businessType,
                             Date createdTime,
                             Date dueDate,
-                            String userAccountId,
+                            String portfolioId,
+                            String userId,
                             String businessReferenceId) {
         super(feeTransactionId, feeId);
         this.feeStatus = feeStatus;
@@ -54,7 +56,8 @@ public class CreateFeeCommand<T extends CreateFeeCommand> extends AbstractFeeCom
         this.businessType = businessType;
         this.createdTime = createdTime;
         this.dueDate = dueDate;
-        this.userAccountId = userAccountId;
+        this.portfolioId = portfolioId;
+        this.userId = userId;
         this.businessReferenceId = businessReferenceId;
     }
 
@@ -82,11 +85,15 @@ public class CreateFeeCommand<T extends CreateFeeCommand> extends AbstractFeeCom
         return dueDate;
     }
 
-    public String getUserAccountId() {
-        return userAccountId;
+    public String getPortfolioId() {
+        return portfolioId;
     }
 
     public String getBusinessReferenceId() {
         return businessReferenceId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

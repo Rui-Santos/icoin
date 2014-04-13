@@ -8,6 +8,7 @@ import com.icoin.trading.api.fee.domain.received.ReceivedSource;
 import com.icoin.trading.api.fee.domain.transfer.TransferTransactionType;
 import com.icoin.trading.api.fee.domain.transfer.TransferType;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.joda.money.BigMoney;
 
 import java.util.Date;
@@ -25,6 +26,7 @@ public class CoinTransferringInTransactionStartedEvent extends TransferringInTra
     public CoinTransferringInTransactionStartedEvent(FeeTransactionId feeTransactionId,
                                                      OffsetId offsetId,
                                                      PortfolioId portfolioId,
+                                                     UserId userId,
                                                      Date startTime,
                                                      Date dueDate,
                                                      FeeId receivedFeeId,
@@ -38,6 +40,7 @@ public class CoinTransferringInTransactionStartedEvent extends TransferringInTra
         super(feeTransactionId,
                 offsetId,
                 portfolioId,
+                userId,
                 startTime,
                 dueDate,
                 receivedFeeId,
@@ -60,6 +63,7 @@ public class CoinTransferringInTransactionStartedEvent extends TransferringInTra
                 "feeTransactionId=" + feeTransactionId +
                 ", offsetId=" + offsetId +
                 ", portfolioId=" + portfolioId +
+                ", userId=" + userId +
                 ", startTime=" + startTime +
                 ", dueDate=" + dueDate +
                 ", receivedFeeId=" + receivedFeeId +

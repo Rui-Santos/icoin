@@ -28,8 +28,9 @@ public class CreateAccountPayableFeeCommand extends CreateFeeCommand<CreateAccou
                                           BusinessType businessType,
                                           Date createdTime,
                                           Date dueDate,
-                                          String userAccountId,
+                                          String portfolioId,
+                                          String userId,
                                           String businessReferenceId) {
-        super(feeTransactionId, feeId, feeStatus, amount, feeType, businessType, createdTime, dueDate, userAccountId, businessReferenceId);
+        super(feeTransactionId, feeId, feeStatus, amount, feeType, businessType, createdTime, dueDate, portfolioId, userId, businessReferenceId);
     }
 }

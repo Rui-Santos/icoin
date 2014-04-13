@@ -32,10 +32,11 @@ public class CreatePaidFeeCommand extends CreateFeeCommand<CreatePaidFeeCommand>
                                 BusinessType businessType,
                                 Date createdTime,
                                 Date dueDate,
-                                String userAccountId,
+                                String portfolioId,
+                                String userId,
                                 String businessReferenceId,
                                 PaidMode paidMode) {
-        super(feeTransactionId, feeId, feeStatus, amount, feeType, businessType, createdTime, dueDate, userAccountId, businessReferenceId);
+        super(feeTransactionId, feeId, feeStatus, amount, feeType, businessType, createdTime, dueDate, portfolioId, userId, businessReferenceId);
         this.paidMode = paidMode;
     }
 

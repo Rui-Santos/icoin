@@ -2,6 +2,7 @@ package com.icoin.trading.api.fee.command;
 
 import com.homhon.base.command.CommandSupport;
 import com.icoin.trading.api.fee.domain.fee.FeeId;
+import com.icoin.trading.api.fee.domain.offset.OffsetId;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -17,15 +18,22 @@ public class OffsetFeeCommand<T extends OffsetFeeCommand> extends CommandSupport
     @NotNull
     private final FeeId feeId;
     @NotNull
+    private final OffsetId offsetId;
+    @NotNull
     private final Date offsetedDate;
 
-    protected OffsetFeeCommand(FeeId feeId, Date offsetedDate) {
+    protected OffsetFeeCommand(FeeId feeId, OffsetId offsetId, Date offsetedDate) {
         this.feeId = feeId;
+        this.offsetId = offsetId;
         this.offsetedDate = offsetedDate;
     }
 
     public FeeId getFeeId() {
         return feeId;
+    }
+
+    public OffsetId getOffsetId() {
+        return offsetId;
     }
 
     public Date getOffsetedDate() {

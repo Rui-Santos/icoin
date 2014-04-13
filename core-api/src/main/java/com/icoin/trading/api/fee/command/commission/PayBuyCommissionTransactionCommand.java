@@ -9,6 +9,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.joda.money.BigMoney;
 
 import javax.validation.constraints.NotNull;
@@ -35,6 +36,7 @@ public class PayBuyCommissionTransactionCommand extends PayTransactionCommand<Pa
                                               String orderId,
                                               TransactionId orderTransactionId,
                                               PortfolioId portfolioId,
+                                              UserId userId,
                                               Date tradeTime,
                                               Date dueDate,
                                               TradeType tradeType,
@@ -50,6 +52,7 @@ public class PayBuyCommissionTransactionCommand extends PayTransactionCommand<Pa
                 orderId,
                 orderTransactionId,
                 portfolioId,
+                userId,
                 tradeTime,
                 dueDate,
                 tradeType,

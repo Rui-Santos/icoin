@@ -8,6 +8,7 @@ import com.icoin.trading.api.tradeengine.domain.OrderBookId;
 import com.icoin.trading.api.tradeengine.domain.PortfolioId;
 import com.icoin.trading.api.tradeengine.domain.TradeType;
 import com.icoin.trading.api.tradeengine.domain.TransactionId;
+import com.icoin.trading.api.users.domain.UserId;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.money.BigMoney;
 
@@ -33,6 +34,8 @@ public class ExecutionTransactionCommand<T extends ExecutionTransactionCommand> 
     @NotNull
     protected final PortfolioId portfolioId;
     @NotNull
+    protected final UserId userId;
+    @NotNull
     protected final Date tradeTime;
     @NotNull
     protected final Date dueDate;
@@ -54,6 +57,7 @@ public class ExecutionTransactionCommand<T extends ExecutionTransactionCommand> 
                                        String orderId,
                                        TransactionId orderTransactionId,
                                        PortfolioId portfolioId,
+                                       UserId userId,
                                        Date tradeTime,
                                        Date dueDate,
                                        TradeType tradeType,
@@ -67,6 +71,7 @@ public class ExecutionTransactionCommand<T extends ExecutionTransactionCommand> 
         this.orderId = orderId;
         this.orderTransactionId = orderTransactionId;
         this.portfolioId = portfolioId;
+        this.userId = userId;
         this.tradeTime = tradeTime;
         this.dueDate = dueDate;
         this.tradeType = tradeType;
@@ -92,6 +97,10 @@ public class ExecutionTransactionCommand<T extends ExecutionTransactionCommand> 
 
     public PortfolioId getPortfolioId() {
         return portfolioId;
+    }
+
+    public UserId getUserId() {
+        return userId;
     }
 
     public Date getTradeTime() {

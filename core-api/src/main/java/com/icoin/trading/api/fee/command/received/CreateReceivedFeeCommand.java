@@ -32,10 +32,11 @@ public class CreateReceivedFeeCommand<T extends CreateReceivedFeeCommand> extend
                                     BusinessType businessType,
                                     Date createdTime,
                                     Date dueDate,
-                                    String userAccountId,
+                                    String portfolioId,
+                                    String userId,
                                     String businessReferenceId,
                                     ReceivedSource receivedSource) {
-        super(feeTransactionId, feeId, feeStatus, amount, feeType, businessType, createdTime, dueDate, userAccountId, businessReferenceId);
+        super(feeTransactionId, feeId, feeStatus, amount, feeType, businessType, createdTime, dueDate, portfolioId, userId, businessReferenceId);
         this.receivedSource = receivedSource;
     }
 
