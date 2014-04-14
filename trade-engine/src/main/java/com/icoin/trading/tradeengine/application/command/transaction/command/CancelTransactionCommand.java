@@ -26,7 +26,7 @@ import java.util.Date;
  * @author Jettro Coenradie
  */
 public class CancelTransactionCommand extends CommandSupport<CancelTransactionCommand> {
-
+    @NotNull
     private TransactionId transactionIdentifier;
     private Date time;
 
