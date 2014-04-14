@@ -11,7 +11,7 @@ import com.homhon.base.domain.ValueObject;
  */
 public enum BusinessType implements ValueObject<BusinessType> {
     RESERVE_COIN,
-    RESERVE_MOENY,
+    RESERVE_MONEY,
     TRADE_EXECUTED,
     CHARGE_COIN_COMMISSION,
     CHARGE_MONEY_COMMISSION,
